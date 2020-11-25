@@ -34,7 +34,7 @@ export abstract class DejaPopupBase extends Destroy implements OnInit {
 
     private aSub: Subscription[];
 
-    public ngOnInit() {
+    public ngOnInit(): void {
         this.aSub = [];
         this.dialogRef.beforeClosed().pipe(
             take(1),
@@ -74,7 +74,7 @@ export abstract class DejaPopupBase extends Destroy implements OnInit {
         }
     }
 
-    public dispatchAction(action: DejaPopupAction) {
+    public dispatchAction(action: DejaPopupAction): boolean {
         if (!action) {
             return false;
         }
@@ -82,7 +82,7 @@ export abstract class DejaPopupBase extends Destroy implements OnInit {
         return undefined;
     }
 
-    protected destroy() {
+    protected destroy(): void {
         this.aSub.forEach(s => s.unsubscribe());
     }
 

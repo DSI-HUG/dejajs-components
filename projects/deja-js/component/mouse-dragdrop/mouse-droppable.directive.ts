@@ -28,7 +28,7 @@ export class DejaMouseDroppableDirective extends Destroy {
         this._context = value;
     }
 
-    public get context() {
+    public get context(): IDejaMouseDroppableContext {
         return this._context;
     }
 

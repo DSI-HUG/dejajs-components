@@ -37,14 +37,22 @@ import { DejaChildValidatorDirective, DejaTextMetricsService } from '@deja-js/co
 import { _MatInputMixinBase } from '@deja-js/core/util';
 import { Subject } from 'rxjs';
 
-export const createCounterRangeValidator = (comp: DejaNumericStepperComponent) => (c: FormControl) => {
+export interface RangeError {
+    rangeError: {
+        given: unknown;
+        max: NumberInput;
+        min: NumberInput;
+    };
+}
+
+export const createCounterRangeValidator = (comp: DejaNumericStepperComponent) => (c: FormControl): RangeError => {
     const err = {
         rangeError: {
             given: c.value,
             max: comp.max,
             min: comp.min
         }
-    };
+    } as RangeError;
 
     if (c.value === null || c.value === undefined) {
         return null;
@@ -68,7 +76,8 @@ export class DejaNumericStepperComponent extends _MatInputMixinBase implements C
     @Output() public readonly textChange = new EventEmitter<number>();
 
     @HostBinding() public id = `deja-numeric-stepper-${DejaNumericStepperComponent.nextId++}`;
-    @HostBinding('class.floating') public get shouldLabelFloat() {
+    @HostBinding('class.floating')
+    public get shouldLabelFloat(): boolean {
         return this.focused || !this.empty || this._alwaysDisplayUnit;
     }
 
@@ -104,7 +113,7 @@ export class DejaNumericStepperComponent extends _MatInputMixinBase implements C
     }
 
     /** Max value of stepper */
-    public get max() {
+    public get max(): NumberInput {
         return this._max;
     }
 
@@ -115,7 +124,7 @@ export class DejaNumericStepperComponent extends _MatInputMixinBase implements C
     }
 
     /** Min value of stepper */
-    public get min() {
+    public get min(): NumberInput {
         return this._min;
     }
 
@@ -125,12 +134,12 @@ export class DejaNumericStepperComponent extends _MatInputMixinBase implements C
         this.changeDetectorRef.markForCheck();
     }
 
-    public get isOffLimits() {
+    public get isOffLimits(): boolean {
         return (this.min !== null && this.value < this.min) || (this.max !== null && this.value > this.max);
     }
 
     /** Step for stepper : default 1 */
-    public get step() {
+    public get step(): NumberInput {
         return this._step;
     }
 
@@ -141,7 +150,7 @@ export class DejaNumericStepperComponent extends _MatInputMixinBase implements C
     }
 
     /** hide the steppers */
-    public get hideSteppers() {
+    public get hideSteppers(): BooleanInput {
         return this._hideSteppers;
     }
 
@@ -161,11 +170,11 @@ export class DejaNumericStepperComponent extends _MatInputMixinBase implements C
     /**
      * Placeholder of the input
      */
-    @Input() public get placeholder() {
+    @Input() public get placeholder(): string {
         return this._placeholder;
     }
 
-    public set placeholder(plh) {
+    public set placeholder(plh: string) {
         this._placeholder = plh;
         this.stateChanges.next();
     }
@@ -173,7 +182,7 @@ export class DejaNumericStepperComponent extends _MatInputMixinBase implements C
     private _placeholder: string;
 
     /** unit always visible */
-    @Input() public get alwaysDisplayUnit() {
+    @Input() public get alwaysDisplayUnit(): BooleanInput {
         return this._alwaysDisplayUnit;
     }
 
@@ -183,7 +192,7 @@ export class DejaNumericStepperComponent extends _MatInputMixinBase implements C
 
     private _alwaysDisplayUnit: boolean;
 
-    public get empty() {
+    public get empty(): boolean {
         return !this._value && this._value !== 0;
     }
 
@@ -192,23 +201,24 @@ export class DejaNumericStepperComponent extends _MatInputMixinBase implements C
     /**
  * Get disable value
  */
-    public get disabled() {
+    public get disabled(): boolean {
         return this.ngControl ? this.ngControl.disabled : this._disabled;
     }
 
     /** Allow to disabled the component */
     @Input()
-    public set disabled(value) {
+    public set disabled(value: boolean) {
         const disabled = coerceBooleanProperty(value);
         this._disabled = disabled || null;
         this.changeDetectorRef.markForCheck();
     }
 
-    @Input() public get required() {
+    @Input()
+    public get required(): boolean {
         return this._required;
     }
 
-    public set required(req) {
+    public set required(req: boolean) {
         this._required = coerceBooleanProperty(req);
         this.stateChanges.next();
     }
@@ -240,8 +250,8 @@ export class DejaNumericStepperComponent extends _MatInputMixinBase implements C
         });
     }
 
-    // eslint-disable-next-line @angular-eslint/no-conflicting-lifecycle, @typescript-eslint/no-explicit-any
-    public ngOnChanges(changes: any) {
+    // eslint-disable-next-line @angular-eslint/no-conflicting-lifecycle, @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-module-boundary-types
+    public ngOnChanges(changes: any): void {
         if (changes.min || changes.max) {
             this.validateFn = createCounterRangeValidator(this);
             if (this.ngControl?.control) {
@@ -255,7 +265,7 @@ export class DejaNumericStepperComponent extends _MatInputMixinBase implements C
     }
 
     // eslint-disable-next-line @angular-eslint/no-conflicting-lifecycle
-    public ngDoCheck() {
+    public ngDoCheck(): void {
         if (this.ngControl) {
             // We need to re-evaluate this on every change detection cycle, because there are some
             // error triggers that we can't subscribe to (e.g. parent form submissions). This means
@@ -265,7 +275,7 @@ export class DejaNumericStepperComponent extends _MatInputMixinBase implements C
     }
 
     // eslint-disable-next-line @angular-eslint/no-conflicting-lifecycle
-    public ngOnDestroy() {
+    public ngOnDestroy(): void {
         this.stateChanges.complete();
         this.fm.stopMonitoring(this.elementRef.nativeElement);
     }
@@ -274,25 +284,25 @@ export class DejaNumericStepperComponent extends _MatInputMixinBase implements C
         return this.validateFn(c) || c.validator?.(c);
     }
 
-    public setDescribedByIds(ids: string[]) {
+    public setDescribedByIds(ids: string[]): void {
         this.describedBy = ids.join(' ');
     }
 
-    public onContainerClick(event: MouseEvent) {
+    public onContainerClick(event: MouseEvent): void {
         if ((event.target as Element).tagName.toLowerCase() !== 'input') {
             this.elementRef.nativeElement.querySelector('input').focus();
         }
     }
 
     /** Give focus to this component */
-    public setFocus() {
+    public setFocus(): void {
         if (this.inputElement) {
             this.inputElement.focus();
         }
     }
 
     // ************* ControlValueAccessor Implementation **************
-    public get value() {
+    public get value(): number {
         return this._value;
     }
 
@@ -303,7 +313,7 @@ export class DejaNumericStepperComponent extends _MatInputMixinBase implements C
         this.stateChanges.next();
     }
 
-    public writeValue(value: number) {
+    public writeValue(value: number): void {
         if (value === null || value === undefined) {
             this._value = value;
         } else {
@@ -314,25 +324,25 @@ export class DejaNumericStepperComponent extends _MatInputMixinBase implements C
         this.textChange.emit(value);
     }
 
-    public registerOnChange(fn: (_a: unknown) => void) {
+    public registerOnChange(fn: (_a: unknown) => void): void {
         this.onChangeCallback = fn;
     }
 
-    public registerOnTouched(fn: () => void) {
+    public registerOnTouched(fn: () => void): void {
         this.onTouchedCallback = fn;
     }
 
-    public setDisabledState(isDisabled: boolean) {
+    public setDisabledState(isDisabled: boolean): void {
         this.disabled = isDisabled;
     }
     // ************* End of ControlValueAccessor Implementation **************
 
-    public checkSize(value?: number) {
+    public checkSize(value?: number): void {
         this.size = this.dejaTextMetricsService.getTextWidth((value || this.value || 0).toString(), this.elementRef.nativeElement);
     }
 
     // NgModel implementation
-    protected onTouchedCallback = () => undefined as void;
-    protected onChangeCallback = (_?: unknown) => undefined as void;
-    protected onValidatorChangeCallback = () => undefined as void;
+    protected onTouchedCallback = (): void => undefined;
+    protected onChangeCallback = (_?: unknown): void => undefined;
+    protected onValidatorChangeCallback = (): void => undefined;
 }

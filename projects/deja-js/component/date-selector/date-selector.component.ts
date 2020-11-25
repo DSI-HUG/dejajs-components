@@ -84,15 +84,15 @@ export class DejaDateSelectorComponent extends Destroy implements OnInit, Contro
     private _keyboardNavigation = false;
     private _keyboardNavigation$ = new Subject<boolean>();
 
-    public get keyboardNavigation() {
+    public get keyboardNavigation(): boolean {
         return this._keyboardNavigation;
     }
 
-    public get displayedDate() {
+    public get displayedDate(): Date {
         return this._displayedDate;
     }
 
-    public get local() {
+    public get local(): string {
         return this._local;
     }
 
@@ -142,23 +142,23 @@ export class DejaDateSelectorComponent extends Destroy implements OnInit, Contro
     }
 
     /** Time property getter. */
-    public get time() {
+    public get time(): BooleanInput {
         return this._time;
     }
 
-    public get days() {
+    public get days(): string[] {
         return this._days;
     }
 
-    public get emptyDays() {
+    public get emptyDays(): number[] {
         return this._emptyDays;
     }
 
-    public get currentDate() {
+    public get currentDate(): Date {
         return this._currentDate;
     }
 
-    public get currentDays() {
+    public get currentDays(): IDateSelectorItem[] {
         return this._currentDays;
     }
 
@@ -171,7 +171,7 @@ export class DejaDateSelectorComponent extends Destroy implements OnInit, Contro
     }
 
     /** Disabled property getter. */
-    public get disabled() {
+    public get disabled(): BooleanInput {
         return this._disabled;
     }
 
@@ -219,7 +219,7 @@ export class DejaDateSelectorComponent extends Destroy implements OnInit, Contro
         this.layout = DateComponentLayout.dateonly;
     }
 
-    public ngOnInit() {
+    public ngOnInit(): void {
         if (!this._displayedDate) {
             this._displayedDate = this._currentDate;
             this.bind();
@@ -241,18 +241,17 @@ export class DejaDateSelectorComponent extends Destroy implements OnInit, Contro
     }
 
     // From ControlValueAccessor interface
-    public writeValue(value: Date | string) {
+    public writeValue(value: Date | string): void {
         if (value instanceof Date && value !== this.selectedDate) {
+            const clone = new Date(value.getTime());
             if (this.selectedDate) {
-                const h = (value) ? value.getHours() : 0;
-                const m = (value) ? value.getMinutes() : 0;
-                if (value && ((!this.layoutId && this.selectedDate.toLocaleTimeString() !== value.toLocaleTimeString()) || (this.layoutId > 1 && ((this.selectedDate.getHours() === 0 && this.selectedDate.getMinutes() === 0) && (h !== 0 && m !== 0) || (this.selectedDate.toLocaleDateString() !== value.toLocaleDateString()))))) {
-                    value.setHours(this.selectedDate.getHours(), this.selectedDate.getMinutes(), this.selectedDate.getSeconds());
+                // When using a date-picker without time keep the time specified in the selectedDate when changing date
+                if (this.layoutId === 1 && this.selectedDate.toLocaleDateString() !== clone.toLocaleDateString()) {
+                    clone.setHours(this.selectedDate.getHours(), this.selectedDate.getMinutes(), this.selectedDate.getSeconds());
                 }
             }
-            this.selectedDate = value;
-            this._displayedDate = value || this._currentDate;
-
+            this.selectedDate = clone;
+            this._displayedDate = clone || this._currentDate;
         } else {
             this._displayedDate = this._currentDate;
         }
@@ -260,16 +259,16 @@ export class DejaDateSelectorComponent extends Destroy implements OnInit, Contro
     }
 
     // From ControlValueAccessor interface
-    public registerOnChange(fn: (_a: unknown) => void) {
+    public registerOnChange(fn: (_a: unknown) => void): void {
         this.onChangeCallback = fn;
     }
 
     // From ControlValueAccessor interface
-    public registerOnTouched(fn: () => void) {
+    public registerOnTouched(fn: () => void): void {
         this.onTouchedCallback = fn;
     }
 
-    public setDisabledState(isDisabled: boolean) {
+    public setDisabledState(isDisabled: boolean): void {
         this.disabled = isDisabled;
     }
     // ************* End of ControlValueAccessor Implementation **************
@@ -334,11 +333,11 @@ export class DejaDateSelectorComponent extends Destroy implements OnInit, Contro
         return days;
     }
 
-    public daysInMonth(month: number, year: number) {
+    public daysInMonth(month: number, year: number): number {
         return new Date(year, month, 0).getDate();
     }
 
-    public keyDown(event: KeyboardEvent) {
+    public keyDown(event: KeyboardEvent): boolean {
         if (this.disabled) {
             return undefined;
         }
@@ -402,17 +401,17 @@ export class DejaDateSelectorComponent extends Destroy implements OnInit, Contro
         return undefined;
     }
 
-    public changeMonth(x: number) {
+    public changeMonth(x: number): boolean {
         this.setMonthIfPossible(this._displayedDate, x);
         return false;
     }
 
-    public changeYear(x: number) {
+    public changeYear(x: number): boolean {
         this.setYearIfPossible(this._displayedDate, x);
         return false;
     }
 
-    public updateHours(hours: number) {
+    public updateHours(hours: number): void {
         let d: Date;
 
         if (hours === 24) {
@@ -431,7 +430,7 @@ export class DejaDateSelectorComponent extends Destroy implements OnInit, Contro
         this.timeChange.emit(this.value);
     }
 
-    public updateMinutes(minutes: number) {
+    public updateMinutes(minutes: number): void {
         let d: Date;
 
         if (this.selectedDate) {
@@ -446,8 +445,8 @@ export class DejaDateSelectorComponent extends Destroy implements OnInit, Contro
         this.timeChange.emit(this.value);
     }
 
-    public onTouchedCallback = () => undefined as void;
-    public onChangeCallback = (_a?: unknown) => undefined as void;
+    public onTouchedCallback = (): void => undefined;
+    public onChangeCallback = (_a?: unknown): void => undefined;
 
     private bind() {
         const month = this._displayedDate.getMonth();

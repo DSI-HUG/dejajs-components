@@ -49,7 +49,7 @@ export class DejaTagComponent implements ControlValueAccessor {
     /**
      * Get disable value
      */
-    public get disabled() {
+    public get disabled(): BooleanInput {
         return this.control ? this.control.disabled : this._disabled;
     }
 
@@ -60,29 +60,29 @@ export class DejaTagComponent implements ControlValueAccessor {
     }
 
     // ************* ControlValueAccessor Implementation **************
-    public get value() {
+    public get value(): string[] {
         return this.items;
     }
 
-    public set value(val) {
+    public set value(val: string[]) {
         this.writeValue(val);
         this.onChangeCallback(val);
         this.onTouchedCallback();
     }
 
-    public writeValue(value: string[]) {
+    public writeValue(value: string[]): void {
         this.items = value ? value : [];
     }
 
-    public registerOnChange(fn: (_a: unknown) => void) {
+    public registerOnChange(fn: (_a: unknown) => void): void {
         this.onChangeCallback = fn;
     }
 
-    public registerOnTouched(fn: () => void) {
+    public registerOnTouched(fn: () => void): void {
         this.onTouchedCallback = fn;
     }
 
-    public setDisabledState(isDisabled: boolean) {
+    public setDisabledState(isDisabled: boolean): void {
         this.disabled = isDisabled;
     }
     // ************* End of ControlValueAccessor Implementation **************
@@ -90,7 +90,7 @@ export class DejaTagComponent implements ControlValueAccessor {
     /**
      * Trigerred when user press key into the component
      */
-    public onKeyDown(e: KeyboardEvent) {
+    public onKeyDown(e: KeyboardEvent): void {
         if (e.code === KeyCodes.Enter) {
             const target = e.target as HTMLInputElement;
             this.onAddItem(target.value);
@@ -101,7 +101,7 @@ export class DejaTagComponent implements ControlValueAccessor {
      * Add item into the the list
      * @param val : Value of the text to add
      */
-    public onAddItem(val: string) {
+    public onAddItem(val: string): void {
         if (val) {
             this.items.push(val);
             this.value = this.items;
@@ -109,12 +109,12 @@ export class DejaTagComponent implements ControlValueAccessor {
         }
     }
 
-    public onRemoveItem() {
+    public onRemoveItem(): void {
         this.onChangeCallback(this.value);
     }
 
     // NgModel implementation
-    protected onTouchedCallback = () => undefined as void;
-    protected onChangeCallback = (_a?: unknown) => undefined as void;
-    protected onValidatorChangeCallback = (_a?: unknown) => undefined as void;
+    protected onTouchedCallback = (): void => undefined;
+    protected onChangeCallback = (_a?: unknown): void => undefined;
+    protected onValidatorChangeCallback = (_a?: unknown): void => undefined;
 }

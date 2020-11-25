@@ -43,22 +43,24 @@ export class DejaPopupBoxComponent {
         label: 'Minify'
     } as DejaPopupAction;
 
-    @HostListener('mouseenter') public onMouseEnter() {
+    @HostListener('mouseenter')
+    public onMouseEnter(): void {
         this.showActions = true;
     }
 
-    @HostListener('mouseleave') public onMouseLeave() {
+    @HostListener('mouseleave')
+    public onMouseLeave(): void {
         this.showActions = false;
     }
 
-    public doEmit(action: DejaPopupAction) {
+    public doEmit(action: DejaPopupAction): void {
         action.target = 'popup-tray';
         this.dialog.componentInstance.isMinified = !this.dialog.componentInstance.isMinified;
         action.panelClass = this.dialog.componentInstance.config.dialogPanelId;
         this.action.emit(action);
     }
 
-    public doClose() {
+    public doClose(): void {
         this.dialog.close();
         const a = new DejaPopupAction('tray-refresh', 'popup-tray');
         this.action.emit(a);

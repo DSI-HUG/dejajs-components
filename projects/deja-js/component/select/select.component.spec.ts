@@ -183,7 +183,7 @@ describe('DejaSelectComponent', () => {
         void expect(sl.positions).toEqual(DejaConnectionPositionPair.parse('start top start bottom'));
 
         selectInstance.dropDownWidth = 100;
-        void expect(sl.dropDownWidth).toEqual('100px');
+        void expect(sl.dropDownWidth).toEqual(100);
 
         void expect(selectInstance.readonly).toBeNull();
         sl.readonly = 'true';

@@ -115,7 +115,7 @@ export class DejaResizeListenerDirective implements OnDestroy {
         requestAnimationFrame(reset);
     }
 
-    public ngOnDestroy() {
+    public ngOnDestroy(): void {
         if (this.resizeSensor) {
             if (this.element.contains(this.resizeSensor)) {
                 this.element.removeChild(this.resizeSensor);

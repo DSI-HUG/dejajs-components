@@ -52,11 +52,11 @@ export class DejaViewPortComponent extends Destroy {
     public vpEndIndex: number;
     public startOffset: number; // Buttons mode only
 
-    public get hasButtons() {
+    public get hasButtons(): boolean {
         return this._hasButtons;
     }
 
-    public get isHorizontal() {
+    public get isHorizontal(): boolean {
         return this._isHorizontal;
     }
 
@@ -72,7 +72,7 @@ export class DejaViewPortComponent extends Destroy {
         this._buttonsStep = value;
     }
 
-    public get buttonsStep() {
+    public get buttonsStep(): number {
         return this._buttonsStep || 20;
     }
 
@@ -136,7 +136,7 @@ export class DejaViewPortComponent extends Destroy {
         }
     }
 
-    public get itemSize() {
+    public get itemSize(): NumberInput {
         return this.viewPort.itemsSize;
     }
 
@@ -151,11 +151,11 @@ export class DejaViewPortComponent extends Destroy {
         ).subscribe(scrollPos => this.viewPort.scrollPosition$.next(scrollPos));
     }
 
-    public get itemTemplate() {
+    public get itemTemplate(): TemplateRef<unknown> {
         return this.itemTemplateExternal || this.itemTemplateInternal;
     }
 
-    public get clientSize() {
+    public get clientSize(): number {
         if (!this.element) {
             return 0;
         }
@@ -168,7 +168,7 @@ export class DejaViewPortComponent extends Destroy {
         this.viewPort.scrollPosition$.next(scrollPos);
     }
 
-    public get scrollPos() {
+    public get scrollPos(): number {
         return this.scrollPosition;
     }
 
@@ -184,7 +184,7 @@ export class DejaViewPortComponent extends Destroy {
         this.viewPort.mode$.next(mode);
     }
 
-    public get viewportMode() {
+    public get viewportMode(): ViewportMode {
         return this.viewPort.mode;
     }
 
@@ -332,12 +332,12 @@ export class DejaViewPortComponent extends Destroy {
         ).subscribe(() => this.viewPort.refresh());
     }
 
-    public refresh() {
+    public refresh(): void {
         this.changeDetectorRef.markForCheck();
     }
 
     /** Recalcule le viewport. */
-    public refreshViewPort(item?: IViewPortItem, clearMeasuredHeight?: boolean) {
+    public refreshViewPort(item?: IViewPortItem, clearMeasuredHeight?: boolean): void {
         const refreshParams = {} as IViewPortRefreshParams;
         if (item) {
             refreshParams.items = [item];
@@ -349,16 +349,16 @@ export class DejaViewPortComponent extends Destroy {
         this.changeDetectorRef.markForCheck();
     }
 
-    public ensureVisible(item: unknown) {
+    public ensureVisible(item: unknown): void {
         this.viewPort.ensureItem$.next(item);
     }
 
-    public getCssSize(item: IViewPortItem) {
+    public getCssSize(item: IViewPortItem): string {
         const itemSize = this.getItemSize(item);
         return itemSize ? `${itemSize}px` : 'auto';
     }
 
-    public getItemSize(item: IViewPortItem) {
+    public getItemSize(item: IViewPortItem): NumberInput {
         if (this.viewPort.mode === 'disabled') {
             return null;
         } else if (this.viewPort.mode === 'fixed') {

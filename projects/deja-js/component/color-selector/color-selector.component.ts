@@ -69,15 +69,15 @@ export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestr
     private hilightedSubIndex: number;
     private hilightedSubIndex$ = new Subject<number>();
 
-    public get subColorFabs() {
+    public get subColorFabs(): DejaColorFab[] {
         return this._subColorFabs;
     }
 
-    public get subColorFabs$() {
+    public get subColorFabs$(): Observable<DejaColorFab[]> {
         return this._subColorFabs$;
     }
 
-    public get colorFabs$() {
+    public get colorFabs$(): Observable<DejaColorFab[]> {
         return this._colorFabs$;
     }
 
@@ -232,19 +232,19 @@ export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestr
         this._disabled = disabled || null;
     }
 
-    public get disabled() {
+    public get disabled(): BooleanInput {
         return this._disabled;
     }
 
     /**
      * Retourne la meilleure couleur d'affichage pour une couleur donnée
      */
-    public getBestTextColor(value: string) {
+    public getBestTextColor(value: string): string {
         const backColor = Color.fromHex(value);
         return backColor.bestTextColor.toHex();
     }
 
-    public resetDefaultColor() {
+    public resetDefaultColor(): void {
         this.value = this._resetcolor;
     }
 
@@ -308,31 +308,31 @@ export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestr
     }
 
     // From ControlValueAccessor interface
-    public writeValue(value: Color) {
+    public writeValue(value: Color): void {
         this._value = value;
         this.selectedColor = value;
     }
 
     // From ControlValueAccessor interface
-    public registerOnChange(fn: (_a: unknown) => void) {
+    public registerOnChange(fn: (_a: unknown) => void): void {
         this.onChangeCallback = fn;
     }
 
     // From ControlValueAccessor interface
-    public registerOnTouched(fn: () => void) {
+    public registerOnTouched(fn: () => void): void {
         this.onTouchedCallback = fn;
     }
 
-    public setDisabledState(isDisabled: boolean) {
+    public setDisabledState(isDisabled: boolean): void {
         this.disabled = isDisabled;
     }
     // ************* End of ControlValueAccessor Implementation **************
 
     // ngModel
-    public onTouchedCallback = () => undefined as void;
-    public onChangeCallback = (_a: unknown) => undefined as void;
+    public onTouchedCallback = (): void => undefined;
+    public onChangeCallback = (_a: unknown): void => undefined;
 
-    public ngOnDestroy() {
+    public ngOnDestroy(): void {
         this.destroyed$.next();
         this.destroyed$.unsubscribe();
     }

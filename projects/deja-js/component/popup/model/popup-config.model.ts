@@ -48,7 +48,7 @@ export class DejaPopupConfig<D> extends MatDialogConfig<D> {
         super();
     }
 
-    public ensureDimension() {
+    public ensureDimension(): void {
         if (!this.width) {
             this.setDefaultWidth();
         }
@@ -57,15 +57,15 @@ export class DejaPopupConfig<D> extends MatDialogConfig<D> {
         }
     }
 
-    public setDefaultWidth() {
+    public setDefaultWidth(): void {
         this.width = this.dimensionDefault.width;
     }
 
-    public setDefaultHeight() {
+    public setDefaultHeight(): void {
         this.height = this.dimensionDefault.height;
     }
 
-    public getDefaultPosition() {
+    public getDefaultPosition(): { top: string; left: string } {
         const shift = (10 * DejaPopupConfig.dialogCount) - (100 * Math.ceil(DejaPopupConfig.dialogCount / 10));
         return {
             top: `${(this.positionStart.top + shift)}px`,
@@ -106,7 +106,7 @@ export class DejaPopupConfig<D> extends MatDialogConfig<D> {
         return config;
     }
 
-    public addPanelClass(panelClass: string) {
+    public addPanelClass(panelClass: string): void {
         if (!this.panelClass) {
             this.panelClass = [panelClass];
         } else if (Array.isArray(this.panelClass)) {
@@ -124,7 +124,7 @@ export class DejaPopupConfig<D> extends MatDialogConfig<D> {
         return !!this.actions && !!this.actionComponentRef;
     }
 
-    public ensurePosition() {
+    public ensurePosition(): boolean {
         if (!this.position) {
             this.position = this.getDefaultPosition();
             return true;

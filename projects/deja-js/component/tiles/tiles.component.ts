@@ -192,7 +192,7 @@ export class DejaTilesComponent extends Destroy implements AfterViewInit, Contro
         this.layoutProvider.designMode = coerceBooleanProperty(value);
     }
 
-    public get designMode() {
+    public get designMode(): BooleanInput {
         return this.layoutProvider.designMode;
     }
 
@@ -263,28 +263,28 @@ export class DejaTilesComponent extends Destroy implements AfterViewInit, Contro
     }
 
     // ************* ControlValueAccessor Implementation **************
-    public writeValue(models: DejaTile[]) {
+    public writeValue(models: DejaTile[]): void {
         this._models = models || [];
         const tiles = this._models;
         this.layoutProvider.tiles = tiles;
         this.changeDetectorRef.markForCheck();
     }
 
-    public registerOnChange(fn: (_a: unknown) => void) {
+    public registerOnChange(fn: (_a: unknown) => void): void {
         this.onChangeCallback = fn;
     }
 
-    public registerOnTouched(fn: () => void) {
+    public registerOnTouched(fn: () => void): void {
         this.onTouchedCallback = fn;
     }
     // ************* End of ControlValueAccessor Implementation **************
 
-    public ngAfterViewInit() {
+    public ngAfterViewInit(): void {
         this.layoutProvider.container = this.tilesContainer.nativeElement;
         this.refresh({ resetWidth: true });
     }
 
-    public ngOnDestroy() {
+    public ngOnDestroy(): void {
         super.ngOnDestroy();
         this.canCopy = false;
         this.canCut = false;
@@ -292,7 +292,7 @@ export class DejaTilesComponent extends Destroy implements AfterViewInit, Contro
         this.canPaste = false;
     }
 
-    public copySelection() {
+    public copySelection(): void {
         const tiles = this.layoutProvider.copySelection();
         if (tiles?.length) {
             const event = new CustomEvent('DejaTilesCopied', { cancelable: true }) as IDejaTilesEvent;
@@ -301,7 +301,7 @@ export class DejaTilesComponent extends Destroy implements AfterViewInit, Contro
         }
     }
 
-    public cutSelection() {
+    public cutSelection(): void {
         const tiles = this.layoutProvider.cutSelection();
         if (tiles?.length) {
             const event = new CustomEvent('DejaTilesCutted', { cancelable: true }) as IDejaTilesEvent;
@@ -310,35 +310,35 @@ export class DejaTilesComponent extends Destroy implements AfterViewInit, Contro
         }
     }
 
-    public deleteSelection() {
+    public deleteSelection(): DejaTile[] {
         const tiles = this.layoutProvider.deleteSelection();
         this.changeDetectorRef.markForCheck();
         return tiles;
     }
 
-    public paste() {
+    public paste(): DejaTile[] {
         const tiles = this.layoutProvider.paste();
         this.changeDetectorRef.markForCheck();
         return tiles;
     }
 
-    public ensureVisible(id: string) {
+    public ensureVisible(id: string): void {
         this.layoutProvider.ensureVisible$.next(id);
     }
 
-    public refresh(params?: IDejaTilesRefreshParams) {
+    public refresh(params?: IDejaTilesRefreshParams): void {
         this.layoutProvider.refreshTiles$.next(params);
     }
 
-    public addTiles(tiles: DejaTile[]) {
+    public addTiles(tiles: DejaTile[]): void {
         this.layoutProvider.addTiles(tiles);
     }
 
-    public removeTiles(tileIds: string[]) {
+    public removeTiles(tileIds: string[]): void {
         this.layoutProvider.removeTiles(tileIds);
     }
 
-    public hitTest(pageX: number, pageY: number) {
+    public hitTest(pageX: number, pageY: number): DejaTile {
         const containerElement = this.tilesContainer.nativeElement as HTMLElement;
         const containerBounds = containerElement.getBoundingClientRect();
 
@@ -348,7 +348,7 @@ export class DejaTilesComponent extends Destroy implements AfterViewInit, Contro
         return this.tiles.find(t => t.pixelBounds?.containsPoint(new Position(x, y)));
     }
 
-    public getFreePlace(pageX?: number, pageY?: number, width?: number, height?: number) {
+    public getFreePlace(pageX?: number, pageY?: number, width?: number, height?: number): Rect {
         if (!this._models || this._models.length === 0) {
             return new Rect(0, 0, width, height);
         }
@@ -364,11 +364,11 @@ export class DejaTilesComponent extends Destroy implements AfterViewInit, Contro
         return this.layoutProvider.getFreePlace(percentBounds);
     }
 
-    public moveTile(id: string, bounds: Rect) {
+    public moveTile(id: string, bounds: Rect): void {
         this.layoutProvider.moveTile(id, bounds);
     }
 
-    public getDropContext() {
+    public getDropContext(): IDejaMouseDroppableContext {
         return {
             dragEnter: (dragContext, dragCursor) => this.layoutProvider.dragEnter(dragContext, dragCursor) && {
                 className: 'hidden' // Hide drag cursor
@@ -382,19 +382,19 @@ export class DejaTilesComponent extends Destroy implements AfterViewInit, Contro
         } as IDejaMouseDroppableContext;
     }
 
-    public onTileClosed(tile: DejaTile) {
+    public onTileClosed(tile: DejaTile): void {
         this.layoutProvider.removeTiles([tile.id]);
     }
 
-    public onFocus() {
+    public onFocus(): void {
         this.hasFocus = true;
     }
 
-    public onBlur() {
+    public onBlur(): void {
         this.hasFocus = false;
     }
 
     // NgModel implementation
-    public onTouchedCallback = () => undefined as void;
-    public onChangeCallback = (_a?: unknown) => undefined as void;
+    public onTouchedCallback = (): void => undefined;
+    public onChangeCallback = (_a?: unknown): void => undefined;
 }

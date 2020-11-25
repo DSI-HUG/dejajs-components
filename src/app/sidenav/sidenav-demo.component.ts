@@ -22,15 +22,15 @@ export class SidenavDemoComponent {
         private sidenavService: DejaSidenavService
     ) { }
 
-    public toggle() {
+    public toggle(): void {
         this.sidenavService.toggle();
     }
 
-    public open() {
+    public open(): void {
         this.sidenavService.open();
     }
 
-    public close() {
+    public close(): void {
         this.sidenavService.close();
     }
 }

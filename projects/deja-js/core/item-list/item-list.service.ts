@@ -83,7 +83,8 @@ export class ItemListService<T> {
      * @param valueField (optional) Champs à traiter comme valeur.
      * @return Valeur à comparer pour le modèle spécifié.
      */
-    public static getItemValue(item: any, valueField?: string) {
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    public static getItemValue(item: any, valueField?: string): unknown {
         // eslint-disable-next-line eqeqeq
         const isDefined = (value: any) => value != undefined;
 
@@ -106,7 +107,8 @@ export class ItemListService<T> {
      * @param textField (optional) Champs à traiter comme source du texte.
      * @return Texte à afficher pour le modèle spécifié.
      */
-    public static getItemText(value: any, textField?: string) {
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    public static getItemText(value: any, textField?: string): string {
         if (value) {
             if (textField) {
                 const fields = textField.split('.');
@@ -129,42 +131,42 @@ export class ItemListService<T> {
         return '';
     }
 
-    public get lastQuery() {
+    public get lastQuery(): RegExp | string {
         return this._lastQuery;
     }
 
     /**
      * Set a observable called before the list will be displayed
      */
-    public setLoadingItems(fn: (query: string | RegExp, selectedItems: IItemBase<T>[]) => Observable<IItemBase<T>[]>) {
+    public setLoadingItems(fn: (query: string | RegExp, selectedItems: IItemBase<T>[]) => Observable<IItemBase<T>[]>): void {
         this.loadingItems$ = fn;
     }
 
     /**
      * Set a promise or an observable called before an item selection
      */
-    public setSelectingItem(fn: (item: IItemBase<T>) => Promise<IItemBase<T>> | Observable<IItemBase<T>>) {
+    public setSelectingItem(fn: (item: IItemBase<T>) => Promise<IItemBase<T>> | Observable<IItemBase<T>>): void {
         this.selectingItem$ = fn;
     }
 
     /**
      * Set a promise or an observable called before an item deselection
      */
-    public setUnselectingItem(fn: (item: IItemBase<T>) => Promise<IItemBase<T>> | Observable<IItemBase<T>>) {
+    public setUnselectingItem(fn: (item: IItemBase<T>) => Promise<IItemBase<T>> | Observable<IItemBase<T>>): void {
         this.unselectingItem$ = fn;
     }
 
     /**
      * Set a promise or an observable called before an item expand
      */
-    public setExpandingItem(fn: (item: IItemTree<T>) => Promise<IItemTree<T>> | Observable<IItemTree<T>>) {
+    public setExpandingItem(fn: (item: IItemTree<T>) => Promise<IItemTree<T>> | Observable<IItemTree<T>>): void {
         this.expandingItem$ = fn;
     }
 
     /**
      * Set a promise or an observable called before an item collapse
      */
-    public setCollapsingItem(fn: (item: IItemTree<T>) => Promise<IItemTree<T>> | Observable<IItemTree<T>>) {
+    public setCollapsingItem(fn: (item: IItemTree<T>) => Promise<IItemTree<T>> | Observable<IItemTree<T>>): void {
         this.collapsingItem$ = fn;
     }
 
@@ -187,7 +189,7 @@ export class ItemListService<T> {
     /** Renvoie le champs utilisé comme collection pour les enfants d'un parent
      * @return value Nom du champ à utilisé comme collection d'enfants.
      */
-    public get childrenField() {
+    public get childrenField(): string {
         return this._childrenField;
     }
 
@@ -201,7 +203,7 @@ export class ItemListService<T> {
     /** Renvoie une valeur indiquant si les éléments selectionés doivent être masqué.
      * @return value True si les éléments selectionés sont masqués
      */
-    public get hideSelected() {
+    public get hideSelected(): boolean {
         return this._hideSelected;
     }
 
@@ -211,11 +213,11 @@ export class ItemListService<T> {
     }
 
     /** Renvoie le champs à utiliser comme valeur de comparaison */
-    public get valueField() {
+    public get valueField(): string {
         return this._valueField;
     }
 
-    public get hasCache() {
+    public get hasCache(): boolean {
         return this._cache && !!this._cache.visibleList;
     }
 
@@ -232,7 +234,7 @@ export class ItemListService<T> {
      * @param items Provider de la liste des éléments de la liste.
      */
     // eslint-disable-next-line rxjs/finnish
-    public setItems$(items: any[] | Promise<any[]> | Observable<any[]>) {
+    public setItems$(items: any[] | Promise<any[]> | Observable<any[]>): Observable<unknown> {
         if (!items) {
             this.items = undefined;
             return of(null);
@@ -271,19 +273,19 @@ export class ItemListService<T> {
     }
 
     // eslint-disable-next-line rxjs/finnish
-    public setModels$(items: any[] | Promise<any[]> | Observable<any[]>) {
+    public setModels$(items: any[] | Promise<any[]> | Observable<any[]>): Observable<unknown> {
         return this.setItems$(items);
     }
 
     /** Renvoie le modèle de grouping ajouté à la liste de base par le service. Ce modèle ne modifie pas la donée, mais est jsute ajouté à l'affichage
      * @return value Modèle de grouping d'affichage de la liste.
      */
-    public get groupInfos() {
+    public get groupInfos(): IGroupInfo[] {
         return this._groupInfos;
     }
 
     // Ne pas utiliser, cette fonction retourne la liste des éléments pour l'implémentation de ngModel.
-    public getItems() {
+    public getItems(): IItemBase<T>[] {
         return this.items;
     }
 
@@ -291,7 +293,7 @@ export class ItemListService<T> {
      * @param index Index de l'élément à chercher sur la liste des éléments visibles.
      * @return Element correspondant à l'index recherché.
      */
-    public getItemFromIndex(index: number) {
+    public getItemFromIndex(index: number): IItemBase<T> {
         return this._cache.visibleList ? this._cache.visibleList[index] : null;
     }
 
@@ -299,14 +301,14 @@ export class ItemListService<T> {
      * @param item Element à chercher sur la liste des éléments visibles.
      * @return Index correspondant à l'élément recherché.
      */
-    public getItemIndex(item: IItemBase<T>) {
+    public getItemIndex(item: IItemBase<T>): number {
         return this._cache.visibleList ? this._cache.visibleList.findIndex(itm => this.compareItems(item, itm)) : -1;
     }
 
     /** Renvoie le service utilisé pour le tri de la liste
      * @return Service utilisé pour le tri.
      */
-    public getSortingService() {
+    public getSortingService(): SortingService {
         if (!this._sortingService) {
             this._sortingService = new SortingService();
         }
@@ -316,14 +318,14 @@ export class ItemListService<T> {
     /** Définit le service utilisé pour le tri de la liste
      * @param value  Service à utiliser pour le tri.
      */
-    public setSortingService(value: SortingService) {
+    public setSortingService(value: SortingService): void {
         this._sortingService = value;
     }
 
     /** Renvoie le service utilisé pour le regroupement de la liste
      * @return Service utilisé pour le regroupement.
      */
-    public getGroupingService() {
+    public getGroupingService(): GroupingService {
         if (!this._groupingService) {
             this._groupingService = new GroupingService();
         }
@@ -333,7 +335,7 @@ export class ItemListService<T> {
     /** Définit le service utilisé pour le regroupement de la liste
      * @param value Service à utiliser pour le regroupement.
      */
-    public setGroupingService(value: GroupingService) {
+    public setGroupingService(value: GroupingService): void {
         this._groupingService = value;
     }
 
@@ -342,7 +344,8 @@ export class ItemListService<T> {
      * @param textField (optional) Champs à traiter comme source du texte.
      * @return Texte à afficher pour le modèle spécifié.
      */
-    public getTextValue(value: any, textField?: string) {
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    public getTextValue(value: any, textField?: string): string {
         return ItemListService.getItemText(value, textField);
     }
 
@@ -351,7 +354,8 @@ export class ItemListService<T> {
      * @param valueField (optional) Champs à traiter comme valeur.
      * @return Valeur à comparer pour le modèle spécifié.
      */
-    public getValue(item: any, valueField?: string) {
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    public getValue(item: any, valueField?: string): unknown {
         return ItemListService.getItemValue(item, valueField);
     }
 
@@ -572,7 +576,7 @@ export class ItemListService<T> {
      * @param items Eléments à étendre.
      * @return Observable résolu par la fonction.
      */
-    public expandItem$(item: IItemTree<T>) {
+    public expandItem$(item: IItemTree<T>): Observable<IItemTree<T>> {
         return of(item).pipe(
             filter(itm => !!itm),
             switchMap(itm => this.expandingItem$ ? this.expandingItem$(itm) : of(itm)),
@@ -588,7 +592,7 @@ export class ItemListService<T> {
      * @param items Eléments à réduire.
      * @return Observable résolu par la fonction.
      */
-    public collapseItem$(item: IItemTree<T>) {
+    public collapseItem$(item: IItemTree<T>): Observable<IItemTree<T>> {
         return of(item).pipe(
             filter(itm => !!itm),
             switchMap(itm => this.collapsingItem$ ? this.collapsingItem$(itm) : of(itm)),
@@ -603,14 +607,14 @@ export class ItemListService<T> {
     /** Retourne la liste des éléments sélectionés.
      * @return Liste des éléments selectionés.
      */
-    public getSelectedItems() {
+    public getSelectedItems(): IItemBase<T>[] {
         return this.selectedList || [];
     }
 
     /** Définit la liste des éléments sélectionés.
      * @param items Liste des éléments a selectioner.
      */
-    public setSelectedItems(items: IItemBase<T>[]) {
+    public setSelectedItems(items: IItemBase<T>[]): void {
         if (this.selectedList) {
             this.selectedList.forEach(item => {
                 item.selected = false;
@@ -670,7 +674,7 @@ export class ItemListService<T> {
      * @param selected True si les éléments divent être sélectionés, False si ils doivent être déselectionés.
      * @return Observable résolu par la fonction.
      */
-    public toggleSelect$(items: IItemBase<T>[], selected: boolean) {
+    public toggleSelect$(items: IItemBase<T>[], selected: boolean): Observable<IItemBase<T>[]> {
         items = items || [];
         return iif(() => selected, this.selectItems$(items), this.unSelectItems$(items)).pipe(
             map(() => {
@@ -706,7 +710,7 @@ export class ItemListService<T> {
      * @param item Elément à sélectioner.
      * @return Observable résolu par la fonction.
      */
-    public selectItem$(item: IItemBase<T>) {
+    public selectItem$(item: IItemBase<T>): Observable<IItemBase<T>> {
         return of(item).pipe(
             filter(itm => !!itm),
             switchMap(itm => this.selectingItem$ ? this.selectingItem$(itm) : of(itm)),
@@ -725,7 +729,7 @@ export class ItemListService<T> {
      * @param item Elément à déselectioner.
      * @return Observable résolu par la fonction.
      */
-    public unSelectItem$(item: IItemBase<T>) {
+    public unSelectItem$(item: IItemBase<T>): Observable<IItemBase<T>> {
         return of(item).pipe(
             filter(itm => !!itm),
             switchMap(itm => this.unselectingItem$ ? this.unselectingItem$(itm) : of(itm)),
@@ -785,7 +789,7 @@ export class ItemListService<T> {
      * @param sortInfos Modèle de tri à appliquer.
      * @return Observable résolu par la fonction.
      */
-    public sort$(sortInfos: ISortInfos) {
+    public sort$(sortInfos: ISortInfos): Observable<IItemTree<T>[]> {
         if (!this.items) {
             throw new Error('No Items');
         }
@@ -810,7 +814,7 @@ export class ItemListService<T> {
      * @param groupInfos Modèle de groupe à appliquer.
      * @return Observable résolu par la fonction.
      */
-    public group$(groupInfos: IGroupInfo[]) {
+    public group$(groupInfos: IGroupInfo[]): Observable<IGroupInfo[]> {
         this._groupInfos = groupInfos;
         this.invalidateCache();
         this.ensureChildrenProperties(this.items);
@@ -821,7 +825,7 @@ export class ItemListService<T> {
      * @param groupInfos Modèle de groupe à retirer.
      * @return Observable résolu par la fonction.
      */
-    public ungroup$(groupInfo: IGroupInfo) {
+    public ungroup$(groupInfo: IGroupInfo): Observable<IGroupInfo> {
         const groupIndex = this._groupInfos ? this._groupInfos.findIndex(gi => gi.groupByField === groupInfo.groupByField) : -1;
         if (groupIndex >= 0) {
             this._groupInfos.splice(groupIndex, 1);
@@ -873,13 +877,13 @@ export class ItemListService<T> {
     }
 
     /** Supprime tous les caches internes. Ils seront recréés à la première demande de la portion de la liste à afficher. */
-    public invalidateCache() {
+    public invalidateCache(): void {
         this._cache = {};
         this.ensureChildrenProperties(this.items);
     }
 
     /** Efface la hauteur calculée des lignes en mode automatique */
-    public invalidateRowsHeightCache() {
+    public invalidateRowsHeightCache(): void {
         if (this._items) {
             this._items.forEach(item => item.size = undefined);
         }
@@ -999,7 +1003,7 @@ export class ItemListService<T> {
         }
     }
 
-    public ensureSelection() {
+    public ensureSelection(): IItemBase<T> {
         return this.ensureSelectedItems(this.items);
     }
 
@@ -1019,7 +1023,7 @@ export class ItemListService<T> {
      * @param regExp Expression de test sur le champs spécifié.
      * @return True si l'élément correspond aux critères de recherche.
      */
-    protected itemMatch(item: IItemBase<T>, searchField: string, regExp: RegExp) {
+    protected itemMatch(item: IItemBase<T>, searchField: string, regExp: RegExp): boolean {
         const itmTree = item as IItemTree<T>;
         if (itmTree.$items) {
             return true;
@@ -1210,7 +1214,7 @@ export class ItemListService<T> {
     }
 
     /** Efface une partie des caches  */
-    protected invalidateViewCache() {
+    protected invalidateViewCache(): void {
         delete this._cache.flatList;
         delete this._cache.visibleList;
         delete this._cache.depthMax;

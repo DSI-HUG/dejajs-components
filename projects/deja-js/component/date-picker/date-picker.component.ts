@@ -8,6 +8,7 @@
 
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { BooleanInput, coerceBooleanProperty, NumberInput } from '@angular/cdk/coercion';
+import { BreakpointObserver } from '@angular/cdk/layout';
 import { AfterContentInit } from '@angular/core';
 import { ChangeDetectionStrategy } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
@@ -79,9 +80,21 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
 
     @Input() public updateInputOn: 'change' | 'blur' | 'submit';
 
+    public get overlayContainerClass(): string {
+        let oc = 'deja-datepicker-overlay-container';
+        if (this.breakpointObserver.isMatched('(max-height: 900px)')) {
+            oc += ' under-toolbar-position';
+        }
+        if (this.breakpointObserver.isMatched('(max-height: 550px)')) {
+            oc += ' top-position';
+        }
+        return oc;
+    }
+
     @ViewChild(DejaChildValidatorDirective) private inputValidatorDirective: DejaChildValidatorDirective;
 
-    @HostBinding('class.floating') public get shouldLabelFloat() {
+    @HostBinding('class.floating')
+    public get shouldLabelFloat(): boolean {
         return this.focused || !this.empty || !!this.mask;
     }
 
@@ -112,11 +125,11 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
         this._showCurrentDateButton = coerceBooleanProperty(value);
     }
 
-    public get showCurrentDateButton() {
+    public get showCurrentDateButton(): boolean {
         return this._showCurrentDateButton;
     }
 
-    public get ngModelOptions() {
+    public get ngModelOptions(): { updateOn: 'change' | 'blur' | 'submit' } {
         return {
             updateOn: this.updateInputOn || 'blur'
         };
@@ -132,14 +145,14 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
         this._allowFreeEntry = coerceBooleanProperty(value) || null;
     }
 
-    public get allowFreeEntry() {
+    public get allowFreeEntry(): BooleanInput {
         return this._allowFreeEntry;
     }
 
     /** Mask for input */
     public _mask = [] as (string | RegExp)[];
 
-    public get mask() {
+    public get mask(): (string | RegExp)[] {
         return this._mask;
     }
 
@@ -195,7 +208,7 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
         }
     }
 
-    public get inputModel() {
+    public get inputModel(): string {
         return this._inputModel;
     }
 
@@ -204,11 +217,11 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
         this._positions = typeof value === 'string' ? DejaConnectionPositionPair.parse(value) : value;
     }
 
-    public get positions() {
+    public get positions(): DejaConnectionPositionPair[] | string {
         return this._positions;
     }
 
-    public get empty() {
+    public get empty(): boolean {
         return !this.value;
     }
 
@@ -224,7 +237,8 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
         @Optional() _parentFormGroup: FormGroupDirective,
         _defaultErrorStateMatcher: ErrorStateMatcher,
         private fm: FocusMonitor,
-        private momentDateAdapter: MomentDateAdapter
+        private momentDateAdapter: MomentDateAdapter,
+        private breakpointObserver: BreakpointObserver
     ) {
         super(_defaultErrorStateMatcher, _parentForm, _parentFormGroup, ngControl);
         if (this.ngControl) {
@@ -384,11 +398,11 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
         ).subscribe(([element]) => element.focus());
     }
 
-    public onChangeCallback = (_a?: unknown) => undefined as void;
-    public onTouchedCallback = () => undefined as void;
+    public onChangeCallback = (_a?: unknown): void => undefined;
+    public onTouchedCallback = (): void => undefined;
 
     /** unsubscribe to all Observable when component is destroyed */
-    public ngOnDestroy() {
+    public ngOnDestroy(): void {
         this.fm.stopMonitoring(this.elementRef.nativeElement);
         this.destroyed$.next();
         this.destroyed$.unsubscribe();
@@ -396,7 +410,7 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
     }
 
     /** Init mask */
-    public ngOnInit() {
+    public ngOnInit(): void {
         if (!this._format) {
             if (!this.layout || this.layout === DateComponentLayout.dateonly || this.layout === 'dateonly') {
                 this.format = 'YYYY-MM-DD';
@@ -410,7 +424,7 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
         }
     }
 
-    public ngDoCheck() {
+    public ngDoCheck(): void {
         if (this.ngControl) {
             // We need to re-evaluate this on every change detection cycle, because there are some
             // error triggers that we can't subscribe to (e.g. parent form submissions). This means
@@ -422,7 +436,7 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
     /** This method is used by the <mat-form-field> to specify the IDs that should be used for the aria-describedby attribute of your component.
      * The method has one parameter, the list of IDs, we just need to apply the given IDs to our host element.
      */
-    public setDescribedByIds(ids: string[]) {
+    public setDescribedByIds(ids: string[]): void {
         this.describedBy = ids.join(' ');
     }
 
@@ -431,13 +445,13 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
      * The method has one parameter, the MouseEvent for the click.
      * In our case we'll just focus the first <input> if the user isn't about to click an <input> anyways.
      */
-    public onContainerClick(event: MouseEvent) {
+    public onContainerClick(event: MouseEvent): void {
         if ((event.target as Element).tagName.toLowerCase() !== 'input') {
             this.elementRef.nativeElement.querySelector('input').focus();
         }
     }
 
-    public get showDropDown() {
+    public get showDropDown(): boolean {
         return this._showDropDown;
     }
 
@@ -450,7 +464,7 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
     }
 
     /** disabled property getter. */
-    public get disabled() {
+    public get disabled(): boolean {
         return this._disabled;
     }
 
@@ -462,7 +476,7 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
     }
 
     /** required property getter. */
-    public get required() {
+    public get required(): boolean {
         return this._required;
     }
 
@@ -477,7 +491,7 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
         this.changeDetectorRef.markForCheck();
     }
 
-    public get layout() {
+    public get layout(): string | DateComponentLayout {
         return this._layout;
     }
 
@@ -495,19 +509,19 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
     }
 
     /** Time property getter */
-    public get time() {
+    public get time(): BooleanInput {
         return this._time;
     }
 
     /** Method to close date-picker dialog */
-    public close() {
+    public close(): boolean {
         this._showDropDown = false;
         this.changeDetectorRef.markForCheck();
         return false;
     }
 
     /** Method to open date-picker dialog */
-    public open() {
+    public open(): void {
         this._showDropDown = true;
         this.changeDetectorRef.markForCheck();
     }
@@ -528,36 +542,36 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
     }
 
     /** From ControlValueAccessor interface */
-    public writeValue(value: Date | string) {
+    public writeValue(value: Date | string): void {
         if (value !== this.date) {
             this.dateChanged$.next(value);
         }
     }
 
     /** From ControlValueAccessor interface */
-    public registerOnChange(fn: (_a: unknown) => void) {
+    public registerOnChange(fn: (_a: unknown) => void): void {
         this.onChangeCallback = fn;
     }
 
     /** From ControlValueAccessor interface */
-    public registerOnTouched(fn: () => void) {
+    public registerOnTouched(fn: () => void): void {
         this.onTouchedCallback = fn;
     }
 
-    public setDisabledState(isDisabled: boolean) {
+    public setDisabledState(isDisabled: boolean): void {
         this.disabled = isDisabled;
     }
     // ************* End of ControlValueAccessor Implementation **************
 
     /** For reactive form. */
-    public ngAfterContentInit() {
+    public ngAfterContentInit(): void {
         if (this.inputValidatorDirective) {
             this.inputValidatorDirective.parentControl = this.ngControl;
         }
     }
 
     /** Give focus to this component */
-    public setFocus() {
+    public setFocus(): void {
         this.focus$.next();
     }
 
@@ -567,7 +581,7 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
      *
      * @param event
      */
-    public toggleDateSelector(event: Event) {
+    public toggleDateSelector(event: Event): boolean {
         if (this.disabled) {
             return undefined;
         }
@@ -587,16 +601,17 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
      *
      * @param date new value of this model
      */
-    public updateModel(date: string | Date) {
+    public updateModel(date: string | Date): void {
         if (typeof date === 'string' && !this.allowFreeEntry) { // && date.replace(/_/g, '').length === this._format.length) {
             if (date.replace(/_/g, '').length === this._format.length) { // If mask is fully filled
-                const d = this.momentDateAdapter.parse(date, this._format)?.toDate() || null;
-                if (!d) {
+                const mDate = this.momentDateAdapter.parse(date, this._format);
+                if (mDate && this.momentDateAdapter.isValid(mDate)) {
+                    date = mDate.toDate() || null;
+                } else {
                     console.warn('[DatePicker]: Invalid Date');
                     this.ngControl.control.setErrors({ invalidMask: true });
                     this.changeDetectorRef.markForCheck();
                 }
-                date = d;
                 // eslint-disable-next-line @typescript-eslint/prefer-regexp-exec
             } else if (!date.match(/[0-9]/)) { // if mask is empty - do nothing
                 return;
@@ -643,7 +658,7 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
     }
 
     /** Reset date-picker values. */
-    public reset() {
+    public reset(): void {
         // To prevent "ExpressionChangedAfterItHasBeenCheckedError"
         timer(0).pipe(
             takeUntil(this.destroyed$)

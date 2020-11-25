@@ -92,7 +92,7 @@ export class DejaTreeListDemoComponent extends Destroy {
         this.changeDetectorRef.markForCheck();
     }
 
-    public get dialogVisible() {
+    public get dialogVisible(): boolean {
         return this._dialogVisible;
     }
 
@@ -243,18 +243,18 @@ export class DejaTreeListDemoComponent extends Destroy {
     }
 
     public loadingItems() {
-        return (_query: string | RegExp, _selectedItems: IItemBase<unknown>[]) => this.countriesService.getCountries$().pipe(delay(3000));
+        return (_query: string | RegExp, _selectedItems: IItemBase<unknown>[]): Observable<Country[]> => this.countriesService.getCountries$().pipe(delay(3000));
     }
 
     public collapsingItems() {
-        return (item: IItemBase<unknown>) => {
+        return (item: IItemBase<unknown>): Observable<IItemBase<unknown>> => {
             const country = item as ICountryGroup;
             return country.loaded ? of(item) : this.confirmDialog()(item);
         };
     }
 
     public expandingItems() {
-        return (item: IItemBase<unknown>) => {
+        return (item: IItemBase<unknown>): Observable<IItemBase<unknown>> => {
             const group = item as ICountryGroup;
             if (group.loaded) {
                 return of(item);
@@ -262,7 +262,7 @@ export class DejaTreeListDemoComponent extends Destroy {
                 return this.confirmDialog()(item).pipe(
                     switchMap(itm => {
                         if (!itm) {
-                            return of(null);
+                            return of(null as IItemBase<unknown>);
                         }
 
                         of(group).pipe(
@@ -285,7 +285,7 @@ export class DejaTreeListDemoComponent extends Destroy {
     }
 
     public confirmDialog() {
-        return (item: IItemBase<unknown>) => {
+        return (item: IItemBase<unknown>): Observable<IItemBase<unknown>> => {
             this.dialogVisible = true;
             return from(this.dialogResponse$).pipe(
                 take(1),
@@ -318,7 +318,7 @@ export class DejaTreeListDemoComponent extends Destroy {
         });
     }
 
-    public imageLoaded(item: IViewPortItem) {
+    public imageLoaded(item: IViewPortItem): void {
         const itemExt = item as IExtendedViewPortItem;
         if (!itemExt.loaded) {
             itemExt.loaded = true;
@@ -326,26 +326,26 @@ export class DejaTreeListDemoComponent extends Destroy {
         }
     }
 
-    public multiselectModelChange(countries: Country[]) {
+    public multiselectModelChange(countries: Country[]): void {
         this.multiselectModel = countries ? countries : null;
     }
 
-    public onFilterTemplateClicked(where: string) {
+    public onFilterTemplateClicked(where: string): void {
         alert(`${where} clicked`);
     }
 
-    public onItemDragStart(event: IDejaDragEvent) {
+    public onItemDragStart(event: IDejaDragEvent): void {
         event.dragInfo.country = event.dragObject;
     }
 
-    public onDivDragOver(event: IDejaDragEvent) {
+    public onDivDragOver(event: IDejaDragEvent): void {
         // eslint-disable-next-line no-prototype-builtins
         if (event.dragInfo.hasOwnProperty('country')) {
             event.preventDefault();
         }
     }
 
-    public onDivDropEvent(event: IDejaDragEvent) {
+    public onDivDropEvent(event: IDejaDragEvent): void {
         // eslint-disable-next-line no-prototype-builtins
         if (event.dragInfo.hasOwnProperty('country')) {
             const country = event.dragInfo.country as Country;
@@ -354,7 +354,7 @@ export class DejaTreeListDemoComponent extends Destroy {
         }
     }
 
-    public getDragContext() {
+    public getDragContext(): IDejaMouseDraggableContext {
         return {
             target: '[ddid]',
             className: 'item-base-cursor',
@@ -365,7 +365,7 @@ export class DejaTreeListDemoComponent extends Destroy {
         } as IDejaMouseDraggableContext;
     }
 
-    public getDropContext(dropArea: HTMLElement) {
+    public getDropContext(dropArea: HTMLElement): IDejaMouseDroppableContext {
         return {
             dragEnter: _dragContext => ({
                 width: 200,

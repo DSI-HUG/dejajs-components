@@ -17,7 +17,7 @@ export class VersionService {
 
     public dejajsCoreVersion = dejaJsCorePkg.version;
 
-    public init() {
+    public init(): void {
         document.body.setAttribute('dejajs-core-version', this.dejajsCoreVersion);
     }
 }

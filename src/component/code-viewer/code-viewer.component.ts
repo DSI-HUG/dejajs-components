@@ -29,7 +29,7 @@ export class DejaCodeViewerComponent implements AfterViewChecked {
      * Re-init prismjs afterViewChecked.
      * It's a quick fix to bind this component in any cases.
      */
-    public ngAfterViewChecked() {
+    public ngAfterViewChecked(): void {
         // console.log('ok');
         if (!this.initialised) {
             // console.warn('not initialised');

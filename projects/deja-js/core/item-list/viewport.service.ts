@@ -73,15 +73,15 @@ export class ViewPortService extends Destroy {
     private viewPort: IViewPort;
     private ignoreScrollCount = 0;
 
-    public get mode() {
+    public get mode(): ViewportMode {
         return this._mode;
     }
 
-    public get itemsSize() {
+    public get itemsSize(): number {
         return this._itemsSize;
     }
 
-    public get direction() {
+    public get direction(): ViewportDirection {
         return this._direction;
     }
 
@@ -599,15 +599,15 @@ export class ViewPortService extends Destroy {
         ).subscribe(viewPort => this.viewPort = viewPort);
     }
 
-    public deleteSizeCache() {
+    public deleteSizeCache(): void {
         this.deleteSizeCache$.next(true);
     }
 
-    public clear() {
+    public clear(): void {
         this.viewPortResult$.next(this.emptyViewPort);
     }
 
-    public refresh(params?: IViewPortRefreshParams) {
+    public refresh(params?: IViewPortRefreshParams): void {
         this.refresh$.next(params || null);
     }
 }

@@ -53,14 +53,14 @@ export class DejaPopupAdvancedComponent extends DejaPopupBase implements AfterVi
         }
     }
 
-    public ngOnInit() {
+    public ngOnInit(): void {
         super.ngOnInit();
         if (this.config.contentComponentRef) {
             this.componentPortal = new ComponentPortal(this.config.contentComponentRef, undefined, this.injector);
         }
     }
 
-    public ngAfterViewInit() {
+    public ngAfterViewInit(): void {
         this.left = this.elRef.nativeElement.offsetLeft;
         this.top = this.elRef.nativeElement.offsetTop;
 
@@ -71,7 +71,7 @@ export class DejaPopupAdvancedComponent extends DejaPopupBase implements AfterVi
         }
     }
 
-    public doAction(action: DejaPopupAction) {
+    public doAction(action: DejaPopupAction): void {
         this.actionSelected = action;
         const actionName = typeof action === 'string' ? action : action.name;
 
@@ -102,13 +102,13 @@ export class DejaPopupAdvancedComponent extends DejaPopupBase implements AfterVi
         }
     }
 
-    public goFullScreen() {
+    public goFullScreen(): void {
         this.isFullscreen = true;
         this.dialogRef.updatePosition({ top: '0', left: '0' });
         this.dialogRef.updateSize('100vw', '100vh');
     }
 
-    public exitFullScreen() {
+    public exitFullScreen(): void {
         this.isFullscreen = false;
 
         const updatedWidth = (!this.config.width || this.config.width.length < 1) ? 'auto' : this.config.width;

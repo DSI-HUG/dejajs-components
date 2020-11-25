@@ -253,7 +253,7 @@ export class MaterialColors {
         }
     } as { [color: string]: { [nuance: string]: string }};
 
-    public get colors() {
+    public get colors(): MaterialColor[] {
         if (!this._colors) {
             this._colors = [] as MaterialColor[];
             Object.keys(this.palet).forEach(baseColorName => {
@@ -271,11 +271,11 @@ export class MaterialColors {
         return this._colors;
     }
 
-    public getColor(name: string) {
+    public getColor(name: string): {[nuance: string]: string} {
         return this.palet[name];
     }
 
-    public getPalet(subColor: string) {
+    public getPalet(subColor: string): Color[] {
         if (!this.palettes) {
             this.palettes = {};
             Object.keys(this.palet).forEach(baseColorName => {
@@ -291,7 +291,7 @@ export class MaterialColors {
         return this.palettes[subColor];
     }
 
-    public getColorFromText(text: string) {
+    public getColorFromText(text: string): MaterialColor {
         let sum = 0;
         // eslint-disable-next-line no-loops/no-loops
         for (let i = 0; i < text.length; i++) {

@@ -27,8 +27,8 @@ import { ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Destroy } from '@deja-js/core';
 import { cloneDeep } from 'lodash';
-import { Subscription, timer } from 'rxjs';
-import { first, take, takeUntil } from 'rxjs/operators';
+import { from, Subscription, timer } from 'rxjs';
+import { delay, first, take, takeUntil, tap } from 'rxjs/operators';
 
 import { DejaEditorService } from './deja-editor.service';
 
@@ -82,7 +82,7 @@ export class DejaEditorComponent extends Destroy implements OnChanges, AfterView
         this._readonly = coerceBooleanProperty(value);
     }
 
-    public get readonly() {
+    public get readonly(): boolean {
         return this._readonly;
     }
 
@@ -91,7 +91,7 @@ export class DejaEditorComponent extends Destroy implements OnChanges, AfterView
         this._inline = coerceBooleanProperty(value);
     }
 
-    public get inline() {
+    public get inline(): boolean {
         return this._inline;
     }
 
@@ -108,18 +108,18 @@ export class DejaEditorComponent extends Destroy implements OnChanges, AfterView
         super();
     }
 
-    public get value() {
+    public get value(): string {
         return this._value;
     }
 
     @Input()
-    public set value(v) {
+    public set value(v: string) {
         if (v !== this._value) {
             this._value = v;
         }
     }
 
-    public ngOnChanges(changes: SimpleChanges) {
+    public ngOnChanges(changes: SimpleChanges): void {
         if (changes.readonly && this.instance) {
             this.instance.setReadOnly(changes.readonly.currentValue);
         }
@@ -128,7 +128,7 @@ export class DejaEditorComponent extends Destroy implements OnChanges, AfterView
     /**
      * On component destroy
      */
-    public ngOnDestroy() {
+    public ngOnDestroy(): void {
         super.ngOnDestroy();
 
         this.focus.complete();
@@ -167,22 +167,19 @@ export class DejaEditorComponent extends Destroy implements OnChanges, AfterView
     /**
      * On component view init
      */
-    public ngAfterViewInit() {
-        void this.initializer.initDejaEditorLib().then(() => {
-            this.ckeditorInit(cloneDeep(this.config) || {});
-            if (!this.destroyed$.closed) {
-                // Effectively display the editor even if parents component ChangeDetectionStrategy is OnPush
-                timer(0).pipe(
-                    takeUntil(this.destroyed$)
-                ).subscribe(() => this.changeDetectorRef.markForCheck());
-            }
-        });
+    public ngAfterViewInit(): void {
+        from(this.initializer.initDejaEditorLib()).pipe(
+            take(1),
+            tap(() => this.ckeditorInit(cloneDeep(this.config) || {})),
+            delay(0),
+            takeUntil(this.destroyed$)
+        ).subscribe(() => this.changeDetectorRef.markForCheck());
     }
 
     /**
      * Value update process
      */
-    public updateValue() {
+    public updateValue(): void {
         this.zone.run(() => {
             let value = this.instance.getData();
             if (!value) {
@@ -197,7 +194,7 @@ export class DejaEditorComponent extends Destroy implements OnChanges, AfterView
         });
     }
 
-    public textAreaChange() {
+    public textAreaChange(): void {
         this.zone.run(() => {
             const value = this.host.nativeElement.value;
 
@@ -209,7 +206,8 @@ export class DejaEditorComponent extends Destroy implements OnChanges, AfterView
     /**
      * CKEditor init
      */
-    public ckeditorInit(config: any) {
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    public ckeditorInit(config: any): void {
         if (typeof CKEDITOR === 'undefined') {
             console.warn('CKEditor 4.x is missing (http://ckeditor.com/)');
         } else {
@@ -280,7 +278,7 @@ export class DejaEditorComponent extends Destroy implements OnChanges, AfterView
     /**
      * Implements ControlValueAccessor
      */
-    public writeValue(value: any) {
+    public writeValue(value: string): void {
         this._value = value;
         if (!this.destroyed$.closed) {
             timer(0).pipe( // See DEJS-728 that explain usage of async method
@@ -301,20 +299,20 @@ export class DejaEditorComponent extends Destroy implements OnChanges, AfterView
     }
 
     // eslint-disable-next-line @typescript-eslint/no-empty-function
-    public onChange(_x: unknown) { }
+    public onChange(_x: unknown): void { }
 
     // eslint-disable-next-line @typescript-eslint/no-empty-function
-    public onTouched() { }
+    public onTouched(): void { }
 
-    public registerOnChange(fn: (_a: unknown) => void) {
+    public registerOnChange(fn: (_a: unknown) => void): void {
         this.onChange = fn;
     }
 
-    public registerOnTouched(fn: () => void) {
+    public registerOnTouched(fn: () => void): void {
         this.onTouched = fn;
     }
 
-    public setDisabledState(isDisabled: boolean) {
+    public setDisabledState(isDisabled: boolean): void {
         this.readonly = isDisabled;
         this.disabled.next(isDisabled);
         if (this._ready) {

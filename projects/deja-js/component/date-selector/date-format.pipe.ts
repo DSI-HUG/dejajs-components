@@ -15,7 +15,7 @@ export class DejaDateFormatPipe implements PipeTransform {
 
     public constructor(private momentDateAdapter: MomentDateAdapter) { }
 
-    public transform(date: Date, format: string) {
+    public transform(date: Date, format: string): string | Date {
         return this.momentDateAdapter.deserialize(date)?.format(format) || date;
     }
 }

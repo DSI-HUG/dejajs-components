@@ -252,7 +252,6 @@ module.exports = {
                 '@typescript-eslint/no-unsafe-assignment': 'off',
                 '@typescript-eslint/no-unsafe-member-access': 'off',
                 '@typescript-eslint/no-unsafe-call': 'off',
-                '@typescript-eslint/explicit-module-boundary-types': 'off',
                 'no-shadow': 'off',
                 '@typescript-eslint/no-shadow': ['error'],
                 'max-len': 'off',

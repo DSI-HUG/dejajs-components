@@ -188,7 +188,8 @@ export class DejaSnackbarComponent extends Destroy implements OnInit, AfterViewI
      *
      * @param event
      */
-    @HostListener('window:resize', []) public onResize() {
+    @HostListener('window:resize', [])
+    public onResize(): void {
         this.setNewWidth();
     }
 
@@ -282,12 +283,12 @@ export class DejaSnackbarComponent extends Destroy implements OnInit, AfterViewI
         this.onAnimationDone.emit(event);
     }
 
-    protected increaseElevation() {
+    protected increaseElevation(): void {
         const zIndex = window.getComputedStyle(this.host).zIndex;
         this.host.style.zIndex = (+zIndex + 1).toString();
     }
 
-    protected decreaseElevation() {
+    protected decreaseElevation(): void {
         const zIndex = window.getComputedStyle(this.host).zIndex;
         this.host.style.zIndex = (+zIndex - 1).toString();
     }

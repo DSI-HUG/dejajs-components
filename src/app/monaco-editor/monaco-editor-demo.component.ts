@@ -38,7 +38,7 @@ export class DejaMonacoEditorDemoComponent extends Destroy implements OnInit {
         super();
     }
 
-    public ngOnInit() {
+    public ngOnInit(): void {
         this.fileService.getFile$('xmlFile.xml').pipe(
             takeUntil(this.destroyed$)
         ).subscribe(val => this.xmlContent = val);
@@ -58,15 +58,15 @@ export class DejaMonacoEditorDemoComponent extends Destroy implements OnInit {
         this.updateLanguage('xml');
     }
 
-    public onValueChange() {
+    public onValueChange(): void {
         // console.log('Value changed');
     }
 
-    public onValueToCompareChange() {
+    public onValueToCompareChange(): void {
         // console.log('ValueToCompare changed');
     }
 
-    public updateLanguage(lang: string) {
+    public updateLanguage(lang: string): void {
         switch (lang) {
             case 'json':
                 this.dynamicLanguage = lang;

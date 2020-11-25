@@ -67,7 +67,7 @@ export class DejaRangeDemoComponent {
      *
      * @memberOf DejaRangeDemoComponent
      */
-    public computeRangeFromWeight() {
+    public computeRangeFromWeight(): void {
         let min = 0;
 
         this.weights = this.weights
@@ -93,7 +93,7 @@ export class DejaRangeDemoComponent {
      *
      * @memberOf DejaRangeDemoComponent
      */
-    public stepFn(event: IStepRangeEvent) {
+    public stepFn(event: IStepRangeEvent): number {
 
         const weight = event.ranges[event.index] as IWeight;
 
@@ -118,7 +118,7 @@ export class DejaRangeDemoComponent {
         return newRangeMax;
     }
 
-    public remove(index: number) {
+    public remove(index: number): void {
         if (this.weights.length >= 2) {
 
             const weight = this.weights
@@ -138,7 +138,7 @@ export class DejaRangeDemoComponent {
         }
     }
 
-    public add(index: number) {
+    public add(index: number): void {
         const weight = this.weights
             .find((_w: Weight, i: number) => index === i);
 

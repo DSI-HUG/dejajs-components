@@ -22,7 +22,7 @@ export class DejaItemComponent {
         this._selected = coerceBooleanProperty(value);
     }
 
-    public get selected() {
+    public get selected(): BooleanInput {
         return this._selected;
     }
 

@@ -135,7 +135,7 @@ export class DejaEditableDirective extends Destroy implements ControlValueAccess
     }
 
     /** Retourne une valeur indiquant si le contenu édité est obligatoire. Si la valeur est 'true' la sortie du mode édition ne sera pas possible tant qu'un contenu n'est pas ajouté. */
-    public get mandatory() {
+    public get mandatory(): BooleanInput {
         return this._mandatory;
     }
 
@@ -146,7 +146,7 @@ export class DejaEditableDirective extends Destroy implements ControlValueAccess
     }
 
     /** Retourne une valeur indiquant si le contenu édité est multiligne */
-    public get multiline() {
+    public get multiline(): BooleanInput {
         return this._multiline;
     }
 
@@ -160,7 +160,7 @@ export class DejaEditableDirective extends Destroy implements ControlValueAccess
         }
     }
 
-    public get disabled() {
+    public get disabled(): BooleanInput {
         return this.control?.disabled || this._disabled;
     }
 
@@ -171,7 +171,7 @@ export class DejaEditableDirective extends Destroy implements ControlValueAccess
     }
 
     /** Retourne une valeur indiquant si l'édition est activée. */
-    public get editMode() {
+    public get editMode(): BooleanInput {
         return this._editMode;
     }
 
@@ -185,7 +185,7 @@ export class DejaEditableDirective extends Destroy implements ControlValueAccess
     }
 
     /** Retourne une valeur indiquant si l'élément est en édition. */
-    public get inEdition() {
+    public get inEdition(): BooleanInput {
         return this._inEdition;
     }
 
@@ -204,37 +204,37 @@ export class DejaEditableDirective extends Destroy implements ControlValueAccess
     }
 
     // From ControlValueAccessor interface
-    public writeValue(value: string) {
+    public writeValue(value: string): void {
         this.model = value;
         this.refreshView();
     }
 
     // From ControlValueAccessor interface
-    public registerOnChange(fn: (_a: unknown) => void) {
+    public registerOnChange(fn: (_a: unknown) => void): void {
         this.onChangeCallback = fn;
     }
 
     // From ControlValueAccessor interface
-    public registerOnTouched(fn: () => void) {
+    public registerOnTouched(fn: () => void): void {
         this.onTouchedCallback = fn;
     }
 
-    public setDisabledState(isDisabled: boolean) {
+    public setDisabledState(isDisabled: boolean): void {
         this.disabled = isDisabled;
     }
     // ************* End of ControlValueAccessor Implementation **************
 
-    public ngOnInit() {
+    public ngOnInit(): void {
         this.model = this.element.innerHTML;
     }
 
     /** Donne le focus à la zone d'édition. */
-    public focus() {
+    public focus(): void {
         this.element.focus();
     }
 
     /** Place toute la zone d'édition en selectioné. */
-    public selectAll() {
+    public selectAll(): void {
         const range = document.createRange();
         range.selectNodeContents(this.element);
         const sel = window.getSelection();
@@ -243,12 +243,12 @@ export class DejaEditableDirective extends Destroy implements ControlValueAccess
     }
 
     /** Active la zone d'édition. */
-    public edit(selectOnFocus?: boolean) {
+    public edit(selectOnFocus?: boolean): void {
         this.edit$.next([!this.disabled, selectOnFocus]);
     }
 
-    public onTouchedCallback = () => undefined as void;
-    public onChangeCallback = (_a?: unknown) => undefined as void;
+    public onTouchedCallback = (): void => undefined;
+    public onChangeCallback = (_a?: unknown): void => undefined;
 
     private isChildElement(element: HTMLElement) {
         let parentElement = element;

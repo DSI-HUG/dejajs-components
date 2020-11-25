@@ -7,7 +7,7 @@
  */
 
 export class StringUtils {
-    public static getLastWord(from: string, cursorPosition: number) {
+    public static getLastWord(from: string, cursorPosition: number): string {
         if (!from) {
             return null;
         }
@@ -27,12 +27,7 @@ export class StringUtils {
         return stringArray[stringArray.length - 1];
     }
 
-    public static insert(
-        from: string,
-        newValue: string,
-        cursorStartPosition: number,
-        cursorEndPosition: number
-    ) {
+    public static insert(from: string, newValue: string, cursorStartPosition: number, cursorEndPosition: number): { value: string; newStartPosition: number; newEndPosition: number } {
         if (cursorStartPosition === cursorEndPosition) {
             const result = {
                 value:

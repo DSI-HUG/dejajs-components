@@ -73,14 +73,14 @@ export class SplitAreaDirective implements OnInit, OnDestroy {
     /**
      * Lifecycle hook that is called after data-bound properties of a directive are initialized.
      */
-    public ngOnInit() {
+    public ngOnInit(): void {
         this.split.addArea(this, this._order, this._size, this._minSizePixel);
     }
 
     /**
      * Lock the events
      */
-    public lockEvents() {
+    public lockEvents(): void {
         this.eventsLockFct.push(this.renderer.listen(this.elementRef.nativeElement, 'selectstart', () => false));
         this.eventsLockFct.push(this.renderer.listen(this.elementRef.nativeElement, 'dragstart', () => false));
     }
@@ -88,7 +88,7 @@ export class SplitAreaDirective implements OnInit, OnDestroy {
     /**
      * Unlock the events
      */
-    public unlockEvents() {
+    public unlockEvents(): void {
         // eslint-disable-next-line no-loops/no-loops
         while (this.eventsLockFct.length > 0) {
             const fct = this.eventsLockFct.pop();
@@ -103,14 +103,14 @@ export class SplitAreaDirective implements OnInit, OnDestroy {
      * @param key style key
      * @param value style value
      */
-    public setStyle(key: string, value: unknown) {
+    public setStyle(key: string, value: unknown): void{
         void (value === null || value === undefined ? this.renderer.removeStyle(this.elementRef.nativeElement, key) : this.renderer.setStyle(this.elementRef.nativeElement, key, value));
     }
 
     /**
      * Lifecycle hook that is called when a directive, pipe or service is destroyed.
      */
-    public ngOnDestroy() {
+    public ngOnDestroy(): void {
         this.split.removeArea(this);
     }
 }

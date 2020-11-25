@@ -39,7 +39,7 @@ export class DejaTilesDemoComponent implements OnInit {
             defaultIfEmpty([]));
     }
 
-    public ngOnInit() {
+    public ngOnInit(): void {
         let x1 = 0;
         let y1 = 0;
         let x2 = 0;
@@ -89,7 +89,7 @@ export class DejaTilesDemoComponent implements OnInit {
             reduce((acc: DejaTile[], cur: DejaTile) => [...acc, cur], []));
     }
 
-    public getDragContext() {
+    public getDragContext(): IDejaMouseDraggableContext {
         return {
             target: 'deja-tile',
             className: 'deja-tile-cursor',
@@ -109,7 +109,7 @@ export class DejaTilesDemoComponent implements OnInit {
         } as IDejaMouseDraggableContext;
     }
 
-    public getDropContext(dropArea: HTMLElement) {
+    public getDropContext(dropArea: HTMLElement): IDejaMouseDroppableContext {
         return {
             dragEnter: _dragContext => ({
                 width: 200,
@@ -123,7 +123,7 @@ export class DejaTilesDemoComponent implements OnInit {
         } as IDejaMouseDroppableContext;
     }
 
-    public onContentAdding(event: IDejaTilesAddEvent) {
+    public onContentAdding(event: IDejaTilesAddEvent): void {
         this.message$.next({
             title: 'Tiles added',
             content: `${event.added.length} tiles added.`,
@@ -139,7 +139,7 @@ export class DejaTilesDemoComponent implements OnInit {
         event.preventDefault();
     }
 
-    public onContentRemoving(event: IDejaTilesRemoveEvent) {
+    public onContentRemoving(event: IDejaTilesRemoveEvent): void {
         this.message$.next({
             title: 'Tiles deleted',
             content: `${event.removed.length} tiles deleted.`,

@@ -168,12 +168,12 @@ export class Color {
         this._a = a;
     }
 
-    public static equals(c1: Color, c2: Color) {
+    public static equals(c1: Color, c2: Color): boolean {
         return !c1 === !c2 && !c1.isEmpty() && c1.r === c2.r && c1.g === c2.g && c1.b === c2.b && c1.a === c2.a;
     }
 
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    public static fromHSL(h: number, s: number, l: number) {
+    public static fromHSL(h: number, s: number, l: number): Color {
         let r: number;
         let g: number;
         let b: number;
@@ -215,7 +215,7 @@ export class Color {
     /**
      * @param hex hexadecimal color value, exemple: #127bdc #FFF #127bdc56
      */
-    public static fromHex(hex: string) {
+    public static fromHex(hex: string): Color {
         if (!hex || hex.length < 3) {
             return new Color();
         }
@@ -255,7 +255,7 @@ export class Color {
         return new Color(r, g, b, a);
     }
 
-    public static parse(color: string) {
+    public static parse(color: string): Color {
         if (!color || color.length === 0) {
             return new Color();
         } else if (Color.COLOR_NAMES[color]) {
@@ -282,23 +282,23 @@ export class Color {
         }
     }
 
-    public get r() {
+    public get r(): number {
         return this._r;
     }
 
-    public get g() {
+    public get g(): number {
         return this._g;
     }
 
-    public get b() {
+    public get b(): number {
         return this._b;
     }
 
-    public get a() {
+    public get a(): number {
         return this._a;
     }
 
-    public get bestTextColor() {
+    public get bestTextColor(): Color {
         if (this.isEmpty()) {
             return new Color();
         }
@@ -307,7 +307,7 @@ export class Color {
         return new Color(d, d, d);
     }
 
-    public get grayScale() {
+    public get grayScale(): Color {
         if (this.isEmpty()) {
             return new Color();
         }
@@ -315,15 +315,15 @@ export class Color {
         return new Color(g, g, g, this.a);
     }
 
-    public isEmpty() {
+    public isEmpty(): boolean {
         return this.r === undefined || this.g === undefined || this.b === undefined;
     }
 
-    public clone() {
+    public clone(): Color {
         return new Color(this.r, this.g, this.b, this.a);
     }
 
-    public toHex() {
+    public toHex(): string {
         const toHex = (d: number) => {
             const s = Number(d).toString(16);
             return `0${s}`.slice(-2).toUpperCase();

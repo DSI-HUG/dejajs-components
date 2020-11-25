@@ -63,7 +63,7 @@ export class DejaSidenavComponent extends Destroy implements OnInit {
         });
     }
 
-    public ngOnInit() {
+    public ngOnInit(): void {
         // Initialize
         this.title = this.getActivatedRouteLastChild().data.title;
 

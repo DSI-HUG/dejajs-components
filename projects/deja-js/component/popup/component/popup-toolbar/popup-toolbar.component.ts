@@ -77,7 +77,7 @@ export class DejaPopupToolbarComponent {
         this.defaultActions = [this.buttonClose];
     }
 
-    public doEmit(action: DejaPopupAction, event?: Event) {
+    public doEmit(action: DejaPopupAction, event?: Event): void {
         if (action.name === this.buttonFullscreen.name || action.name === this.buttonFullscreenExit.name) {
             this.toggleFullScreenButton();
         }
@@ -89,7 +89,7 @@ export class DejaPopupToolbarComponent {
         }
     }
 
-    public toggleFullScreenButton() {
+    public toggleFullScreenButton(): boolean {
         this.isFullScreen = !this.isFullScreen;
         let formerButton: DejaPopupAction;
         let newButton;

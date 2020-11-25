@@ -43,7 +43,7 @@ export class DejaDatePickerDemoComponent implements OnInit {
     public theDate2: Date;
     public theDate3: Date;
 
-    public ngOnInit() {
+    public ngOnInit(): void {
         const now: Date = new Date();
         this.dateMin = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 7);
         this.dateMax = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -52,11 +52,11 @@ export class DejaDatePickerDemoComponent implements OnInit {
         console.log(this.dateMax);
     }
 
-    public dateChange(date: Date) {
+    public dateChange(date: Date): void {
         console.log('dateChange', date);
     }
 
-    public timeChange(date: Date) {
+    public timeChange(date: Date): void {
         console.log('timeChange', date);
     }
 }

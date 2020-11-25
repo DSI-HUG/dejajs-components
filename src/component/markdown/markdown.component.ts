@@ -55,7 +55,7 @@ export class DejaMarkdownComponent extends Destroy implements AfterViewChecked {
     private _html: SafeHtml;
     private _converter: Showdown.Converter;
 
-    public get html() {
+    public get html(): SafeHtml {
         return this._html;
     }
 
@@ -65,7 +65,7 @@ export class DejaMarkdownComponent extends Destroy implements AfterViewChecked {
         this._converter.setOption('tables', true);
     }
 
-    public ngAfterViewChecked() {
+    public ngAfterViewChecked(): void {
         if (!this._initialised) {
             Prism.highlightAll(false, () => {
                 this._initialised = true;

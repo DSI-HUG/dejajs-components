@@ -28,7 +28,7 @@ export class DejaPopupTrayComponent implements OnInit {
         public dialogSrv: DejaPopupService
     ) { }
 
-    public ngOnInit() {
+    public ngOnInit(): void {
 
         this.dialogs$ = from(this.dialogSrv.afterOpened).pipe(
             merge(this.dialogSrv.dejaPopupCom$.pipe(
@@ -50,7 +50,7 @@ export class DejaPopupTrayComponent implements OnInit {
 
     }
 
-    public minify(action: DejaPopupAction) {
+    public minify(action: DejaPopupAction): boolean {
         const el = document.querySelector<HTMLElement>(action.panelClass);
         if (!el) {
             return false;
@@ -60,7 +60,7 @@ export class DejaPopupTrayComponent implements OnInit {
         return undefined;
     }
 
-    public maxify(action: DejaPopupAction) {
+    public maxify(action: DejaPopupAction): boolean {
         const el = document.querySelector<HTMLElement>(action.panelClass);
         if (!el) {
             return false;
@@ -70,7 +70,7 @@ export class DejaPopupTrayComponent implements OnInit {
         return undefined;
     }
 
-    public doAction(action: DejaPopupAction) {
+    public doAction(action: DejaPopupAction): boolean {
         if (action.name === 'toolbar-minify') {
             this.minify(action);
         } else if (action.name === 'toolbar-fullscreen') {
@@ -78,14 +78,15 @@ export class DejaPopupTrayComponent implements OnInit {
         } else {
             this.dialogSrv.dejaPopupCom$.next(action);
         }
+        return undefined;
     }
 
-    public closeAll() {
+    public closeAll(): void {
         this.dialogSrv.closeAll();
         this.refresh();
     }
 
-    public minimizeAll() {
+    public minimizeAll(): void {
         this.dialogSrv.openDialogs.forEach((d: MatDialogRef<DejaPopupBase>) => {
             const a = new DejaPopupAction('minify-all', 'popup-tray');
             d.componentInstance.isMinified = true;
@@ -94,7 +95,7 @@ export class DejaPopupTrayComponent implements OnInit {
         });
     }
 
-    public showAll() {
+    public showAll(): void {
         this.dialogSrv.openDialogs.forEach((d: MatDialogRef<DejaPopupBase>) => {
             const a = new DejaPopupAction('show-all', 'popup-tray');
             d.componentInstance.isMinified = false;

@@ -25,7 +25,7 @@ export class DummyComponent {
         public materialColors: MaterialColors
     ) { }
 
-    public onColorPickerChange(event: IColorEvent) {
+    public onColorPickerChange(event: IColorEvent): void {
         const action = new DejaPopupAction('color-change', 'ground-control');
         action.data = event;
         this.config.dejaPopupCom$.next(action);

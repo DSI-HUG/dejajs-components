@@ -8,7 +8,7 @@
 
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Optional, Output } from '@angular/core';
 import { IDejaChipsComponentCloseEvent } from '@deja-js/component/chips';
-import { IDejaDragEvent, IDejaDropEvent } from '@deja-js/component/dragdrop';
+import { IDejaDragContext, IDejaDragEvent, IDejaDropContext, IDejaDropEvent } from '@deja-js/component/dragdrop';
 import { DejaClipboardService } from '@deja-js/core';
 
 import { IDejaGridColumn } from '../data-grid-column/data-grid-column';
@@ -31,7 +31,7 @@ export class DejaGridGroupAreaComponent {
     private groupGroupKey = 'deja-grid-group';
 
     /** Revoie le modèle de groupe qui représente l'ensemble des colonnes déposées dans le composant */
-    public get groups() {
+    public get groups(): IDejaGridColumn[] {
         return this._groups;
     }
 
@@ -43,7 +43,7 @@ export class DejaGridGroupAreaComponent {
 
     public constructor(private changeDetectorRef: ChangeDetectorRef, @Optional() private clipboardService: DejaClipboardService) { }
 
-    public getDragContext(group: IDejaGridColumn) {
+    public getDragContext(group: IDejaGridColumn): IDejaDragContext {
         if (!this.clipboardService) {
             return null;
         }
@@ -59,10 +59,10 @@ export class DejaGridGroupAreaComponent {
             dragstartcallback: (event: IDejaDragEvent) => {
                 event.dragInfo[this.groupGroupKey] = group;
             }
-        };
+        } as IDejaDragContext;
     }
 
-    public getDropContext() {
+    public getDropContext(): IDejaDropContext {
         if (!this.clipboardService) {
             return null;
         }
@@ -78,7 +78,7 @@ export class DejaGridGroupAreaComponent {
             evt.preventDefault();
         };
 
-        const dragcallback = (event: IDejaDropEvent) => {
+        const dragcallback = (event: IDejaDropEvent): void => {
             // eslint-disable-next-line no-prototype-builtins
             if (event.dragInfo.hasOwnProperty(this.columnGroupKey)) {
                 const sourceColumn = event.dragInfo[this.columnGroupKey] as IDejaGridColumn;
@@ -153,10 +153,10 @@ export class DejaGridGroupAreaComponent {
 
                 this.changeDetectorRef.markForCheck();
             }
-        };
+        } as IDejaDropContext;
     }
 
-    public removeGroup(event: IDejaChipsComponentCloseEvent) {
+    public removeGroup(event: IDejaChipsComponentCloseEvent): boolean {
         this.groupRemoved.emit(event);
         event.stopPropagation();
         return false;

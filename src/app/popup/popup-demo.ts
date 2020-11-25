@@ -61,7 +61,7 @@ export class DejaPopupDemoComponent extends Destroy {
         ).subscribe();
     }
 
-    public askConfirmation1() {
+    public askConfirmation1(): void {
         const butSave = new DejaPopupButton('save', 'Save', 'save');
         const butCancel = new DejaPopupButton('cancel', 'Cancel', 'cancel');
         this.dejaPopupService.openInline('Inscription à la formation', 'Etes-vous sure de vouloir faire cela ?', [butSave, butCancel]).pipe(
@@ -71,7 +71,7 @@ export class DejaPopupDemoComponent extends Destroy {
         });
     }
 
-    public askConfirmation2() {
+    public askConfirmation2(): void {
 
         const config = new DejaPopupConfig();
 
@@ -98,7 +98,7 @@ export class DejaPopupDemoComponent extends Destroy {
         });
     }
 
-    public askConfirmationCustom() {
+    public askConfirmationCustom(): void {
 
         const config = new DejaPopupConfig();
         config.data = { test: 'abcde' };
@@ -119,7 +119,7 @@ export class DejaPopupDemoComponent extends Destroy {
         });
     }
 
-    public showUrlImg() {
+    public showUrlImg(): void {
         const config = new DejaPopupConfig();
         config.height = '600px';
         config.width = '800px';
@@ -130,7 +130,7 @@ export class DejaPopupDemoComponent extends Destroy {
         });
     }
 
-    public showUrlPdf(conf?: DejaPopupConfig<unknown>) {
+    public showUrlPdf(conf?: DejaPopupConfig<unknown>): void {
         if (!conf) {
             conf = new DejaPopupConfig();
         }
@@ -147,14 +147,14 @@ export class DejaPopupDemoComponent extends Destroy {
         });
     }
 
-    public showUrlPdfFullscreen() {
+    public showUrlPdfFullscreen(): void {
         const conf = new DejaPopupConfig();
         conf.fullscreen = true;
         // conf.buttonFullscreenExit = false;
         this.showUrlPdf(conf);
     }
 
-    public useAdvancedComponent() {
+    public useAdvancedComponent(): void {
         const conf = new DejaPopupConfig();
         conf.actions = [
             new DejaPopupButton('close', 'Close', 'close')
@@ -174,7 +174,7 @@ export class DejaPopupDemoComponent extends Destroy {
         });
     }
 
-    public showPopUp() {
+    public showPopUp(): void {
         const config = new DejaPopupConfig();
         config.title = `Movable ${DejaPopupConfig.dialogCount + 1}`;
         config.content = '<h2>Movable Popup No Modal</h2>';
@@ -197,7 +197,7 @@ export class DejaPopupDemoComponent extends Destroy {
         });
     }
 
-    public showPopUpPdf() {
+    public showPopUpPdf(): void {
         const config = new DejaPopupConfig();
         config.title = `Pdf ${DejaPopupConfig.dialogCount}`;
         config.url = this.dummyPdfUrl;
@@ -233,7 +233,7 @@ export class DejaPopupDemoComponent extends Destroy {
         });
     }
 
-    public showComponentInjection() {
+    public showComponentInjection(): void {
         const config = new DejaPopupConfig();
         config.title = 'Pick a color';
         config.height = 'auto';

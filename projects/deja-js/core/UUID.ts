@@ -27,7 +27,7 @@ export class UUID {
     }
 
     /** Le renoive le guid sous format string. */
-    public toString() {
+    public toString(): string {
         return this.uuid;
     }
 }

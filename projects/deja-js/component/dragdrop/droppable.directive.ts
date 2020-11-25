@@ -44,7 +44,7 @@ export class DejaDroppableDirective extends Destroy {
         this.droppable = !!value || null;
     }
 
-    public get context() {
+    public get context(): IDejaDropContext {
         return this._context;
     }
 

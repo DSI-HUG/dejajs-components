@@ -75,7 +75,7 @@ export class DejaCircularPickerComponent extends Destroy implements OnInit, Cont
         this._outerLabels = coerceBooleanProperty(value) || null;
     }
 
-    public get outerLabels() {
+    public get outerLabels(): BooleanInput {
         return this._outerLabels;
     }
 
@@ -87,7 +87,7 @@ export class DejaCircularPickerComponent extends Destroy implements OnInit, Cont
     }
 
     /** To get disabled attribute. */
-    public get disabled() {
+    public get disabled(): BooleanInput {
         return this._disabled;
     }
 
@@ -112,19 +112,19 @@ export class DejaCircularPickerComponent extends Destroy implements OnInit, Cont
 
     private clickedTime: number;
 
-    public get cursorHand() {
+    public get cursorHand(): { width: number; angle: number } {
         return this._cursorHand;
     }
 
-    public get cursor() {
+    public get cursor(): ICircularValue {
         return this._cursor;
     }
 
-    public get radius() {
+    public get radius(): number {
         return this._radius;
     }
 
-    public get circularValues() {
+    public get circularValues(): ICircularValue[] {
         return this._circularValues;
     }
 
@@ -232,7 +232,7 @@ export class DejaCircularPickerComponent extends Destroy implements OnInit, Cont
     /**
      * Init circular-picker configuration
      */
-    public ngOnInit() {
+    public ngOnInit(): void {
         /* max - width */
         const diameter = this.fullDiameter - this.labelsDiameter; // Material standard button size
         this._radius = diameter / 2;
@@ -269,7 +269,7 @@ export class DejaCircularPickerComponent extends Destroy implements OnInit, Cont
     }
 
     /** From ControlValueAccessor interface */
-    public writeValue(value: number) {
+    public writeValue(value: number): void {
         if (value !== this._value) {
             this._value = value;
             this.updateCursor();
@@ -277,22 +277,22 @@ export class DejaCircularPickerComponent extends Destroy implements OnInit, Cont
     }
 
     /** From ControlValueAccessor interface */
-    public registerOnChange(fn: (_a: unknown) => void) {
+    public registerOnChange(fn: (_a: unknown) => void): void {
         this.onChangeCallback = fn;
     }
 
     /** From ControlValueAccessor interface */
-    public registerOnTouched(fn: () => void) {
+    public registerOnTouched(fn: () => void): void {
         this.onTouchedCallback = fn;
     }
 
-    public setDisabledState(isDisabled: boolean) {
+    public setDisabledState(isDisabled: boolean): void {
         this.disabled = isDisabled;
     }
     // ************* End of ControlValueAccessor Implementation **************
 
-    protected onChangeCallback = (_a: unknown) => undefined as void;
-    protected onTouchedCallback = () => undefined as void;
+    protected onChangeCallback = (_a: unknown): void => undefined;
+    protected onTouchedCallback = (): void => undefined;
 
     /**
      * Take a point in parameter and return corresponding value
@@ -303,7 +303,7 @@ export class DejaCircularPickerComponent extends Destroy implements OnInit, Cont
      *
      * @return value
      */
-    protected pointToValue(x: number, y: number, config: IConfig) {
+    protected pointToValue(x: number, y: number, config: IConfig): number {
         const angleAtPoint: number = this.pointToAngle(x - this._radius, y - this._radius, config);
         let circleSegmentIndexAtPoint: number = config.steps - Math.ceil(angleAtPoint / config.stepAngle);
         // By having pointToAngle() to compute using a half step below the actual angle,

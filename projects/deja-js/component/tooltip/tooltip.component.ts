@@ -101,7 +101,7 @@ export class DejaTooltipComponent extends Destroy implements OnInit {
         this._closeOnMoveOver = coerceBooleanProperty(value);
     }
 
-    public get closeOnMoveOver() {
+    public get closeOnMoveOver(): boolean {
         return this._closeOnMoveOver;
     }
 
@@ -110,11 +110,11 @@ export class DejaTooltipComponent extends Destroy implements OnInit {
         this._positions = typeof value === 'string' ? DejaConnectionPositionPair.parse(value) : value;
     }
 
-    public get positions() {
+    public get positions(): string | DejaConnectionPositionPair[] {
         return this._positions;
     }
 
-    public get model() {
+    public get model(): unknown {
         return this._model;
     }
 
@@ -170,7 +170,7 @@ export class DejaTooltipComponent extends Destroy implements OnInit {
      * Init tooltip configuration
      * Check if ng-template model passed through param is an observable or a promise and resolve it before set.
      */
-    public ngOnInit() {
+    public ngOnInit(): void {
         if (!this.name) {
             throw (new Error('Name is required'));
         }

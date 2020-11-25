@@ -17,7 +17,7 @@ export class VersionService {
 
     public dejajsComponentVersion = dejaJsComponentPkg.version;
 
-    public init() {
+    public init(): void {
         document.body.setAttribute('dejajs-component-version', this.dejajsComponentVersion);
     }
 }

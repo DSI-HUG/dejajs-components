@@ -26,7 +26,7 @@ export class DejaMouseDraggableDirective extends Destroy {
         this._context = value;
     }
 
-    public get context() {
+    public get context(): IDejaMouseDraggableContext {
         return this._context;
     }
 

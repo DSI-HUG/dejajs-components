@@ -42,7 +42,7 @@ export class DejaSnackbarDemoComponent implements OnInit {
     public info: string;
     public default: string;
 
-    public ngOnInit() {
+    public ngOnInit(): void {
         const colors = new MaterialColors();
         this.danger = colors.getColor('mat-red')[500];
         this.warning = colors.getColor('mat-orange')[500];

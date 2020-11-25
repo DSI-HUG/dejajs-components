@@ -25,7 +25,7 @@ import { ViewChild } from '@angular/core';
 import { ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { NgControl } from '@angular/forms';
-import { IDejaDragEvent } from '@deja-js/component/dragdrop';
+import { IDejaDragContext, IDejaDragEvent, IDejaDropContext } from '@deja-js/component/dragdrop';
 import { DejaChildValidatorDirective } from '@deja-js/core';
 import { DejaClipboardService } from '@deja-js/core';
 import { DejaItemComponent } from '@deja-js/core';
@@ -140,7 +140,7 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
         this._minSearchLength = coerceNumberProperty(value);
     }
 
-    public get minSearchlength() {
+    public get minSearchlength(): NumberInput {
         return this._minSearchLength;
     }
 
@@ -211,7 +211,7 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
             }),
             // eslint-disable-next-line @typescript-eslint/no-unsafe-return
             map(value => this.getVirtualSelectedEntities(value)),
-            tap(value => super.setSelectedModels(!value || this._multiSelect || value instanceof Array ? value : [value])));
+            tap(value => super.setSelectedModels(!value || this._multiSelect || value instanceof Array ? value as unknown[] : [value])));
 
         merge(selectModels$, selectItems$).pipe(
             takeUntil(this.destroyed$)
@@ -229,7 +229,7 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
         this.listElement = elem.nativeElement;
     }
 
-    public keyboardNavigation() {
+    public keyboardNavigation(): boolean {
         return this._keyboardNavigation;
     }
 
@@ -239,7 +239,7 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
         this._searchArea = coerceBooleanProperty(value);
     }
 
-    public get searchArea() {
+    public get searchArea(): BooleanInput {
         return this._searchArea || this.minSearchlength > 0;
     }
 
@@ -249,7 +249,7 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
         this._modelIsValue = coerceBooleanProperty(value);
     }
 
-    public get modelIsValue() {
+    public get modelIsValue(): BooleanInput {
         return this._modelIsValue;
     }
 
@@ -259,7 +259,7 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
         this._sortable = coerceBooleanProperty(value);
     }
 
-    public get sortable() {
+    public get sortable(): BooleanInput {
         return this._sortable;
     }
 
@@ -269,7 +269,7 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
         this._itemsDraggable = coerceBooleanProperty(value);
     }
 
-    public get itemsDraggable() {
+    public get itemsDraggable(): BooleanInput {
         return this._itemsDraggable;
     }
 
@@ -280,7 +280,7 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
     }
 
     /** Retourne le nombre de lignes à sauter en cas de pression sur les touches PageUp ou PageDown */
-    public get pageSize() {
+    public get pageSize(): NumberInput {
         if (this._pageSize === 0) {
             const vpRowHeight = this.getViewPortRowHeight();
             const containerHeight = this.getMaxHeight() || this.listElement.clientHeight;
@@ -324,7 +324,7 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
     }
 
     /** Définit le champ utilisé pour la liste des enfants d'un parent */
-    public get childrenField() {
+    public get childrenField(): string {
         return this._childrenField;
     }
 
@@ -351,7 +351,7 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
     /** Retourne le champ à utiliser comme champ de recherche.
      * Ce champ peut indiquer, un champ contenant une valeur, un texte indexé, ou une fonction.
      */
-    public get searchField() {
+    public get searchField(): string {
         return this._searchField;
     }
 
@@ -368,7 +368,7 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
      * spécifier une grande valeur pour ne jamais afficher de scrollbar
      * Spécifier 0 pour que le composant determine sa hauteur à partir du container
      */
-    public get maxHeight() {
+    public get maxHeight(): NumberInput {
         return this.getMaxHeight();
     }
 
@@ -382,12 +382,12 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
     }
 
     /** Retourne la ligne courant ou ligne active */
-    public get currentItem() {
+    public get currentItem(): IItemBase<unknown> {
         return super.getCurrentItem();
     }
 
     /** Retourne le nombre de niveau pour une liste hierarchique */
-    public get depthMax() {
+    public get depthMax(): number {
         return this._depthMax;
     }
 
@@ -398,7 +398,7 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
     }
 
     /** Retourne une valeur indiquant si plusieurs lignes peuvent être sélectionées. */
-    public get multiSelect() {
+    public get multiSelect(): BooleanInput {
         return this._multiSelect;
     }
 
@@ -411,7 +411,7 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
     }
 
     /** Retourne la liste des éléments selectionés en mode multiselect */
-    public get selectedItems() {
+    public get selectedItems(): IItemBase<unknown>[] {
         return super.getSelectedItems();
     }
 
@@ -424,7 +424,7 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
     }
 
     /** Retourne l'éléments selectioné en mode single select */
-    public get selectedItem() {
+    public get selectedItem(): unknown {
         const selectedItem = super.getSelectedItems();
         return selectedItem?.[0];
     }
@@ -438,7 +438,7 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
     }
 
     /** Retourne le model selectioné en mode single select */
-    public get selectedModel() {
+    public get selectedModel(): unknown {
         const selectedModel = super.getSelectedModels();
         return selectedModel?.[0];
     }
@@ -452,7 +452,7 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
     }
 
     /** Retourne la liste des models selectionés en mode multiselect */
-    public get selectedModels() {
+    public get selectedModels(): unknown[] {
         return super.getSelectedModels();
     }
 
@@ -469,7 +469,7 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
     }
 
     /** Retourne le service de liste utilisé par ce composant. Ce srevice permet de controller dynamiquement la liste, ou de faire du lazyloading. */
-    public get itemListService() {
+    public get itemListService(): ItemListService<unknown> {
         return this.getItemListService();
     }
 
@@ -497,7 +497,7 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
                     this.changeDetectorRef.markForCheck();
                     return of(itms);
                 } else {
-                    return this.calcViewList$().pipe(map(() => itms as unknown));
+                    return this.calcViewList$().pipe(map(() => itms));
                 }
             }),
             takeUntil(this.destroyed$)
@@ -563,7 +563,7 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
         this.changeDetectorRef.markForCheck();
     }
 
-    public get disabled() {
+    public get disabled(): BooleanInput {
         return this._disabled;
     }
 
@@ -574,7 +574,7 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
     }
 
     /** Retourne si le waiter doit être affiché dans la liste. */
-    public get waiter() {
+    public get waiter(): BooleanInput {
         return this._waiter;
     }
 
@@ -590,58 +590,58 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
         this.changeDetectorRef.markForCheck();
     }
 
-    public get currentItemIndex() {
+    public get currentItemIndex(): number {
         return this.getCurrentItemIndex();
     }
 
-    public get itemTemplate() {
+    public get itemTemplate(): TemplateRef<unknown> {
         return this.itemTemplateExternal || this.itemTemplateInternal;
     }
 
-    public get parentItemTemplate() {
+    public get parentItemTemplate(): TemplateRef<unknown> {
         return this.parentItemTemplateExternal || this.parentItemTemplateInternal;
     }
 
-    public get loaderTemplate() {
+    public get loaderTemplate(): TemplateRef<unknown> {
         return this.loaderTemplateExternal || this.loaderTemplateInternal;
     }
 
-    public get headerTemplate() {
+    public get headerTemplate(): TemplateRef<unknown> {
         return this.headerTemplateExternal || this.headerTemplateInternal;
     }
 
-    public get searchPrefixTemplate() {
+    public get searchPrefixTemplate(): TemplateRef<unknown> {
         return this.searchPrefixTemplateExternal || this.searchPrefixTemplateInternal;
     }
 
-    public get searchSuffixTemplate() {
+    public get searchSuffixTemplate(): TemplateRef<unknown> {
         return this.searchSuffixTemplateExternal || this.searchSuffixTemplateInternal;
     }
 
     // ************* ControlValueAccessor Implementation **************
-    public get value() {
+    public get value(): unknown {
         return this._multiSelect ? this.selectedItems : this.selectedItem;
     }
 
-    public set value(val) {
+    public set value(val: unknown) {
         this.writeValue(val);
         this.onChangeCallback(val);
         this.onTouchedCallback();
     }
 
-    public writeValue(value: IItemBase<unknown>[] | IItemBase<unknown>) {
+    public writeValue(value: IItemBase<unknown>[] | IItemBase<unknown>): void {
         this.writeValue$.next(value);
     }
 
-    public registerOnChange(fn: (_a: unknown) => void) {
+    public registerOnChange(fn: (_a: unknown) => void): void {
         this.onChangeCallback = fn;
     }
 
-    public registerOnTouched(fn: () => void) {
+    public registerOnTouched(fn: () => void): void {
         this.onTouchedCallback = fn;
     }
 
-    public setDisabledState(isDisabled: boolean) {
+    public setDisabledState(isDisabled: boolean): void {
         this.disabled = isDisabled;
     }
     // ************* End of ControlValueAccessor Implementation **************
@@ -653,7 +653,7 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
     }
 
     /** Change l'état d'expansion de toute les lignes parentes */
-    public toggleAll(collapsed?: boolean) {
+    public toggleAll(collapsed?: boolean): void {
         this.toggleAll$(collapsed).pipe(
             take(1),
             takeUntil(this.destroyed$)
@@ -661,16 +661,16 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
     }
 
     /** Positionne a scrollbar pour assurer que l'élément spécifié soit visible */
-    public ensureItemVisible(item: IItemBase<unknown> | number) {
+    public ensureItemVisible(item: IItemBase<unknown> | number): void {
         super.ensureItemVisible(item);
     }
 
     /** Efface le contenu de la liste */
-    public clearViewPort() {
+    public clearViewPort(): void {
         super.clearViewPort();
     }
 
-    public ngAfterContentInit() {
+    public ngAfterContentInit(): void {
         if (!this.items && this.options?.length) {
             const selectedModels = [] as unknown[];
             this.valueField = 'value';
@@ -699,7 +699,7 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
         this.contentInitialized$.next(true);
     }
 
-    public ngAfterViewInit() {
+    public ngAfterViewInit(): void {
         // FIXME Issue angular/issues/6005
         // see http://stackoverflow.com/questions/34364880/expression-has-changed-after-it-was-checked
         if (this._itemList.length === 0 && (this.hasCustomService || this.hasLoadingEvent)) {
@@ -952,7 +952,7 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
         this.viewPort.element$.next(this.listElement);
     }
 
-    public mousedown(e: MouseEvent) {
+    public mousedown(e: MouseEvent): boolean {
         if (this.mouseUp$sub) {
             this.mouseUp$sub.unsubscribe();
             this.mouseUp$sub = undefined;
@@ -1057,7 +1057,7 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
         return undefined;
     }
 
-    public getDragContext(index: number) {
+    public getDragContext(index: number): IDejaDragContext {
         if (!this.clipboardService || (!this.sortable && !this.itemsDraggable)) {
             return null;
         }
@@ -1084,15 +1084,15 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
             object: {
                 index: index
             }
-        };
+        } as IDejaDragContext;
     }
 
-    public getDropContext() {
+    public getDropContext(): IDejaDropContext {
         if (!this.clipboardService || !this.sortable) {
             return null;
         }
 
-        const dragcallback = (event: IDejaDragEvent) => {
+        const dragcallback = (event: IDejaDragEvent): void => {
             if (this._ddStartIndex === undefined) {
                 return;
             }
@@ -1133,10 +1133,10 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
                 ).subscribe();
                 event.preventDefault();
             }
-        };
+        } as IDejaDropContext;
     }
 
-    public dragLeave(event: DragEvent) {
+    public dragLeave(event: DragEvent): void {
         const listRect = this.listElement.getBoundingClientRect();
 
         const listBounds = Rect.fromLTRB(listRect.left,
@@ -1153,7 +1153,7 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
         }
     }
 
-    public onSelectionChange() {
+    public onSelectionChange(): void {
         let outputEmitter = null;
 
         let output = null;
@@ -1221,7 +1221,7 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
             tap(() => this.changeDetectorRef.markForCheck()));
     }
 
-    public getItemClass(item: IItemTree<unknown>) {
+    public getItemClass(item: IItemTree<unknown>): string {
         const classNames = ['listitem'] as string[];
         if (item.className) {
             classNames.push(item.className);
@@ -1248,6 +1248,6 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
     }
 
     // NgModel implementation
-    public onTouchedCallback = () => undefined as void;
-    public onChangeCallback = (_a?: unknown) => undefined as void;
+    public onTouchedCallback = (): void => undefined;
+    public onChangeCallback = (_a?: unknown): void => undefined;
 }

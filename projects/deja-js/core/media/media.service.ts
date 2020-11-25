@@ -131,7 +131,7 @@ export class MediaService implements OnDestroy {
         );
     }
 
-    public ngOnDestroy() {
+    public ngOnDestroy(): void {
         Object.keys(this.mql).forEach(alias => {
             // eslint-disable-next-line @typescript-eslint/unbound-method
             this.mql[alias].removeEventListener('change', this.onMqlEvent as never);
