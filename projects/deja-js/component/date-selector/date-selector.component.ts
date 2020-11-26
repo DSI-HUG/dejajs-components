@@ -243,16 +243,15 @@ export class DejaDateSelectorComponent extends Destroy implements OnInit, Contro
     // From ControlValueAccessor interface
     public writeValue(value: Date | string): void {
         if (value instanceof Date && value !== this.selectedDate) {
+            const clone = new Date(value.getTime());
             if (this.selectedDate) {
-                const h = (value) ? value.getHours() : 0;
-                const m = (value) ? value.getMinutes() : 0;
-                if (value && ((!this.layoutId && this.selectedDate.toLocaleTimeString() !== value.toLocaleTimeString()) || (this.layoutId > 1 && ((this.selectedDate.getHours() === 0 && this.selectedDate.getMinutes() === 0) && (h !== 0 && m !== 0) || (this.selectedDate.toLocaleDateString() !== value.toLocaleDateString()))))) {
-                    value.setHours(this.selectedDate.getHours(), this.selectedDate.getMinutes(), this.selectedDate.getSeconds());
+                // When using a date-picker without time keep the time specified in the selectedDate when changing date
+                if (this.layoutId === 1 && this.selectedDate.toLocaleDateString() !== clone.toLocaleDateString()) {
+                    clone.setHours(this.selectedDate.getHours(), this.selectedDate.getMinutes(), this.selectedDate.getSeconds());
                 }
             }
-            this.selectedDate = value;
-            this._displayedDate = value || this._currentDate;
-
+            this.selectedDate = clone;
+            this._displayedDate = clone || this._currentDate;
         } else {
             this._displayedDate = this._currentDate;
         }
