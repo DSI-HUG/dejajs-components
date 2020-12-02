@@ -203,8 +203,8 @@ export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestr
                 this.hilightedBaseIndex$.next(this.hilightedBaseIndex);
                 this.hilightedSubIndex$.next(+targetIndex.value);
             } else {
-                this.hilightedBaseIndex$.next(null);
-                this.hilightedSubIndex$.next(null);
+                this.hilightedBaseIndex$.next(undefined);
+                this.hilightedSubIndex$.next(undefined);
             }
         });
 
