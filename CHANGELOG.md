@@ -1,3 +1,10 @@
+#### 10.0.1 (2020-12-02)
+
+##### Bug Fixes
+
+* **ColorSelector:**  Fix subcolor error ([43bb59b7](https://github.com/DSI-HUG/dejajs-components/commit/43bb59b72bb353f2a0a32a05f15f61c5fa91e6af))
+
+
 #### 10.0.0.0 (2020-11-25)
 
 ##### Chores
