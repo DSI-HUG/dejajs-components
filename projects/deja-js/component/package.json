@@ -1,6 +1,6 @@
 {
     "name": "@deja-js/component",
-    "version": "10.0.0",
+    "version": "10.0.1",
     "description": "Angular Components Library",
     "homepage": "https://github.com/DSI-HUG/dejajs-components",
     "bugs": "https://github.com/DSI-HUG/dejajs-components/issues",
@@ -30,7 +30,7 @@
         "@angular/platform-browser": "^10.1.3",
         "@angular/platform-browser-dynamic": "^10.1.3",
         "@angular/router": "^10.1.3",
-        "@deja-js/core": "^10.0.0",
+        "@deja-js/core": "^10.0.1",
         "angular2-text-mask": "9.0.0",
         "core-js": "^3.6.5",
         "hammerjs": "^2.0.8",
