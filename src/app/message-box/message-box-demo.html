@@ -17,10 +17,10 @@
         <deja-message-box type="primary" title="Title" showCloseIcon="true" (close)="dialogTitle = null">
             <span [innerHtml]="dialogTitle"></span>
             <ng-template #actionsTemplate>
-                <button mat-raised-button (click)="dialogTitle = null">
+                <button mat-button (click)="dialogTitle = null">
 					Cancel
 				</button>
-                <button mat-raised-button color="primary" (click)="dialogTitle = null">
+                <button mat-button (click)="dialogTitle = null">
 					Ok
 				</button>
             </ng-template>
@@ -31,9 +31,7 @@
         Du texte dans la <b>message box</b>
     </deja-message-box>
 
-    <div style="margin:1rem;"></div>
-
-    <deja-tooltip name="test-tt" *ngIf="tooltipVisible" (hide)="tooltipVisible = false">
+    <deja-tooltip name="test-tt" *ngIf="tooltipVisible" (hide)="tooltipVisible = false" [actions]="closeAction">
         <ng-template #tooltipTemplate let-model>
             <div id="tooltip">
                 {{model.text}}
@@ -45,9 +43,15 @@
         <span deja-tooltip="test-tt" [tooltip-model]="toolTipModel" (tooltip-show)="tooltipVisible = true">Un message "success"</span>
     </deja-message-box>
 
-    <div style="margin:1rem;"></div>
-
     <deja-message-box type="warn" horizontal title="Title" [actions]="closeAction">
+        Un message "warn" <b>horizontal</b> avec titre
+    </deja-message-box>
+
+    <deja-message-box type="info" horizontal>
+        Un message "info" <b>horizontal</b>
+    </deja-message-box>
+
+    <deja-message-box type="warn" horizontal [actions]="closeAction">
         Un message "warn" <b>horizontal</b>
     </deja-message-box>
 
@@ -56,13 +60,11 @@
     <deja-message-box type="danger" horizontal title="Title">
         Un message "danger" <b>horizontal</b> avec une action au format template
         <ng-template #actionsTemplate>
-            <button mat-mini-fab [color]="'blank'" class="action-button">
+            <button mat-icon-button>
 				<mat-icon>clear</mat-icon>
 			</button>
         </ng-template>
     </deja-message-box>
-
-    <div style="margin:1rem;"></div>
 
     <deja-message-box horizontal>
         Un message horizontal sans type ni titre

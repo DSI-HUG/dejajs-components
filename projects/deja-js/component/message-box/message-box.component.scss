@@ -1,32 +1,30 @@
 deja-message-box {
     display: block;
+    border-radius: 3px;
 
     #msgbox {
-        border-style: solid;
-        border-width: 1px;
+        border: 0;
         margin: 0;
         padding: 0;
         display: block;
+        border-radius: 3px;
 
         >.mat-card-title {
+            text-transform: uppercase;
             align-items: center;
-            box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.2);
             display: flex;
             margin: 0;
-            padding: 0.8rem;
+            padding: 1rem 0rem 0rem 1.2rem;
+            font-size: 1rem;
 
             #icon {
-                margin-right: 0.5rem;
+                margin-right: 0.3rem;
             }
 
             .header-actions {
-                margin-left: auto;
-
-                button.mat-mini-fab {
-                    background: none;
-                    border: none;
-                    box-shadow: none;
-                }
+                position: absolute;
+                top:0;
+                right:0;
             }
         }
 
@@ -34,12 +32,16 @@ deja-message-box {
             margin: 0;
             padding: 0.75rem;
             overflow: hidden;
+            font-weight: 300;
+            padding-left: 1.3rem;
+            padding-top: 0.5rem;
 
             h2 {
-                font-size: 1.3rem;
+                font-size: 1rem;
                 margin: 0;
-                font-weight: 300;
-                line-height: 2rem;
+                font-weight: 500;
+                text-transform: uppercase;
+                line-height: 1.5rem;
                 text-overflow: ellipsis;
                 overflow: hidden;
                 white-space: nowrap;
@@ -51,45 +53,12 @@ deja-message-box {
             display: flex;
             justify-content: flex-end;
             margin: 0;
-            padding: 0.2rem;
+            padding: 0.5rem 0.5rem;
 
             button {
-                margin-left: 0.2rem;
-
-                &.mat-blank[mat-raised-button],
-                &.mat-blank[mat-fab],
-                &.mat-blank[mat-mini-fab] {
-                    &:not([disabled]) {
-                        box-shadow: none;
-                    }
-
-                    &.action-button {
-                        align-items: stretch;
-                        display: flex;
-                        height: 1rem;
-                        margin: 0;
-                        padding: 0;
-                        right: 0;
-                        width: 1rem;
-
-                        .mat-button-wrapper {
-                            height: 1rem;
-                            width: 1rem;
-
-                            .mat-icon {
-                                font-size: 1rem;
-                                height: 1rem;
-                                line-height: 1rem;
-                                padding: 0;
-                                position: absolute;
-                                right: 0;
-                                top: 0;
-                                width: 1rem;
-                            }
-                        }
-                    }
-                }
+                text-transform: uppercase;
             }
+
         }
     }
 
@@ -108,6 +77,7 @@ deja-message-box {
                 justify-content: center;
                 margin: 0;
                 text-align: center;
+                padding: 0.5rem 0rem 0.5rem 0.8rem;
 
                 #icon {
                     margin: 0;
@@ -124,8 +94,14 @@ deja-message-box {
                 margin: 0;
                 padding: 0;
                 position: absolute;
-                right: 0.2rem;
-                top: 0.3rem;
+                right: 0;
+                top: 0;
+
+                [mat-icon-button] {
+                    mat-icon {
+                        font-size: 1rem;
+                    }
+                }
             }
         }
     }

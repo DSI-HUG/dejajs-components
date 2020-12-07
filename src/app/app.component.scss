@@ -18,7 +18,13 @@ body {
 
 	[mat-icon-button] {
 		overflow: hidden;
-	}
+    }
+
+    button {
+        .mat-button-ripple {
+            position: absolute !important;
+        }
+    }
 
 	mat-nav-list {
 		flex-direction: column;
