@@ -1,4 +1,5 @@
-@import '~@angular/material/theming';
+@import '~@angular/material/core/theming/palette';
+@import '~@angular/material/core/theming/theming';
 
 @mixin sub-item-list-theme($theme) {
 	$primary: map-get($theme, primary);
@@ -11,7 +12,7 @@
 					color: #fff;
 				}
 			}
-		}        
+		}
     }
 	&:not([disabled="true"]) {
 		.deja-listcontainer {

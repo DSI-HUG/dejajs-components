@@ -1,4 +1,5 @@
-@import '~@angular/material/theming';
+@import '~@angular/material/core/theming/palette';
+@import '~@angular/material/core/theming/theming';
 deja-sidenav {
     $large-sidenav-width: 320px;
     $small-sidenav-width: 280px;

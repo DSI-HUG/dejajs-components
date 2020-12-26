@@ -1,4 +1,5 @@
-@import '~@angular/material/theming';
+@import '~@angular/material/core/theming/palette';
+@import '~@angular/material/core/theming/theming';
 
 @mixin tabs-theme($theme) {
 	$primary: map-get($theme, primary);
@@ -28,7 +29,7 @@
 					transition: all 500ms ease;
 					width: 0;
 				}
-				&.mat-tab-label-active { 
+				&.mat-tab-label-active {
 					&:after {
 						left: 0;
 						width: 100%;

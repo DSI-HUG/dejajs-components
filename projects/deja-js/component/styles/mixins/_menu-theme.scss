@@ -1,4 +1,5 @@
-@import '~@angular/material/theming';
+@import '~@angular/material/core/theming/palette';
+@import '~@angular/material/core/theming/theming';
 
 @mixin menu-theme($theme) {
 	$primary: map-get($theme, primary);
@@ -6,7 +7,7 @@
 	.deja-overlay-container {
         .deja-menu-content {
 			background-color: #FFF;
-			border-color: rgba(0, 0, 0, 0.3);            
+			border-color: rgba(0, 0, 0, 0.3);
             >ul,
             &ul {
 				li {

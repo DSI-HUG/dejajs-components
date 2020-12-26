@@ -1,4 +1,5 @@
-@import '~@angular/material/theming';
+@import '~@angular/material/core/theming/palette';
+@import '~@angular/material/core/theming/theming';
 @mixin chips-theme($theme) {
     $background: map-get($theme, background);
 
@@ -12,7 +13,7 @@
         >span.chips-item {
             background-color: mat-color($primary, A400);
             color: mat-color($primary, default-contrast);
-            
+
             &:hover {
                 background-color: mat-color($primary, A700);
             }
