@@ -1,0 +1,33 @@
+{
+    "branches": [
+        "master",
+        "develop",
+        {
+            "name": "develop",
+            "prerelease": true
+        }
+    ],
+    "plugins": [
+        "@semantic-release/commit-analyzer",
+        "@semantic-release/release-notes-generator",
+        [
+            "@semantic-release/changelog",
+            {
+                "changelogFile": "./CHANGELOG.md"
+            }
+        ],
+        [
+            "@semantic-release/npm",
+            {
+                "npmPublish": false,
+                "pkgRoot": "."
+            }
+        ],
+        "@semantic-release/git",
+        {
+            "assets": ["./package.json", "./CHANGELOG.md"],
+            "message": "chore(dejajs-component): ${nextRelease.version}"
+        }
+    ],
+    "repositoryUrl": "git@github.com:vapkse/deja-js-component.git"
+}

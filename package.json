@@ -34,8 +34,8 @@
         "postinstall": "ngcc",
         "postrelease:core": "cpx \"./projects/deja-js/core/CHANGELOG.md\" \"./dist/deja-js/core\" && cpx \"./projects/deja-js/core/package.json\" \"./dist/deja-js/core\"",
         "postrelease:lib": "cpx \"./projects/deja-js/component/CHANGELOG.md\" \"./dist/deja-js/component\" && cpx \"./projects/deja-js/component/package.json\" \"./dist/deja-js/component\"",
-        "release": "semantic-release --no-ci",
-        "release:ci": "semantic-release && yarn run postrelease"
+        "release": "multi-semantic-release --no-ci",
+        "release:ci": "multi-semantic-release && yarn run postrelease"
     },
     "dependencies": {
         "@angular/animations": "~11.0.2",
@@ -75,7 +75,10 @@
         "@angular/language-service": "~11.0.2",
         "@commitlint/cli": "^11.0.0",
         "@commitlint/config-conventional": "^11.0.0",
+        "@qiwi/multi-semantic-release": "^3.11.0",
         "@semantic-release/changelog": "^5.0.1",
+        "@semantic-release/git": "^9.0.0",
+        "@semantic-release/github": "^7.2.0",
         "@types/ckeditor": "~4.9.10",
         "@types/jasmine": "~3.6.0",
         "@types/jasminewd2": "~2.0.8",
@@ -120,5 +123,9 @@
         "hooks": {
             "commit-msg": "commitlint --edit"
         }
-    }
+    },
+    "workspaces": [
+        "projects/deja-js/core",
+        "projects/deja-js/component"
+    ]
 }

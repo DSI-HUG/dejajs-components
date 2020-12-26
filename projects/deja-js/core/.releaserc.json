@@ -1,34 +1,33 @@
 {
     "branches": [
         "master",
+        "develop",
         {
             "name": "develop",
             "prerelease": true
         }
     ],
-    "repositoryUrl": "ssh://git@vmlp-00012.hcuge.ch:7999/deja/dejajs-dpi.git",
     "plugins": [
         "@semantic-release/commit-analyzer",
         "@semantic-release/release-notes-generator",
         [
             "@semantic-release/changelog",
             {
-                "changelogFile": "projects/dejajs-dpi/CHANGELOG.md"
+                "changelogFile": "./CHANGELOG.md"
             }
         ],
         [
             "@semantic-release/npm",
             {
                 "npmPublish": false,
-                "pkgRoot": "projects/dejajs-dpi"
+                "pkgRoot": "."
             }
         ],
-        [
-            "@semantic-release/git",
-            {
-                "assets": ["projects/dejajs-dpi/package.json", "projects/dejajs-dpi/CHANGELOG.md"],
-                "message": "chore(release): ${nextRelease.version}"
-            }
-        ]
-    ]
+        "@semantic-release/git",
+        {
+            "assets": ["./package.json", "./CHANGELOG.md"],
+            "message": "chore(dejajs-core): ${nextRelease.version}"
+        }
+    ],
+    "repositoryUrl": "git@github.com:vapkse/deja-js-component.git"
 }
