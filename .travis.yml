@@ -43,8 +43,6 @@ jobs:
   include:
     - stage: Components npm release
       before_deploy:
-        - npm run build:lib
-        - npm run test:lib
         - npm run release:ci
         - cd dist/deja-js/component
       deploy:
