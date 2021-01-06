@@ -7,11 +7,18 @@
  */
 
 /* eslint-disable @typescript-eslint/naming-convention */
-import { Component, DebugElement } from '@angular/core';
+import { Component } from '@angular/core';
+import { DebugElement } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { GroupingService, IItemBase, ItemListService, IViewPort, KeyCodes, SortingService, ViewPortService } from '@deja-js/core';
+import { GroupingService } from '@deja-js/component/core';
+import { IItemBase } from '@deja-js/component/core';
+import { ItemListService } from '@deja-js/component/core';
+import { IViewPort } from '@deja-js/component/core';
+import { KeyCodes } from '@deja-js/component/core';
+import { SortingService } from '@deja-js/component/core';
+import { ViewPortService } from '@deja-js/component/core';
 import { cloneDeep } from 'lodash';
 import { from, timer } from 'rxjs';
 import { debounceTime, delay, filter, take, tap } from 'rxjs/operators';

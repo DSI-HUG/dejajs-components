@@ -7,11 +7,20 @@
  */
 
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, Input, Optional, Output, TemplateRef } from '@angular/core';
+import { ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectorRef } from '@angular/core';
+import { Component } from '@angular/core';
+import { ContentChild } from '@angular/core';
+import { ElementRef } from '@angular/core';
+import { EventEmitter } from '@angular/core';
+import { Input } from '@angular/core';
+import { Optional } from '@angular/core';
+import { Output } from '@angular/core';
+import { TemplateRef } from '@angular/core';
+import { DejaClipboardService } from '@deja-js/component/core';
+import { Destroy } from '@deja-js/component/core';
+import { ISortInfos } from '@deja-js/component/core';
 import { IDejaDragContext, IDejaDragEvent, IDejaDropContext, IDejaDropEvent } from '@deja-js/component/dragdrop';
-import { DejaClipboardService } from '@deja-js/core';
-import { Destroy } from '@deja-js/core';
-import { ISortInfos } from '@deja-js/core';
 import { fromEvent, merge, Observable, of, Subject } from 'rxjs';
 import { catchError, filter, switchMap, take, takeUntil, tap, timeout } from 'rxjs/operators';
 

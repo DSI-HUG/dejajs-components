@@ -6,8 +6,10 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Component, EventEmitter, OnInit } from '@angular/core';
-import { MaterialColors } from '@deja-js/core';
+import { Component } from '@angular/core';
+import { EventEmitter } from '@angular/core';
+import { OnInit } from '@angular/core';
+import { MaterialColors } from '@deja-js/component/core';
 import { from, interval, Observable } from 'rxjs';
 import { defaultIfEmpty, filter, map, scan } from 'rxjs/operators';
 

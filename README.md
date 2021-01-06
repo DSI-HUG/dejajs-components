@@ -4,7 +4,7 @@
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg?style=flat-square)](http://commitizen.github.io/cz-cli/)
 [![codebeat badge](https://codebeat.co/badges/84883b64-dd1f-4c76-9ed0-e12cda09f3fb)](https://codebeat.co/projects/github-com-dsi-hug-dejajs-components-develop)
 
-# @deja-js/component - @deja-js/core
+# @deja-js/component
 This is the home for the Hôpitaux Universitaires de Genève - DSI - Domaine Patient team's Angular components for Angular and material. 
 
 Online demo : [https://dsi-hug.github.io/dejajs-components](https://dsi-hug.github.io/dejajs-components)
@@ -43,13 +43,13 @@ and navigate to `http://localhost:5100`.
 
 ## Build
 
-To build the library you can use the command `npm run build:core` and `npm run build:lib`
+To build the library you can use the command `npm run build:lib`
 
 A `dist/` folder will be created in the root directory for the library.
 
 ## Test
 
-Just run `npm run test:core` && `npm run test:lib` to launch tests.
+Just run `npm run test:lib` to launch tests.
 
 ## Contributing
 

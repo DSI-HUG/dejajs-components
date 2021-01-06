@@ -6,7 +6,8 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { Component, TemplateRef } from '@angular/core';
+import { Component } from '@angular/core';
+import { TemplateRef } from '@angular/core';
 import { ContentChild } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
@@ -14,7 +15,10 @@ import { Input } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Output } from '@angular/core';
 import { ViewEncapsulation } from '@angular/core';
-import { DejaConnectionPositionPair, Destroy, Position, Rect } from '@deja-js/core';
+import { DejaConnectionPositionPair } from '@deja-js/component/core';
+import { Destroy } from '@deja-js/component/core';
+import { Position } from '@deja-js/component/core';
+import { Rect } from '@deja-js/component/core';
 import { from, fromEvent, Observable } from 'rxjs';
 import { debounceTime, delay, filter, map, takeUntil, tap } from 'rxjs/operators';
 

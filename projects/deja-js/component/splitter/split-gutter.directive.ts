@@ -7,7 +7,10 @@
  */
 
 import { BooleanInput, coerceBooleanProperty, coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
-import { Directive, ElementRef, Input, Renderer2 } from '@angular/core';
+import { Directive } from '@angular/core';
+import { ElementRef } from '@angular/core';
+import { Input } from '@angular/core';
+import { Renderer2 } from '@angular/core';
 
 /**
  * Separator for the spltter component

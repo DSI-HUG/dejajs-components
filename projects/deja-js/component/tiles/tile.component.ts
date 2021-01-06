@@ -7,14 +7,15 @@
  */
 
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
-import { ChangeDetectionStrategy, TemplateRef } from '@angular/core';
+import { ChangeDetectionStrategy } from '@angular/core';
+import { TemplateRef } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { Component } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { Input } from '@angular/core';
 import { Output } from '@angular/core';
-import { Destroy } from '@deja-js/core';
+import { Destroy } from '@deja-js/component/core';
 import { from } from 'rxjs';
 import { debounceTime, delay, filter, take, takeUntil, tap } from 'rxjs/operators';
 

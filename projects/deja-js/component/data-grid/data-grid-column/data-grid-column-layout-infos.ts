@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { UnitValue } from '@deja-js/core';
+import { UnitValue } from '@deja-js/component/core';
 
 import { IDejaGridColumn } from './data-grid-column';
 

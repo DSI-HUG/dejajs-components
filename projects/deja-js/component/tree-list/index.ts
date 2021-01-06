@@ -13,9 +13,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { DejaChildValidatorModule } from '@deja-js/component/core';
+import { DejaItemModule } from '@deja-js/component/core';
+import { DejaTextMetricsModule } from '@deja-js/component/core';
 import { DejaDragDropModule } from '@deja-js/component/dragdrop';
 import { DejaListLoaderModule } from '@deja-js/component/loaders';
-import { DejaChildValidatorModule, DejaItemModule, DejaTextMetricsModule } from '@deja-js/core';
 
 import { DejaTreeListComponent } from './tree-list.component';
 

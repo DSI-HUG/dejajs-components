@@ -5,7 +5,10 @@
  *  Use of this source code is governed by an Apache-2.0 license that can be
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
-import { Component, Inject, Injector, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
+import { Inject } from '@angular/core';
+import { Injector } from '@angular/core';
+import { ViewEncapsulation } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 import { DejaPopupAction } from '../../model/popup-action.model';

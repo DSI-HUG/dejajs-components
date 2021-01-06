@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { DejaItemsEvent } from '@deja-js/core';
+import { DejaItemsEvent } from '@deja-js/component/core';
 
 export class DejaGridRowsEvent<T> extends DejaItemsEvent<T> {
 

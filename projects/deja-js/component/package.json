@@ -30,7 +30,6 @@
         "@angular/platform-browser": "^10.1.3",
         "@angular/platform-browser-dynamic": "^10.1.3",
         "@angular/router": "^10.1.3",
-        "@deja-js/core": "^10.0.1",
         "angular2-text-mask": "9.0.0",
         "core-js": "^3.6.5",
         "hammerjs": "^2.0.8",

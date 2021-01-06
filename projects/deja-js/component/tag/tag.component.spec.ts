@@ -9,7 +9,7 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { KeyCodes } from '@deja-js/core';
+import { KeyCodes } from '@deja-js/component/core';
 
 import { DejaTagModule } from '.';
 import { DejaTagComponent } from './tag.component';
