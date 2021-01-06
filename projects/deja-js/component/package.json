@@ -1,6 +1,6 @@
 {
     "name": "@deja-js/component",
-    "version": "10.0.1",
+    "version": "10.1.0-develop.1",
     "description": "Angular Components Library",
     "homepage": "https://github.com/DSI-HUG/dejajs-components",
     "bugs": "https://github.com/DSI-HUG/dejajs-components/issues",
