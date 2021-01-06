@@ -30,7 +30,7 @@
         "build:lib:watch": "node --max-old-space-size=4096 ./node_modules/@angular/cli/bin/ng build @deja-js/component --watch && npm run build:scss",
         "build:scss": "scss-bundle -c component-scss-bundle.config.json",
         "postinstall": "ngcc",
-        "postrelease:lib": "cpx \"./projects/deja-js/component/CHANGELOG.md\" \"./dist/deja-js/component\" && cpx \"./projects/deja-js/component/package.json\" \"./dist/deja-js/component\"",
+        "postrelease": "cpx \"./projects/deja-js/component/CHANGELOG.md\" \"./dist/deja-js/component\" && cpx \"./projects/deja-js/component/package.json\" \"./dist/deja-js/component\"",
         "release": "semantic-release --no-ci",
         "release:ci": "semantic-release && npm run postrelease",
         "commit": "git-cz"
@@ -87,6 +87,7 @@
         "@types/showdown": "~1.9.3",
         "@typescript-eslint/eslint-plugin": "~4.4.1",
         "@typescript-eslint/parser": "~4.4.1",
+        "cpx": "~1.5.0",
         "eslint": "^7.11.0",
         "eslint-plugin-chai-friendly": "^0.6.0",
         "eslint-plugin-cypress": "^2.11.2",
