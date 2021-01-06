@@ -17,7 +17,8 @@ import { Output } from '@angular/core';
 import { Self } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { NgControl } from '@angular/forms';
-import { Color, MaterialColor } from '@deja-js/core';
+import { Color } from '@deja-js/component/core';
+import { MaterialColor } from '@deja-js/component/core';
 import { BehaviorSubject, combineLatest, from, fromEvent, merge, Observable, Subject, timer } from 'rxjs';
 import { debounce, debounceTime, delay, distinctUntilChanged, filter, map, take, takeUntil, tap } from 'rxjs/operators';
 

@@ -7,7 +7,8 @@
  */
 
 import { BooleanInput, coerceBooleanProperty, coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
-import { ChangeDetectionStrategy, TemplateRef } from '@angular/core';
+import { ChangeDetectionStrategy } from '@angular/core';
+import { TemplateRef } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { Component } from '@angular/core';
 import { ContentChild } from '@angular/core';
@@ -19,22 +20,22 @@ import { Output } from '@angular/core';
 import { ViewChild } from '@angular/core';
 import { ViewEncapsulation } from '@angular/core';
 import { IDejaChipsComponentCloseEvent } from '@deja-js/component/chips';
+import { DejaClipboardService } from '@deja-js/component/core';
+import { Destroy } from '@deja-js/component/core';
+import { GroupingService } from '@deja-js/component/core';
+import { IGroupInfo } from '@deja-js/component/core';
+import { IItemBase } from '@deja-js/component/core';
+import { IItemTree } from '@deja-js/component/core';
+import { ISortInfos } from '@deja-js/component/core';
+import { ItemListService } from '@deja-js/component/core';
+import { IViewListResult } from '@deja-js/component/core';
+import { IViewPort } from '@deja-js/component/core';
+import { KeyCodes } from '@deja-js/component/core';
+import { SortingService } from '@deja-js/component/core';
+import { ViewPortService } from '@deja-js/component/core';
+import { ViewportMode } from '@deja-js/component/core';
 import { IDejaDragEvent } from '@deja-js/component/dragdrop';
 import { DejaTreeListComponent, DejaTreeListScrollEvent } from '@deja-js/component/tree-list';
-import { DejaClipboardService } from '@deja-js/core';
-import { Destroy } from '@deja-js/core';
-import { GroupingService } from '@deja-js/core';
-import { IGroupInfo } from '@deja-js/core';
-import { IItemBase } from '@deja-js/core';
-import { IItemTree } from '@deja-js/core';
-import { ISortInfos } from '@deja-js/core';
-import { ItemListService } from '@deja-js/core';
-import { IViewListResult } from '@deja-js/core';
-import { IViewPort } from '@deja-js/core';
-import { KeyCodes } from '@deja-js/core';
-import { SortingService } from '@deja-js/core';
-import { ViewPortService } from '@deja-js/core';
-import { ViewportMode } from '@deja-js/core';
 import { combineLatest, from, fromEvent, Observable, ReplaySubject, Subject, timer } from 'rxjs';
 import { debounceTime, filter, map, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 

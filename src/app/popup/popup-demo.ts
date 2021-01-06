@@ -9,9 +9,9 @@
 import { ComponentPortal, PortalInjector, TemplatePortal } from '@angular/cdk/portal';
 import { ChangeDetectorRef, Component, Injector, TemplateRef, ViewChild, ViewContainerRef } from '@angular/core';
 import { DialogPosition } from '@angular/material/dialog';
+import { Color, Destroy } from '@deja-js/component/core';
 import { DejaMessageBoxAction, DejaMessageBoxType } from '@deja-js/component/message-box';
 import { DejaPopupAction, DejaPopupButton, DejaPopupConfig, DejaPopupCustomAction, DejaPopupReponse, DejaPopupService } from '@deja-js/component/popup';
-import { Color, Destroy } from '@deja-js/core';
 import { filter, map, takeUntil } from 'rxjs/operators';
 
 import { DummyComponent } from './dummy/dummy.component';

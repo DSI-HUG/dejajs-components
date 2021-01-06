@@ -11,7 +11,7 @@ import { Component, DebugElement } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { GroupingService, IItemBase, ItemListService, IViewPort, KeyCodes, SortingService, ViewPortService } from '@deja-js/core';
+import { GroupingService, IItemBase, ItemListService, IViewPort, KeyCodes, SortingService, ViewPortService } from '@deja-js/component/core';
 import { cloneDeep } from 'lodash';
 import { from, timer } from 'rxjs';
 import { debounceTime, delay, filter, take, tap } from 'rxjs/operators';

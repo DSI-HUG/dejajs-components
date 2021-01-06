@@ -8,8 +8,8 @@
 
 import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { Destroy, IItemBase, IItemTree, IViewPortItem } from '@deja-js/component/core';
 import { DejaSelectComponent } from '@deja-js/component/select';
-import { Destroy, IItemBase, IItemTree, IViewPortItem } from '@deja-js/core';
 import { from, Observable, of, Subject, Subscription } from 'rxjs';
 import { delay, map, take, takeUntil, tap } from 'rxjs/operators';
 

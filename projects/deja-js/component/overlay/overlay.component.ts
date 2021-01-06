@@ -9,7 +9,9 @@
 import { BooleanInput, coerceBooleanProperty, coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
 import { CdkConnectedOverlay, CdkOverlayOrigin, OverlayContainer } from '@angular/cdk/overlay';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, Output, ViewChild, ViewEncapsulation } from '@angular/core';
-import { DejaConnectionPositionPair, Destroy, MediaService } from '@deja-js/core';
+import { DejaConnectionPositionPair } from '@deja-js/component/core';
+import { Destroy } from '@deja-js/component/core';
+import { MediaService } from '@deja-js/component/core';
 import { timer } from 'rxjs';
 import { take, takeUntil, takeWhile } from 'rxjs/operators';
 

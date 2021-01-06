@@ -9,7 +9,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AfterViewChecked, ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, ViewEncapsulation } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { Destroy } from '@deja-js/core';
+import { Destroy } from '@deja-js/component/core';
 import * as Prism from 'prismjs';
 import { takeUntil } from 'rxjs/operators';
 import * as Showdown from 'showdown';

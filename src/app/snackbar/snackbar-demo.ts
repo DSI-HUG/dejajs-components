@@ -7,7 +7,7 @@
  */
 
 import { Component, EventEmitter, OnInit } from '@angular/core';
-import { MaterialColors } from '@deja-js/core';
+import { MaterialColors } from '@deja-js/component/core';
 import { from, interval, Observable } from 'rxjs';
 import { defaultIfEmpty, filter, map, scan } from 'rxjs/operators';
 

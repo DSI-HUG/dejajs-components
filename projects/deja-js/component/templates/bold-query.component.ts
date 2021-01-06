@@ -7,8 +7,8 @@
  */
 
 import { Component, Input, ViewEncapsulation } from '@angular/core';
-import { Diacritics } from '@deja-js/core';
-import { RegExpUtils } from '@deja-js/core/util';
+import { Diacritics } from '@deja-js/component/core';
+import { RegExpUtils } from '@deja-js/component/core/util';
 
 @Component({
     encapsulation: ViewEncapsulation.None,

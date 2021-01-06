@@ -7,9 +7,9 @@
  */
 
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Rect } from '@deja-js/component/core';
 import { IDejaMouseDraggableContext, IDejaMouseDroppableContext, IDropCursorInfos } from '@deja-js/component/mouse-dragdrop';
 import { DejaTile, IDejaTilesAddEvent, IDejaTilesRemoveEvent } from '@deja-js/component/tiles';
-import { Rect } from '@deja-js/core';
 import { DejaMessageBoxType } from 'projects/deja-js/component/message-box';
 import { from, Observable, Subject } from 'rxjs';
 import { defaultIfEmpty, map, reduce, scan, switchMap, take } from 'rxjs/operators';

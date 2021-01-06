@@ -4,8 +4,8 @@
             "entryFile": "./index.ts",
             "umdModuleIds": {
                 "lodash": "lodash",
-                "@deja-js/core": "@deja-js/core",
-                "@deja-js/core/util": "@deja-js/core/util"
+                "@deja-js/component/core": "@deja-js/component/core",
+                "@deja-js/component/core/util": "@deja-js/component/core/util"
             }
         }
     },

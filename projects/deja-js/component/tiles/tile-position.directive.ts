@@ -7,7 +7,7 @@
  */
 
 import { Directive, ElementRef, Input } from '@angular/core';
-import { Rect } from '@deja-js/core';
+import { Rect } from '@deja-js/component/core';
 
 @Directive({
     selector: '[deja-tile-position]'

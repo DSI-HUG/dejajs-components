@@ -8,8 +8,8 @@
 
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Optional, Output } from '@angular/core';
 import { IDejaChipsComponentCloseEvent } from '@deja-js/component/chips';
+import { DejaClipboardService } from '@deja-js/component/core';
 import { IDejaDragContext, IDejaDragEvent, IDejaDropContext, IDejaDropEvent } from '@deja-js/component/dragdrop';
-import { DejaClipboardService } from '@deja-js/core';
 
 import { IDejaGridColumn } from '../data-grid-column/data-grid-column';
 import { IDejaGridGroupsEvent } from './data-grid-group';

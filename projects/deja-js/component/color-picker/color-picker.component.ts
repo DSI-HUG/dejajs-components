@@ -10,8 +10,9 @@ import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostBinding, Input, Optional, Output, Self, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { NgControl } from '@angular/forms';
+import { Color } from '@deja-js/component/core';
+import { DejaConnectionPositionPair } from '@deja-js/component/core';
 import { DejaOverlayComponent } from '@deja-js/component/overlay';
-import { Color, DejaConnectionPositionPair } from '@deja-js/core';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,

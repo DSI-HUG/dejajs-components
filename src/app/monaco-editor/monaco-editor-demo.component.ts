@@ -7,8 +7,8 @@
  */
 
 import { Component, OnInit } from '@angular/core';
+import { Destroy } from '@deja-js/component/core';
 import { Languages } from '@deja-js/component/monaco-editor';
-import { Destroy } from '@deja-js/core';
 import { takeUntil } from 'rxjs/operators';
 
 import { MonacoEditorDemoService } from './monaco-editor-demo.service';

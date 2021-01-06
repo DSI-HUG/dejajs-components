@@ -21,7 +21,8 @@ import { Self } from '@angular/core';
 import { ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { NgControl } from '@angular/forms';
-import { Destroy, KeyCodes } from '@deja-js/core';
+import { Destroy } from '@deja-js/component/core';
+import { KeyCodes } from '@deja-js/component/core';
 import { from, fromEvent, merge, Subject } from 'rxjs';
 import { debounceTime, filter, takeUntil, tap } from 'rxjs/operators';
 

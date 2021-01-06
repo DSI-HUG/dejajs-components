@@ -20,22 +20,19 @@
         "start": "ng serve",
         "build": "ng build --prod",
         "test": "ng test",
-        "test:core": "ng test @deja-js/core --watch=false",
         "test:lib": "ng test @deja-js/component --watch=false",
         "test:lib:watch": "ng test @deja-js/component --watch=true",
         "lint": "eslint . --ext .js,.ts",
         "lint:fix": "eslint . --ext .js,.ts --fix",
         "e2e": "ng e2e",
         "license-check": "node scripts/licenses.js",
-        "build:core": "ng build @deja-js/core --configuration=production",
         "build:lib": "node --max-old-space-size=4096 ./node_modules/@angular/cli/bin/ng build @deja-js/component --configuration=production && npm run build:scss",
         "build:lib:watch": "node --max-old-space-size=4096 ./node_modules/@angular/cli/bin/ng build @deja-js/component --watch && npm run build:scss",
         "build:scss": "scss-bundle -c component-scss-bundle.config.json",
         "postinstall": "ngcc",
-        "postrelease:core": "cpx \"./projects/deja-js/core/CHANGELOG.md\" \"./dist/deja-js/core\" && cpx \"./projects/deja-js/core/package.json\" \"./dist/deja-js/core\"",
         "postrelease:lib": "cpx \"./projects/deja-js/component/CHANGELOG.md\" \"./dist/deja-js/component\" && cpx \"./projects/deja-js/component/package.json\" \"./dist/deja-js/component\"",
-        "release": "multi-semantic-release --no-ci",
-        "release:ci": "multi-semantic-release && yarn run postrelease"
+        "release": "semantic-release --no-ci",
+        "release:ci": "semantic-release && yarn run postrelease"
     },
     "dependencies": {
         "@angular/animations": "~11.0.2",
@@ -123,9 +120,5 @@
         "hooks": {
             "commit-msg": "commitlint --edit"
         }
-    },
-    "workspaces": [
-        "projects/deja-js/core",
-        "projects/deja-js/component"
-    ]
+    }
 }

@@ -17,12 +17,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { DejaItemModule, DejaSortingModule, GroupingService } from '@deja-js/component/core';
 import { DejaDialogModule } from '@deja-js/component/dialog';
 import { DejaDragDropModule } from '@deja-js/component/dragdrop';
 import { DejaMessageBoxModule } from '@deja-js/component/message-box';
 import { DejaMouseDragDropModule } from '@deja-js/component/mouse-dragdrop';
 import { DejaTreeListModule } from '@deja-js/component/tree-list';
-import { DejaItemModule, DejaSortingModule, GroupingService } from '@deja-js/core';
 
 import { DejaMarkdownModule } from '../../component/markdown/index';
 import { NewsCardModule } from '../common/news-card.module';

@@ -30,7 +30,6 @@
         "@angular/platform-browser": "~11.0.2",
         "@angular/platform-browser-dynamic": "~11.0.2",
         "@angular/router": "~11.0.2",
-        "@deja-js/core": "^11.0.0",
         "core-js": "^3.6.5",
         "json-object-mapper": "^1.6.0",
         "material-icons-font": "^2.1.0",

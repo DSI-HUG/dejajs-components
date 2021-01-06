@@ -7,8 +7,9 @@
  */
 
 import { ChangeDetectionStrategy, Component, ElementRef, ViewEncapsulation } from '@angular/core';
-import { DejaTextMetricsService, IconService } from '@deja-js/core';
-import { Destroy } from '@deja-js/core';
+import { DejaTextMetricsService } from '@deja-js/component/core';
+import { IconService } from '@deja-js/component/core';
+import { Destroy } from '@deja-js/component/core';
 import { BehaviorSubject, from } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 

@@ -7,7 +7,7 @@
  */
 
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, Input, TemplateRef } from '@angular/core';
-import { ItemListService } from '@deja-js/core';
+import { ItemListService } from '@deja-js/component/core';
 
 import { IDejaGridColumn } from '../data-grid-column/data-grid-column';
 import { IDejaGridRow } from '../data-grid-row/data-grid-row';

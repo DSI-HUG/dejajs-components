@@ -8,7 +8,7 @@
 
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Color, MaterialColors, UUID } from '@deja-js/core';
+import { Color, MaterialColors, UUID } from '@deja-js/component/core';
 import { JsonProperty, ObjectMapper } from 'json-object-mapper';
 import { cloneDeep } from 'lodash';
 import { Observable } from 'rxjs';

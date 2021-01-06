@@ -8,7 +8,7 @@
 
 import { Component } from '@angular/core';
 import { IColorEvent } from '@deja-js/component/color-selector';
-import { Color, MaterialColors } from '@deja-js/core';
+import { Color, MaterialColors } from '@deja-js/component/core';
 
 @Component({
     selector: 'deja-color-selector-demo',

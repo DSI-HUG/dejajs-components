@@ -7,7 +7,8 @@
  */
 
 import { Directive, ElementRef, EventEmitter, Input, Output } from '@angular/core';
-import { DejaConnectionPositionPair, Destroy } from '@deja-js/core';
+import { DejaConnectionPositionPair } from '@deja-js/component/core';
+import { Destroy } from '@deja-js/component/core';
 import { fromEvent, of } from 'rxjs';
 import { delay, switchMap, takeUntil } from 'rxjs/operators';
 

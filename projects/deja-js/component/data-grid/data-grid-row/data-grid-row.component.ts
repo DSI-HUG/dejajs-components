@@ -11,7 +11,8 @@ import { ChangeDetectorRef } from '@angular/core';
 import { Component } from '@angular/core';
 import { ContentChild } from '@angular/core';
 import { Input } from '@angular/core';
-import { Destroy, ItemListService } from '@deja-js/core';
+import { Destroy } from '@deja-js/component/core';
+import { ItemListService } from '@deja-js/component/core';
 import { from, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 

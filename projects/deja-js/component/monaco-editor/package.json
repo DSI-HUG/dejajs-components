@@ -3,7 +3,7 @@
         "lib": {
             "entryFile": "./index.ts",
             "umdModuleIds": {
-                "@deja-js/core": "@deja-js/core"
+                "@deja-js/component/core": "@deja-js/component/core"
             }
         }
     },
