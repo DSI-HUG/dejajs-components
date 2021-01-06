@@ -1,7 +1,6 @@
 {
     "branches": [
         "master",
-        "develop",
         {
             "name": "develop",
             "prerelease": true
@@ -23,11 +22,13 @@
                 "pkgRoot": "projects/deja-js/component/"
             }
         ],
-        "@semantic-release/git",
-        {
-            "assets": ["projects/deja-js/component/package.json", "projects/deja-js/component/CHANGELOG.md"],
-            "message": "chore(dejajs-component): ${nextRelease.version}"
-        }
+        [
+            "@semantic-release/git",
+            {
+                "assets": ["projects/deja-js/component/package.json", "projects/deja-js/component/CHANGELOG.md"],
+                "message": "chore(release): ${nextRelease.version}"
+            }
+        ]
     ],
     "repositoryUrl": "git@github.com:vapkse/deja-js-component.git"
 }
