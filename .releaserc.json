@@ -13,19 +13,19 @@
         [
             "@semantic-release/changelog",
             {
-                "changelogFile": "./CHANGELOG.md"
+                "changelogFile": "projects/deja-js/component/CHANGELOG.md"
             }
         ],
         [
             "@semantic-release/npm",
             {
                 "npmPublish": false,
-                "pkgRoot": "."
+                "pkgRoot": "projects/deja-js/component/"
             }
         ],
         "@semantic-release/git",
         {
-            "assets": ["./package.json", "./CHANGELOG.md"],
+            "assets": ["projects/deja-js/component/package.json", "projects/deja-js/component/CHANGELOG.md"],
             "message": "chore(dejajs-component): ${nextRelease.version}"
         }
     ],
