@@ -17,11 +17,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { DejaItemModule } from '@deja-js/component/core';
 import { DejaDialogModule } from '@deja-js/component/dialog';
 import { DejaMessageBoxModule } from '@deja-js/component/message-box';
 import { DejaSelectModule } from '@deja-js/component/select';
 import { DejaBoldQueryModule } from '@deja-js/component/templates';
-import { DejaItemModule } from '@deja-js/core';
 
 import { DejaMarkdownModule } from '../../component/markdown/index';
 import { NewsCardModule } from '../common/news-card.module';

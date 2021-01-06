@@ -7,7 +7,8 @@
  */
 
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
-import { ChangeDetectionStrategy, TemplateRef } from '@angular/core';
+import { ChangeDetectionStrategy } from '@angular/core';
+import { TemplateRef } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { Component } from '@angular/core';
 import { ContentChild } from '@angular/core';
@@ -20,7 +21,7 @@ import { Output } from '@angular/core';
 import { Self } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { NgControl } from '@angular/forms';
-import { Destroy } from '@deja-js/core';
+import { Destroy } from '@deja-js/component/core';
 import { fromEvent } from 'rxjs';
 import { merge } from 'rxjs';
 import { Observable } from 'rxjs';

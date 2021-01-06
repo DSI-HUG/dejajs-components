@@ -7,7 +7,8 @@
  */
 
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
-import { AfterViewInit, TemplateRef } from '@angular/core';
+import { AfterViewInit } from '@angular/core';
+import { TemplateRef } from '@angular/core';
 import { ChangeDetectionStrategy } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { Component } from '@angular/core';
@@ -22,8 +23,11 @@ import { Self } from '@angular/core';
 import { ViewChild } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { NgControl } from '@angular/forms';
+import { Destroy } from '@deja-js/component/core';
+import { KeyCodes } from '@deja-js/component/core';
+import { Position } from '@deja-js/component/core';
+import { Rect } from '@deja-js/component/core';
 import { IDejaMouseDroppableContext, IDropCursorInfos } from '@deja-js/component/mouse-dragdrop';
-import { Destroy, KeyCodes, Position, Rect } from '@deja-js/core';
 import { from, fromEvent, Observable, Subject, Subscription } from 'rxjs';
 import { debounceTime, filter, takeUntil } from 'rxjs/operators';
 

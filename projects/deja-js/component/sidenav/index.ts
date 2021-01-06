@@ -12,7 +12,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { DejaSlimScrollModule, MediaModule } from '@deja-js/core';
+import { DejaSlimScrollModule } from '@deja-js/component/core';
+import { MediaModule } from '@deja-js/component/core';
 
 import { DejaSidenavContentDirective } from './sidenav-content.directive';
 import { DejaSidenavHeaderDirective } from './sidenav-header.directive';

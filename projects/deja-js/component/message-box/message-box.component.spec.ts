@@ -130,16 +130,6 @@ describe('DejaMessageBoxComponent', () => {
             void expect(el.className).toContain('with-icon');
         });
 
-        it('should display a button mat-mini-fab if action has an icon but no text', () => {
-            component.actions = [
-                { type: 'info', action: () => undefined as void, icon: 'randomIcon' }
-            ];
-            fixture.detectChanges();
-
-            const el = fixture.debugElement.query(By.css('mat-card-actions > span > button')).nativeElement;
-            void expect(el.attributes['mat-mini-fab']).toBeTruthy();
-        });
-
     });
 
     describe('close icon', () => {
