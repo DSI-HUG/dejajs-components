@@ -9,7 +9,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import { coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
-import { ChangeDetectorRef, EventEmitter } from '@angular/core';
+import { ChangeDetectorRef } from '@angular/core';
+import { EventEmitter } from '@angular/core';
 import { from, Observable, of, Subscription, timer } from 'rxjs';
 import { filter, map, reduce, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 

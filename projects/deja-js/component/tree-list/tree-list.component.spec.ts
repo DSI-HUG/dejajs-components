@@ -7,20 +7,21 @@
  */
 
 import { CommonModule } from '@angular/common';
-import { Component, DebugElement } from '@angular/core';
+import { Component } from '@angular/core';
+import { DebugElement } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { DejaItemModule } from '@deja-js/core';
-import { GroupingService } from '@deja-js/core';
-import { IItemBase } from '@deja-js/core';
-import { IItemTree } from '@deja-js/core';
-import { ISortInfos } from '@deja-js/core';
-import { ItemListService } from '@deja-js/core';
-import { KeyCodes } from '@deja-js/core';
-import { SortingService } from '@deja-js/core';
-import { ViewPortService } from '@deja-js/core';
+import { DejaItemModule } from '@deja-js/component/core';
+import { GroupingService } from '@deja-js/component/core';
+import { IItemBase } from '@deja-js/component/core';
+import { IItemTree } from '@deja-js/component/core';
+import { ISortInfos } from '@deja-js/component/core';
+import { ItemListService } from '@deja-js/component/core';
+import { KeyCodes } from '@deja-js/component/core';
+import { SortingService } from '@deja-js/component/core';
+import { ViewPortService } from '@deja-js/component/core';
 import { from, Observable, timer } from 'rxjs';
 import { debounceTime, delay, filter, take, tap } from 'rxjs/operators';
 
@@ -520,7 +521,7 @@ describe('DejaTreeListByModelContainerComponent', () => {
                 // Bind view port
                 fixture.detectChanges();
                 const selectedModels = fixture.debugElement.queryAll(By.css('deja-tree-list > .deja-listcontainer > .listitem.selected'));
-                const models = vp.visibleItems.map((item: IItemBase<unknown>) => item.model as IItemBase<unknown>);
+                const models = vp.visibleItems.map((item: IItemBase<unknown>) => item.model);
                 const selectedItems = vp.items.filter((item: IItemBase<unknown>) => item.selected);
 
                 switch (++pass) {

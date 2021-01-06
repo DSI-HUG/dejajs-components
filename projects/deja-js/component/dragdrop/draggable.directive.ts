@@ -5,8 +5,14 @@
  *  Use of this source code is governed by an Apache-2.0 license that can be
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
-import { Directive, ElementRef, HostBinding, Input, Optional } from '@angular/core';
-import { DejaClipboardService, Destroy, UUID } from '@deja-js/core';
+import { Directive } from '@angular/core';
+import { ElementRef } from '@angular/core';
+import { HostBinding } from '@angular/core';
+import { Input } from '@angular/core';
+import { Optional } from '@angular/core';
+import { DejaClipboardService } from '@deja-js/component/core';
+import { Destroy } from '@deja-js/component/core';
+import { UUID } from '@deja-js/component/core';
 import { fromEvent } from 'rxjs';
 import { filter, switchMap, take, takeUntil } from 'rxjs/operators';
 

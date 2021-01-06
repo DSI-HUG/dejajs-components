@@ -33,9 +33,11 @@ import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { CanUpdateErrorState } from '@angular/material/core';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MatFormFieldControl } from '@angular/material/form-field';
+import { DejaChildValidatorDirective } from '@deja-js/component/core';
+import { DejaConnectionPositionPair } from '@deja-js/component/core';
+import { KeyCodes } from '@deja-js/component/core';
+import { _MatInputMixinBase } from '@deja-js/component/core/util';
 import { DateComponentLayout, DaysOfWeek, DejaDateSelectorComponent } from '@deja-js/component/date-selector';
-import { DejaChildValidatorDirective, DejaConnectionPositionPair, KeyCodes } from '@deja-js/core';
-import { _MatInputMixinBase } from '@deja-js/core/util';
 import { combineLatest, from, fromEvent, merge, Observable, ReplaySubject, Subject, timer } from 'rxjs';
 import { delay, filter, map, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 

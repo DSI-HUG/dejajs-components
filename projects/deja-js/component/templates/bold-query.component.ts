@@ -6,9 +6,11 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Component, Input, ViewEncapsulation } from '@angular/core';
-import { Diacritics } from '@deja-js/core';
-import { RegExpUtils } from '@deja-js/core/util';
+import { Component } from '@angular/core';
+import { Input } from '@angular/core';
+import { ViewEncapsulation } from '@angular/core';
+import { Diacritics } from '@deja-js/component/core';
+import { RegExpUtils } from '@deja-js/component/core/util';
 
 @Component({
     encapsulation: ViewEncapsulation.None,

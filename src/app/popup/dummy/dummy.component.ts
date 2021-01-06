@@ -5,11 +5,13 @@
  *  Use of this source code is governed by an Apache-2.0 license that can be
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
-import { Component, Inject } from '@angular/core';
+import { Component } from '@angular/core';
+import { Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { IColorEvent } from '@deja-js/component/color-selector';
+import { Color } from '@deja-js/component/core';
+import { MaterialColors } from '@deja-js/component/core';
 import { DejaPopupAction, DejaPopupConfig } from '@deja-js/component/popup';
-import { Color, MaterialColors } from '@deja-js/core';
 
 @Component({
     selector: 'deja-dummy',

@@ -33,8 +33,9 @@ import { ValidatorFn } from '@angular/forms';
 import { CanUpdateErrorState } from '@angular/material/core';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MatFormFieldControl } from '@angular/material/form-field';
-import { DejaChildValidatorDirective, DejaTextMetricsService } from '@deja-js/core';
-import { _MatInputMixinBase } from '@deja-js/core/util';
+import { DejaChildValidatorDirective } from '@deja-js/component/core';
+import { DejaTextMetricsService } from '@deja-js/component/core';
+import { _MatInputMixinBase } from '@deja-js/component/core/util';
 import { Subject } from 'rxjs';
 
 export interface RangeError {

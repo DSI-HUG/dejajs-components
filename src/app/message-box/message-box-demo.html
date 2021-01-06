@@ -18,20 +18,20 @@
             <span [innerHtml]="dialogTitle"></span>
             <ng-template #actionsTemplate>
                 <button mat-button (click)="dialogTitle = null">
-					Cancel
-				</button>
+                    Cancel
+                </button>
                 <button mat-button (click)="dialogTitle = null">
-					Ok
-				</button>
+                    Ok
+                </button>
             </ng-template>
         </deja-message-box>
     </deja-dialog>
 
-    <deja-message-box type="primary" title="Title">
+    <deja-message-box type="primary" title="Title" [actions]="closeAction">
         Du texte dans la <b>message box</b>
     </deja-message-box>
 
-    <deja-tooltip name="test-tt" *ngIf="tooltipVisible" (hide)="tooltipVisible = false" [actions]="closeAction">
+    <deja-tooltip name="test-tt" *ngIf="tooltipVisible" (hide)="tooltipVisible = false">
         <ng-template #tooltipTemplate let-model>
             <div id="tooltip">
                 {{model.text}}
@@ -61,8 +61,8 @@
         Un message "danger" <b>horizontal</b> avec une action au format template
         <ng-template #actionsTemplate>
             <button mat-icon-button>
-				<mat-icon>clear</mat-icon>
-			</button>
+                <mat-icon>clear</mat-icon>
+            </button>
         </ng-template>
     </deja-message-box>
 

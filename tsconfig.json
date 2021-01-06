@@ -7,12 +7,6 @@
             ],
             "@deja-js/component/*": [
                 "dist/deja-js/component/*"
-            ],
-            "@deja-js/core": [
-                "dist/deja-js/core"
-            ],
-            "@deja-js/core/*": [
-                "dist/deja-js/core/*"
             ]
         }
     }
