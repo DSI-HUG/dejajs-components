@@ -19,6 +19,7 @@ node_js:
 branches:
   only:
   - release/11.x.x
+  - next/11.x.x
 before_install:
 - npm install -g yarn
 - rm -rf node_modules
