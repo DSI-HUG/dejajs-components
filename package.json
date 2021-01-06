@@ -32,7 +32,8 @@
         "postinstall": "ngcc",
         "postrelease:lib": "cpx \"./projects/deja-js/component/CHANGELOG.md\" \"./dist/deja-js/component\" && cpx \"./projects/deja-js/component/package.json\" \"./dist/deja-js/component\"",
         "release": "semantic-release --no-ci",
-        "release:ci": "semantic-release && yarn run postrelease"
+        "release:ci": "semantic-release && npm run postrelease",
+        "commit": "git-cz"
     },
     "dependencies": {
         "@angular/animations": "~11.0.2",
