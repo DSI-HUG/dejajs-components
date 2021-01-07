@@ -16,7 +16,8 @@ import { ActivatedRoute } from '@angular/router';
 import { ActivatedRouteSnapshot } from '@angular/router';
 import { NavigationEnd } from '@angular/router';
 import { Router } from '@angular/router';
-import { Destroy, MediaService } from '@deja-js/core';
+import { Destroy } from '@deja-js/component/core';
+import { MediaService } from '@deja-js/component/core';
 import { from } from 'rxjs';
 import { filter, map, mergeMap, takeUntil } from 'rxjs/operators';
 

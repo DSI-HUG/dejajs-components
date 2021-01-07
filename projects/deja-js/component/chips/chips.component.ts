@@ -7,7 +7,15 @@
  */
 
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
-import { Component, ContentChild, EventEmitter, HostBinding, Input, Optional, Output, Self, TemplateRef } from '@angular/core';
+import { Component } from '@angular/core';
+import { ContentChild } from '@angular/core';
+import { EventEmitter } from '@angular/core';
+import { HostBinding } from '@angular/core';
+import { Input } from '@angular/core';
+import { Optional } from '@angular/core';
+import { Output } from '@angular/core';
+import { Self } from '@angular/core';
+import { TemplateRef } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { NgControl } from '@angular/forms';
 

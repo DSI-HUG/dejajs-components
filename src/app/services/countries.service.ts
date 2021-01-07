@@ -8,7 +8,8 @@
 
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Color, MaterialColors } from '@deja-js/core';
+import { Color } from '@deja-js/component/core';
+import { MaterialColors } from '@deja-js/component/core';
 import { ObjectMapper } from 'json-object-mapper';
 import { Observable, of } from 'rxjs';
 import { map, publishLast, refCount } from 'rxjs/operators';

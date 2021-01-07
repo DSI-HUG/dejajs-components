@@ -5,98 +5,89 @@
     $warn: map-get($theme, warn);
     $background: map-get($theme, background);
     $foreground: map-get($theme, foreground);
+    $warning: mat-palette($mat-orange);
+    $success: mat-palette($mat-green);
 
-    $warning: #FF9800;
-    $success: #4CAF50;
 
     deja-message-box {
         background-color: mat-color($background, card);
 
+        &:not([horizontal]) {
+            #msgbox {
+                &.info,
+                &.primary {
+                    .mat-card-actions {
+                        background-color: mat-color($primary, 700);
+                    }
+                }
+
+                &.danger {
+                    .mat-card-actions {
+                        background-color: mat-color($warn, 700);
+                    }
+                }
+
+                &.success {
+                    .mat-card-actions {
+                        background-color: mat-color($success, 700);
+                    }
+                }
+
+                &.warn {
+                    .mat-card-actions {
+                        background-color: mat-color($warning, 700);
+                    }
+                }
+            }
+        }
+
         #msgbox {
 
             &.info,
-            &.primary {
-                border-color: mat-color($primary);
+            &.primary,
+            &.danger,
+            &.success,
+            &.warn {
+                color: mat-color($background, card);
 
-                >.mat-card-title {
-                    background-color: mat-color($primary);
-                    color: mat-color($primary, default-contrast);
+                mat-icon {
+                    color: mat-color($background, card);
                 }
+            }
+
+            &.info,
+            &.primary {
+                background-color: mat-color($primary);
+                box-shadow: 0 4px 20px 0 rgba(0,0,0,.14), 0 7px 10px -5px rgba(mat-color($primary), .4);
             }
 
             &.danger {
-                border-color: mat-color($warn);
-
-                >.mat-card-title {
-                    background-color: mat-color($warn);
-                    color: mat-color($warn, default-contrast);
-                }
+                background-color: mat-color($warn);
+                box-shadow: 0 4px 20px 0 rgba(0,0,0,.14), 0 7px 10px -5px rgba(mat-color($warn), .4);
             }
 
             &.warn {
-                border-color: $warning;
-
-                >.mat-card-title {
-                    background-color: $warning;
-                    color: #FFF;
-                }
+                background-color: mat-color($warning);
+                box-shadow: 0 4px 20px 0 rgba(0,0,0,.14), 0 7px 10px -5px rgba(mat-color($warning), .4);
             }
 
             &.success {
-                border-color: $success;
-
-                >.mat-card-title {
-                    background-color: $success;
-                    color: #FFF;
-                }
+                background-color: mat-color($success);
+                box-shadow: 0 4px 20px 0 rgba(0,0,0,.14), 0 7px 10px -5px rgba(mat-color($success), .4);
             }
 
             >.mat-card-actions {
                 button {
                     &.mat-success[mat-icon-button]:not([disabled]) {
-                        color: $success !important;
+                        color: mat-color($success) !important;
                     }
 
                     &.mat-warn[mat-icon-button]:not([disabled]) {
-                        color: $warning !important;
+                        color: mat-color($warning) !important;
                     }
 
                     &.mat-danger[mat-icon-button]:not([disabled]) {
                         color: mat-color($warn) !important;
-                    }
-
-                    &.mat-success[mat-raised-button],
-                    &.mat-success[mat-fab],
-                    &.mat-success[mat-mini-fab] {
-                        &:not([disabled]) {
-                            background-color: $success !important;
-                            color: #FFF !important;
-                        }
-                    }
-
-                    &.mat-warn[mat-raised-button],
-                    &.mat-warn[mat-fab],
-                    &.mat-warn[mat-mini-fab] {
-                        background-color: $warning !important;
-                        color: #FFF !important;
-                    }
-
-                    &.mat-danger[mat-raised-button],
-                    &.mat-danger[mat-fab],
-                    &.mat-danger[mat-mini-fab] {
-                        &:not([disabled]) {
-                            background-color: mat-color($warn) !important;
-                            color: mat-color($warn, default-contrast) !important;
-                        }
-                    }
-
-                    &.mat-blank[mat-raised-button],
-                    &.mat-blank[mat-fab],
-                    &.mat-blank[mat-mini-fab] {
-                        &:not([disabled]) {
-                            background-color: transparent !important;
-                            color: mat-color($foreground, secondary-text) !important;
-                        }
                     }
                 }
             }

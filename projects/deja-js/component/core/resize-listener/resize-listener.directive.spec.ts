@@ -7,7 +7,10 @@
  */
 
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
+import { EventEmitter } from '@angular/core';
+import { Output } from '@angular/core';
+import { ViewEncapsulation } from '@angular/core';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';

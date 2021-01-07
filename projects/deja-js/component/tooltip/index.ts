@@ -8,8 +8,8 @@
 
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { MediaModule } from '@deja-js/component/core';
 import { DejaOverlayModule } from '@deja-js/component/overlay';
-import { MediaModule } from '@deja-js/core';
 
 import { DejaTooltipComponent } from './tooltip.component';
 import { DejaTooltipDirective } from './tooltip.directive';

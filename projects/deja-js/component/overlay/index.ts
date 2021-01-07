@@ -9,7 +9,7 @@
 import { OverlayModule } from '@angular/cdk/overlay';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { MediaModule } from '@deja-js/core';
+import { MediaModule } from '@deja-js/component/core';
 
 import { DejaOverlayComponent } from './overlay.component';
 

@@ -3,7 +3,6 @@
         "lib": {
             "entryFile": "./index.ts",
             "umdModuleIds": {
-                "@deja-js/core": "@deja-js/core",
                 "lodash": "lodash"
             }
         }

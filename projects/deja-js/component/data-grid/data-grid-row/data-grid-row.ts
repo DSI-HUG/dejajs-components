@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { IItemTree } from '@deja-js/core';
+import { IItemTree } from '@deja-js/component/core';
 
 // tslint:disable-next-line:no-empty-interface
 export type IDejaGridRow<T> = IItemTree<T>;

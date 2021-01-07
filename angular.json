@@ -198,47 +198,6 @@
                     }
                 }
             }
-        },
-        "@deja-js/core": {
-            "root": "projects/deja-js/core",
-            "sourceRoot": "projects/deja-js/core",
-            "projectType": "library",
-            "prefix": "lib",
-            "architect": {
-                "build": {
-                    "builder": "@angular-devkit/build-angular:ng-packagr",
-                    "options": {
-                        "tsConfig": "projects/deja-js/core/tsconfig.lib.json",
-                        "project": "projects/deja-js/core/ng-package.json"
-                    },
-                    "configurations": {
-                        "production": {
-                            "tsConfig": "projects/deja-js/core/tsconfig.lib.prod.json"
-                        }
-                    }
-                },
-                "test": {
-                    "builder": "@angular-devkit/build-angular:karma",
-                    "options": {
-                        "main": "projects/deja-js/core/test.ts",
-                        "tsConfig": "projects/deja-js/core/tsconfig.spec.json",
-                        "karmaConfig": "projects/deja-js/core/karma.conf.js"
-                    }
-                },
-                "lint": {
-                    "builder": "@angular-devkit/build-angular:tslint",
-                    "options": {
-                        "tsConfig": [
-                            "projects/deja-js/core/tsconfig.lib.json",
-                            "projects/deja-js/core/tsconfig.spec.json"
-                        ],
-                        "exclude": [
-                            "**/node_modules/**"
-                        ]
-                    }
-                }
-            }
         }
-    },
-    "defaultProject": "dejajs-component"
+    }
 }

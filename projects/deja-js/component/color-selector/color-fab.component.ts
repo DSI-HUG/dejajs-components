@@ -9,7 +9,7 @@ import { BooleanInput } from '@angular/cdk/coercion';
 import { Component } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { Input } from '@angular/core';
-import { Destroy } from '@deja-js/core';
+import { Destroy } from '@deja-js/component/core';
 import { combineLatest, from } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 

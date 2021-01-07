@@ -16,7 +16,8 @@ import { Optional } from '@angular/core';
 import { Self } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { NgControl } from '@angular/forms';
-import { Destroy, KeyCodes } from '@deja-js/core';
+import { Destroy } from '@deja-js/component/core';
+import { KeyCodes } from '@deja-js/component/core';
 import { BehaviorSubject, from, fromEvent, Observable, timer } from 'rxjs';
 import { distinctUntilChanged, filter, map, switchMap, take, takeUntil } from 'rxjs/operators';
 

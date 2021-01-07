@@ -6,10 +6,15 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
+import { ChangeDetectorRef } from '@angular/core';
+import { Component } from '@angular/core';
+import { ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { Destroy } from '@deja-js/component/core';
+import { IItemBase } from '@deja-js/component/core';
+import { IItemTree } from '@deja-js/component/core';
+import { IViewPortItem } from '@deja-js/component/core';
 import { DejaSelectComponent } from '@deja-js/component/select';
-import { Destroy, IItemBase, IItemTree, IViewPortItem } from '@deja-js/core';
 import { from, Observable, of, Subject, Subscription } from 'rxjs';
 import { delay, map, take, takeUntil, tap } from 'rxjs/operators';
 

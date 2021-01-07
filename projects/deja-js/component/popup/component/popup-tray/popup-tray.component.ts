@@ -5,7 +5,9 @@
  *  Use of this source code is governed by an Apache-2.0 license that can be
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy } from '@angular/core';
+import { Component } from '@angular/core';
+import { OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { from, Observable } from 'rxjs';
 import { debounceTime, filter, map, merge } from 'rxjs/operators';
