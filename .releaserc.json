@@ -3,12 +3,12 @@
         "master",
         {
             "name": "release/11.x.x",
-            "channel": "release-11.x.x"
+            "channel": "release/11.x.x"
         },
         {
             "name": "next/11.x.x",
-            "channel": "next-11.x.x",
-            "prerelease": true
+            "channel": "next/11.x.x",
+            "prerelease": "next"
         }
     ],
     "plugins": [
