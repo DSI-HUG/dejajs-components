@@ -7,7 +7,7 @@
  */
 
 import { ElementRef } from '@angular/core';
-import { DejaConnectionPositionPair } from '@deja-js/core';
+import { DejaConnectionPositionPair } from '@deja-js/component/core';
 
 /**
  * Format of tooltip params

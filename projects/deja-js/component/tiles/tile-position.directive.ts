@@ -6,8 +6,10 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Directive, ElementRef, Input } from '@angular/core';
-import { Rect } from '@deja-js/core';
+import { Directive } from '@angular/core';
+import { ElementRef } from '@angular/core';
+import { Input } from '@angular/core';
+import { Rect } from '@deja-js/component/core';
 
 @Directive({
     selector: '[deja-tile-position]'

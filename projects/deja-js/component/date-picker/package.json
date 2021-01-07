@@ -3,8 +3,6 @@
         "lib": {
             "entryFile": "./index.ts",
             "umdModuleIds": {
-                "@deja-js/core": "@deja-js/core",
-                "@deja-js/core/util": "@deja-js/core/util",
                 "angular2-text-mask": "angular2-text-mask",
                 "@angular/material-moment-adapter": "@angular/material-moment-adapter"
             }

@@ -22,7 +22,6 @@ export * from './sorting/index';
 export * from './text-metrics/index';
 export * from './validation/index';
 export * from './destroy/index';
-export * from './version/index';
 export * from './keycodes.enum';
 export * from './UUID';
 

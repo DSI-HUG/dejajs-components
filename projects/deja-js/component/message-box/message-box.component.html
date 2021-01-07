@@ -3,7 +3,7 @@
         <mat-icon id="icon" *ngIf="icon">{{icon}}</mat-icon>
         <span id="title" *ngIf="!horizontal">{{title}}</span>
         <div class="header-actions">
-            <button *ngIf="showCloseIcon" mat-mini-fab type="button" class="close" (click)="onClose()">
+            <button *ngIf="showCloseIcon" mat-icon-button type="button" class="close" (click)="onClose()">
                 <mat-icon>close</mat-icon>
             </button>
         </div>
@@ -14,13 +14,10 @@
     </mat-card-content>
     <mat-card-actions *ngIf="actions">
         <span *ngFor="let action of actions">
-            <button mat-raised-button type="button" *ngIf="action.icon && action.text" (click)="action.action()" class="with-icon" [attr.data-icon]="action.icon" [color]="action.type">
+            <button mat-button type="button" *ngIf="action.text" (click)="action.action()" class="with-icon" [attr.data-icon]="action.icon">
                 {{action.text}}
             </button>
-            <button mat-raised-button type="button" *ngIf="!action.icon && action.text" (click)="action.action()" [color]="action.type">
-                {{action.text}}
-            </button>
-            <button mat-mini-fab type="button" *ngIf="action.icon && !action.text" [color]="action.type || 'blank'" [class.action-button]="!action.type" (click)="action.action()">
+            <button mat-icon-button type="button" *ngIf="action.icon && !action.text" [class.action-button]="!action.type" (click)="action.action()">
                 <mat-icon *ngIf="action.icon">{{action.icon}}</mat-icon>
             </button>
         </span>

@@ -14,12 +14,12 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { GroupingService } from '@deja-js/component/core';
 import { DejaGridModule } from '@deja-js/component/data-grid';
 import { DejaDialogModule } from '@deja-js/component/dialog';
 import { DejaDragDropModule } from '@deja-js/component/dragdrop';
 import { DejaMessageBoxModule } from '@deja-js/component/message-box';
 import { DejaSplitterModule } from '@deja-js/component/splitter';
-import { GroupingService } from '@deja-js/core';
 
 import { DejaMarkdownModule } from '../../component/markdown/index';
 import { DejaGridDemoComponent } from './grid-demo';

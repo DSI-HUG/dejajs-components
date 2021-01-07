@@ -6,7 +6,10 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { AfterViewChecked, Component, Input, ViewEncapsulation } from '@angular/core';
+import { AfterViewChecked } from '@angular/core';
+import { Component } from '@angular/core';
+import { Input } from '@angular/core';
+import { ViewEncapsulation } from '@angular/core';
 import * as Prism from 'prismjs';
 
 /**

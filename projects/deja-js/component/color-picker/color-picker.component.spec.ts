@@ -8,7 +8,8 @@
 
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { Color, MaterialColors } from '@deja-js/core';
+import { Color } from '@deja-js/component/core';
+import { MaterialColors } from '@deja-js/component/core';
 
 import { DejaColorPickerComponent, DejaColorPickerModule } from './index';
 

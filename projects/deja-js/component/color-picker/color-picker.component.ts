@@ -7,11 +7,23 @@
  */
 
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostBinding, Input, Optional, Output, Self, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectorRef } from '@angular/core';
+import { Component } from '@angular/core';
+import { ElementRef } from '@angular/core';
+import { EventEmitter } from '@angular/core';
+import { HostBinding } from '@angular/core';
+import { Input } from '@angular/core';
+import { Optional } from '@angular/core';
+import { Output } from '@angular/core';
+import { Self } from '@angular/core';
+import { ViewChild } from '@angular/core';
+import { ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { NgControl } from '@angular/forms';
+import { Color } from '@deja-js/component/core';
+import { DejaConnectionPositionPair } from '@deja-js/component/core';
 import { DejaOverlayComponent } from '@deja-js/component/overlay';
-import { Color, DejaConnectionPositionPair } from '@deja-js/core';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,

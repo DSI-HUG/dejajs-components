@@ -7,7 +7,8 @@
  */
 
 import { coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
-import { ChangeDetectionStrategy, TemplateRef } from '@angular/core';
+import { ChangeDetectionStrategy } from '@angular/core';
+import { TemplateRef } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { Component } from '@angular/core';
 import { ContentChild } from '@angular/core';
@@ -15,13 +16,13 @@ import { ElementRef } from '@angular/core';
 import { HostBinding } from '@angular/core';
 import { Input } from '@angular/core';
 import { ViewChild } from '@angular/core';
-import { Destroy } from '@deja-js/core';
-import { IViewPort } from '@deja-js/core';
-import { IViewPortItem } from '@deja-js/core';
-import { IViewPortRefreshParams } from '@deja-js/core';
-import { ViewportDirection } from '@deja-js/core';
-import { ViewportMode } from '@deja-js/core';
-import { ViewPortService } from '@deja-js/core';
+import { Destroy } from '@deja-js/component/core';
+import { IViewPort } from '@deja-js/component/core';
+import { IViewPortItem } from '@deja-js/component/core';
+import { IViewPortRefreshParams } from '@deja-js/component/core';
+import { ViewportDirection } from '@deja-js/component/core';
+import { ViewportMode } from '@deja-js/component/core';
+import { ViewPortService } from '@deja-js/component/core';
 import { BehaviorSubject, from, fromEvent, interval, merge, Observable, of, Subject, timer } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
 

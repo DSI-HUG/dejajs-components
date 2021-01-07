@@ -6,9 +6,13 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { ChangeDetectionStrategy, Component, ElementRef, ViewEncapsulation } from '@angular/core';
-import { DejaTextMetricsService, IconService } from '@deja-js/core';
-import { Destroy } from '@deja-js/core';
+import { ChangeDetectionStrategy } from '@angular/core';
+import { Component } from '@angular/core';
+import { ElementRef } from '@angular/core';
+import { ViewEncapsulation } from '@angular/core';
+import { DejaTextMetricsService } from '@deja-js/component/core';
+import { IconService } from '@deja-js/component/core';
+import { Destroy } from '@deja-js/component/core';
 import { BehaviorSubject, from } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 

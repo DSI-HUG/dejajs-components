@@ -7,5 +7,4 @@ coverage
 
 !.eslintrc.js
 src/test.ts
-projects/deja-js/core/test.ts
 projects/deja-js/component/test.ts

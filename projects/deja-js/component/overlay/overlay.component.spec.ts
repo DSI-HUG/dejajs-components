@@ -6,10 +6,12 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Component, NO_ERRORS_SCHEMA } from '@angular/core';
+import { Component } from '@angular/core';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { DejaConnectionPositionPair, MediaService } from '@deja-js/core';
+import { DejaConnectionPositionPair } from '@deja-js/component/core';
+import { MediaService } from '@deja-js/component/core';
 
 import { DejaOverlayModule } from './index';
 import { DejaOverlayComponent } from './overlay.component';

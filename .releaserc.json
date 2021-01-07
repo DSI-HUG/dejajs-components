@@ -1,0 +1,34 @@
+{
+    "branches": [
+        "master",
+        {
+            "name": "develop",
+            "prerelease": true
+        }
+    ],
+    "plugins": [
+        "@semantic-release/commit-analyzer",
+        "@semantic-release/release-notes-generator",
+        [
+            "@semantic-release/changelog",
+            {
+                "changelogFile": "projects/deja-js/component/CHANGELOG.md"
+            }
+        ],
+        [
+            "@semantic-release/npm",
+            {
+                "npmPublish": false,
+                "pkgRoot": "projects/deja-js/component/"
+            }
+        ],
+        [
+            "@semantic-release/git",
+            {
+                "assets": ["projects/deja-js/component/package.json", "projects/deja-js/component/CHANGELOG.md"],
+                "message": "chore(release): ${nextRelease.version} [skip ci]"
+            }
+        ]
+    ],
+    "repositoryUrl": "git@github.com:DSI-HUG/dejajs-components.git"
+}

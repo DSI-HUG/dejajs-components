@@ -15,7 +15,7 @@ import { Input } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Output } from '@angular/core';
-import { Destroy } from '@deja-js/core';
+import { Destroy } from '@deja-js/component/core';
 import { from, Subject, Subscription, timer } from 'rxjs';
 import { debounce, delay, take, takeUntil, tap } from 'rxjs/operators';
 
