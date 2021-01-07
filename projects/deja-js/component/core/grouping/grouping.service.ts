@@ -13,8 +13,8 @@ import { IItemTree } from '../item-list/item-tree';
 import { SortingService } from '../sorting/sorting.service';
 import { IGroupInfo } from './group-infos';
 
-/* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 
 /** Service de regroupement d'un tableau de modèles */
 @Injectable()
