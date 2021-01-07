@@ -6,9 +6,10 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { OnInit } from '@angular/core';
+import { Destroy } from '@deja-js/component/core';
 import { Languages } from '@deja-js/component/monaco-editor';
-import { Destroy } from '@deja-js/core';
 import { takeUntil } from 'rxjs/operators';
 
 import { MonacoEditorDemoService } from './monaco-editor-demo.service';

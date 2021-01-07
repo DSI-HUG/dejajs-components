@@ -5,12 +5,19 @@
  *  Use of this source code is governed by an Apache-2.0 license that can be
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
-import { ChangeDetectorRef, Component, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectorRef } from '@angular/core';
+import { Component } from '@angular/core';
+import { ViewChild } from '@angular/core';
+import { ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { Destroy } from '@deja-js/component/core';
+import { GroupingService } from '@deja-js/component/core';
+import { IItemBase } from '@deja-js/component/core';
+import { IItemTree } from '@deja-js/component/core';
+import { IViewPortItem } from '@deja-js/component/core';
 import { IDejaDragEvent } from '@deja-js/component/dragdrop';
 import { IDejaMouseDraggableContext, IDejaMouseDroppableContext, IDropCursorInfos } from '@deja-js/component/mouse-dragdrop';
 import { DejaTreeListComponent } from '@deja-js/component/tree-list';
-import { Destroy, GroupingService, IItemBase, IItemTree, IViewPortItem } from '@deja-js/core';
 import { from, Observable, of, Subject, Subscription } from 'rxjs';
 import { delay, map, switchMap, take, takeUntil, tap, toArray } from 'rxjs/operators';
 

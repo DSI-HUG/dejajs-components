@@ -6,7 +6,8 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Directive, ElementRef } from '@angular/core';
+import { Directive } from '@angular/core';
+import { ElementRef } from '@angular/core';
 
 @Directive({
     selector: 'deja-sidenav-menu-separator, [deja-sidenav-menu-separator]'

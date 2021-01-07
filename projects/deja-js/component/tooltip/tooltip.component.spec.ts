@@ -12,7 +12,7 @@ import { TestBed, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MediaService } from '@deja-js/core';
+import { MediaService } from '@deja-js/component/core';
 import { of, timer } from 'rxjs';
 import { delay } from 'rxjs/operators';
 

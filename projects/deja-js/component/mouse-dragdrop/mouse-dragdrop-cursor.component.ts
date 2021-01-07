@@ -6,8 +6,12 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Component, ElementRef, ViewChild, ViewEncapsulation } from '@angular/core';
-import { Destroy, Position } from '@deja-js/core';
+import { Component } from '@angular/core';
+import { ElementRef } from '@angular/core';
+import { ViewChild } from '@angular/core';
+import { ViewEncapsulation } from '@angular/core';
+import { Destroy } from '@deja-js/component/core';
+import { Position } from '@deja-js/component/core';
 import { BehaviorSubject, combineLatest, from } from 'rxjs';
 import { delay, filter, takeUntil, tap } from 'rxjs/operators';
 

@@ -6,7 +6,8 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Injectable, InjectionToken } from '@angular/core';
+import { Injectable } from '@angular/core';
+import { InjectionToken } from '@angular/core';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const CONTAINER_DATA = new InjectionToken<unknown>('CONTAINER_DATA');

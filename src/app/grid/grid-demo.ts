@@ -8,10 +8,17 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { ChangeDetectorRef, Component, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectorRef } from '@angular/core';
+import { Component } from '@angular/core';
+import { ViewChild } from '@angular/core';
+import { ViewEncapsulation } from '@angular/core';
+import { Destroy } from '@deja-js/component/core';
+import { GroupingService } from '@deja-js/component/core';
+import { IGroupInfo } from '@deja-js/component/core';
+import { IItemTree } from '@deja-js/component/core';
+import { IViewPortItem } from '@deja-js/component/core';
 import { DejaGridComponent, IDejaGridColumn, IDejaGridColumnSizeEvent, IDejaGridRow } from '@deja-js/component/data-grid';
 import { IDejaDragContext, IDejaDropContext, IDejaDropEvent } from '@deja-js/component/dragdrop';
-import { Destroy, GroupingService, IGroupInfo, IItemTree, IViewPortItem } from '@deja-js/core';
 import { cloneDeep } from 'lodash';
 import { from, Observable, of, Subject, Subscription } from 'rxjs';
 import { debounceTime, delay, map, reduce, switchMap, take, takeUntil, tap } from 'rxjs/operators';

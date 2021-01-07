@@ -7,7 +7,8 @@
  */
 
 import { BooleanInput, coerceBooleanProperty, coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
-import { AfterContentInit, TemplateRef } from '@angular/core';
+import { AfterContentInit } from '@angular/core';
+import { TemplateRef } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import { ChangeDetectionStrategy } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
@@ -25,26 +26,26 @@ import { ViewChild } from '@angular/core';
 import { ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { NgControl } from '@angular/forms';
+import { DejaChildValidatorDirective } from '@deja-js/component/core';
+import { DejaClipboardService } from '@deja-js/component/core';
+import { DejaItemComponent } from '@deja-js/component/core';
+import { DejaItemEvent } from '@deja-js/component/core';
+import { DejaItemsEvent } from '@deja-js/component/core';
+import { GroupingService } from '@deja-js/component/core';
+import { IFindItemResult } from '@deja-js/component/core';
+import { IItemBase } from '@deja-js/component/core';
+import { IItemTree } from '@deja-js/component/core';
+import { ItemListBase } from '@deja-js/component/core';
+import { ItemListService } from '@deja-js/component/core';
+import { IViewListResult } from '@deja-js/component/core';
+import { IViewPort } from '@deja-js/component/core';
+import { KeyCodes } from '@deja-js/component/core';
+import { Position } from '@deja-js/component/core';
+import { Rect } from '@deja-js/component/core';
+import { SortingService } from '@deja-js/component/core';
+import { ViewportMode } from '@deja-js/component/core';
+import { ViewPortService } from '@deja-js/component/core';
 import { IDejaDragContext, IDejaDragEvent, IDejaDropContext } from '@deja-js/component/dragdrop';
-import { DejaChildValidatorDirective } from '@deja-js/core';
-import { DejaClipboardService } from '@deja-js/core';
-import { DejaItemComponent } from '@deja-js/core';
-import { DejaItemEvent } from '@deja-js/core';
-import { DejaItemsEvent } from '@deja-js/core';
-import { GroupingService } from '@deja-js/core';
-import { IFindItemResult } from '@deja-js/core';
-import { IItemBase } from '@deja-js/core';
-import { IItemTree } from '@deja-js/core';
-import { ItemListBase } from '@deja-js/core';
-import { ItemListService } from '@deja-js/core';
-import { IViewListResult } from '@deja-js/core';
-import { IViewPort } from '@deja-js/core';
-import { KeyCodes } from '@deja-js/core';
-import { Position } from '@deja-js/core';
-import { Rect } from '@deja-js/core';
-import { SortingService } from '@deja-js/core';
-import { ViewportMode } from '@deja-js/core';
-import { ViewPortService } from '@deja-js/core';
 import { BehaviorSubject, combineLatest, from, fromEvent, merge, Observable, of, Subject, Subscription, timer } from 'rxjs';
 import { debounceTime, filter, map, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 
@@ -725,7 +726,7 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
             takeUntil(this.destroyed$)
         ).subscribe(scrollPos => this.viewPort.scrollPosition$.next(scrollPos));
 
-        let keyDown$ = fromEvent(this.listElement, 'keydown') as Observable<KeyboardEvent>;
+        let keyDown$ = fromEvent<KeyboardEvent>(this.listElement, 'keydown');
         if (this.input) {
             const inputKeyDown$ = fromEvent(this.input.nativeElement, 'keydown');
             keyDown$ = merge(keyDown$, inputKeyDown$) as Observable<KeyboardEvent>;
@@ -845,7 +846,7 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
                                 return of(null);
                             }
 
-                            sitem = this.currentItem as IItemTree<unknown>;
+                            sitem = this.currentItem;
                             if (sitem) {
                                 if (this.isCollapsible(sitem)) {
                                     return this.toggleCollapse$(currentIndex, !sitem.collapsed);
@@ -862,7 +863,7 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
                             return of(-1);
 
                         case KeyCodes.Enter:
-                            eitem = this.currentItem as IItemTree<unknown>;
+                            eitem = this.currentItem;
                             if (eitem) {
                                 if (this.isCollapsible(eitem)) {
                                     return this.toggleCollapse$(currentIndex, !eitem.collapsed);
@@ -891,7 +892,7 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
             takeUntil(this.destroyed$)
         ).subscribe();
 
-        let keyUp$ = fromEvent(this.listElement, 'keyup') as Observable<KeyboardEvent>;
+        let keyUp$ = fromEvent<KeyboardEvent>(this.listElement, 'keyup');
         if (this.input) {
             const inputKeyup$ = fromEvent(this.input.nativeElement, 'keyup');
             const inputDrop$ = fromEvent(this.input.nativeElement, 'drop');
