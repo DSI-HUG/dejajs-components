@@ -2,12 +2,12 @@
     "branches": [
         "master",
         {
-            "name": "11.x.x",
-            "channel": "release"
+            "name": "release/11.x.x",
+            "channel": "release-11.x.x"
         },
         {
-            "name": "11.x.x",
-            "channel": "next",
+            "name": "next/11.x.x",
+            "channel": "next-11.x.x",
             "prerelease": true
         }
     ],
