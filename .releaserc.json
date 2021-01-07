@@ -1,5 +1,7 @@
 {
-    "branches": [{
+    "branches": [
+        "master",
+        {
             "name": "11.x.x",
             "channel": "release"
         },
