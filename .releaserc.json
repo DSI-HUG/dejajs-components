@@ -1,11 +1,5 @@
 {
-    "branches": [
-        "release",
-        {
-            "name": "next",
-            "prerelease": true
-        },
-        {
+    "branches": [{
             "name": "11.x.x",
             "channel": "release"
         },
