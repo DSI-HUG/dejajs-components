@@ -15,11 +15,11 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { DejaSlimScrollModule } from '@deja-js/component/core';
 import { MediaModule } from '@deja-js/component/core';
 
+import { DejaSidenavComponent } from './sidenav.component';
 import { DejaSidenavContentDirective } from './sidenav-content.directive';
 import { DejaSidenavHeaderDirective } from './sidenav-header.directive';
 import { DejaSidenavMenuDirective } from './sidenav-menu.directive';
 import { DejaSidenavMenuSeparatorDirective } from './sidenav-separator.directive';
-import { DejaSidenavComponent } from './sidenav.component';
 
 @NgModule({
     declarations: [

@@ -16,8 +16,8 @@ import { from, Observable, of } from 'rxjs';
 import { distinctUntilChanged, filter, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 
 import { IDragCursorInfos } from './mouse-drag-cursor-infos.interface';
-import { IDragDropContext } from './mouse-dragdrop-context.interface';
 import { DejaMouseDragDropService } from './mouse-dragdrop.service';
+import { IDragDropContext } from './mouse-dragdrop-context.interface';
 import { IDropCursorInfos } from './mouse-drop-cursor-infos.interface';
 
 @Directive({

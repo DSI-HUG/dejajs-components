@@ -22,8 +22,8 @@ import { Rect } from '@deja-js/component/core';
 import { from, fromEvent, Observable } from 'rxjs';
 import { debounceTime, delay, filter, map, takeUntil, tap } from 'rxjs/operators';
 
-import { ITooltipParams } from './tooltip-params.interface';
 import { DejaTooltipService } from './tooltip.service';
+import { ITooltipParams } from './tooltip-params.interface';
 
 /**
  * Customizable tooltip component for Angular

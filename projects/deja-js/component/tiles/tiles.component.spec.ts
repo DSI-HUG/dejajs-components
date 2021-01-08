@@ -21,8 +21,8 @@ import { __spread } from 'tslib';
 
 import { DejaTilesModule } from './index';
 import { DejaTile } from './tile.class';
-import { DejaTilesLayoutProvider } from './tiles-layout.provider';
 import { DejaTilesComponent } from './tiles.component';
+import { DejaTilesLayoutProvider } from './tiles-layout.provider';
 
 const padding = 0;
 

@@ -22,8 +22,8 @@ import { debounceTime, delay, filter, map, reduce, switchMap, take, takeUntil, t
 import { __spread } from 'tslib';
 
 import { DejaTile } from './tile.class';
-import { IDejaTilesRefreshParams } from './tiles-refresh-params.interface';
 import { IDejaTilesAddedEvent, IDejaTilesAddEvent, IDejaTilesDeletedEvent, IDejaTilesEvent, IDejaTilesRemoveEvent } from './tiles.event';
+import { IDejaTilesRefreshParams } from './tiles-refresh-params.interface';
 
 interface ILayoutInfo {
     id: string;

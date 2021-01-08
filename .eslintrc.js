@@ -145,7 +145,7 @@ module.exports = {
             'error',
             'never'
         ],
-        'simple-import-sort/sort': [
+        'simple-import-sort/imports': [
             'error',
             {
                 groups: [

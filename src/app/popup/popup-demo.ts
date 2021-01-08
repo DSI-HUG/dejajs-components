@@ -22,8 +22,8 @@ import { filter, map, takeUntil } from 'rxjs/operators';
 
 import { DummyComponent } from './dummy/dummy.component';
 import { DejaPopupCustomDemoComponent } from './popup-custom.component';
-import { PopupDemoButtonComponent, PopupDemoButtonComponentData } from './popup-demo-button/popup-demo-button.component';
 import { CONTAINER_DATA } from './popup-demo.service';
+import { PopupDemoButtonComponent, PopupDemoButtonComponentData } from './popup-demo-button/popup-demo-button.component';
 
 @Component({
     selector: 'popup-demo',
