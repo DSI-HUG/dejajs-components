@@ -122,9 +122,6 @@ MIT
 @deja-js/component
 Apache-2.0
 
-@deja-js/core
-Apache-2.0
-
 angular2-text-mask
 Unlicense
 This is free and unencumbered software released into the public domain.
