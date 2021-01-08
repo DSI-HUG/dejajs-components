@@ -50,7 +50,7 @@
             "@semantic-release/git",
             {
                 "assets": ["projects/deja-js/component/package.json", "projects/deja-js/component/CHANGELOG.md"],
-                "message": "chore(release): [skip travis] ${nextRelease.version}"
+                "message": "chore(release): ${nextRelease.version} [skip ci]"
             }
         ]
     ],
