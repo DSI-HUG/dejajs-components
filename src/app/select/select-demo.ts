@@ -19,8 +19,8 @@ import { from, Observable, of, Subject, Subscription } from 'rxjs';
 import { delay, map, take, takeUntil, tap } from 'rxjs/operators';
 
 import { News } from '../common/news.model';
-import { CountriesListService } from '../services/countries-list.service';
 import { CountriesService, Country } from '../services/countries.service';
+import { CountriesListService } from '../services/countries-list.service';
 import { NewsService } from '../services/news.service';
 import { cheeseValidator } from './validators';
 

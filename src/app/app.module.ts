@@ -24,8 +24,8 @@ import { DejaSidenavModule } from '@deja-js/component/sidenav';
 
 import { AppComponent } from './app.component';
 import { routing } from './app.routes';
-import { CountriesListService } from './services/countries-list.service';
 import { CountriesService } from './services/countries.service';
+import { CountriesListService } from './services/countries-list.service';
 import { FoldersService } from './services/folders.service';
 import { NewsService } from './services/news.service';
 import { PeopleService } from './services/people.service';
