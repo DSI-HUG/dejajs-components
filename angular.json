@@ -201,5 +201,6 @@
                 }
             }
         }
-    }
+    },
+    "defaultProject": "dejajs-component"
 }
