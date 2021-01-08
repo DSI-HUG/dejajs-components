@@ -1,6 +1,6 @@
 {
     "name": "@deja-js/component",
-    "version": "10.2.0",
+    "version": "10.3.0-develop.1",
     "description": "Angular Components Library",
     "homepage": "https://github.com/DSI-HUG/dejajs-components",
     "bugs": "https://github.com/DSI-HUG/dejajs-components/issues",
@@ -38,7 +38,7 @@
         "prismjs": "^1.23.0",
         "rxjs": "^6.6.3",
         "showdown": "^1.9.1",
-        "zone.js": "^0.11.3"
+        "zone.js": "^0.10.3"
     },
     "publishConfig": {
         "access": "public"

@@ -40,8 +40,7 @@ export class DejaTooltipComponent extends Destroy implements OnInit {
     /** Tooltip name. Mandatory, and need to be unic */
     @Input() public name: string;
     /** Event Emmited when hide action is called */
-    // eslint-disable-next-line @angular-eslint/prefer-output-readonly
-    @Output() public hide = new EventEmitter();
+    @Output() public readonly hide = new EventEmitter();
 
     /** Template for tooltip content */
     @ContentChild('tooltipTemplate')
