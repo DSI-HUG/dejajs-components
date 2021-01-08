@@ -9,9 +9,9 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DejaCircularPickerModule } from '@deja-js/component/circular-picker';
 
 import { DejaDateFormatPipe } from './date-format.pipe';

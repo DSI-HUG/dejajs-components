@@ -32,9 +32,9 @@ import { from, fromEvent, Observable, Subject, Subscription } from 'rxjs';
 import { debounceTime, filter, takeUntil } from 'rxjs/operators';
 
 import { DejaTile } from './tile.class';
+import { IDejaTilesAddedEvent, IDejaTilesAddEvent, IDejaTilesDeletedEvent, IDejaTilesEvent, IDejaTilesRemoveEvent } from './tiles.event';
 import { DejaTilesLayoutProvider } from './tiles-layout.provider';
 import { IDejaTilesRefreshParams } from './tiles-refresh-params.interface';
-import { IDejaTilesAddedEvent, IDejaTilesAddEvent, IDejaTilesDeletedEvent, IDejaTilesEvent, IDejaTilesRemoveEvent } from './tiles.event';
 
 @Component({
     selector: 'deja-tiles',

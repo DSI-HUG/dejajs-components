@@ -12,8 +12,8 @@ import { FormsModule } from '@angular/forms';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { DejaMouseDragDropModule } from '@deja-js/component/mouse-dragdrop';
 
-import { DejaTilePositionDirective } from './tile-position.directive';
 import { DejaTileComponent } from './tile.component';
+import { DejaTilePositionDirective } from './tile-position.directive';
 import { DejaTilesComponent } from './tiles.component';
 
 @NgModule({
