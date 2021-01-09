@@ -8,7 +8,7 @@ cache:
   - node_modules
 notifications:
   email:
-    on_failure: always
+    on_failure: never
     on_success: never
   slack:
     rooms:
@@ -18,8 +18,8 @@ node_js:
 - '12'
 branches:
   only:
-  - master
-  - develop
+  - gh-pages
+  - /.*/
 before_install:
 - npm install -g yarn
 - rm -rf node_modules
@@ -29,10 +29,12 @@ before_script:
   --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 3000x1200x16"
 - sleep 3
 script:
-- npm run license-check
 - npm run build:lib
-- npm run test:lib
-- npm run lint
+- if [ $TRAVIS_PULL_REQUEST != "false" ]; then
+    npm run license-check
+    npm run test:lib
+    npm run lint
+  fi
 env:
   global:
   - ENCRYPTION_LABEL: d9215e5535f8
@@ -41,7 +43,6 @@ jobs:
   include:
     - stage: Components npm release
       before_deploy:
-        - npm run build:lib # un rebuild est nécessaire ici pour enlever les bundle ivy générés lors des tests
         - npm run release:ci
         - cd dist/deja-js/component
       deploy:
@@ -54,6 +55,7 @@ jobs:
         on:
           repo: DSI-HUG/dejajs-components
           all_branches: true
+          condition: $TRAVIS_BRANCH =~ ^(master|develop)$
       after_deploy:
       - cd ../../..
       - bash ./scripts/deploy.sh
