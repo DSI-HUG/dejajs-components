@@ -27,7 +27,7 @@ before_script:
 - export DISPLAY=:99.0
 - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/cucumber_xvfb_99.pid --make-pidfile
   --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 3000x1200x16"
-- sleep 4
+- sleep 3
 script:
 - npm run build:lib
 - if [ $TRAVIS_PULL_REQUEST != "false" ]; then
