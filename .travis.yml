@@ -20,7 +20,7 @@ branches:
   only:
   - gh-pages
   - /.*/
-if: branch = test-travis-pr
+if: branch IN (master, develop) OR type = pull_request
 before_install:
 - npm install -g yarn
 - rm -rf node_modules
