@@ -20,6 +20,7 @@ branches:
   only:
   - gh-pages
   - /.*/
+if: branch = master
 before_install:
 - npm install -g yarn
 - rm -rf node_modules
