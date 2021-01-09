@@ -21,11 +21,6 @@ branches:
   - develop
   - master
 before_install:
-- if [ $TRAVIS_PULL_REQUEST != "false" ]; then
-      echo "Start a test build for pull request"; 
-  else 
-      echo "Start a deployment build"; 
-  fi
 - npm install -g yarn
 - rm -rf node_modules
 before_script:
