@@ -1,7 +1,8 @@
 {
     "extends": "../../../tsconfig.json",
     "compilerOptions": {
-        "outDir": "../../../out-tsc/spec",
+        "skipLibCheck": true,
+        "outDir": "../../../out-tsc/lib",
         "types": [
             "jasmine",
             "node",
