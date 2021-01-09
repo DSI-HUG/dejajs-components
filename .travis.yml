@@ -41,6 +41,7 @@ jobs:
   include:
     - stage: Components npm release
       before_deploy:
+        - npm run build:lib # un rebuild est nécessaire ici pour enlever les bundle ivy générés lors des tests
         - npm run release:ci
         - cd dist/deja-js/component
       deploy:
