@@ -16,13 +16,13 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { DejaOverlayModule } from '@deja-js/component/overlay';
 
+import { DejaPopupComponent } from './component/popup/popup.component';
 import { DejaPopupActionsComponent } from './component/popup-actions/popup-actions.component';
 import { DejaPopupAdvancedComponent } from './component/popup-advanced/popup-advanced.component';
 import { DejaPopupBoxComponent } from './component/popup-box/popup-box.component';
 import { DejaPopupContentComponent } from './component/popup-content/popup-content.component';
 import { DejaPopupToolbarComponent } from './component/popup-toolbar/popup-toolbar.component';
 import { DejaPopupTrayComponent } from './component/popup-tray/popup-tray.component';
-import { DejaPopupComponent } from './component/popup/popup.component';
 import { DejaPopupService } from './service/popup.service';
 
 @NgModule({

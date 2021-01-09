@@ -13,9 +13,9 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
+import { DejaPopupComponent } from '../component/popup/popup.component';
 import { DejaPopupActionsComponent } from '../component/popup-actions/popup-actions.component';
 import { DejaPopupAdvancedComponent } from '../component/popup-advanced/popup-advanced.component';
-import { DejaPopupComponent } from '../component/popup/popup.component';
 import { DejaPopupAction } from '../model/popup-action.model';
 import { DejaPopupBase } from '../model/popup-base.class';
 import { DejaPopupConfig } from '../model/popup-config.model';

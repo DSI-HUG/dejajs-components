@@ -16,7 +16,7 @@
         "url": "https://github.com/DSI-HUG/dejajs-components.git"
     },
     "dependencies": {
-        "tslib": "~2.0.0"
+        "tslib": "~2.1.0"
     },
     "peerDependencies": {
         "@angular/animations": "~11.0.2",
@@ -34,8 +34,9 @@
         "core-js": "^3.6.5",
         "json-object-mapper": "^1.6.0",
         "material-icons-font": "^2.1.0",
+        "prismjs": "^1.23.0",
         "rxjs": "^6.6.3",
-        "zone.js": "~0.10.3"
+        "zone.js": "^0.10.3"
     },
     "publishConfig": {
         "access": "public"

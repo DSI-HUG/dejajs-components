@@ -25,8 +25,8 @@ import { DejaMarkdownModule } from '../../component/markdown/index';
 import { DummyComponent } from './dummy/dummy.component';
 import { DejaPopupCustomDemoComponent } from './popup-custom.component';
 import { DejaPopupDemoComponent } from './popup-demo';
-import { PopupDemoButtonComponent } from './popup-demo-button/popup-demo-button.component';
 import { routing } from './popup-demo.routes';
+import { PopupDemoButtonComponent } from './popup-demo-button/popup-demo-button.component';
 
 @NgModule({
     declarations: [DejaPopupDemoComponent, DejaPopupCustomDemoComponent, DummyComponent, PopupDemoButtonComponent],

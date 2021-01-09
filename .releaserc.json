@@ -33,7 +33,7 @@
                 },
                 {
                     "type": "chore",
-                    "release": "patch"
+                    "release": "minor"
                 }
             ]
         }],
