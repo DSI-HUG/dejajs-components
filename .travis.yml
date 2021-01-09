@@ -20,7 +20,7 @@ branches:
   only:
   - gh-pages
   - /.*/
-if: branch = master
+if: branch = test-travis-pr
 before_install:
 - npm install -g yarn
 - rm -rf node_modules
