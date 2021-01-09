@@ -23,8 +23,8 @@ import { cloneDeep } from 'lodash';
 import { from, timer } from 'rxjs';
 import { debounceTime, delay, filter, take, tap } from 'rxjs/operators';
 
-import { IDejaGridColumn, IDejaGridColumnLayoutEvent } from './data-grid-column/data-grid-column';
 import { DejaGridComponent } from './data-grid.component';
+import { IDejaGridColumn, IDejaGridColumnLayoutEvent } from './data-grid-column/data-grid-column';
 import { DejaGridModule } from './index';
 
 interface IFructs extends IItemBase<unknown> {

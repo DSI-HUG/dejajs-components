@@ -8,7 +8,5 @@
 
 import { NgModule } from '@angular/core';
 
-@NgModule({})
+@NgModule()
 export class DejaJsComponentModule { }
-
-export * from './version/index';

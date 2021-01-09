@@ -23,8 +23,8 @@ import { delay, map, switchMap, take, takeUntil, tap, toArray } from 'rxjs/opera
 
 import { News } from '../common/news.model';
 import { cheeseValidator } from '../select/validators';
-import { CountriesListService } from '../services/countries-list.service';
 import { CountriesService, Country } from '../services/countries.service';
+import { CountriesListService } from '../services/countries-list.service';
 import { Folder, FoldersService } from '../services/folders.service';
 import { NewsService } from '../services/news.service';
 

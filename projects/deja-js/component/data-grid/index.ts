@@ -15,11 +15,11 @@ import { DejaSortingModule } from '@deja-js/component/core';
 import { DejaDragDropModule } from '@deja-js/component/dragdrop';
 import { DejaTreeListModule } from '@deja-js/component/tree-list';
 
+import { DejaGridComponent } from './data-grid.component';
 import { DejaGridGroupAreaComponent } from './data-grid-grouparea/data-grid-grouparea.component';
 import { DejaGridHeaderComponent } from './data-grid-header/data-grid-header.component';
 import { DejaGridParentRowComponent } from './data-grid-parent-row/data-grid-parent-row.component';
 import { DejaGridRowComponent } from './data-grid-row/data-grid-row.component';
-import { DejaGridComponent } from './data-grid.component';
 
 @NgModule({
     declarations: [
