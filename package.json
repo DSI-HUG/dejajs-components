@@ -30,7 +30,7 @@
         "build:scss": "scss-bundle -c component-scss-bundle.config.json",
         "postinstall": "ngcc",
         "release": "semantic-release --no-ci",
-        "release:ci": "semantic-release && npm run postrelease",
+        "release:ci": "semantic-release",
         "commit": "git-cz"
     },
     "dependencies": {
