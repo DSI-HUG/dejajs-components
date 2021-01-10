@@ -8,7 +8,7 @@ cache:
   - node_modules
 notifications:
   email:
-    on_failure: never
+    on_failure: always
     on_success: never
   slack:
     rooms:

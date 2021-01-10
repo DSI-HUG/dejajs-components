@@ -8,7 +8,7 @@
 
 import { Injectable } from '@angular/core';
 
-import * as dejaJsCorePkg from '../package.json';
+import * as dejaJsComponentPkg from '../package.json';
 
 interface PackageJsonInterface {
     version: string;
@@ -19,11 +19,11 @@ interface PackageJsonInterface {
 })
 export class VersionService {
 
-    public dejajsCoreVersion: string;
+    public dejajsComponentVersion: string;
 
     public init(): void {
-        const pkgJson = dejaJsCorePkg as unknown;
-        this.dejajsCoreVersion = (pkgJson as PackageJsonInterface).version;
-        document.body.setAttribute('dejajs-core-version', this.dejajsCoreVersion);
+        const pkgJson = dejaJsComponentPkg as unknown;
+        this.dejajsComponentVersion = (pkgJson as PackageJsonInterface).version;
+        document.body.setAttribute('dejajs-component-version', this.dejajsComponentVersion);
     }
 }
