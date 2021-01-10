@@ -1,3 +1,5 @@
+# [10.5.0](https://github.com/DSI-HUG/dejajs-components/compare/v10.4.0...v10.5.0) (2021-01-10)
+
 # [10.5.0-develop.1](https://github.com/DSI-HUG/dejajs-components/compare/v10.4.0...v10.5.0-develop.1) (2021-01-10)
 
 # [10.5.0-develop.1](https://github.com/DSI-HUG/dejajs-components/compare/v10.4.0...v10.5.0-develop.1) (2021-01-10)
