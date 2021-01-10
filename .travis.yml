@@ -8,7 +8,7 @@ cache:
   - node_modules
 notifications:
   email:
-    on_failure: always
+    on_failure: never
     on_success: never
   slack:
     rooms:
@@ -31,10 +31,12 @@ before_script:
   --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 3000x1200x16"
 - sleep 3
 script:
-- npm run license-check
 - npm run build:lib
-- npm run test:lib
-- npm run lint
+- if [ $TRAVIS_PULL_REQUEST != "false" ]; then
+    npm run license-check;
+    npm run test:lib;
+    npm run lint;
+  fi
 env:
   global:
   - ENCRYPTION_LABEL: d9215e5535f8
@@ -55,6 +57,7 @@ jobs:
         on:
           repo: DSI-HUG/dejajs-components
           all_branches: true
+          condition: $TRAVIS_BRANCH =~ ^(next/11.x.x|release/11.x.x)$
       after_deploy:
       - cd ../../..
       - bash ./scripts/deploy.sh
