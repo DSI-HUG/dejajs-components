@@ -57,7 +57,7 @@ jobs:
         on:
           repo: DSI-HUG/dejajs-components
           all_branches: true
-          condition: $TRAVIS_BRANCH =~ ^(master|develop)$
+          condition: $TRAVIS_BRANCH =~ ^(next/11.x.x|release/11.x.x)$
       after_deploy:
       - cd ../../..
       - bash ./scripts/deploy.sh
