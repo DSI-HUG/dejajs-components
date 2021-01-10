@@ -29,7 +29,7 @@
         "build:lib:watch": "node --max-old-space-size=8192 ./node_modules/@angular/cli/bin/ng build @deja-js/component --watch && npm run build:scss",
         "build:scss": "scss-bundle -c component-scss-bundle.config.json",
         "postinstall": "ngcc",
-        "postrelease": "cpx \"./projects/deja-js/component/CHANGELOG.md\" \"./dist/deja-js/component\" && cpx \"./projects/deja-js/component/package.json\" \"./dist/deja-js/component\"",
+        "postrelease": "cpx \"./projects/deja-js/component/CHANGELOG.md\" \"./dist/deja-js/component\"",
         "release": "semantic-release --no-ci",
         "release:ci": "semantic-release && npm run postrelease",
         "commit": "git-cz"
