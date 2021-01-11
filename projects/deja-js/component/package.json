@@ -31,10 +31,8 @@
         "@angular/router": "^10.2.4",
         "angular2-text-mask": "^9.0.0",
         "core-js": "^3.8.2",
-        "hammerjs": "^2.0.8",
         "json-object-mapper": "^1.6.0",
         "material-icons-font": "^2.1.0",
-        "prismjs": "^1.23.0",
         "rxjs": "^6.6.3",
         "showdown": "^1.9.1",
         "zone.js": "^0.10.3"
