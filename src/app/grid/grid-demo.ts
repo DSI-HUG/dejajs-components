@@ -19,7 +19,7 @@ import { IItemTree } from '@deja-js/component/core';
 import { IViewPortItem } from '@deja-js/component/core';
 import { DejaGridComponent, IDejaGridColumn, IDejaGridColumnSizeEvent, IDejaGridRow } from '@deja-js/component/data-grid';
 import { IDejaDragContext, IDejaDropContext, IDejaDropEvent } from '@deja-js/component/dragdrop';
-import { cloneDeep } from 'lodash';
+import { cloneDeep } from 'lodash-es';
 import { from, Observable, of, Subject, Subscription } from 'rxjs';
 import { debounceTime, delay, map, reduce, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 

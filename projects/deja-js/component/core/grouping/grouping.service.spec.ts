@@ -5,7 +5,7 @@
  *  Use of this source code is governed by an Apache-2.0 license that can be
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
-import { cloneDeep } from 'lodash';
+import { cloneDeep } from 'lodash-es';
 import { take } from 'rxjs/operators';
 
 import { ISortInfos } from '../sorting/sort-infos.model';

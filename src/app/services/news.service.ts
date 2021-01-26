@@ -9,7 +9,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ObjectMapper } from 'json-object-mapper';
-import { cloneDeep } from 'lodash';
+import { cloneDeep } from 'lodash-es';
 import { Observable } from 'rxjs';
 import { map, publishLast, refCount, switchMap } from 'rxjs/operators';
 

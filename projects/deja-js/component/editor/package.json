@@ -3,11 +3,12 @@
         "lib": {
             "entryFile": "./index.ts",
             "umdModuleIds": {
-                "lodash": "lodash"
+                "lodash-es": "lodash-es"
             }
         }
     },
     "peerDependencies": {
-        "ckeditor": "~4.11.0"
+        "ckeditor": "~4.11.0",
+        "lodash-es": "^4.17.20"
     }
 }
