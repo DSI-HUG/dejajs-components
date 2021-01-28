@@ -1,3 +1,11 @@
+# [11.5.0-next.1](https://github.com/DSI-HUG/dejajs-components/compare/v11.4.0...v11.5.0-next.1) (2021-01-28)
+
+
+### Bug Fixes
+
+* **lodash:** replace lodash by lodash-es ([f39a3ed](https://github.com/DSI-HUG/dejajs-components/commit/f39a3edb23e79353eb7e05e4854eb1a2df744573))
+* **moment:** replace moment by date-fns ([b7f4021](https://github.com/DSI-HUG/dejajs-components/commit/b7f40215cc65cbd4a1f2902210724f9e9232b0ec))
+
 # [11.4.0](https://github.com/DSI-HUG/dejajs-components/compare/v11.3.0...v11.4.0) (2021-01-11)
 
 # [11.4.0-next.1](https://github.com/DSI-HUG/dejajs-components/compare/v11.3.0...v11.4.0-next.1) (2021-01-11)
