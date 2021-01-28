@@ -19,7 +19,7 @@ import { IViewPort } from '@deja-js/component/core';
 import { KeyCodes } from '@deja-js/component/core';
 import { SortingService } from '@deja-js/component/core';
 import { ViewPortService } from '@deja-js/component/core';
-import { cloneDeep } from 'lodash';
+import { cloneDeep } from 'lodash-es';
 import { from, timer } from 'rxjs';
 import { debounceTime, delay, filter, take, tap } from 'rxjs/operators';
 

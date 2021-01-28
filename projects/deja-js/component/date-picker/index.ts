@@ -12,7 +12,6 @@ import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DejaChildValidatorModule } from '@deja-js/component/core';
 import { DejaDateSelectorModule } from '@deja-js/component/date-selector';
 import { DejaOverlayModule } from '@deja-js/component/overlay';
@@ -33,9 +32,6 @@ import { DejaDatePickerComponent } from './date-picker.component';
         DejaChildValidatorModule,
         DejaDateSelectorModule,
         TextMaskModule
-    ],
-    providers: [
-        MomentDateAdapter
     ]
 })
 export class DejaDatePickerModule { }

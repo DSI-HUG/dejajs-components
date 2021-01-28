@@ -88,7 +88,7 @@ describe('DejaDatePickerContainerComponent', () => {
         from(component.formatChanged$).pipe(
             take(1)
         ).subscribe(format => {
-            void expect(format).toEqual('YYYY-MM-DD HH:mm');
+            void expect(format).toEqual('yyyy-MM-dd HH:mm');
             datePickerTestingUtils.testDone();
         });
 
@@ -219,7 +219,7 @@ describe('DejaDatePickerContainerComponent', () => {
     describe('free entry', () => {
         beforeEach(() => {
             component.allowFreeEntry = true;
-            component.format = 'YYYY-DD-MM';
+            component.format = 'yyyy-dd-MM';
             // Without dispatchEvent the incorrect input (the one which does not support free text) is set to the DOM
             // Don't know why fixture.detectChanges does not do the job
             fixture.debugElement
