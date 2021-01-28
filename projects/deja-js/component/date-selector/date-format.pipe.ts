@@ -7,16 +7,14 @@
  */
 import { Pipe } from '@angular/core';
 import { PipeTransform } from '@angular/core';
-import { MomentDateAdapter } from '@angular/material-moment-adapter';
+import { formatWithLocale } from '@deja-js/component/core';
 
 @Pipe({
     name: 'dejaDate'
 })
 export class DejaDateFormatPipe implements PipeTransform {
 
-    public constructor(private momentDateAdapter: MomentDateAdapter) { }
-
-    public transform(date: Date, format: string): string | Date {
-        return this.momentDateAdapter.deserialize(date)?.format(format) || date;
+    public transform(date: Date, dateFormat: string): string | Date {
+        return formatWithLocale(date, dateFormat) || date;
     }
 }
