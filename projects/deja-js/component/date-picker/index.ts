@@ -15,7 +15,7 @@ import { MatInputModule } from '@angular/material/input';
 import { DejaChildValidatorModule } from '@deja-js/component/core';
 import { DejaDateSelectorModule } from '@deja-js/component/date-selector';
 import { DejaOverlayModule } from '@deja-js/component/overlay';
-import { TextMaskModule } from 'angular2-text-mask';
+import { NgxMaskModule } from 'ngx-mask';
 
 import { DejaDatePickerComponent } from './date-picker.component';
 
@@ -31,10 +31,11 @@ import { DejaDatePickerComponent } from './date-picker.component';
         MatIconModule,
         DejaChildValidatorModule,
         DejaDateSelectorModule,
-        TextMaskModule
+        NgxMaskModule.forRoot()
     ]
 })
 export class DejaDatePickerModule { }
 
-export * from './format-to-mask';
 export * from './date-picker.component';
+export * from './format-to-mask';
+

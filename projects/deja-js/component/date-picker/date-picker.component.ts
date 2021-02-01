@@ -9,40 +9,19 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { BooleanInput, coerceBooleanProperty, NumberInput } from '@angular/cdk/coercion';
 import { BreakpointObserver } from '@angular/cdk/layout';
-import { AfterContentInit } from '@angular/core';
-import { ChangeDetectionStrategy } from '@angular/core';
-import { ChangeDetectorRef } from '@angular/core';
-import { Component } from '@angular/core';
-import { DoCheck } from '@angular/core';
-import { ElementRef } from '@angular/core';
-import { EventEmitter } from '@angular/core';
-import { HostBinding } from '@angular/core';
-import { Input } from '@angular/core';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { Optional } from '@angular/core';
-import { Output } from '@angular/core';
-import { Self } from '@angular/core';
-import { ViewChild } from '@angular/core';
-import { ViewEncapsulation } from '@angular/core';
-import { ControlValueAccessor } from '@angular/forms';
-import { FormGroupDirective } from '@angular/forms';
-import { NgControl } from '@angular/forms';
-import { NgForm } from '@angular/forms';
-import { CanUpdateErrorState } from '@angular/material/core';
-import { ErrorStateMatcher } from '@angular/material/core';
+import { AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, DoCheck, ElementRef, EventEmitter, HostBinding, Input, OnDestroy, OnInit, Optional, Output, Self, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
+import { CanUpdateErrorState, ErrorStateMatcher } from '@angular/material/core';
 import { MatFormFieldControl } from '@angular/material/form-field';
-import { DejaChildValidatorDirective } from '@deja-js/component/core';
-import { DejaConnectionPositionPair } from '@deja-js/component/core';
-import { KeyCodes } from '@deja-js/component/core';
-import { formatWithLocale } from '@deja-js/component/core';
+import { DejaChildValidatorDirective, DejaConnectionPositionPair, formatWithLocale, KeyCodes } from '@deja-js/component/core';
 import { _MatInputMixinBase } from '@deja-js/component/core/util';
 import { DateComponentLayout, DaysOfWeek, DejaDateSelectorComponent } from '@deja-js/component/date-selector';
 import { add, isValid, parse, startOfToday } from 'date-fns';
 import { combineLatest, from, fromEvent, merge, Observable, ReplaySubject, Subject, timer } from 'rxjs';
 import { delay, filter, map, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 
-import { formatToMask, formatToUnitOfTime } from './format-to-mask';
+import { formatToMask, formatToPattern, formatToUnitOfTime } from './format-to-mask';
+
 
 /**
  * Date-picker component for Angular
@@ -153,10 +132,17 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
     }
 
     /** Mask for input */
-    public _mask = [] as (string | RegExp)[];
+    public _mask = '';
 
-    public get mask(): (string | RegExp)[] {
+    public get mask(): string {
         return this._mask;
+    }
+
+    /** Pattern for input */
+    public _pattern = {};
+
+    public get pattern(): { [character: string]: { pattern: RegExp; optional?: boolean } } {
+        return this._pattern;
     }
 
     /** Internal use */
@@ -363,14 +349,17 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
             tap(([dateFormat]) => {
                 // eslint-disable-next-line @typescript-eslint/prefer-regexp-exec
                 const array = dateFormat.match(DejaDatePickerComponent.formattingTokens);
-                this._mask = array.reduce((result, val) => {
-                    if (formatToMask[val]) {
-                        result = [...result, ...formatToMask[val]];
-                    } else {
-                        result.push(val);
+                this._mask = array.map(val => formatToMask[val] ? formatToMask[val] : val).join('');
+                const patternBuilder: { [character: string]: { pattern: RegExp; optional?: boolean } } = {};
+                array.forEach(val => {
+                    const patternSection = formatToPattern[val] ? formatToPattern[val] : null;
+                    if (patternSection) {
+                        patternSection.forEach((value, key) => {
+                            patternBuilder[key] = value;
+                        });
                     }
-                    return result;
-                }, [] as Array<RegExp | string>);
+                });
+                this._pattern = patternBuilder;
             })
         );
 
@@ -421,13 +410,13 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
     public ngOnInit(): void {
         if (!this._format) {
             if (!this.layout || this.layout === DateComponentLayout.dateonly || this.layout === 'dateonly') {
-                this.format = 'yyyy-MM-dd';
+                this.format = 'yyyy/MM/dd';
             } else if (this.layout === DateComponentLayout.datetime || this.layout === 'datetime') {
-                this.format = 'yyyy-MM-dd HH:mm';
+                this.format = 'yyyy/MM/dd HH:mm';
             } else if (this.layout === DateComponentLayout.timeonly || this.layout === 'timeonly') {
                 this.format = 'HH:mm';
             } else {
-                this.format = 'yyyy-MM-dd';
+                this.format = 'yyyy/MM/dd';
             }
         }
     }

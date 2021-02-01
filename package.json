@@ -31,6 +31,8 @@
         "postinstall": "ngcc",
         "release": "semantic-release --no-ci",
         "release:ci": "semantic-release",
+        "analyze": "ng build --statsJson=true  && webpack-bundle-analyzer --port 8989 ./dist/deja-js/component/stats.json",
+        "analyze:prod": "ng build --prod=true --statsJson=true && npm run build:scss && webpack-bundle-analyzer --port 8989 ./dist/deja-js/component/stats.json",
         "commit": "git-cz"
     },
     "dependencies": {
@@ -45,7 +47,6 @@
         "@angular/platform-browser": "~11.1.0",
         "@angular/platform-browser-dynamic": "~11.1.0",
         "@angular/router": "~11.1.0",
-        "angular2-text-mask": "9.0.0",
         "ckeditor": "~4.11.0",
         "core-js": "~3.8.2",
         "date-fns": "~2.16.1",
@@ -53,11 +54,13 @@
         "lodash-es": "~4.17.20",
         "material-icons-font": "2.1.0",
         "monaco-editor": "0.21.2",
+        "ngx-mask": "11.1.4",
         "prismjs": "~1.23.0",
         "rxjs": "~6.6.3",
         "showdown": "~1.9.1",
         "tslib": "~2.1.0",
-        "zone.js": "~0.10.3"
+        "zone.js": "~0.10.3",
+        "webpack-bundle-analyzer": "^4.1.0"
     },
     "devDependencies": {
         "@angular-devkit/architect": "~0.1101.1",
