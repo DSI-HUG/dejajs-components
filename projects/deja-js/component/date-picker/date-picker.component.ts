@@ -21,6 +21,7 @@ import { combineLatest, from, fromEvent, merge, Observable, ReplaySubject, Subje
 import { delay, filter, map, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 
 import { formatToMask, formatToPattern, formatToUnitOfTime } from './format-to-mask';
+import { Pattern } from './models/pattern.model';
 
 
 /**
@@ -39,6 +40,7 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
     public static nextId = 0;
     // eslint-disable-next-line @typescript-eslint/naming-convention
     private static formattingTokens = new RegExp('(\\[[^\\[]*\\])|(\\\\)?([Hh]mm(ss)?|Mo|MM?M?M?|Do|DDDo|DD?D?D?|ddd?d?|do?|w[o|w]?|W[o|W]?|Qo?|yyyyyy|yyyyy|yyyy|yy|gg(ggg?)?|GG(GGG?)?|e|E|a|A|hh?|HH?|kk?|mm?|ss?|S{1,9}|x|X|zz?|ZZ?|.)', 'g');
+
 
     @HostBinding() public id = `my-tel-input-${DejaDatePickerComponent.nextId++}`;
     @HostBinding('attr.aria-describedby') public describedBy = '';
@@ -139,9 +141,9 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
     }
 
     /** Pattern for input */
-    public _pattern = {};
+    public _pattern: Pattern;
 
-    public get pattern(): { [character: string]: { pattern: RegExp; optional?: boolean } } {
+    public get pattern(): Pattern {
         return this._pattern;
     }
 
@@ -324,17 +326,17 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
             tap(([dateFormat]) => {
                 // eslint-disable-next-line @typescript-eslint/prefer-regexp-exec
                 const array = dateFormat.match(DejaDatePickerComponent.formattingTokens);
-                this._mask = array.map(val => formatToMask[val] ? formatToMask[val] : val).join('');
-                const patternBuilder: { [character: string]: { pattern: RegExp; optional?: boolean } } = {};
-                array.forEach(val => {
+                this._mask = array.map(val => formatToMask[val] || val).join('');
+
+                this._pattern = array.reduce((patternBuilder, val) => {
                     const patternSection = formatToPattern[val] ? formatToPattern[val] : null;
                     if (patternSection) {
                         patternSection.forEach((value, key) => {
                             patternBuilder[key] = value;
                         });
                     }
-                });
-                this._pattern = patternBuilder;
+                    return patternBuilder;
+                }, {} as Pattern);
             })
         );
 
