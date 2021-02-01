@@ -298,22 +298,8 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
                     } else if (this.date) {
                         // If cursor is on number, we can update it
                         if (!isNaN(+this._inputModel[this.cursorPosition - 1])) {
-                            // We get an array of all sections of the date format
-                            // eslint-disable-next-line @typescript-eslint/prefer-regexp-exec
-                            const dateFormat = this._format.match(DejaDatePickerComponent.formattingTokens);
-                            // We check the letter of the format at cursor position
-                            const f = this._format[this.cursorPosition - 1];
-                            // With this letter we determinate the format by checking on format array
-                            let unitOfTime = dateFormat.find(str => str.includes(f));
-                            // If this format has a corresponding value inside formatToUnitOfTime object we can increment its value with moment.add() method
-                            unitOfTime = (unitOfTime && formatToUnitOfTime[unitOfTime]) || undefined;
-                            if (unitOfTime) {
-                                const duration = {
-                                    [unitOfTime]: 1
-                                } as Duration;
-                                const updatedValue = add(this.toDate(this.value), duration);
-                                this.updateModel(!this.dateMax || updatedValue <= this.dateMax ? updatedValue : this.value);
-                            }
+                            const updatedValue = this.incrementDateBySegment(1);
+                            this.updateModel(!this.dateMax || updatedValue <= this.dateMax ? updatedValue : this.value);
                         }
                     }
                     break;
@@ -324,19 +310,8 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
                     } else if (this.date) {
                         // Same as arrowUp
                         if (!isNaN(+this._inputModel[this.cursorPosition - 1])) {
-                            // eslint-disable-next-line @typescript-eslint/prefer-regexp-exec
-                            const dateFormat = this._format.match(DejaDatePickerComponent.formattingTokens);
-                            const f = this._format[this.cursorPosition - 1];
-
-                            let unitOfTime = dateFormat.find(str => str.includes(f));
-                            unitOfTime = (unitOfTime && formatToUnitOfTime[unitOfTime]) || undefined;
-                            if (unitOfTime) {
-                                const duration = {
-                                    [unitOfTime]: -1
-                                } as Duration;
-                                const updatedValue = add(this.toDate(this.value), duration);
-                                this.updateModel(!this.dateMin || updatedValue >= this.dateMin ? updatedValue : this.value);
-                            }
+                            const updatedValue = this.incrementDateBySegment(-1);
+                            this.updateModel(!this.dateMin || updatedValue >= this.dateMin ? updatedValue : this.value);
                         }
                     }
                     break;
@@ -683,6 +658,27 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
                 this.inputElement.setSelectionRange(hoursPosition, stringDate.length);
             });
         }
+    }
+
+    private incrementDateBySegment(increment: number): string | Date {
+        // We get an array of all sections of the date format
+        // eslint-disable-next-line @typescript-eslint/prefer-regexp-exec
+        const dateFormat = this._format.match(DejaDatePickerComponent.formattingTokens);
+        // We check the letter of the format at cursor position
+        const f = this._format[this.cursorPosition - 1];
+        // With this letter we determinate the format by checking on format array
+        let unitOfTime = dateFormat.find(str => str.includes(f));
+        // If this format has a corresponding value inside formatToUnitOfTime object we can increment its value with moment.add() method
+        unitOfTime = (unitOfTime && formatToUnitOfTime[unitOfTime]) || undefined;
+        if (unitOfTime) {
+            const duration = {
+                [unitOfTime]: increment
+            } as Duration;
+            const updatedValue = add(this.toDate(this.value), duration);
+            return updatedValue;
+        }
+
+        return this.value;
     }
 
     private toDate(value: Date | string) {
