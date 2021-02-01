@@ -311,8 +311,8 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
                                 const duration = {
                                     [unitOfTime]: 1
                                 } as Duration;
-                                const m = add(this.toDate(this.value), duration);
-                                this.updateModel(m);
+                                const updatedValue = add(this.toDate(this.value), duration);
+                                this.updateModel(!this.dateMax || updatedValue <= this.dateMax ? updatedValue : this.value);
                             }
                         }
                     }
@@ -334,8 +334,8 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
                                 const duration = {
                                     [unitOfTime]: -1
                                 } as Duration;
-                                const m = add(this.toDate(this.value), duration);
-                                this.updateModel(m);
+                                const updatedValue = add(this.toDate(this.value), duration);
+                                this.updateModel(!this.dateMin || updatedValue >= this.dateMin ? updatedValue : this.value);
                             }
                         }
                     }
