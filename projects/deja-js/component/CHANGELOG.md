@@ -1,3 +1,11 @@
+# [11.5.0-next.2](https://github.com/DSI-HUG/dejajs-components/compare/v11.5.0-next.1...v11.5.0-next.2) (2021-02-02)
+
+
+### Bug Fixes
+
+* **date-picker-range:** "to date" cannot be smaller than "from date" and vice-versa ([5f8741a](https://github.com/DSI-HUG/dejajs-components/commit/5f8741af10f17c0958b64653cab39967c5d68c57))
+* **warnings-build:lib:** fixed missing name warning ([c09d3ab](https://github.com/DSI-HUG/dejajs-components/commit/c09d3abc26b8162ebebfa0b44b441d97bcf69f82))
+
 # [11.5.0-next.1](https://github.com/DSI-HUG/dejajs-components/compare/v11.4.0...v11.5.0-next.1) (2021-01-28)
 
 
