@@ -9,40 +9,20 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { BooleanInput, coerceBooleanProperty, NumberInput } from '@angular/cdk/coercion';
 import { BreakpointObserver } from '@angular/cdk/layout';
-import { AfterContentInit } from '@angular/core';
-import { ChangeDetectionStrategy } from '@angular/core';
-import { ChangeDetectorRef } from '@angular/core';
-import { Component } from '@angular/core';
-import { DoCheck } from '@angular/core';
-import { ElementRef } from '@angular/core';
-import { EventEmitter } from '@angular/core';
-import { HostBinding } from '@angular/core';
-import { Input } from '@angular/core';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { Optional } from '@angular/core';
-import { Output } from '@angular/core';
-import { Self } from '@angular/core';
-import { ViewChild } from '@angular/core';
-import { ViewEncapsulation } from '@angular/core';
-import { ControlValueAccessor } from '@angular/forms';
-import { FormGroupDirective } from '@angular/forms';
-import { NgControl } from '@angular/forms';
-import { NgForm } from '@angular/forms';
-import { CanUpdateErrorState } from '@angular/material/core';
-import { ErrorStateMatcher } from '@angular/material/core';
+import { AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, DoCheck, ElementRef, EventEmitter, HostBinding, Input, OnDestroy, OnInit, Optional, Output, Self, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
+import { CanUpdateErrorState, ErrorStateMatcher } from '@angular/material/core';
 import { MatFormFieldControl } from '@angular/material/form-field';
-import { DejaChildValidatorDirective } from '@deja-js/component/core';
-import { DejaConnectionPositionPair } from '@deja-js/component/core';
-import { KeyCodes } from '@deja-js/component/core';
-import { formatWithLocale } from '@deja-js/component/core';
+import { DejaChildValidatorDirective, DejaConnectionPositionPair, formatWithLocale, KeyCodes } from '@deja-js/component/core';
 import { _MatInputMixinBase } from '@deja-js/component/core/util';
 import { DateComponentLayout, DaysOfWeek, DejaDateSelectorComponent } from '@deja-js/component/date-selector';
 import { add, isValid, parse, startOfToday } from 'date-fns';
 import { combineLatest, from, fromEvent, merge, Observable, ReplaySubject, Subject, timer } from 'rxjs';
 import { delay, filter, map, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 
-import { formatToMask, formatToUnitOfTime } from './format-to-mask';
+import { formatToMask, formatToPattern, formatToUnitOfTime } from './format-to-mask';
+import { Pattern } from './models/pattern.model';
+
 
 /**
  * Date-picker component for Angular
@@ -60,6 +40,7 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
     public static nextId = 0;
     // eslint-disable-next-line @typescript-eslint/naming-convention
     private static formattingTokens = new RegExp('(\\[[^\\[]*\\])|(\\\\)?([Hh]mm(ss)?|Mo|MM?M?M?|Do|DDDo|DD?D?D?|ddd?d?|do?|w[o|w]?|W[o|W]?|Qo?|yyyyyy|yyyyy|yyyy|yy|gg(ggg?)?|GG(GGG?)?|e|E|a|A|hh?|HH?|kk?|mm?|ss?|S{1,9}|x|X|zz?|ZZ?|.)', 'g');
+
 
     @HostBinding() public id = `my-tel-input-${DejaDatePickerComponent.nextId++}`;
     @HostBinding('attr.aria-describedby') public describedBy = '';
@@ -153,10 +134,17 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
     }
 
     /** Mask for input */
-    public _mask = [] as (string | RegExp)[];
+    public _mask = '';
 
-    public get mask(): (string | RegExp)[] {
+    public get mask(): string {
         return this._mask;
+    }
+
+    /** Pattern for input */
+    public _pattern: Pattern;
+
+    public get pattern(): Pattern {
+        return this._pattern;
     }
 
     /** Internal use */
@@ -312,22 +300,8 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
                     } else if (this.date) {
                         // If cursor is on number, we can update it
                         if (!isNaN(+this._inputModel[this.cursorPosition - 1])) {
-                            // We get an array of all sections of the date format
-                            // eslint-disable-next-line @typescript-eslint/prefer-regexp-exec
-                            const dateFormat = this._format.match(DejaDatePickerComponent.formattingTokens);
-                            // We check the letter of the format at cursor position
-                            const f = this._format[this.cursorPosition - 1];
-                            // With this letter we determinate the format by checking on format array
-                            let unitOfTime = dateFormat.find(str => str.includes(f));
-                            // If this format has a corresponding value inside formatToUnitOfTime object we can increment its value with moment.add() method
-                            unitOfTime = (unitOfTime && formatToUnitOfTime[unitOfTime]) || undefined;
-                            if (unitOfTime) {
-                                const duration = {
-                                    [unitOfTime]: 1
-                                } as Duration;
-                                const m = add(this.toDate(this.value), duration);
-                                this.updateModel(m);
-                            }
+                            const updatedValue = this.incrementDateBySegment(1);
+                            this.updateModel(!this.dateMax || updatedValue <= this.dateMax ? updatedValue : this.value);
                         }
                     }
                     break;
@@ -338,19 +312,8 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
                     } else if (this.date) {
                         // Same as arrowUp
                         if (!isNaN(+this._inputModel[this.cursorPosition - 1])) {
-                            // eslint-disable-next-line @typescript-eslint/prefer-regexp-exec
-                            const dateFormat = this._format.match(DejaDatePickerComponent.formattingTokens);
-                            const f = this._format[this.cursorPosition - 1];
-
-                            let unitOfTime = dateFormat.find(str => str.includes(f));
-                            unitOfTime = (unitOfTime && formatToUnitOfTime[unitOfTime]) || undefined;
-                            if (unitOfTime) {
-                                const duration = {
-                                    [unitOfTime]: -1
-                                } as Duration;
-                                const m = add(this.toDate(this.value), duration);
-                                this.updateModel(m);
-                            }
+                            const updatedValue = this.incrementDateBySegment(-1);
+                            this.updateModel(!this.dateMin || updatedValue >= this.dateMin ? updatedValue : this.value);
                         }
                     }
                     break;
@@ -363,14 +326,17 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
             tap(([dateFormat]) => {
                 // eslint-disable-next-line @typescript-eslint/prefer-regexp-exec
                 const array = dateFormat.match(DejaDatePickerComponent.formattingTokens);
-                this._mask = array.reduce((result, val) => {
-                    if (formatToMask[val]) {
-                        result = [...result, ...formatToMask[val]];
-                    } else {
-                        result.push(val);
+                this._mask = array.map(val => formatToMask[val] || val).join('');
+
+                this._pattern = array.reduce((patternBuilder, val) => {
+                    const patternSection = formatToPattern[val] || null;
+                    if (patternSection) {
+                        patternSection.forEach((value, key) => {
+                            patternBuilder[key] = value;
+                        });
                     }
-                    return result;
-                }, [] as Array<RegExp | string>);
+                    return patternBuilder;
+                }, {} as Pattern);
             })
         );
 
@@ -421,13 +387,13 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
     public ngOnInit(): void {
         if (!this._format) {
             if (!this.layout || this.layout === DateComponentLayout.dateonly || this.layout === 'dateonly') {
-                this.format = 'yyyy-MM-dd';
+                this.format = 'yyyy/MM/dd';
             } else if (this.layout === DateComponentLayout.datetime || this.layout === 'datetime') {
-                this.format = 'yyyy-MM-dd HH:mm';
+                this.format = 'yyyy/MM/dd HH:mm';
             } else if (this.layout === DateComponentLayout.timeonly || this.layout === 'timeonly') {
                 this.format = 'HH:mm';
             } else {
-                this.format = 'yyyy-MM-dd';
+                this.format = 'yyyy/MM/dd';
             }
         }
     }
@@ -694,6 +660,27 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
                 this.inputElement.setSelectionRange(hoursPosition, stringDate.length);
             });
         }
+    }
+
+    private incrementDateBySegment(increment: number): string | Date {
+        // We get an array of all sections of the date format
+        // eslint-disable-next-line @typescript-eslint/prefer-regexp-exec
+        const dateFormat = this._format.match(DejaDatePickerComponent.formattingTokens);
+        // We check the letter of the format at cursor position
+        const f = this._format[this.cursorPosition - 1];
+        // With this letter we determinate the format by checking on format array
+        let unitOfTime = dateFormat.find(str => str.includes(f));
+        // If this format has a corresponding value inside formatToUnitOfTime object we can increment its value with moment.add() method
+        unitOfTime = (unitOfTime && formatToUnitOfTime[unitOfTime]) || undefined;
+        if (unitOfTime) {
+            const duration = {
+                [unitOfTime]: increment
+            } as Duration;
+            const updatedValue = add(this.toDate(this.value), duration);
+            return updatedValue;
+        }
+
+        return this.value;
     }
 
     private toDate(value: Date | string) {
