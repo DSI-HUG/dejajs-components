@@ -1,3 +1,10 @@
+## [11.5.1-next.1](https://github.com/DSI-HUG/dejajs-components/compare/v11.5.0...v11.5.1-next.1) (2021-02-02)
+
+
+### Bug Fixes
+
+* **angular.json:** remove useless reference to angular2-text-mask ([0c55c71](https://github.com/DSI-HUG/dejajs-components/commit/0c55c71b184459a8bf31516c2e5079fd4d85f4f5))
+
 # [11.5.0](https://github.com/DSI-HUG/dejajs-components/compare/v11.4.0...v11.5.0) (2021-02-02)
 
 
