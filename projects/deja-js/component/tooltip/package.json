@@ -3,8 +3,11 @@
         "lib": {
             "entryFile": "./index.ts",
             "umdModuleIds": {
-                "lodash": "lodash"
+                "lodash-es": "lodash-es"
             }
         }
+    },
+    "peerDependencies": {
+        "lodash-es": "^4.17.20"
     }
 }

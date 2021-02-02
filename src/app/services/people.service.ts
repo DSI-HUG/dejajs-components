@@ -12,7 +12,7 @@ import { Color } from '@deja-js/component/core';
 import { MaterialColors } from '@deja-js/component/core';
 import { UUID } from '@deja-js/component/core';
 import { JsonProperty, ObjectMapper } from 'json-object-mapper';
-import { cloneDeep } from 'lodash';
+import { cloneDeep } from 'lodash-es';
 import { Observable } from 'rxjs';
 import { map, publishLast, refCount } from 'rxjs/operators';
 

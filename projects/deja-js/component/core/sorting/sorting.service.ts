@@ -9,7 +9,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Injectable } from '@angular/core';
-import { sortBy } from 'lodash';
+import { sortBy } from 'lodash-es';
 import { Observable, of } from 'rxjs';
 import { map, reduce, switchMap } from 'rxjs/operators';
 

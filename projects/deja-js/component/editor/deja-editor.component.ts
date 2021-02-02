@@ -26,7 +26,7 @@ import { ViewChild } from '@angular/core';
 import { ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Destroy } from '@deja-js/component/core';
-import { cloneDeep } from 'lodash';
+import { cloneDeep } from 'lodash-es';
 import { from, Subscription, timer } from 'rxjs';
 import { delay, first, take, takeUntil, tap } from 'rxjs/operators';
 

@@ -65,18 +65,7 @@ describe('DejaDatePickerContainerComponent', () => {
 
     it('should init the mask', () => {
         component.value = new Date();
-        const mask = [
-            /[1|2]/,
-            /\d/,
-            /\d/,
-            /\d/,
-            '-',
-            /[0|1]/,
-            /\d/,
-            '-',
-            /[0-3]/,
-            /\d/
-        ];
+        const mask = 'B000/F0/d0';
 
         void expect(component.mask.length).toEqual(10);
         void expect(component.mask).toEqual(mask);
@@ -88,7 +77,7 @@ describe('DejaDatePickerContainerComponent', () => {
         from(component.formatChanged$).pipe(
             take(1)
         ).subscribe(format => {
-            void expect(format).toEqual('YYYY-MM-DD HH:mm');
+            void expect(format).toEqual('yyyy/MM/dd HH:mm');
             datePickerTestingUtils.testDone();
         });
 
@@ -219,7 +208,7 @@ describe('DejaDatePickerContainerComponent', () => {
     describe('free entry', () => {
         beforeEach(() => {
             component.allowFreeEntry = true;
-            component.format = 'YYYY-DD-MM';
+            component.format = '0000-d0-M0';
             // Without dispatchEvent the incorrect input (the one which does not support free text) is set to the DOM
             // Don't know why fixture.detectChanges does not do the job
             fixture.debugElement

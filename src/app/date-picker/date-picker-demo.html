@@ -143,11 +143,11 @@
                     <h3>Date Range Picker :</h3>
                     <mat-form-field appearance="fill">
                         <mat-label>Range min</mat-label>
-                        <deja-date-picker format="DD.MM.YYYY" #dtfrom [disableDates]="disabledDate" [(ngModel)]="dateRangeFrom"></deja-date-picker>
+                        <deja-date-picker format="dd.MM.yyyy" #dtfrom [disableDates]="disabledDate" [(ngModel)]="dateRangeFrom" [dateMax]="datetimeRangeTo"></deja-date-picker>
                     </mat-form-field>
                     <mat-form-field appearance="fill">
                         <mat-label>Range max</mat-label>
-                        <deja-date-picker format="DD.MM.YYYY" #dtto [disableDates]="disabledDate" [(ngModel)]="dateRangeTo"></deja-date-picker>
+                        <deja-date-picker format="dd.MM.yyyy" #dtto [disableDates]="disabledDate" [(ngModel)]="dateRangeTo" [dateMin]="datetimeRangeFrom"></deja-date-picker>
                     </mat-form-field>
                     <p>Selected date : from {{dateRangeFrom | date:'yyyy-MM-dd'}} to {{dateRangeTo | date:'yyyy-MM-dd'}}</p>
                 </div>
@@ -155,11 +155,11 @@
                     <h3>DateTime Range Picker :</h3>
                     <mat-form-field>
                         <mat-label>Range min</mat-label>
-                        <deja-date-picker format="DD.MM.YYYY HH:mm" #dtfrom [disableDates]="disabledDate" [(ngModel)]="datetimeRangeFrom" time></deja-date-picker>
+                        <deja-date-picker format="dd.MM.yyyy HH:mm" #dtfrom [disableDates]="disabledDate" [(ngModel)]="datetimeRangeFrom" time [dateMax]="datetimeRangeTo"></deja-date-picker>
                     </mat-form-field>
                     <mat-form-field>
                         <mat-label>Range max</mat-label>
-                        <deja-date-picker format="DD.MM.YYYY HH:mm" #dtto [disableDates]="disabledDate" [(ngModel)]="datetimeRangeTo" time></deja-date-picker>
+                        <deja-date-picker format="dd.MM.yyyy HH:mm" #dtto [disableDates]="disabledDate" [(ngModel)]="datetimeRangeTo" time [dateMin]="datetimeRangeFrom"></deja-date-picker>
                     </mat-form-field>
                     <p>Selected date : from {{datetimeRangeFrom | date:'yyyy-MM-dd HH:mm:ss'}} to {{datetimeRangeTo | date:'yyyy-MM-dd HH:mm:ss'}}</p>
                 </div>
