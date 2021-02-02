@@ -329,7 +329,7 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
                 this._mask = array.map(val => formatToMask[val] || val).join('');
 
                 this._pattern = array.reduce((patternBuilder, val) => {
-                    const patternSection = formatToPattern[val] ? formatToPattern[val] : null;
+                    const patternSection = formatToPattern[val] || null;
                     if (patternSection) {
                         patternSection.forEach((value, key) => {
                             patternBuilder[key] = value;
