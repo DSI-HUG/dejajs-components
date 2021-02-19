@@ -61,7 +61,7 @@
         "material-icons-font": "2.0.0",
         "moment": "2.24.0",
         "monaco-editor": "0.17.0",
-        "prismjs": "~1.21.0",
+        "prismjs": "~1.23.0",
         "rxjs": "~6.5.4",
         "showdown": "~1.9.1",
         "tslib": "~1.11.1",
