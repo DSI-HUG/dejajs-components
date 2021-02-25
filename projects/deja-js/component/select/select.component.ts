@@ -104,7 +104,7 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
     /** Permet de définir un template pour le loader par binding. */
     @Input() public loaderTemplateExternal: TemplateRef<unknown>;
     /** Exécuté lorsque le calcul du viewPort est terminé. */
-    @Output() public readonly viewPortChanged = new EventEmitter<IViewPort>();
+    @Output() public readonly viewPortChanged = new EventEmitter<IViewPort<unknown>>();
     /** Exécuté lorsque l'utilisateur sélectionne ou désélectionne une ligne. */
     @Output() public readonly selectedChange = new EventEmitter<DejaItemsEvent<unknown> | DejaItemEvent<unknown>>();
     /** For test only. */
@@ -261,7 +261,7 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
     }
 
     public constructor(changeDetectorRef: ChangeDetectorRef,
-        public viewPort: ViewPortService,
+        public viewPortService: ViewPortService<unknown>,
         private fm: FocusMonitor,
         private elementRef: ElementRef<HTMLElement>,
         @Self() @Optional() public ngControl: NgControl,
@@ -269,7 +269,7 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
         @Optional() private parentFormGroup: FormGroupDirective,
         mediaService: MediaService,
         private defaultErrorStateMatcher: ErrorStateMatcher) {
-        super(changeDetectorRef, viewPort);
+        super(changeDetectorRef, viewPortService);
 
         this.overlayOwnerElement = this.elementRef.nativeElement;
 
@@ -331,7 +331,7 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
         from(this.storeScrollPosition$).pipe(
             takeUntil(this.destroyed$)
         ).subscribe(scrollPos => {
-            this.viewPort.scrollPosition$.next(scrollPos);
+            this.viewPortService.scrollPosition$.next(scrollPos);
             this.lastScrollPosition = scrollPos;
         });
 
@@ -342,7 +342,7 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
         ).subscribe(() => {
             delete this.selectingItemIndex;
             setDropDownVisible(false);
-            this.viewPort.element$.next(null);
+            this.viewPortService.element$.next(null);
             this.changeDetectorRef.markForCheck();
         });
 
@@ -394,7 +394,7 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
             delay(1),
             filter(() => this.dropdownVisible), // Show canceled by the hide$ observable if !dropdownVisible
             tap(() => {
-                this.viewPort.element$.next(this.listElement);
+                this.viewPortService.element$.next(this.listElement);
             }),
             delay(1),
             takeUntil(this.destroyed$)
@@ -992,7 +992,7 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
                         this.currentItemIndex = index;
                         if (this.dropdownVisible) {
                             this.ensureItemVisible(this.currentItemIndex);
-                            this.viewPort.refresh();
+                            this.viewPortService.refresh();
                         }
 
                         if (!this._multiSelect) {

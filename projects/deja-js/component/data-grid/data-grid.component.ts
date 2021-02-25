@@ -131,7 +131,7 @@ export class DejaGridComponent extends Destroy {
     /** Cet évenement est levé lorsque la taille d'une colonne est modifiée */
     @Output() public readonly columnSizeChanged = new EventEmitter<IDejaGridColumnSizeEvent>();
     /** Exécuté lorsque le calcul du viewPort est executé. */
-    @Output() public readonly viewPortChanged = new EventEmitter<IViewPort>();
+    @Output() public readonly viewPortChanged = new EventEmitter<IViewPort<unknown>>();
     /** Exécuté lorsque le sorting à changé. */
     @Output() public readonly sortChanged = new EventEmitter<ISortInfos>();
     /** Exécuté lorsque le grouping à changé. */
@@ -200,7 +200,7 @@ export class DejaGridComponent extends Destroy {
     private _minSearchLength = 0;
     private _maxHeight = 0;
     private _pageSize = 0;
-    private _viewPortRowHeight = ViewPortService.itemDefaultSize;
+    private _viewPortRowHeight = 40;
     // private noColumnsSpecified = false;
 
     private columnGroups$ = new Subject<IDejaGridColumn[] | string>();
@@ -444,8 +444,8 @@ export class DejaGridComponent extends Destroy {
     }
 
     /** Retourne le service de viewport utilisé pour la grille */
-    public get viewPort(): ViewPortService {
-        return this.treeListComponent.viewPort;
+    public get viewPort(): ViewPortService<unknown> {
+        return this.treeListComponent.viewPortService;
     }
 
     public get searchPrefixTemplate(): TemplateRef<unknown> {

@@ -1,61 +1,91 @@
 :host {
-    .flexLayout {
-        display: flex;
-        align-items: center;
-        justify-content: flex-start;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
 
-        .flex3r {
-            flex: 0 0 3rem;
-            overflow: hidden;
-        }
-
-        .flexOffset1rl {
-            padding-left: 1rem;
-        }
-
-        .flexOffset3rl {
-            padding-left: 3rem;
-        }
+    .mat-tab-group{
+        flex: 0 0 auto;
     }
 
-    deja-viewport {
-        margin-top: 1rem;
+    .demo-card {
+        flex: 1 1 auto;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
 
-        &[horizontal="false"] {
-            height: calc(100vh - 380px);
-
-            .listitem {
-                box-shadow: inset 1px 0 0 #aaa, inset -1px 0 0 #aaa, inset 0 -1px 0 #aaa;
-
-                &:first-child {
-                    box-shadow: inset 1px 0 0 #aaa, inset -1px 0 0 #aaa, inset 0 -1px 0 #aaa, inset 0 1px 0 #aaa;
-                }
-            }
+        .mat-toolbar {
+            flex: 0 0 auto;
         }
 
-        &[horizontal="true"] {
-            height: 25rem;
+        .mat-card-content {
+            flex: 1 1 auto;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
 
-            .listitem {
-                box-shadow: inset -1px 0 0 #aaa, inset 0 -1px 0 #aaa, inset 0 1px 0 #aaa;
+            .viewPortTitle {
+                flex: 0 0 auto;
+            }
 
-                &:first-child {
-                    box-shadow: inset 1px 0 0 #aaa, inset -1px 0 0 #aaa, inset 0 -1px 0 #aaa, inset 0 1px 0 #aaa;
+            .viewPortOptions {
+                flex: 0 0 auto;
+                display: flex;
+                align-items: center;
+                justify-content: flex-start;
+
+                .mat-checkbox {
+                    padding: 0.5rem;
+                }
+                
+                .viewPortEnsureIndex,
+                .viewPortEnsureScrollPos {
+                    display: flex;
+                    align-items: center;
+                    justify-content: flex-start;
+                    padding-left: 2rem;
+
+                    .flex3r {
+                        flex: 0 0 3rem;
+                        overflow: hidden;
+                    }
+                }
+            }
+
+            deja-viewport {
+                padding-top: 1rem;
+                flex: 1 1 100%;
+
+                .listitem {
+                    box-shadow: inset 1px 0 0 #aaa, inset -1px 0 0 #aaa, inset 0 -1px 0 #aaa;
+
+                    &:first-child {
+                        box-shadow: inset 1px 0 0 #aaa, inset -1px 0 0 #aaa, inset 0 -1px 0 #aaa, inset 0 1px 0 #aaa;
+                    }
                 }
 
-                .news {
-                    max-width: 45rem;
-                    display: block;
+                &[horizontal="true"] {
+                    .listitem {
+                        box-shadow: inset -1px 0 0 #aaa, inset 0 -1px 0 #aaa, inset 0 1px 0 #aaa;
 
-                    .logo {
-                        max-width: 20rem !important;
-                    }
+                        &:first-child {
+                            box-shadow: inset 1px 0 0 #aaa, inset -1px 0 0 #aaa, inset 0 -1px 0 #aaa, inset 0 1px 0 #aaa;
+                        }
 
-                    .text {
-                        flex: 0 1 25rem !important;
+                        .news {
+                            max-width: 45rem;
+                            display: block;
 
-                        .footer {
-                            flex-direction: column !important;
+                            .logo {
+                                max-width: 20rem !important;
+                            }
+
+                            .text {
+                                flex: 0 1 25rem !important;
+
+                                .footer {
+                                    flex-direction: column !important;
+                                }
+                            }
                         }
                     }
                 }

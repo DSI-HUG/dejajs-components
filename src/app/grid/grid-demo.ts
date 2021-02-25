@@ -779,7 +779,7 @@ export class DejaGridDemoComponent extends Destroy {
         }
     }
 
-    public imageLoaded(item: IViewPortItem, grid: DejaGridComponent): void {
+    public imageLoaded(item: IViewPortItem<unknown>, grid: DejaGridComponent): void {
         const itemExt = item as IExtendedViewPortItem;
         if (!itemExt.loaded) {
             itemExt.loaded = true;

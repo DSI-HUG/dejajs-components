@@ -15,6 +15,7 @@ export class News {
     public url: string = void 0;
     public urlToImage: string = void 0;
     public publishedAt: string = void 0;
+    public imageLoaded?: boolean = false;
 }
 
 export class NewsSource {

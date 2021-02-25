@@ -12,7 +12,7 @@ import { coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
 import { ChangeDetectorRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { from, Observable, of, Subscription, timer } from 'rxjs';
-import { filter, map, reduce, switchMap, take, takeUntil, tap } from 'rxjs/operators';
+import { filter, map, reduce, switchMap, take, takeUntil, tap, withLatestFrom } from 'rxjs/operators';
 
 import { Destroy } from '../destroy/destroy';
 import { IGroupInfo } from '../grouping/group-infos';
@@ -53,7 +53,7 @@ export abstract class ItemListBase<T> extends Destroy {
     // Sorting
     protected _sortInfos: ISortInfos;
 
-    protected _viewPortChanged: EventEmitter<IViewPort>;
+    protected _viewPortChanged: EventEmitter<IViewPort<T>>;
 
     // Drag drop
     protected _ddStartIndex: number;
@@ -66,21 +66,23 @@ export abstract class ItemListBase<T> extends Destroy {
 
     private _itemListService: ItemListService<T>;
     private allCollapsed = false;
-    private _viewPortRowHeight = ViewPortService.itemDefaultSize;
+    private _viewPortRowHeight = 40;
 
     private _listElement: HTMLElement;
+    private viewPortMode: ViewportMode = 'fixed';
 
-    public constructor(protected changeDetectorRef: ChangeDetectorRef, protected viewPort: ViewPortService) {
+    public constructor(protected changeDetectorRef: ChangeDetectorRef, protected viewPortService: ViewPortService<T>) {
         super();
 
         this._listElementId = `listcontainer_${(1000000000 * Math.random()).toString().substr(10)}`;
 
-        viewPort.viewPort$.pipe(
-            switchMap((viewPortResult: IViewPort) => {
+        viewPortService.viewPort$.pipe(
+            withLatestFrom(viewPortService.mode$),
+            switchMap(([viewPortResult, viewPortMode]) => {
                 let next$: Observable<number> = of(null);
 
                 delete this._hintLabel;
-                if (viewPort.mode === 'disabled') {
+                if (viewPortMode === 'disabled') {
                     this._itemList = viewPortResult.items;
                     this._vpStartRow = 0;
                     this._vpEndRow = 0;
@@ -94,16 +96,16 @@ export abstract class ItemListBase<T> extends Destroy {
                     this._vpAfterHeight = viewPortResult.afterSize;
                 }
 
-                if (viewPortResult.scrollPos !== undefined) {
+                if (viewPortResult.targetScrollPos !== undefined) {
                     if (this.listElement) {
                         const listItems = this.listElement.getElementsByClassName('listitem');
                         const rebind = listItems.length !== viewPortResult.visibleItems.length;
                         if (!rebind) {
-                            this.listElement.scrollTop = viewPortResult.scrollPos;
+                            this.listElement.scrollTop = viewPortResult.targetScrollPos;
                         } else {
                             next$ = timer(1).pipe(
                                 filter(() => !!this.listElement),
-                                tap(() => this.listElement.scrollTop = viewPortResult.scrollPos)
+                                tap(() => this.listElement.scrollTop = viewPortResult.targetScrollPos)
                             );
                         }
                     }
@@ -287,7 +289,8 @@ export abstract class ItemListBase<T> extends Destroy {
      * @param mode Mode du viewport (sans viewport, avec un viewport tailles des rows fixes ou dynamiques)
      */
     public setViewportMode(mode: ViewportMode): void {
-        this.viewPort.mode$.next(mode);
+        this.viewPortService.mode$.next(mode);
+        this.viewPortMode = mode;
     }
 
     /** Trie la liste par le champs spécifié. */
@@ -346,7 +349,8 @@ export abstract class ItemListBase<T> extends Destroy {
      */
     public toggleAll$(collapsed?: boolean): Observable<IItemTree<T>[]> {
         this.allCollapsed = (collapsed !== undefined) ? collapsed : !this.allCollapsed;
-        if (this.viewPort.mode === 'disabled') {
+
+        if (this.viewPortMode === 'disabled') {
             return from(this._itemList).pipe(
                 filter((item: IItemTree<T>) => item.$items && item.depth === 0 && item.collapsible !== false),
                 switchMap((_item: IItemTree<T>, index: number) => this.toggleCollapse$(index + this.vpStartRow, this.allCollapsed)),
@@ -390,21 +394,18 @@ export abstract class ItemListBase<T> extends Destroy {
     }
 
     /** Recalcule le viewport. */
-    public refreshViewPort(item?: IItemBase<T> | IItemBase<T>[], clearMeasuredHeight?: boolean): void {
-        const refreshParams = {} as IViewPortRefreshParams;
-        if (item) {
-            refreshParams.items = item instanceof Array ? item : [item];
-        }
-        if (clearMeasuredHeight) {
-            refreshParams.clearMeasuredSize = clearMeasuredHeight;
-        }
-        this.viewPort.refresh(refreshParams);
+    public refreshViewPort(item?: IItemBase<T> | IItemBase<T>[], clearMeasuredSize?: boolean): void {
+        const refreshParams = {
+            items: item ? [item] : undefined,
+            clearMeasuredSize
+        } as IViewPortRefreshParams<T>;
+        this.viewPortService.refresh(refreshParams);
         this.changeDetectorRef.markForCheck();
     }
 
     /** Efface le viewport */
     public clearViewPort(): void {
-        this.viewPort.clear();
+        this.viewPortService.clear();
     }
 
     /** Efface la hauteur calculée des lignes en mode automatique */
@@ -434,7 +435,7 @@ export abstract class ItemListBase<T> extends Destroy {
     }
 
     public getViewPortRowHeight(): number {
-        return this._viewPortRowHeight || ViewPortService.itemDefaultSize;
+        return this._viewPortRowHeight || 40;
     }
 
     public getCurrentItemIndex(): number {
@@ -452,14 +453,14 @@ export abstract class ItemListBase<T> extends Destroy {
     }
 
     public getItemHeight(item: IItemBase<T>): number {
-        if (this.viewPort.mode === 'disabled') {
+        if (this.viewPortMode === 'disabled') {
             return null;
-        } else if (this.viewPort.mode === 'fixed') {
+        } else if (this.viewPortMode === 'fixed') {
             return this.getViewPortRowHeight();
-        } else if (this.viewPort.mode === 'auto') {
+        } else if (this.viewPortMode === 'auto') {
             return item.size || null;
         } else {
-            return (item.size && item.size > ViewPortService.itemDefaultSize) ? item.size : this.getViewPortRowHeight();
+            return (item.size && item.size > 40) ? item.size : this.getViewPortRowHeight();
         }
     }
 
@@ -490,7 +491,7 @@ export abstract class ItemListBase<T> extends Destroy {
     protected setViewPortRowHeight(value: NumberInput): void {
         this._viewPortRowHeight = coerceNumberProperty(value);
         if (value) {
-            this.viewPort.itemsSize$.next(this._viewPortRowHeight);
+            this.viewPortService.itemsSize$.next(this._viewPortRowHeight);
         }
     }
 
@@ -713,8 +714,11 @@ export abstract class ItemListBase<T> extends Destroy {
      * Spécifier 0 pour que le composant determine sa hauteur à partir du container
      */
     protected setMaxHeight(value: NumberInput): void {
-        this._maxHeight = value === 'auto' ? null : +value || null;
-        this.viewPort.maxSize$.next(value);
+        if (value === 'auto') {
+            this.viewPortService.maxSize$.next('auto');
+        } else {
+            this.viewPortService.maxSize$.next(+value);
+        }
     }
 
     /** Retourne la hauteur maximum avant que le composant affiche une scrollbar
@@ -771,7 +775,7 @@ export abstract class ItemListBase<T> extends Destroy {
                     this._depthMax = result.depthMax;
                 }
                 this.rowsCount = result.visibleList.length;
-                this.viewPort.items$.next(result.visibleList);
+                this.viewPortService.items$.next(result.visibleList);
             }));
     }
 
@@ -781,7 +785,7 @@ export abstract class ItemListBase<T> extends Destroy {
 
     /** Calcul la position de la scrollbar pour que l'élément spécifié soit dans la zone visible. */
     protected ensureItemVisible(item: IItemBase<T> | number): void {
-        this.viewPort.ensureItem$.next(item);
+        this.viewPortService.ensureItem$.next(item);
     }
 
     // eslint-disable-next-line @typescript-eslint/naming-convention

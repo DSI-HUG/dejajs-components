@@ -18,7 +18,6 @@ import { ItemListService } from '@deja-js/component/core';
 import { IViewPort } from '@deja-js/component/core';
 import { KeyCodes } from '@deja-js/component/core';
 import { SortingService } from '@deja-js/component/core';
-import { ViewPortService } from '@deja-js/component/core';
 import { cloneDeep } from 'lodash-es';
 import { from, timer } from 'rxjs';
 import { debounceTime, delay, filter, take, tap } from 'rxjs/operators';
@@ -460,8 +459,8 @@ describe('DejaGridComponent', () => {
         gridContainerInstance = fixture.componentInstance;
     }));
 
-    const observeViewPort$ = () => from(gridInstance.viewPort.viewPortResult$).pipe(
-        filter((result: IViewPort) => result.viewPortSize > 0));
+    const observeViewPort$ = () => from(gridInstance.viewPort.viewPort$).pipe(
+        filter((result: IViewPort<unknown>) => result.viewPortSize > 0));
 
     it('should create the component', waitForAsync(() => {
         fixture.detectChanges();
@@ -485,7 +484,7 @@ describe('DejaGridComponent', () => {
         gridInstance.hintLabel = 'I am a hint label';
         void expect(gridInstance.hintLabel).toEqual('I am a hint label');
 
-        void expect(gridInstance.viewPortRowHeight).toBe(ViewPortService.itemDefaultSize);
+        void expect(gridInstance.viewPortRowHeight).toBe(40);
         gridInstance.viewPortRowHeight = 100;
         void expect(gridInstance.viewPortRowHeight).toBe(100);
 

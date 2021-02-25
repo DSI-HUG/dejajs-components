@@ -21,12 +21,15 @@ import { NewsService } from '../services/news.service';
     templateUrl: './viewport-demo.html'
 })
 export class DejaViewPortDemoComponent {
-    @ViewChild('viewport') private viewport: DejaViewPortComponent;
+    @ViewChild('viewport')
+    private viewport: DejaViewPortComponent<News>;
 
     public tabIndex = 1;
     public isHorizontal = false;
     public hasButtons = false;
     public ensureIndex: number;
+    public scrollPosition: number;
+
 
     public exampleValue = `
     <deja-viewport [models]="news$ | async" itemSize="120">
@@ -53,15 +56,10 @@ export class DejaViewPortDemoComponent {
         this.news$ = newsService.getNews$(50);
     }
 
-    public imageLoaded(item: IViewPortItem): void {
-        const itemExt = item as IExtendedViewPortItem;
-        if (!itemExt.loaded) {
-            itemExt.loaded = true;
-            this.viewport.refreshViewPort(itemExt);
+    public imageLoaded(item: IViewPortItem<News>): void {
+        if (!item.model.imageLoaded) {
+            item.model.imageLoaded = true; // Loaded
+            this.viewport.refreshViewPort(item);
         }
     }
-}
-
-interface IExtendedViewPortItem extends IViewPortItem {
-    loaded: boolean;
 }

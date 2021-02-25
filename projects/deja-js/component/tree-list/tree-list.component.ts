@@ -95,7 +95,7 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
     /** Exécuté lorsque l'utilisateur sélectionne ou désélectionne une ligne. */
     @Output() public readonly selectedChange = new EventEmitter<DejaItemsEvent<unknown> | DejaItemEvent<unknown>>();
     /** Exécuté lorsque le calcul du viewPort est executé. */
-    @Output() public readonly viewPortChanged = new EventEmitter<IViewPort>();
+    @Output() public readonly viewPortChanged = new EventEmitter<IViewPort<unknown>>();
 
     /** Internal use */
     @ViewChild('inputelement') public input: ElementRef;
@@ -145,8 +145,8 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
         return this._minSearchLength;
     }
 
-    public constructor(changeDetectorRef: ChangeDetectorRef, public viewPort: ViewPortService, public elementRef: ElementRef, @Self() @Optional() public control: NgControl, @Optional() private clipboardService: DejaClipboardService) {
-        super(changeDetectorRef, viewPort);
+    public constructor(changeDetectorRef: ChangeDetectorRef, public viewPortService: ViewPortService<unknown>, public elementRef: ElementRef, @Self() @Optional() public control: NgControl, @Optional() private clipboardService: DejaClipboardService) {
+        super(changeDetectorRef, viewPortService);
 
         if (this.control) {
             this.control.valueAccessor = this;
@@ -170,8 +170,8 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
             debounceTime(5),
             takeUntil(this.destroyed$)
         ).subscribe(() => {
-            this.viewPort.deleteSizeCache();
-            this.viewPort.refresh();
+            this.viewPortService.deleteSizeCache();
+            this.viewPortService.refresh();
             this.changeDetectorRef.markForCheck();
         });
 
@@ -724,7 +724,7 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
                 return target.scrollTop;
             }),
             takeUntil(this.destroyed$)
-        ).subscribe(scrollPos => this.viewPort.scrollPosition$.next(scrollPos));
+        ).subscribe(scrollPos => this.viewPortService.scrollPosition$.next(scrollPos));
 
         let keyDown$ = fromEvent<KeyboardEvent>(this.listElement, 'keydown');
         if (this.input) {
@@ -755,7 +755,7 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
                     const setCurrentIndex = (index: number) => {
                         this.currentItemIndex = index;
                         this.ensureItemVisible(this.currentItemIndex);
-                        this.viewPort.refresh();
+                        this.viewPortService.refresh();
                     };
 
                     const currentIndex = this.rangeStartIndex >= 0 ? this.rangeStartIndex : this.rangeStartIndex = this.currentItemIndex;
@@ -950,7 +950,7 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
             this.ensureItemVisible(this.currentItemIndex);
         });
 
-        this.viewPort.element$.next(this.listElement);
+        this.viewPortService.element$.next(this.listElement);
     }
 
     public mousedown(e: MouseEvent): boolean {

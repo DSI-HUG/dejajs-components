@@ -137,7 +137,7 @@ describe('DejaTreeListComponent', () => {
         const treeListDebugElement = fixture.debugElement.query(By.directive(DejaTreeListComponent));
         const viewPortService = treeListDebugElement.injector.get(ViewPortService);
 
-        return from(viewPortService.viewPortResult$).pipe(
+        return from(viewPortService.viewPort$).pipe(
             filter(result => result.viewPortSize > 0));
     };
 
@@ -176,7 +176,7 @@ describe('DejaTreeListComponent', () => {
         treeListInstance.hintLabel = 'I am a hint label';
         void expect(treeListInstance.hintLabel).toEqual('I am a hint label');
 
-        void expect(tl._viewPortRowHeight).toBe(ViewPortService.itemDefaultSize);
+        void expect(tl._viewPortRowHeight).toBe(40);
         treeListInstance.viewPortRowHeight = 100;
         void expect(tl._viewPortRowHeight).toBe(100);
 
@@ -339,7 +339,7 @@ describe('DejaTreeListComponent', () => {
         treeListInstance.minSearchlength = 2;
         const viewPortService = treeListDebugElement.injector.get(ViewPortService);
 
-        from(viewPortService.viewPortResult$).pipe(
+        from(viewPortService.viewPort$).pipe(
             debounceTime(100))
             .subscribe(_vp => {
                 // Bind view port
@@ -497,7 +497,7 @@ describe('DejaTreeListByModelContainerComponent', () => {
         const treeListDebugElement = fixture.debugElement.query(By.directive(DejaTreeListComponent));
         const viewPortService = treeListDebugElement.injector.get(ViewPortService);
 
-        return from(viewPortService.viewPortResult$).pipe(
+        return from(viewPortService.viewPort$).pipe(
             filter(result => result.viewPortSize > 0));
     };
 
@@ -933,7 +933,7 @@ describe('DejaTreeListByOptionsContainerComponent', () => {
         const treeListDebugElement = fixture.debugElement.query(By.directive(DejaTreeListComponent));
         const viewPortService = treeListDebugElement.injector.get(ViewPortService);
 
-        return from(viewPortService.viewPortResult$).pipe(
+        return from(viewPortService.viewPort$).pipe(
             filter(result => result.viewPortSize > 0));
     };
 

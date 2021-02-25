@@ -312,7 +312,7 @@ export class DejaTreeListDemoComponent extends Destroy {
         }
 
         // eslint-disable-next-line rxjs-angular/prefer-takeuntil
-        this.viewPortInfos$ = treelist?.viewPort.viewPort$.subscribe(viewPort => {
+        this.viewPortInfos$ = treelist?.viewPortService.viewPort$.subscribe(viewPort => {
             this.viewPortInfos = [
                 { name: 'beforeSize', value: String(viewPort.beforeSize) },
                 { name: 'startIndex', value: String(viewPort.startIndex) },
@@ -325,7 +325,7 @@ export class DejaTreeListDemoComponent extends Destroy {
         });
     }
 
-    public imageLoaded(item: IViewPortItem): void {
+    public imageLoaded(item: IViewPortItem<unknown>): void {
         const itemExt = item as IExtendedViewPortItem;
         if (!itemExt.loaded) {
             itemExt.loaded = true;
@@ -397,6 +397,6 @@ interface ICountryGroup extends ISelectCountry {
     loaded?: boolean;
 }
 
-export interface IExtendedViewPortItem extends IViewPortItem {
+export interface IExtendedViewPortItem extends IViewPortItem<unknown> {
     loaded: boolean;
 }

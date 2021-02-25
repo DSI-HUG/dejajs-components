@@ -250,7 +250,7 @@ export class SelectDemoComponent extends Destroy {
             delete this.viewPortInfos$;
         }
 
-        this.viewPortInfos$ = select?.viewPort.viewPort$.pipe(
+        this.viewPortInfos$ = select?.viewPortService.viewPort$.pipe(
             takeUntil(this.destroyed$)
         ).subscribe(viewPort => {
             this.viewPortInfos = [
@@ -265,7 +265,7 @@ export class SelectDemoComponent extends Destroy {
         });
     }
 
-    public imageLoaded(item: IViewPortItem): void {
+    public imageLoaded(item: IViewPortItem<unknown>): void {
         const itemExt = item as IExtendedViewPortItem;
         if (!itemExt.loaded) {
             itemExt.loaded = true;
@@ -285,6 +285,6 @@ interface ICountryGroup extends ISelectCountry {
     loaded?: boolean;
 }
 
-interface IExtendedViewPortItem extends IViewPortItem {
+interface IExtendedViewPortItem extends IViewPortItem<unknown> {
     loaded: boolean;
 }

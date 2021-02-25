@@ -1,55 +1,10 @@
 :host {
-	position: relative;
-	display: flex;
-	flex-direction: row;
+    display: flex;
+    flex-direction: column;
 	overflow: hidden;
+    position: relative;
 
-	&[hasUpBtn="false"] {
-		#up {
-			visibility: hidden;
-		}
-	}
-
-	&[hasDownBtn="false"] {
-		#down {
-			visibility: hidden;
-		}
-	}
-
-	&[buttons="false"] {
-		&[horizontal="false"] {
-			#viewport-wrapper {
-				width: 100%;
-				overflow-y: auto;
-			}
-		}
-
-		&[horizontal="true"] {
-			#viewport-wrapper {
-				height: 100%;
-				overflow-x: auto;
-			}
-		}
-	}
-
-	&[buttons="true"] {
-		&[horizontal="false"] {
-			flex-direction: column;
-		}
-	}
-
-	#viewport-wrapper {
-		position: relative;
-		flex-grow: 1;
-		overflow: hidden;
-
-		>div {
-			padding: 0;
-			margin: 0;
-		}
-	}
-
-	#up,
+    #up,
 	#down {
 		flex: 0 0 auto;
 		display: flex;
@@ -57,44 +12,64 @@
 		align-items: center;
 		font-size: 120%;
 		cursor: pointer;
-		z-index: 1;
-	}
+        z-index: 1;
+        padding: 0.15rem 0;
 
-	&[horizontal="false"] {
-		#viewport-wrapper {
-			>div {
-				width: 100%;
-			}
+        &[hidden="true"] {
+            visibility: hidden;
+        }
+    }
+    
+    #viewport-wrapper {
+        flex: 1 1 auto;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: flex-start;
+        width: 100%;
+		overflow: visible;
+        overflow-y: auto;
+        position: relative;
+
+		>div {
+			padding: 0;
+            margin: 0;
+            flex-grow: 0;
+            flex-shrink: 0;
+            width: 100%;
 		}
+    }
 
-		#up,
-		#down {
-			padding: 0.15rem 0;
-		}
-	}
+    &[horizontal="true"] {
+        #viewport-wrapper {
+            flex-direction: row;
+            height: 100%;
+            overflow: visible;
+            overflow-x: auto;
 
-	&[horizontal="true"] {
-		#viewport-wrapper {
-			display: flex;
-			justify-content: flex-start;
-			align-items: stretch;
-			flex-direction: row;
+            >div {
+                height: 100%;
+                overflow: hidden;
+            }
+        }
 
-			>div {
-				height: 100%;
-				overflow: hidden;
-				flex-grow: 0;
-				flex-shrink: 0;
-			}
-		}
+        &[buttons="true"] {
+            flex-direction: row;
 
-		#up,
-		#down {
-			padding: 0 0.15rem;
+            #up,
+            #down {
+                padding: 0 0.15rem;
 
-			.mat-icon {
-				transform: rotate(270Deg);
-			}
-		}
-	}
+                .mat-icon {
+                    transform: rotate(270Deg);
+                }
+            }
+        }
+    }
+
+    &[buttons="true"] {
+        #viewport-wrapper {
+            overflow: hidden;
+        }
+    }
 }

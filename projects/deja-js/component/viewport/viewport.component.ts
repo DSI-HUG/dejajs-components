@@ -7,24 +7,10 @@
  */
 
 import { coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
-import { ChangeDetectionStrategy } from '@angular/core';
-import { TemplateRef } from '@angular/core';
-import { ChangeDetectorRef } from '@angular/core';
-import { Component } from '@angular/core';
-import { ContentChild } from '@angular/core';
-import { ElementRef } from '@angular/core';
-import { HostBinding } from '@angular/core';
-import { Input } from '@angular/core';
-import { ViewChild } from '@angular/core';
-import { Destroy } from '@deja-js/component/core';
-import { IViewPort } from '@deja-js/component/core';
-import { IViewPortItem } from '@deja-js/component/core';
-import { IViewPortRefreshParams } from '@deja-js/component/core';
-import { ViewportDirection } from '@deja-js/component/core';
-import { ViewportMode } from '@deja-js/component/core';
-import { ViewPortService } from '@deja-js/component/core';
-import { BehaviorSubject, from, fromEvent, interval, merge, Observable, of, Subject, timer } from 'rxjs';
-import { debounceTime, distinctUntilChanged, filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { ChangeDetectionStrategy, Component, ContentChild, ElementRef, HostBinding, Input, QueryList, TemplateRef, ViewChild, ViewChildren } from '@angular/core';
+import { Destroy, IViewPortItem, IViewPortRefreshParams, ViewportDirection, ViewportMode, ViewPortService } from '@deja-js/component/core';
+import { from, fromEvent, interval, merge, Subject, timer } from 'rxjs';
+import { debounceTime, distinctUntilChanged, filter, map, mergeMap, switchMap, takeUntil, tap, withLatestFrom } from 'rxjs/operators';
 
 export type DejaViewPortScrollStyleType = 'scrollbar' | 'buttons';
 
@@ -35,74 +21,44 @@ export type DejaViewPortScrollStyleType = 'scrollbar' | 'buttons';
     styleUrls: ['./viewport.component.scss'],
     templateUrl: './viewport.component.html'
 })
-export class DejaViewPortComponent extends Destroy {
-    @HostBinding('attr.hasUpBtn') public hasUpButton = false;
-    @HostBinding('attr.hasDownBtn') public hasDownButton = false;
-    @HostBinding('attr.horizontal') public _isHorizontal = false;
-    @HostBinding('attr.buttons') public _hasButtons = false;
+export class DejaViewPortComponent<T> extends Destroy {
+    @HostBinding('attr.buttons') public hasButtons: boolean = null;
+    @HostBinding('attr.horizontal') public isHorizontal: boolean = null;
 
     /** Permet de définir un template d'élément par binding */
-    @Input() public itemTemplateExternal: TemplateRef<unknown>;
+    @Input() public itemTemplateExternal: TemplateRef<T>;
 
-    @ContentChild('itemTemplate') private itemTemplateInternal: TemplateRef<unknown>;
+    @ContentChild('itemTemplate') private itemTemplateInternal: TemplateRef<T>;
 
-    public beforeSize: number;
-    public afterSize: number;
-    public vpItems: IDejaViewPortItem[];
-    public vpStartIndex: number;
-    public vpEndIndex: number;
-    public startOffset: number; // Buttons mode only
+    public vpItems: IViewPortItem<T>[];
+    public hasUpButton: boolean = null;
+    public hasDownButton: boolean = null;
+    public destroyElement$ = new Subject<void>();
+    public buttons$ = new Subject<QueryList<ElementRef<HTMLElement>>>();
 
-    public get hasButtons(): boolean {
-        return this._hasButtons;
-    }
-
-    public get isHorizontal(): boolean {
-        return this._isHorizontal;
-    }
-
-    private _items: IDejaViewPortItem[];
-    private element: HTMLElement;
-    private downButton$ = new BehaviorSubject<HTMLElement>(null);
-    private upButton$ = new Subject<HTMLElement>();
-    private scrollPosition = 0;
-    private _buttonsStep: number;
+    private _buttonsStep: NumberInput;
 
     @Input()
-    public set buttonsStep(value: number) {
-        this._buttonsStep = value;
+    public set buttonsStep(value: NumberInput) {
+        this._buttonsStep = coerceNumberProperty(value);
     }
 
-    public get buttonsStep(): number {
+    public get buttonsStep(): NumberInput {
         return this._buttonsStep || 20;
-    }
-
-    @ViewChild('down')
-    public set downButton(element: ElementRef) {
-        this.downButton$.next(element?.nativeElement || null);
-    }
-
-    @ViewChild('up')
-    public set upButton(element: ElementRef) {
-        this.upButton$.next(element?.nativeElement || null);
     }
 
     /** Set the list of models to render inside the viewport control */
     @Input()
-    public set models(models: unknown[]) {
+    public set models(models: T[]) {
         this.items = models ? models.map(model => ({
             model: model
-        } as IDejaViewPortItem)) : [];
+        } as IViewPortItem<T>)) : [];
     }
 
     /** Set the list of items to render inside the viewport control */
     @Input()
-    public set items(items: IDejaViewPortItem[]) {
-        this._items = items || [] as IDejaViewPortItem[];
-        if (this.viewPort.mode === 'disabled') {
-            this.vpItems = this._items;
-        }
-        this.viewPort.items$.next(this._items);
+    public set items(items: IViewPortItem<T>[]) {
+        this.viewPortService.items$.next(items);
     }
 
     /** Set the scrolling style
@@ -111,7 +67,8 @@ export class DejaViewPortComponent extends Destroy {
       */
     @Input()
     public set scrollingStyle(value: DejaViewPortScrollStyleType) {
-        this._hasButtons = value === 'buttons';
+        this.hasButtons = value === 'buttons';
+        this.viewPortService.refresh();
     }
 
     /** Set the direction of the items rendering
@@ -120,57 +77,37 @@ export class DejaViewPortComponent extends Destroy {
      */
     @Input()
     public set direction(value: ViewportDirection) {
-        this.viewPort.direction$.next(value);
-        this._isHorizontal = value === 'horizontal';
-        this.changeDetectorRef.markForCheck();
+        this.isHorizontal = value === 'horizontal';
+        this.viewPortService.direction$.next(value);
     }
 
     /** Set the item size in fixed mode or the default item size before rendering in auto mode */
     @Input()
     public set itemSize(value: NumberInput) {
         if (value) {
-            const size = coerceNumberProperty(value);
-            this.viewPort.itemsSize$.next(+value);
-            if (!this._buttonsStep) {
-                this._buttonsStep = size;
-            }
+            const itemSize = coerceNumberProperty(value);
+            this.viewPortService.itemsSize$.next(itemSize);
         }
     }
 
-    public get itemSize(): NumberInput {
-        return this.viewPort.itemsSize;
+    @ViewChild('wrapper')
+    protected set wrapperElement(element: ElementRef<HTMLElement>) {
+        this.destroyElement$.next();
+        this.viewPortService.element$.next(element.nativeElement);
     }
 
-    @ViewChild('wrapper', { static: true })
-    public set wrapperElement(element: ElementRef) {
-        this.element = element.nativeElement as HTMLElement;
-        this.viewPort.element$.next(this.element);
-        fromEvent(this.element, 'scroll').pipe(
-            map(event => event.target as HTMLElement),
-            map(target => Math.round(this._isHorizontal ? target.scrollLeft : target.scrollTop)),
-            takeUntil(this.destroyed$)
-        ).subscribe(scrollPos => this.viewPort.scrollPosition$.next(scrollPos));
+    @ViewChildren('button')
+    protected set buttons(buttons: QueryList<ElementRef<HTMLElement>>) {
+        this.buttons$.next(buttons);
     }
 
-    public get itemTemplate(): TemplateRef<unknown> {
+    public get itemTemplate(): TemplateRef<T> {
         return this.itemTemplateExternal || this.itemTemplateInternal;
-    }
-
-    public get clientSize(): number {
-        if (!this.element) {
-            return 0;
-        }
-        return this._isHorizontal ? this.element.clientWidth : this.element.clientHeight;
     }
 
     public set scrollPos(value: number) {
         const scrollPos = Math.max(coerceNumberProperty(value), 0);
-        this.scrollPosition = scrollPos;
-        this.viewPort.scrollPosition$.next(scrollPos);
-    }
-
-    public get scrollPos(): number {
-        return this.scrollPosition;
+        this.viewPortService.scrollPosition$.next(scrollPos);
     }
 
     /**
@@ -179,199 +116,140 @@ export class DejaViewPortComponent extends Destroy {
      * fixed: Seul les éléments visibles sont rendus. La taille des éléments est constante et définie par itemsSize. (performances ++)
      * variable: Seul les éléments visibles sont rendus. La taille des éléments est variable et définie par item.size. (performances +-)
      * auto: Seul les éléments visibles sont rendus. La taille des éléments est calculée automatiquement (performances --)
-     */
+    */
     @Input()
     public set viewportMode(mode: ViewportMode) {
-        this.viewPort.mode$.next(mode);
+        this.viewPortService.mode$.next(mode);
     }
 
-    public get viewportMode(): ViewportMode {
-        return this.viewPort.mode;
-    }
-
-    public constructor(private changeDetectorRef: ChangeDetectorRef, private viewPort: ViewPortService) {
+    public constructor(
+        public viewPortService: ViewPortService<T>
+    ) {
         super();
 
-        fromEvent(window, 'resize').pipe(
-            debounceTime(5),
+        viewPortService.element$.pipe(
+            switchMap(element => fromEvent(element, 'scroll').pipe(
+                withLatestFrom(viewPortService.direction$),
+                map(([_, direction]) => Math.round(direction === 'horizontal' ? element.scrollLeft : element.scrollTop)),
+                takeUntil(this.destroyElement$)
+            )),
             takeUntil(this.destroyed$)
-        ).subscribe(() => {
-            this.viewPort.deleteSizeCache();
-            this.viewPort.refresh();
-            this.changeDetectorRef.markForCheck();
+        ).subscribe(scrollPosition => {
+            this.viewPortService.scrollPosition$.next(scrollPosition);
         });
 
-        const scroll = (vp: IViewPort) => {
-            if (vp) {
-                if (!this.hasButtons) {
-                    if (this.element) {
-                        if (this._isHorizontal) {
-                            this.element.scrollLeft = vp.scrollPos;
-                        } else {
-                            this.element.scrollTop = vp.scrollPos;
-                        }
-                        this.scrollPosition = vp.scrollPos;
-                    }
-                } else {
-                    this.scrollPos = vp.scrollPos;
-                    this.startOffset = this.scrollPos - vp.beforeSize;
-                }
-            }
-            this.changeDetectorRef.markForCheck();
-        };
-
-        viewPort.viewPort$.pipe(
-            switchMap(viewPortResult => {
-                if (viewPort.mode !== 'disabled') {
-                    this.vpItems = viewPortResult.visibleItems as IDejaViewPortItem[];
-                    this.vpStartIndex = viewPortResult.startIndex;
-                    this.vpEndIndex = viewPortResult.endIndex;
-                } else {
-                    this.vpStartIndex = 0;
-                    this.vpEndIndex = 0;
-                }
-
-                if (this.hasButtons) {
-                    this.startOffset = this.scrollPos - viewPortResult.beforeSize;
-                    this.beforeSize = null;
-                    this.afterSize = null;
-                    this.hasUpButton = this.scrollPos > 0;
-                    this.hasDownButton = this.scrollPos + viewPortResult.listSize < viewPortResult.beforeSize + viewPortResult.viewPortSize + viewPortResult.afterSize;
-
-                } else {
-                    this.startOffset = 0;
-                    this.beforeSize = viewPortResult.beforeSize || null;
-                    this.afterSize = viewPortResult.afterSize || null;
-                    this.hasUpButton = false;
-                    this.hasDownButton = false;
-                }
-
-                if (viewPortResult.scrollPos !== undefined) {
-                    let length = 0;
-                    if (this.element) {
-                        const listItems = this.element.getElementsByClassName('listitem');
-                        length = listItems.length;
-                    }
-                    const rebind = length !== viewPortResult.visibleItems.length;
-                    if (!rebind) {
-                        return of(viewPortResult);
-                    } else {
-                        this.changeDetectorRef.markForCheck();
-                        return timer(1).pipe(
-                            map(() => viewPortResult)
-                        );
-                    }
-                } else {
-                    return of(null);
-                }
-            }),
-            takeUntil(this.destroyed$)
-        ).subscribe(scroll);
-
-        const mouseWheel$ = () => {
-            const mouseWheelEvent$ = fromEvent(this.element, 'mousewheel') as Observable<MouseWheelEvent>;
-            return mouseWheelEvent$.pipe(
-                map(event => {
+        viewPortService.element$.pipe(
+            switchMap(element => fromEvent<WheelEvent>(element, 'mousewheel').pipe(
+                withLatestFrom(viewPortService.direction$),
+                filter(([_, direction]) => this.hasButtons || direction === 'horizontal'),
+                tap(([event, direction]) => {
                     event.stopPropagation();
                     event.preventDefault();
-                    return this.scrollPos + event.deltaY;
-                })
-            );
-        };
-
-        const downButton$ = from(this.downButton$).pipe(
-            distinctUntilChanged()
-        );
-
-        const upButton$ = from(this.upButton$).pipe(
-            distinctUntilChanged()
-        );
-
-        downButton$.pipe(
-            switchMap(downButton => downButton ? mouseWheel$() : of(0)),
-            takeUntil(this.destroyed$)
-        ).subscribe(scrollPos => this.scrollPos = scrollPos);
-
-        const autoScroll$ = (event: MouseEvent, sign: number) => timer(750).pipe(
-            switchMap(() => interval(50)),
-            tap(() => this.scrollPos += sign * (event.ctrlKey ? this.clientSize : this.buttonsStep * 2))
-        );
-
-        const initButton$ = (button: HTMLElement) => {
-            const sign = button.id === 'down' ? 1 : -1;
-            const mouseUpEvent$ = fromEvent(button, 'mouseup') as Observable<MouseEvent>;
-            const mouseLeaveEvent$ = fromEvent(button, 'mouseleave') as Observable<MouseEvent>;
-            const mouseup$ = merge(mouseUpEvent$, mouseLeaveEvent$).pipe(
-                tap(upEvent => this.scrollPos += sign * (upEvent.ctrlKey ? this.clientSize : this.buttonsStep))
-            );
-
-            const mouseDownEvent$ = fromEvent(button, 'mousedown') as Observable<MouseEvent>;
-            return mouseDownEvent$.pipe(
-                tap(event => this.scrollPos += sign * (event.ctrlKey ? this.clientSize : this.buttonsStep * 2)),
-                switchMap(event => autoScroll$(event, sign).pipe(
-                    takeUntil(mouseup$)
-                ))
-            );
-        };
-
-        downButton$.pipe(
-            filter(downButton => !!downButton),
-            switchMap(initButton$),
+                    if (direction === 'horizontal') {
+                        element.scroll({ top: 0, left: element.scrollLeft + event.deltaY });
+                    } else {
+                        element.scroll({ top: element.scrollTop + event.deltaY, left: 0 });
+                    }
+                }),
+                takeUntil(this.destroyElement$)
+            )),
             takeUntil(this.destroyed$)
         ).subscribe();
 
-        upButton$.pipe(
-            filter(upButton => !!upButton),
-            switchMap(initButton$),
+        viewPortService.viewPort$.pipe(
+            takeUntil(this.destroyed$)
+        ).subscribe(viewPort => {
+            this.hasUpButton = this.hasButtons && viewPort.mode === 'disabled' ? viewPort.scrollPosition > 0 : viewPort.beforeSize > 0;
+            this.hasDownButton = this.hasButtons && viewPort.mode === 'disabled' ? viewPort.scrollPosition < viewPort.viewPortSize - viewPort.listSize : viewPort.afterSize > 0;
+
+            if (viewPort?.element) {
+                if (viewPort.direction === 'horizontal') {
+                    viewPort.element.scrollLeft = viewPort.targetScrollPos || viewPort.scrollPosition;
+                } else {
+                    viewPort.element.scrollTop = viewPort.targetScrollPos || viewPort.scrollPosition;
+                }
+            }
+        });
+
+        const buttons$ = this.buttons$.pipe(
+            debounceTime(100),
+            map(buttons => buttons.map(button => button.nativeElement)),
+            distinctUntilChanged((b1, b2) => b1?.length === b2?.length)
+        );
+
+        const destroyButtons$ = buttons$.pipe(
+            filter(buttons => buttons.length === 0)
+        );
+
+        buttons$.pipe(
+            filter(buttons => buttons.length === 2),
+            withLatestFrom(viewPortService.element$),
+            switchMap(([buttons, viewPortElement]) => {
+                const clientSize = this.isHorizontal ? viewPortElement.clientWidth : viewPortElement.clientHeight;
+
+                const scroll = (event: MouseEvent, sign: number) => {
+                    const delta = sign * (event.ctrlKey ? clientSize : +this.buttonsStep * 2);
+                    if (this.isHorizontal) {
+                        viewPortElement.scroll({ top: 0, left: viewPortElement.scrollLeft + delta });
+                    } else {
+                        viewPortElement.scroll({ top: viewPortElement.scrollTop + delta, left: 0 });
+                    }
+                };
+
+                return from(buttons).pipe(
+                    mergeMap(button => {
+                        const sign = button.id === 'down' ? 1 : -1;
+
+                        const autoScroll$ = (event: MouseEvent) => {
+                            const mouseup$ = merge(fromEvent<MouseEvent>(buttons[0], 'mouseup'), fromEvent<MouseEvent>(buttons[0], 'mouseleave'), fromEvent<MouseEvent>(buttons[1], 'mouseup'), fromEvent<MouseEvent>(buttons[1], 'mouseleave'));
+                            return timer(750).pipe(
+                                mergeMap(() => interval(50)),
+                                tap(() => scroll(event, sign)),
+                                takeUntil(mouseup$)
+                            );
+                        };
+
+                        return fromEvent<MouseEvent>(button, 'mousedown').pipe(
+                            switchMap(event => {
+                                scroll(event, sign);
+                                return autoScroll$(event);
+                            }),
+                            takeUntil(destroyButtons$)
+                        );
+                    })
+                );
+            }),
             takeUntil(this.destroyed$)
         ).subscribe();
-
-        merge(downButton$, upButton$).pipe(
-            debounceTime(10),
-            filter(needToRefresh => !!needToRefresh),
-            takeUntil(this.destroyed$)
-        ).subscribe(() => this.viewPort.refresh());
-    }
-
-    public refresh(): void {
-        this.changeDetectorRef.markForCheck();
     }
 
     /** Recalcule le viewport. */
-    public refreshViewPort(item?: IViewPortItem, clearMeasuredHeight?: boolean): void {
-        const refreshParams = {} as IViewPortRefreshParams;
-        if (item) {
-            refreshParams.items = [item];
-        }
-        if (clearMeasuredHeight) {
-            refreshParams.clearMeasuredSize = clearMeasuredHeight;
-        }
-        this.viewPort.refresh(refreshParams);
-        this.changeDetectorRef.markForCheck();
+    public refreshViewPort(item?: IViewPortItem<T>, clearMeasuredSize?: boolean): void {
+        const refreshParams = {
+            items: item ? [item] : undefined,
+            clearMeasuredSize
+        } as IViewPortRefreshParams<T>;
+        this.viewPortService.refresh(refreshParams);
     }
 
-    public ensureVisible(item: unknown): void {
-        this.viewPort.ensureItem$.next(item);
+    public ensureVisible(item: number | IViewPortItem<T>): void {
+        this.viewPortService.ensureItem$.next(item);
     }
 
-    public getCssSize(item: IViewPortItem): string {
+    public getCssSize(item: IViewPortItem<T>): string {
         const itemSize = this.getItemSize(item);
         return itemSize ? `${itemSize}px` : 'auto';
     }
 
-    public getItemSize(item: IViewPortItem): NumberInput {
-        if (this.viewPort.mode === 'disabled') {
+    public getItemSize(item: IViewPortItem<T>): NumberInput {
+        if (this.viewportMode === 'disabled') {
             return null;
-        } else if (this.viewPort.mode === 'fixed') {
+        } else if (this.viewportMode === 'fixed') {
             return this.itemSize;
-        } else if (this.viewPort.mode === 'auto') {
+        } else if (this.viewportMode === 'auto') {
             return item.size || null;
         } else {
-            return (item.size && item.size > ViewPortService.itemDefaultSize) ? item.size : this.itemSize;
+            return (item.size && item.size > 40) ? item.size : this.itemSize;
         }
     }
-}
-
-export interface IDejaViewPortItem extends IViewPortItem {
-    model?: unknown;
 }

@@ -157,7 +157,7 @@ describe('DejaSelectComponent', () => {
         from(selectInstance.dropDownVisibleChange)
             .subscribe(() => fixture.detectChanges());
 
-        return from(viewPortService.viewPortResult$).pipe(
+        return from(viewPortService.viewPort$).pipe(
             filter(result => result.viewPortSize > 0));
     };
 
@@ -204,7 +204,7 @@ describe('DejaSelectComponent', () => {
         selectInstance.hintLabel = 'I am a hint label';
         void expect(selectInstance.hintLabel).toEqual('I am a hint label');
 
-        void expect(sl._viewPortRowHeight).toBe(ViewPortService.itemDefaultSize);
+        void expect(sl._viewPortRowHeight).toBe(40);
         selectInstance.viewPortRowHeight = 100;
         void expect(sl._viewPortRowHeight).toBe(100);
 
@@ -317,7 +317,7 @@ describe('DejaSelectComponent', () => {
                     }
                 });
 
-                from(viewPortService.viewPortResult$).pipe(
+                from(viewPortService.viewPort$).pipe(
                     debounceTime(100),
                     take(1)
                     // eslint-disable-next-line rxjs/no-nested-subscribe
@@ -427,7 +427,7 @@ describe('DejaSelectComponent', () => {
                     // eslint-disable-next-line rxjs/no-nested-subscribe
                     .subscribe(() => fixture.detectChanges());
 
-                from(viewPortService.viewPortResult$).pipe(
+                from(viewPortService.viewPort$).pipe(
                     debounceTime(10)
                     // eslint-disable-next-line rxjs/no-nested-subscribe
                 ).subscribe(vp => {
@@ -598,7 +598,7 @@ describe('DejaSelectByOptionsContainerComponent', () => {
         from(selectInstance.dropDownVisibleChange)
             .subscribe(() => fixture.detectChanges());
 
-        return from(viewPortService.viewPortResult$).pipe(
+        return from(viewPortService.viewPort$).pipe(
             filter(result => result.viewPortSize > 0));
     };
 
@@ -616,7 +616,7 @@ describe('DejaSelectByOptionsContainerComponent', () => {
             from(selectInstance.dropDownVisibleChange)
                 .subscribe(() => fixture.detectChanges());
 
-            from(viewPortService.viewPortResult$).pipe(
+            from(viewPortService.viewPort$).pipe(
                 debounceTime(100),
                 take(1))
                 .subscribe(vp => {
