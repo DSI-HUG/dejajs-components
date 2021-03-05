@@ -22,10 +22,6 @@
     
     #viewport-wrapper {
         flex: 1 1 auto;
-        display: flex;
-        flex-direction: column;
-        align-items: stretch;
-        justify-content: flex-start;
         width: 100%;
 		overflow: visible;
         overflow-y: auto;
@@ -34,9 +30,7 @@
 		>div {
 			padding: 0;
             margin: 0;
-            flex-grow: 0;
-            flex-shrink: 0;
-            width: 100%;
+            position: relative;
 
             &[mode="fixed"],
             &[mode="variable"] {
@@ -51,14 +45,17 @@
 
     &[horizontal="true"] {
         #viewport-wrapper {
-            flex-direction: row;
             height: 100%;
             overflow: visible;
             overflow-x: auto;
+            display: flex;
+            flex-direction: row;
+            align-items: stretch;
+            justify-content: flex-start;
 
             >div {
-                height: 100%;
-                overflow: hidden;
+                flex-grow: 0;
+                flex-shrink: 0;
             }
         }
 

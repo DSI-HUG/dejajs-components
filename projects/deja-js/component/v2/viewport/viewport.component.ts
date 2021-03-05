@@ -9,10 +9,10 @@
 import { coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, Component, ContentChild, ElementRef, HostBinding, Input, QueryList, TemplateRef, ViewChild, ViewChildren } from '@angular/core';
 import { Destroy } from '@deja-js/component/core';
-import { from, fromEvent, interval, merge, Subject, timer } from 'rxjs';
+import { from, fromEvent, interval, merge, Observable, Subject, timer } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, map, mergeMap, switchMap, takeUntil, tap, withLatestFrom } from 'rxjs/operators';
 
-import { ViewPortDirection, ViewPortItem, ViewPortMode, ViewPortRefreshParams, ViewPortService } from './viewport.service';
+import { ViewPort, ViewPortDirection, ViewPortItem, ViewPortMode, ViewPortService } from './viewport.service';
 
 
 export type ViewPortScrollStyleType = 'scrollbar' | 'buttons';
@@ -37,6 +37,7 @@ export class ViewPortComponent<T> extends Destroy {
     public hasUpButton: boolean = null;
     public hasDownButton: boolean = null;
     public buttons$ = new Subject<QueryList<ElementRef<HTMLElement>>>();
+    public viewPort$: Observable<ViewPort<T>>;
 
     private _buttonsStep: NumberInput;
 
@@ -124,9 +125,11 @@ export class ViewPortComponent<T> extends Destroy {
     }
 
     public constructor(
-        public viewPortService: ViewPortService<T>
+        private viewPortService: ViewPortService<T>
     ) {
         super();
+
+        this.viewPort$ = viewPortService.viewPort$;
 
         viewPortService.element$.pipe(
             distinctUntilChanged(),
@@ -226,21 +229,22 @@ export class ViewPortComponent<T> extends Destroy {
     }
 
     /** Recalcule le viewport. */
-    public refreshViewPort(item?: ViewPortItem<T>, clearMeasuredSize?: boolean): void {
-        const refreshParams = {
-            items: item ? [item] : undefined,
-            clearMeasuredSize
-        } as ViewPortRefreshParams<T>;
-        this.viewPortService.refresh(refreshParams);
+    public refreshViewPort(clearMeasuredSize?: boolean): void {
+        this.viewPortService.refresh(clearMeasuredSize);
+    }
+
+    /** Efface le viewport */
+    public clearViewPort(): void {
+        this.viewPortService.clear();
     }
 
     public ensureVisible(item: number | ViewPortItem<T>): void {
         this.viewPortService.ensureItem$.next(item);
     }
 
-    public getStyleAttribute(item: ViewPortItem<T>, defaultItemSize: number, mode: ViewPortMode): string {
+    public getCssSize(item: ViewPortItem<T>, defaultItemSize: number, mode: ViewPortMode): string {
         const itemSize = this.getItemSize(item, defaultItemSize, mode);
-        return itemSize ? `flex-basis: ${itemSize}px` : 'flex-basis: auto';
+        return itemSize ? `${itemSize}px` : 'auto';
     }
 
     public getItemSize(item: ViewPortItem<T>, defaultItemSize: number, mode: ViewPortMode): NumberInput {

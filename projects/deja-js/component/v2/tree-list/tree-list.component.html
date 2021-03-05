@@ -21,7 +21,7 @@
                 <span id="expandbtn">
                     <mat-icon *ngIf="item.children?.length">arrow_drop_down</mat-icon>
                 </span>
-                <ng-container *ngIf="(!item.children || !parentItemTemplate) && (item.children || !itemTemplate)">{{ item.displayName }}</ng-container>
+                <ng-container *ngIf="(!item.children || !parentItemTemplate) && (item.children || !itemTemplate)">{{ item.label }}</ng-container>
                 <ng-container class="item-content" *ngIf="item.children && parentItemTemplate">
                     <ng-template [ngTemplateOutlet]="parentItemTemplate" [ngTemplateOutletContext]="{ $implicit: item, query: query, flatindex: index }"></ng-template>
                 </ng-container>

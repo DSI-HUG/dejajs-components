@@ -64,8 +64,6 @@ export class ViewPortService<T> {
 
     public constructor() {
 
-        console.log('ViewPortService constructor');
-
         const element$ = this.element$.pipe(
             distinctUntilChanged()
         );
@@ -480,7 +478,9 @@ export class ViewPortService<T> {
                 }
 
                 if (params?.items) {
-                    params.items.forEach(item => item.size = undefined);
+                    params.items.forEach(item => {
+                        item.size = undefined;
+                    });
                 }
             })
         );

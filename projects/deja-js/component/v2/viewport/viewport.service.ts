@@ -8,7 +8,7 @@
 
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, combineLatest, fromEvent, merge, Observable, of, ReplaySubject, Subject, timer } from 'rxjs';
+import { BehaviorSubject, combineLatest, fromEvent, merge, Observable, of, ReplaySubject, Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, map, shareReplay, startWith, switchMap, take, tap, withLatestFrom } from 'rxjs/operators';
 
 export type ViewPortMode = 'disabled' | 'fixed' | 'variable' | 'auto';
@@ -45,7 +45,7 @@ export class ViewPortService<T> {
     public itemsSize$ = new BehaviorSubject<number>(40);
     public direction$ = new BehaviorSubject<ViewPortDirection>('vertical');
 
-    private refresh$ = new BehaviorSubject<ViewPortRefreshParams<T>>(null);
+    private refresh$ = new BehaviorSubject<boolean>(null);
     private deleteSizeCache$ = new BehaviorSubject<void>(undefined);
     private clear$ = new Subject<ViewPort<T>>();
     private lastCalculatedSize: number;
@@ -63,8 +63,6 @@ export class ViewPortService<T> {
     } as ViewPort<T>;
 
     public constructor() {
-
-        console.log('ViewPortService constructor');
 
         const element$ = this.element$.pipe(
             // withLatestFrom(this.scrollPosition$, this.direction$),
@@ -258,11 +256,13 @@ export class ViewPortService<T> {
                 switchMap(viewPort => {
                     const calculationRequired = !isCalculation && viewPort.visibleItems.find(item => !item.size);
 
+                    const measure$ = of(viewPort);
                     if (!calculationRequired) {
-                        return of(viewPort);
+                        return measure$;
                     } else {
                         // Measure items size
-                        return merge(of(viewPort), timer(1).pipe(
+                        return merge(measure$, measure$.pipe(
+                            debounceTime(1),
                             tap(() => {
                                 const elements = params.element.getElementsByClassName('listitem');
                                 // eslint-disable-next-line @typescript-eslint/prefer-for-of, no-loops/no-loops
@@ -303,7 +303,9 @@ export class ViewPortService<T> {
             } as ViewPort<T>;
 
             if (elements.length !== items.length && bindIfAny !== false) {
-                return merge(of(viewPort), timer(1).pipe(
+                const measure$ = of(viewPort);
+                return merge(measure$, measure$.pipe(
+                    debounceTime(1),
                     switchMap(() => calcDisabledViewPort$(params, items, scrollPosition, containerSize, false))
                 ));
             }
@@ -407,7 +409,9 @@ export class ViewPortService<T> {
                         const endScrollPos = viewPort.beforeSize + viewPort.viewPortSize + viewPort.afterSize - viewPort.listSize;
                         if (params.mode !== 'disabled' && listSize < 80) {
                             // Measure again container and recalc viewport
-                            return merge(of(this.measureViewPort), timer(1).pipe(
+                            const measure$ = of(this.measureViewPort);
+                            return merge(measure$, measure$.pipe(
+                                debounceTime(1),
                                 switchMap(() => calcViewPort$(params, items, scrollPosition, true))
                             ));
                         } else if (endScrollPos < 0 || (items.length && endScrollPos > 0 && (viewPort.targetScrollPos || scrollPosition) > endScrollPos)) {
@@ -473,22 +477,19 @@ export class ViewPortService<T> {
         const resize$ = fromEvent(window, 'resize').pipe(
             debounceTime(5),
             switchMap(() => deleteSizeCache$().pipe(
-                map(() => undefined as ViewPortRefreshParams<T>)
+                map(() => false)
             ))
         );
 
         const refresh$ = merge(this.refresh$, resize$).pipe(
-            withLatestFrom(this.items$),
-            tap(([params, items]) => {
-                if (params?.clearMeasuredSize && items?.length) {
+            withLatestFrom(this.viewPort$ || of(null as ViewPort<T>)),
+            tap(([clearMeasuredSize, viewPort]) => {
+                if (clearMeasuredSize && viewPort?.visibleItems?.length) {
                     this.lastCalculatedSize = undefined;
-                    items.forEach(item => item.size = undefined);
+                    viewPort?.visibleItems.forEach(item => item.size = undefined);
                 }
-
-                if (params?.items) {
-                    params.items.forEach(item => item.size = undefined);
-                }
-            })
+            }),
+            debounceTime(100)
         );
 
         const scrollPosition$ = this.scrollPosition$.pipe(
@@ -512,8 +513,9 @@ export class ViewPortService<T> {
                 if (items?.length && (listSize === 'auto' || listSize < 80)) {
                     // Set the viewlist to the maximum height to measure the real max-height defined in the css
                     // Use a blank div to do that
-                    vp$ = merge(of(this.measureViewPort), timer(1).pipe(
-                        // Wait next life cycle for the result
+                    const measure$ = of(this.measureViewPort);
+                    vp$ = merge(measure$, measure$.pipe(
+                        debounceTime(1), // Wait next life cycle for the result
                         switchMap(() => {
                             // Get max size from container
                             maxSizeValue = this.lastCalculatedSize = clientSize(params.element, params.direction);
@@ -557,8 +559,8 @@ export class ViewPortService<T> {
         this.clear$.next(this.emptyViewPort);
     }
 
-    public refresh(params?: ViewPortRefreshParams<T>): void {
-        this.refresh$.next(params || null);
+    public refresh(clearMeasuredSize?: boolean): void {
+        this.refresh$.next(clearMeasuredSize);
     }
 }
 
@@ -592,9 +594,4 @@ export interface ViewPort<T> extends ViewPortParams {
 export interface ViewPortItem<T> {
     size?: number;
     model?: T;
-}
-
-export interface ViewPortRefreshParams<T> {
-    items: ViewPortItem<T>[];
-    clearMeasuredSize: boolean;
 }

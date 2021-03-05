@@ -30,7 +30,6 @@ export class DejaViewPortDemoComponent {
     public ensureIndex: number;
     public scrollPosition: number;
 
-
     public exampleValue = `
     <deja-viewport [models]="news$ | async" itemSize="120">
         <ng-template #itemTemplate let-item>

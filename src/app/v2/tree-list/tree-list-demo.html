@@ -351,7 +351,7 @@
             <h1>Fixed size rows 100K items</h1>
             <div>An exemple with 100000 fixed size items</div>
             <span class="flexLayout">
-                <tree-list #bigCountries id="bigCountries" class="flex45p" [items]="bigCountries$ | async" textField="naqme" valueField="code"></tree-list>
+                <tree-list #bigCountries id="bigCountries" class="flex45p" [models]="bigCountries$ | async" textField="naqme" valueField="code"></tree-list>
                 <span class="flex45p flexOffset5p">
                     <h4 id="vptitle">Viewport Infos:</h4>
                     <div *ngFor="let info of viewPortInfos">

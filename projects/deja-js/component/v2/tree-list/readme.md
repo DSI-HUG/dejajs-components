@@ -154,8 +154,8 @@ Crée une liste récursive.
         <tr>
             <td>textField</td>
             <td>string</td>
-            <td>displayName</td>
-            <td>Retourne ou définit le champ des objets à utiliser comme label. Si cette valeur n'est pas définie, la propriété `displayName` de l'objet sera utilisée, et qui peut etre un string ou une fonction.</td>
+            <td>label</td>
+            <td>Retourne ou définit le champ des objets à utiliser comme label. Si cette valeur n'est pas définie, la propriété `label` de l'objet sera utilisée, et qui peut etre un string ou une fonction.</td>
         </tr>
         <tr>
             <td>valueField</td>

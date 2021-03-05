@@ -35,8 +35,6 @@ import { TreeListScrollEvent } from './tree-list-scroll-event';
     templateUrl: './tree-list.component.html'
 })
 export class TreeListComponent<T> extends Destroy implements ControlValueAccessor {
-    @ContentChildren(ItemComponent) public options: ItemComponent[];
-
     /** Exécuté lorsque la scrollbar change de position. */
     // eslint-disable-next-line @angular-eslint/no-output-native
     @Output() public readonly scroll = new EventEmitter<TreeListScrollEvent>();
@@ -153,6 +151,13 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
         return this._viewPortComponent;
     }
 
+    @ContentChildren(ItemComponent)
+    public set options(value: ItemComponent[]) {
+        if (value?.length) {
+            this.itemService.options$.next(value);
+        }
+    }
+
     /** Définit la hauteur d'une ligne pour le calcul du viewport. Le Viewport ne fonctionne qu'avec des hauteurs de lignes fixe.
      * Pour désactiver le viewport, mettre la hauteur de ligne à 0.
      * Attention, une désactivation du viewport dégrade considérablement les performances de la liste et ne doit pas être activée si la liste
@@ -185,7 +190,7 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
 
         this.viewPort$ = this.viewPortComponent$.pipe(
             filter(viewPortComponent => !!viewPortComponent),
-            switchMap(viewPortComponent => viewPortComponent.viewPortService.viewPort$)
+            switchMap(viewPortComponent => viewPortComponent.viewPort$)
         );
 
         // itemService.itemList$.pipe(
@@ -661,46 +666,20 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
 
     /** Recalcule le viewport. */
     public refreshViewPort(item?: Item<T>, clearMeasuredSize?: boolean): void {
+        if (item) {
+            item.size = undefined;
+        }
         if (this.viewPortComponent) {
-            this.viewPortComponent.refreshViewPort(item, clearMeasuredSize);
+            this.viewPortComponent.refreshViewPort(clearMeasuredSize);
         }
     }
 
     /** Efface le viewport */
     public clearViewPort(): void {
         if (this.viewPortComponent) {
-            this.viewPortComponent.viewPortService.clear();
+            this.viewPortComponent.clearViewPort();
         }
     }
-
-    // public ngAfterContentInit(): void {
-    // if (!this.items && this.options?.length) {
-    //     const selectedModels = [] as unknown[];
-    //     this.valueField = 'value';
-    //     this.textField = 'text';
-    //     const models = this.options.map(option => {
-    //         const model = {
-    //             text: option.text,
-    //             value: option.value
-    //         };
-    //         if (option.selected) {
-    //             selectedModels.push(model);
-    //         }
-    //         return model;
-    //     });
-    //     this.models = models;
-    //     if (selectedModels.length) {
-    //         this.selectedModels = selectedModels;
-    //     }
-    //     if (models.length > 100) {
-    //         // eslint-disable-next-line no-debugger
-    //         debugger;
-    //         console.error('Select options with more than 100 items can have performance options. Please bind directly the items in code behind with items or models input.');
-    //     }
-    // }
-
-    // this.contentInitialized$.next(true);
-    // }
 
     // public ngAfterViewInit(): void {
     // FIXME Issue angular/issues/6005

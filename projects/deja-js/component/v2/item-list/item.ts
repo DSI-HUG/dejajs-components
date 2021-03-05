@@ -10,10 +10,10 @@ import { ViewPortItem } from '@deja-js/component/v2/viewport';
 
 export interface Item<T> extends ViewPortItem<T> {
     id?: string;
+    label?: string;
     selectable?: boolean;
     selected?: boolean;
     dragged?: boolean;
-    displayName?: string;
     searchText?: string;
     visible?: boolean;
     odd?: boolean;

@@ -112,7 +112,7 @@ export class TreeListDemoComponent extends Destroy {
         private fb: FormBuilder
     ) {
         super();
-        this.multiselectModel = JSON.parse('[{"naqme":"ÅlandIslands","code":"AX","displayName":"ÅlandIslands","depth":0,"odd":true,"selected":true},{"naqme":"AmericanSamoa","code":"AS","displayName":"AmericanSamoa","depth":0,"odd":false,"selected":true},{"naqme":"Argentina","code":"AR","displayName":"Argentina","depth":0,"odd":false,"selected":true},{"naqme":"ChristmasIsland","code":"CX","displayName":"ChristmasIsland","depth":0,"odd":false,"selected":true},{"naqme":"Egypt","code":"EG","displayName":"Egypt","depth":0,"odd":true,"selected":true},{"naqme":"Dominica","code":"DM","displayName":"Dominica","depth":0,"odd":false,"selected":true}]');
+        this.multiselectModel = JSON.parse('[{"naqme":"ÅlandIslands","code":"AX","label":"ÅlandIslands","depth":0,"odd":true,"selected":true},{"naqme":"AmericanSamoa","code":"AS","label":"AmericanSamoa","depth":0,"odd":false,"selected":true},{"naqme":"Argentina","code":"AR","label":"Argentina","depth":0,"odd":false,"selected":true},{"naqme":"ChristmasIsland","code":"CX","label":"ChristmasIsland","depth":0,"odd":false,"selected":true},{"naqme":"Egypt","code":"EG","label":"Egypt","depth":0,"odd":true,"selected":true},{"naqme":"Dominica","code":"DM","label":"Dominica","depth":0,"odd":false,"selected":true}]');
         this.news$ = newsService.getNews$(50);
         this.bigNews$ = newsService.getNews$(10000);
         this.bigCountries$ = countriesService.getCountries$(null, 100000);
@@ -122,7 +122,7 @@ export class TreeListDemoComponent extends Destroy {
             const rand = Math.floor(Math.random() * (70 - 33 + 1)) + 33; // random de 33 à 70
             this.loremList[i] = {} as Item<unknown>;
             this.loremList[i].size = rand;
-            this.loremList[i].displayName = `${i} - Une ligne de test avec une taille de : ${rand}`;
+            this.loremList[i].label = `${i} - Une ligne de test avec une taille de : ${rand}`;
         }
 
         groupingService.group$(this.loremList, [{ groupByField: 'height' }]).pipe(
@@ -172,12 +172,12 @@ export class TreeListDemoComponent extends Destroy {
         this.fruits$ = of(this.fructs);
 
         this.fructItems = this.fructs.map(fruct => ({
-            displayName: fruct,
+            label: fruct,
             value: fruct.toLowerCase()
         } as Item<unknown>));
 
         this.fructItemsWithPreSelection = this.fructs.map((fruct, index) => ({
-            displayName: fruct,
+            label: fruct,
             value: fruct.toLowerCase(),
             selected: index === 1
         } as Item<unknown>));
@@ -187,7 +187,7 @@ export class TreeListDemoComponent extends Destroy {
             delay(1),
             takeUntil(this.destroyed$)
         ).subscribe(() => {
-            this.multiselectModel = JSON.parse('[{"naqme":"ÅlandIslands","code":"AX","displayName":"ÅlandIslands","depth":0,"odd":true,"selected":true},{"naqme":"AmericanSamoa","code":"AS","displayName":"AmericanSamoa","depth":0,"odd":false,"selected":true},{"naqme":"Argentina","code":"AR","displayName":"Argentina","depth":0,"odd":false,"selected":true},{"naqme":"ChristmasIsland","code":"CX","displayName":"ChristmasIsland","depth":0,"odd":false,"selected":true},{"naqme":"Egypt","code":"EG","displayName":"Egypt","depth":0,"odd":true,"selected":true},{"naqme":"Dominica","code":"DM","displayName":"Dominica","depth":0,"odd":false,"selected":true}]');
+            this.multiselectModel = JSON.parse('[{"naqme":"ÅlandIslands","code":"AX","label":"ÅlandIslands","depth":0,"odd":true,"selected":true},{"naqme":"AmericanSamoa","code":"AS","label":"AmericanSamoa","depth":0,"odd":false,"selected":true},{"naqme":"Argentina","code":"AR","label":"Argentina","depth":0,"odd":false,"selected":true},{"naqme":"ChristmasIsland","code":"CX","label":"ChristmasIsland","depth":0,"odd":false,"selected":true},{"naqme":"Egypt","code":"EG","label":"Egypt","depth":0,"odd":true,"selected":true},{"naqme":"Dominica","code":"DM","label":"Dominica","depth":0,"odd":false,"selected":true}]');
         });
 
         this.countries$.pipe(
@@ -202,7 +202,7 @@ export class TreeListDemoComponent extends Destroy {
                 collapsed: true,
                 groupName: 'EmptyGroup',
                 items: [],
-                displayName: 'Empty Group',
+                label: 'Empty Group',
                 selectable: false
             } as ICountryGroup);
 
@@ -214,7 +214,7 @@ export class TreeListDemoComponent extends Destroy {
                         collapsible: true,
                         groupName: groupName,
                         items: countryMap[groupName],
-                        displayName: groupName,
+                        label: groupName,
                         selectable: false
                     } as ICountryGroup);
 
@@ -223,10 +223,10 @@ export class TreeListDemoComponent extends Destroy {
                         collapsed: true,
                         groupName: groupName,
                         items: [{
-                            displayName: 'loading...',
+                            label: 'loading...',
                             selectable: false
                         }],
-                        displayName: groupName,
+                        label: groupName,
                         selectable: false,
                         loaded: false
                     } as ICountryGroup);
@@ -277,7 +277,7 @@ export class TreeListDemoComponent extends Destroy {
                             takeUntil(this.destroyed$)
                         ).subscribe(grp => {
                             // Simulate asynchronous load
-                            const original = this.groupedCountries.find(c => c.displayName === grp.displayName);
+                            const original = this.groupedCountries.find(c => c.label === grp.label);
                             grp.items = original.items;
                             grp.loaded = true;
                             // this.onExpandList.refresh();
@@ -325,14 +325,17 @@ export class TreeListDemoComponent extends Destroy {
     }
 
     public imageLoaded(item: IViewPortItem<News>): void {
-        if (!item.model.imageLoaded) {
-            item.model.imageLoaded = true; // Loaded
-            this.newsList.refreshViewPort(item);
-        }
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+            if (!item.model.imageLoaded) {
+                item.model.imageLoaded = true; // Loaded
+                item.size = undefined;
+                this.newsList.refreshViewPort();
+            }
+        }));
     }
 
-    public multiselectModelChange(countries: Country[]): void {
-        this.multiselectModel = countries ? countries : null;
+    public multiselectModelChange(_countries: Country[]): void {
+        // this.multiselectModel = countries ? countries : null;
     }
 
     public onFilterTemplateClicked(where: string): void {

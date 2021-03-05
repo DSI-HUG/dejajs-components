@@ -17,6 +17,7 @@ import { BehaviorSubject, combineLatest, concat, from, iif, merge, Observable, o
 import { debounceTime, filter, map, reduce, shareReplay, switchMap, tap } from 'rxjs/operators';
 
 import { Item } from './item';
+import { ItemComponent } from './item.component';
 
 
 /** Service de gestion des listes (treelist et select).
@@ -27,11 +28,11 @@ import { Item } from './item';
 export class ItemService<T> {
     // Working item array (can be recursive)
     public items$ = new ReplaySubject<Item<T>[]>(1);
-
     public models$ = new ReplaySubject<T[]>(1);
+    public options$ = new ReplaySubject<ItemComponent[]>(1);
 
     public childrenField$ = new BehaviorSubject<string>('items');
-    public textField$ = new BehaviorSubject<string>('displayName');
+    public textField$ = new BehaviorSubject<string>('label');
     public valueField$ = new BehaviorSubject<string>('value');
     public searchField$ = new BehaviorSubject<string>(null);
 
@@ -78,59 +79,72 @@ export class ItemService<T> {
 
     public constructor() {
 
+        const itemsFromOptions$ = this.options$.pipe(
+            debounceTime(1),
+            map(options => {
+                const items = options.map(option => {
+                    const item = {
+                        label: option.text,
+                        value: option.value,
+                        selected: option.selected
+                    } as Item<T>;
+                    return item;
+                });
+                if (items.length > 100) {
+                    // eslint-disable-next-line no-debugger
+                    debugger;
+                    console.error('Select options with more than 100 items can have performance options. Please bind directly the items in code behind with items or models input.');
+                }
+                return items;
+            })
+        );
+
         const itemsFromModels$ = combineLatest([this.models$, this.valueField$, this.textField$, this.childrenField$]).pipe(
             debounceTime(1),
-            map(([models, valueField, textField, childrenField]) => (models && this.mapToItem(models, valueField, textField, childrenField)) || []),
+            map(([models, valueField, textField, childrenField]) => (models && models instanceof Array && this.mapToItem(models, valueField, textField, childrenField)) || []),
             shareReplay({ bufferSize: 1, refCount: false })
         );
 
-        this.itemList$ = merge(this.items$, itemsFromModels$);
+        const treeItemList$ = merge(this.items$, itemsFromModels$, itemsFromOptions$);
+
+
+        this.itemList$ = treeItemList$;
     }
 
-    /** Evalue la valeur à comparer pour l'élément spécifié.
-     * @param value  Model à évaluer.
+    public extractValueField(model: T, field: string): unknown {
+        const indexedModel = model as unknown as Record<string, unknown>;
+        const fields = field.split('.');
+        return fields.reduce((mdl, fld) => mdl[fld], indexedModel);
+    }
+
+    /** Map une structure de modèles en items
+     * @param mods  Modèles à évaluer.
      * @param valueField (optional) Champs à traiter comme valeur.
-     * @return Valeur à comparer pour le modèle spécifié.
+     * @param textField (optional) Champs à traiter comme text.
+     * @param childrenField (optional) Champs à traiter comme enfants.
+     * @return Structure mapée
      */
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    public static getItemValue(item: any, valueField?: string): unknown {
-        // eslint-disable-next-line eqeqeq
-        const isDefined = (value: any) => value != undefined;
-
-        if (valueField) {
-            const fields = valueField.split('.');
-            let model = item.model?.[fields[0]] !== undefined ? item.model : item;
-            fields.forEach(fieldName => {
-                model = model?.[fieldName];
-            });
-            if (isDefined(model)) {
-                return typeof model === 'function' ? model() : model;
-            }
-        }
-
-        return isDefined(item.value) ? item.value : (isDefined(item.model) && item.model) || item;
-    }
-
-    public mapToItem(mods: T[], valueField: string, textField: string, childrenField: string): Item<T>[] {
+    public mapToItem(mods: T[], valueField: string, textField: string, childrenField?: string): Item<T>[] {
         return mods.map(model => {
-            const item = {} as IndexedItem<T>;
-            const indexedModel = model as unknown as Indexed;
+            const item = {} as Item<T>;
             item.model = model;
 
             if (typeof model === 'string') {
                 item.id = model;
-                item.displayName = model;
+                item.label = model;
             } else {
-                item.displayName = indexedModel[textField] as string;
-                item.id = indexedModel[valueField] as string;
+                item.label = this.extractValueField(model, textField) as string;
+                item.id = this.extractValueField(model, valueField) as string;
+
+                if (childrenField) {
+                    const children = this.extractValueField(model, childrenField) as T[];
+                    if (children && children instanceof Array) {
+                        item.items = this.mapToItem(children, valueField, textField, childrenField);
+                    }
+                }
             }
 
-            if (indexedModel[childrenField]) {
-                const children = indexedModel[childrenField] as T[];
-                item.childrenField = this.mapToItem(children, valueField, textField, childrenField);
-            }
-
-            return item as Item<T>;
+            return item;
         });
     }
 
@@ -220,8 +234,9 @@ export class ItemService<T> {
      * @param item Element à chercher sur la liste des éléments visibles.
      * @return Index correspondant à l'élément recherché.
      */
-    public getItemIndex(item: Item<T>): number {
-        return this._cache.visibleList ? this._cache.visibleList.findIndex(itm => this.compareItems(item, itm)) : -1;
+    public getItemIndex(_item: Item<T>): number {
+        return 0;
+        // return this._cache.visibleList ? this._cache.visibleList.findIndex(itm => this.compareItems(item, itm)) : -1;
     }
 
     /** Renvoie le service utilisé pour le tri de la liste
@@ -256,16 +271,6 @@ export class ItemService<T> {
      */
     public setGroupingService(value: GroupingService): void {
         this._groupingService = value;
-    }
-
-    /** Evalue la valeur à comparer pour l'élément spécifié.
-     * @param value  Model à évaluer.
-     * @param valueField (optional) Champs à traiter comme valeur.
-     * @return Valeur à comparer pour le modèle spécifié.
-     */
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    public getValue(item: any, valueField?: string): unknown {
-        return ItemService.getItemValue(item, valueField);
     }
 
     /** Usage interne. Termine le drag and drop en cours. */
@@ -647,10 +652,10 @@ export class ItemService<T> {
             tap(itm => {
                 itm.selected = false;
                 if (this.selectedList?.length) {
-                    const index = this.selectedList.findIndex(i => this.compareItems(i, itm));
-                    if (index >= 0) {
-                        this.selectedList.splice(index, 1);
-                    }
+                    // const index = this.selectedList.findIndex(i => this.compareItems(i, itm));
+                    // if (index >= 0) {
+                    //     this.selectedList.splice(index, 1);
+                    // }
                 }
             }));
     }
@@ -1185,31 +1190,31 @@ export class ItemService<T> {
     //     return this.selectedList;
     // }
 
-    private compareItems = (item1: Item<T>, item2: Item<T>) => {
-        const isDefined = (value: any) => value !== undefined && value !== null;
+    // private compareItems = (item1: Item<T>, item2: Item<T>) => {
+    //     const isDefined = (value: any) => value !== undefined && value !== null;
 
-        const item1Comp = item1 as Comparable<T>;
-        const item2Comp = item2 as Comparable<T>;
+    //     const item1Comp = item1 as Comparable<T>;
+    //     const item2Comp = item2 as Comparable<T>;
 
-        // TODO
-        if (!isDefined(item1) || !isDefined(item2)) {
-            return false;
-        } else if (item1Comp.equals) {
-            return item1Comp.equals(item2);
-        } else if (item2Comp.equals) {
-            return item2Comp.equals(item1);
-        } else {
-            const model1 = item1.model as unknown as Comparable<T>;
-            const model2 = item1.model as unknown as Comparable<T>;
-            if (model1?.equals) {
-                return model1.equals(item2.model);
-            } else if (model2?.equals) {
-                return model2.equals(item1.model);
-            } else {
-                return this.getValue(item1, this._valueField) === this.getValue(item2, this._valueField);
-            }
-        }
-    };
+    //     // TODO
+    //     if (!isDefined(item1) || !isDefined(item2)) {
+    //         return false;
+    //     } else if (item1Comp.equals) {
+    //         return item1Comp.equals(item2);
+    //     } else if (item2Comp.equals) {
+    //         return item2Comp.equals(item1);
+    //     } else {
+    //         const model1 = item1.model as unknown as Comparable<T>;
+    //         const model2 = item1.model as unknown as Comparable<T>;
+    //         if (model1?.equals) {
+    //             return model1.equals(item2.model);
+    //         } else if (model2?.equals) {
+    //             return model2.equals(item1.model);
+    //         } else {
+    //             return this.getValue(item1, this._valueField) === this.getValue(item2, this._valueField);
+    //         }
+    //     }
+    // };
 
     // private ensureVisibleListCache$(_searchField: string, _regExp: RegExp, _expandTree: boolean, _multiSelect: boolean) {
     // if (this._cache.visibleList?.length) {
@@ -1322,13 +1327,9 @@ export interface ParentListInfoResult<T> {
 //     index: number;
 // }
 
-interface Comparable<T> {
-    equals(itm: Item<T>): boolean;
-}
+// interface Comparable<T> {
+//     equals(itm: Item<T>): boolean;
+// }
 
-export interface Indexed {
-    [index: string]: unknown;
-}
-
-export interface IndexedItem<T> extends Item<T>, Indexed {
+export interface IndexedItem<T> extends Item<T>, Record<string, unknown> {
 }

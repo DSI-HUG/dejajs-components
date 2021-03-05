@@ -57,9 +57,12 @@ export class ViewPortDemoComponent {
     }
 
     public imageLoaded(item: IViewPortItem<News>): void {
-        if (!item.model.imageLoaded) {
-            item.model.imageLoaded = true; // Loaded
-            this.viewport.refreshViewPort(item);
-        }
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+            if (!item.model.imageLoaded) {
+                item.model.imageLoaded = true; // Loaded
+                item.size = undefined;
+                this.viewport.refreshViewPort();
+            }
+        }));
     }
 }
