@@ -4,7 +4,8 @@
 	$primary: map-get($theme, primary);
 
     &[disabled="true"]{
-		.deja-listcontainer {
+        .deja-listcontainer,
+        .listcontainer {
 			>div.listitem {
 				&.selected {
 					background-color: rgba(0, 0, 0, 0.8);
@@ -14,7 +15,8 @@
 		}        
     }
 	&:not([disabled="true"]) {
-		.deja-listcontainer {
+        .deja-listcontainer,
+        .listcontainer {
 			>div.listitem {
 				&[current="true"] {
 					background-color: rgba(0, 0, 0, 0.03);

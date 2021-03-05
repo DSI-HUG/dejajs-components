@@ -6,18 +6,18 @@ Ce contrôle permet de créer le DOM que pour la partie visible d'une liste scro
  - Éléments de taille auto, dans ce cas, il est préférable de spécifier la taille moyenne des éléments pour éviter un trop grand réajustement de la scrollbar. Le contrôle calculera la taille des éléments au rendu et réajustera la scrollbar au fur et à mesure. 
 
 ### Utilisation
-> Ne pas oublier d'importer le `DejaViewPortModule` dans les `imports` de votre module concern&eacute; !
+> Ne pas oublier d'importer le `ViewPortModule` dans les `imports` de votre module concern&eacute; !
 
 Ensuite utiliser le composant comme ceci dans votre template :
 
  - impl&eacute;mentation :
 
 ```html
-<deja-viewport [models]="news$ | async" viewportMode="auto" direction="vertical">
-    <ng-template #itemTemplate let-item>
+<viewport [models]="news$ | async" viewPortMode="auto" direction="vertical">
+    <ng-template #viewPortItemTemplate let-item>
         <!-- Your content template here -->
     </ng-template>
-</deja-viewport>
+</viewport>
 ```
 
 ####Note :

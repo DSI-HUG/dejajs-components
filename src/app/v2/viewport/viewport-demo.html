@@ -9,7 +9,7 @@
 </mat-tab-group>
 
 <mat-card class="demo-card demo-basic" *ngIf="tabIndex === 0">
-    <deja-markdown [url]="'https://raw.githubusercontent.com/DSI-HUG/dejajs-components/develop/projects/deja-js/component/viewport/readme.md'"></deja-markdown>
+    <deja-markdown [url]="'https://raw.githubusercontent.com/DSI-HUG/dejajs-components/develop/projects/deja-js/component/v2/viewport/readme.md'"></deja-markdown>
 </mat-card>
 
 <mat-card class="demo-card demo-basic" *ngIf="tabIndex === 1">
@@ -34,10 +34,10 @@
                 <button type="button" mat-button (click)="viewport.viewPortService.scrollPosition$.next(scrollPosition)">Go</button>
             </span>
         </div>
-        <deja-viewport #viewport [models]="news$ | async" viewPortMode="auto" itemSize="140" [direction]="isHorizontal ? 'horizontal': 'vertical'" [scrollingStyle]="hasButtons ? 'buttons' : 'scrollbar'">
-            <ng-template #itemTemplate let-item let-size="size">
+        <viewport #viewport [models]="news$ | async" viewPortMode="auto" itemSize="41" [direction]="isHorizontal ? 'horizontal': 'vertical'" [scrollingStyle]="hasButtons ? 'buttons' : 'scrollbar'">
+            <ng-template #viewPortItemTemplate let-item let-size="size">
                 <news-card [item]="item.model" (imageLoaded)="imageLoaded(item)"></news-card>
             </ng-template>
-        </deja-viewport>
+        </viewport>
     </mat-card-content>
 </mat-card>
