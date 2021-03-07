@@ -33,13 +33,30 @@ export class Item<T> implements ViewPortItem<T> {
     /** Enfants */
     public items?: Item<T>[];
 
+    /** Définit si l'élément peut être réduit.
+     * @return True si l'élément peut être réduit.
+     */
+    public get isCollapsible(): boolean {
+        return this.items && this.collapsible !== false;
+    }
+
+    /** Définit si l'élément est visible.
+     * @return True si l'élément est visible.
+     */
+    public get isVisible(): boolean {
+        return this.visible !== false;
+    }
+
+    /** Définit si l'élément peut-être sélectionné.
+     * @return True si l'élément peut-être sélectionné.
+     */
+    public get isSelectable(): boolean {
+        return this.selectable !== false;
+    }
+
     public constructor(id?: string, label?: string, model?: T) {
         this.model = model;
         this.id = id;
         this.label = label;
-    }
-
-    public class(): string {
-        return this.selected ? 'selected' : '';
     }
 }

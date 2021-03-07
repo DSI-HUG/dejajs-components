@@ -1,7 +1,7 @@
 <div #button id="up" *ngIf="hasButtons" [attr.hidden]="!this.hasUpButton || null">
     <mat-icon>keyboard_arrow_up</mat-icon>
 </div>
-<div #wrapper id="viewport-wrapper">
+<div #wrapper class="viewport-wrapper">
     <ng-container *ngIf="viewPort$ | async as viewPort">
         <ng-container *ngIf="viewPort.direction === 'vertical';else horizontal">
             <div class="fake" *ngIf="viewPort.beforeSize > 0" [style.height.px]="viewPort.beforeSize">&nbsp;</div>

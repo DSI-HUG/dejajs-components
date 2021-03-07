@@ -61,7 +61,7 @@ export class TreeListDemoComponent extends Destroy {
     public deepCountries$: Observable<DeepCountry[]>;
     public countriesForMultiselect: Country[];
     public onDemandGroupedCountries: ICountryGroup[];
-    public multiselectModel: Item<unknown>[];
+    public multiselectModel: Country[];
     public fruitForm: FormGroup;
     public fruitFormModels: FormGroup;
     public fruits$: Observable<string[]>;
@@ -331,8 +331,8 @@ export class TreeListDemoComponent extends Destroy {
         }));
     }
 
-    public multiselectModelChange(_countries: Country[]): void {
-        // this.multiselectModel = countries ? countries : null;
+    public multiselectModelChange(countries: Country[]): void {
+        this.multiselectModel = countries || null;
     }
 
     public onFilterTemplateClicked(where: string): void {

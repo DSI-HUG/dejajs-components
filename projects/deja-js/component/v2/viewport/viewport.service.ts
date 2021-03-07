@@ -65,15 +65,6 @@ export class ViewPortService<T> {
     public constructor() {
 
         const element$ = this.element$.pipe(
-            // withLatestFrom(this.scrollPosition$, this.direction$),
-            // map(([element, scrollPosition, direction]) => {
-            //     if (direction === 'horizontal') {
-            //         element.scrollLeft = scrollPosition;
-            //     } else {
-            //         element.scrollTop = scrollPosition;
-            //     }
-            //     return element;
-            // }),
             distinctUntilChanged()
         );
 
@@ -594,5 +585,4 @@ export interface ViewPort<T> extends ViewPortParams {
 export interface ViewPortItem<T> {
     size?: number;
     model?: T;
-    class?(): string;
 }

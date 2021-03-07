@@ -7,7 +7,7 @@
  */
 
 import { coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
-import { ChangeDetectionStrategy, Component, ContentChild, ElementRef, HostBinding, Input, QueryList, TemplateRef, ViewChild, ViewChildren } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ContentChild, ElementRef, EventEmitter, HostBinding, Input, Output, QueryList, TemplateRef, ViewChild, ViewChildren } from '@angular/core';
 import { Destroy } from '@deja-js/component/core';
 import { BehaviorSubject, combineLatest, from, fromEvent, interval, merge, Observable, Subject, timer } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, map, mergeMap, switchMap, takeUntil, tap, withLatestFrom } from 'rxjs/operators';
@@ -16,6 +16,11 @@ import { ViewPort, ViewPortDirection, ViewPortItem, ViewPortMode, ViewPortServic
 
 
 export type ViewPortScrollStyleType = 'scrollbar' | 'buttons';
+
+export class ViewPortItemClassEvent<T> {
+    public item: ViewPortItem<T>;
+    public classes: string[];
+}
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -30,6 +35,8 @@ export class ViewPortComponent<T> extends Destroy {
 
     /** Permet de définir un template d'élément par binding */
     @Input() public viewPortItemTemplateExternal: TemplateRef<T>;
+
+    @Output() public readonly itemClass = new EventEmitter<ViewPortItemClassEvent<T>>();
 
     @ContentChild('viewPortItemTemplate') private viewPortItemTemplateInternal: TemplateRef<T>;
 
@@ -126,7 +133,7 @@ export class ViewPortComponent<T> extends Destroy {
     }
 
     public constructor(
-        private viewPortService: ViewPortService<T>
+        public viewPortService: ViewPortService<T>
     ) {
         super();
 
@@ -172,9 +179,9 @@ export class ViewPortComponent<T> extends Destroy {
 
             if (viewPort?.element) {
                 if (viewPort.direction === 'horizontal') {
-                    viewPort.element.scrollLeft = viewPort.targetScrollPos || viewPort.scrollPosition;
+                    viewPort.element.scrollLeft = viewPort.targetScrollPos ?? viewPort.scrollPosition;
                 } else {
-                    viewPort.element.scrollTop = viewPort.targetScrollPos || viewPort.scrollPosition;
+                    viewPort.element.scrollTop = viewPort.targetScrollPos ?? viewPort.scrollPosition;
                 }
             }
         });
@@ -269,11 +276,11 @@ export class ViewPortComponent<T> extends Destroy {
 
     public getItemClassName(item: ViewPortItem<T>): string {
         const classes = ['listitem'];
-        if (item.class instanceof Function) {
-            const className = item.class();
-            if (className) {
-                classes.push(className);
-            }
+        if (this.itemClass.observers.length > 0) {
+            this.itemClass.next({
+                item,
+                classes
+            } as ViewPortItemClassEvent<T>);
         }
         return classes.join(' ');
     }

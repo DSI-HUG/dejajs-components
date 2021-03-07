@@ -20,7 +20,7 @@
         }
     }
     
-    #viewport-wrapper {
+    .viewport-wrapper {
         flex: 1 1 auto;
         width: 100%;
 		overflow: visible;
@@ -44,7 +44,7 @@
     }
 
     &[horizontal="true"] {
-        #viewport-wrapper {
+        .viewport-wrapper {
             height: 100%;
             overflow: visible;
             overflow-x: auto;
@@ -74,7 +74,7 @@
     }
 
     &[buttons="true"] {
-        #viewport-wrapper {
+        .viewport-wrapper {
             overflow: hidden;
         }
     }

@@ -12,12 +12,13 @@ import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { DejaChildValidatorDirective, Destroy } from '@deja-js/component/core';
 import { IDejaDragEvent } from '@deja-js/component/dragdrop';
 import { Item, ItemComponent, ItemEvent, ItemService } from '@deja-js/component/v2/item-list';
-import { ViewPort, ViewPortComponent, ViewPortMode, ViewPortService } from '@deja-js/component/v2/viewport';
-import { BehaviorSubject, combineLatest, fromEvent, Observable, ReplaySubject, Subject } from 'rxjs';
+import { ViewPort, ViewPortComponent, ViewPortMode } from '@deja-js/component/v2/viewport';
+import { BehaviorSubject, combineLatest, fromEvent, merge, Observable, of, ReplaySubject, Subject, timer } from 'rxjs';
 import { filter, switchMap, takeUntil, tap, withLatestFrom } from 'rxjs/operators';
 
+import { KeyCodes } from '../../core/keycodes.enum';
+import { ViewPortItemClassEvent } from '../viewport/viewport.component';
 import { TreeListScrollEvent } from './tree-list-scroll-event';
-
 
 export type NgModelType = 'item' | 'model' | 'value';
 
@@ -28,7 +29,6 @@ export type NgControlType<T> = Item<T> | Item<T>[] | T | T[] | string | string[]
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     providers: [
-        ViewPortService,
         ItemService
     ],
     selector: 'tree-list',
@@ -72,9 +72,17 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
     /** Exécuté lorsque le déplacement d'une ligne commence. */
     @Output() public readonly itemDragStart = new EventEmitter<IDejaDragEvent>();
     /** Exécuté lorsque l'utilisateur sélectionne ou désélectionne une ligne. */
-    @Output() public readonly selectedChange = new EventEmitter<ItemEvent<unknown>>();
+    @Output() public readonly selectedChange = new EventEmitter<ItemEvent<T>>();
     /** Exécuté lorsque le calcul du viewPort est executé. */
-    @Output() public readonly viewPortChanged = new EventEmitter<ViewPort<unknown>>();
+    @Output() public readonly viewPortChanged = new EventEmitter<ViewPort<T>>();
+    /** Exécuté lorsque l'utilisateur tape enter sur une ligne. */
+    @Output() public readonly itemEnter = new EventEmitter<ItemEvent<T>>();
+
+    // Cnacelable pre events
+    @Input() public selectingItems$: Observable<Item<T>[]>;
+    @Input() public expandingItem$: Observable<Item<T>>;
+    @Input() public collapsingItem$: Observable<Item<T>>;
+
 
     /** Internal use */
     @ViewChild('inputelement') public input: ElementRef;
@@ -90,56 +98,48 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
     @ContentChild('searchSuffixTemplate') private searchSuffixTemplateInternal: TemplateRef<unknown>;
 
     public viewPort$: Observable<ViewPort<T>>;
+    public listElementId: string;
 
     public setQuery$ = new Subject<string>();
-    public listElementId: string;
 
     // Drag drop
     public ddStartIndex: number;
     public ddTargetIndex: number;
 
     private _selectedItems: Item<T>[];
-    private _keyboardNavigation = false;
-    private _depthMax = 0;
-    private _currentItemIndex = -1;
-    private _waiter = false;
-    private _currentItem: Item<T>;
-    private _maxHeight: number;
-    private _hintLabel: string;
-    private _pageSize = 0;
-    private modelType$ = new BehaviorSubject<NgModelType>('value');
-    private _modelType: NgModelType = 'value';
+    private ngModelType$ = new BehaviorSubject<NgModelType>('value');
+    private _ngModelType: NgModelType = 'value';
     private writeValue$ = new ReplaySubject<NgControlType<T>>(1);
     private multiSelect$ = new BehaviorSubject<boolean>(false);
     private _multiSelect = false;
     private listElement$ = new ReplaySubject<HTMLElement>(1);
     private raiseChangeCallback = false;
+    private _currentItem: Item<T>;
+    private _pageSize = 0;
+    private filterExpression = '';
 
-    // protected _items: Item[]; In the base class, correspond to the model
+    private _keyboardNavigation = false;
+    private _depthMax = 0;
+    private _waiter = false;
+    private _maxHeight: number;
+    private _hintLabel: string;
+    private _viewPortRowHeight = 40;
+    private viewPortComponent$ = new ReplaySubject<ViewPortComponent<T>>(1);
+    private _viewPortComponent: ViewPortComponent<T>;
+    private keyboardStartIndex = undefined as number;
+
     // private clickedItem: Item<unknown>;
-    // private rangeStartIndex = 0;
-    // private filterExpression = '';
     private _searchArea = false;
     private _sortable = false;
     private _itemsDraggable = false;
     // private hasLoadingEvent = false;
-
     // private keyboardNavigation$ = new Subject();
-
-    // private mouseUp$sub: Subscription;
-
-    // private clearFilterExpression$ = new BehaviorSubject<void>(null);
     private _minSearchLength = 0;
 
-    private _viewPortRowHeight: number;
-
-    private viewPortComponent$ = new ReplaySubject<ViewPortComponent<T>>(1);
-    private _viewPortComponent: ViewPortComponent<T>;
-
     @ViewChild(ViewPortComponent)
-    public set viewPortComponent(value: ViewPortComponent<T>) {
-        this.viewPortComponent$.next(value);
-        this._viewPortComponent = value;
+    public set viewPortComponent(viewPortComponent: ViewPortComponent<T>) {
+        this.viewPortComponent$.next(viewPortComponent);
+        this._viewPortComponent = viewPortComponent;
     }
 
     public get viewPortComponent(): ViewPortComponent<T> {
@@ -166,6 +166,18 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
 
     public get viewPortRowHeight(): NumberInput {
         return this._viewPortRowHeight;
+    }
+
+    /** Définit la liste des éléments */
+    @Input()
+    public set items(items: Item<T>[]) {
+        delete this.hintLabel;
+        this.itemService.items$.next(items);
+    }
+
+    /** Définit la liste des éléments (tout type d'objet métier) */
+    @Input() public set models(models: T[]) {
+        this.itemService.models$.next(models);
     }
 
     /** Définit la liste des éléments sélectionnés en mode multiselect */
@@ -238,19 +250,75 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
 
     /** Définit une valeur indiquant si en reactive form le model renvoyé doit être un obeject oue une valeur */
     @Input()
-    public set modelType(value: NgModelType) {
-        this.modelType$.next(value);
+    public set ngModelType(value: NgModelType) {
+        this.ngModelType$.next(value);
     }
 
     /** Définit une valeur indiquant si plusieurs lignes peuvent être sélectionnées. */
     @Input()
     public set multiSelect(value: BooleanInput) {
-        this.multiSelect$.next(coerceBooleanProperty(value));
+        this._multiSelect = coerceBooleanProperty(value);
+        this.multiSelect$.next(this._multiSelect);
+    }
+
+    public get multiSelect(): BooleanInput {
+        return this._multiSelect;
     }
 
     @ViewChild('listElement', { static: true })
     public set listElememtRef(elem: ElementRef) {
         this.listElement$.next(elem.nativeElement);
+    }
+
+    /** Permet de désactiver la liste */
+    @Input()
+    public set disabled(value: BooleanInput) {
+        const disabled = coerceBooleanProperty(value);
+        this._disabled = disabled || null;
+    }
+
+    public get disabled(): BooleanInput {
+        return this._disabled;
+    }
+
+    /** Définit le champ utilisé pour la liste des enfants d'un parent */
+    @Input()
+    public set childrenField(value: string) {
+        this.itemService.childrenField$.next(value);
+    }
+
+    /** Définit le champ à utiliser comme valeur d'affichage. */
+    @Input()
+    public set textField(value: string) {
+        this.itemService.textField$.next(value);
+    }
+
+    /** Définit le champ à utiliser comme valeur de comparaison. */
+    @Input()
+    public set valueField(value: string) {
+        this.itemService.valueField$.next(value);
+    }
+
+    /** Définit la ligne courant ou ligne active */
+    @Input()
+    public set currentItem(item: Item<T>) {
+        this._currentItem = item;
+    }
+
+    /** Retourne la ligne courant ou ligne active */
+    public get currentItem(): Item<T> {
+        return this._currentItem;
+    }
+
+    @Input()
+    /** Définit le nombre de lignes à sauter en cas de pression sur les touches PageUp ou PageDown */
+    public set pageSize(value: NumberInput) {
+        this._pageSize = coerceNumberProperty(value);
+    }
+
+    /** Retourne le nombre de lignes à sauter en cas de pression sur les touches PageUp ou PageDown */
+    public get pageSize(): NumberInput {
+        return this._pageSize;
     }
 
     public constructor(
@@ -273,7 +341,48 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
             switchMap(viewPortComponent => viewPortComponent.viewPort$)
         );
 
+        this.viewPortComponent$.pipe(
+            filter(viewPortComponent => !!viewPortComponent),
+            switchMap(viewPortComponent => viewPortComponent.itemClass),
+            takeUntil(this.destroyed$)
+        ).subscribe((itemClassEvent: ViewPortItemClassEvent<T>) => {
+            const item = itemClassEvent.item as Item<T>;
+            if (item?.selected) {
+                itemClassEvent.classes.push('selected');
+            }
+            if (item === this.currentItem) {
+                itemClassEvent.classes.push('current');
+            }
+            if (item.className) {
+                itemClassEvent.classes.push(item.className);
+            }
+            if (item.collapsing || item.expanding) {
+                itemClassEvent.classes.push('hide');
+            }
+            if (item.items) {
+                itemClassEvent.classes.push('parent');
+            }
+            if (item.collapsed) {
+                itemClassEvent.classes.push('collapsed');
+            }
+            if (!item.isSelectable) {
+                itemClassEvent.classes.push('unselectable');
+            }
+            if (item.odd) {
+                itemClassEvent.classes.push('odd');
+            }
+            if (item.depth) {
+                itemClassEvent.classes.push(`depth${item.depth}`);
+            }
+        });
+
         this.itemService.selectedItems$.pipe(
+            switchMap(selectedItems => {
+                if (!this.raiseChangeCallback || !this.selectingItems$) {
+                    return of(selectedItems);
+                }
+                return this.selectingItems$;
+            }),
             takeUntil(this.destroyed$)
         ).subscribe(selectedItems => {
             this._selectedItems = selectedItems;
@@ -281,17 +390,29 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
                 this.onChangeCallback(this.value);
                 this.onTouchedCallback();
                 this.raiseChangeCallback = false;
+
+                if (this.selectedChange.observers.length > 0) {
+                    const selectedModels = this.selectedModels;
+                    this.selectedChange.next({
+                        item: selectedItems[0],
+                        model: selectedModels[0],
+                        items: selectedItems,
+                        models: selectedModels
+                    } as ItemEvent<T>);
+                }
             }
         });
 
-        const modelType$ = this.modelType$.pipe(
-            tap(modelType => this._modelType = modelType)
+        const modelType$ = this.ngModelType$.pipe(
+            tap(modelType => this._ngModelType = modelType)
         );
 
-        combineLatest([this.multiSelect$, modelType$, this.writeValue$]).pipe(
+        combineLatest([this.writeValue$, this.multiSelect$, modelType$]).pipe(
             takeUntil(this.destroyed$)
-        ).subscribe(([multiSelect, modelType, value]) => {
-            if (multiSelect) {
+        ).subscribe(([value, multiSelect, modelType]) => {
+            if (!value) {
+                this.itemService.unselectAll();
+            } else if (multiSelect) {
                 switch (modelType) {
                     case 'item':
                         this.selectedItems = value as Item<T>[];
@@ -318,46 +439,33 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
 
         this.listElement$.pipe(
             switchMap(element => fromEvent<MouseEvent>(element, 'mousedown').pipe(
-                withLatestFrom(this.viewPort$),
-                switchMap(([event, viewPort]) => {
+                withLatestFrom(this.viewPort$, this.itemService.flatItemList$),
+                switchMap(([event, viewPort, flatItemList]) => {
                     if (this.disabled) {
-                        return undefined;
+                        return of(null);
                     }
 
                     const target = event.target as HTMLElement;
                     const itemIndex = itemService.getItemIndexFromHtmlElement(target);
                     if (itemIndex === undefined) {
-                        return undefined;
+                        return of(null);
                     }
 
-                    // const isExpandButton = (el: HTMLElement) => el.id === 'expandbtn' || el.parentElement.id === 'expandbtn';
+                    const isExpandButton = (el: HTMLElement) => el.id === 'expandbtn' || el.parentElement.id === 'expandbtn';
 
-                    const clickedItem = viewPort.visibleItems[itemIndex - viewPort.startIndex];
+                    const clickedItem = viewPort.visibleItems[itemIndex - viewPort.startIndex] as Item<T>;
 
-                    // if ((!isExpandButton(target) || !this.isCollapsible(item)) && this.isSelectable(item) && (!e.ctrlKey || !this.multiSelect) && (e.button === 0 || !item.selected)) {
-                    //     if (e.shiftKey && this.multiSelect) {
-                    //         // Select all from current to clicked
-                    //         this.selectRange$(itemIndex, this.currentItemIndex).pipe(
-                    //             take(1),
-                    //             takeUntil(this.destroyed$)
-                    //         ).subscribe(() => this.changeDetectorRef.markForCheck());
-                    //         return false;
-                    //     } else if (!e.ctrlKey) {
-                    //         if (!this.multiSelect && item.selected) {
-                    //             return undefined;
-                    //         }
-
-                    //         this.unselectAll$().pipe(
-                    //             take(1),
-                    //             switchMap(() => {
-                    //                 this.currentItemIndex = itemIndex;
-                    //                 return this.toggleSelect$([item], true);
-                    //             }),
-                    //             take(1),
-                    //             takeUntil(this.destroyed$)
-                    //         ).subscribe(() => this.changeDetectorRef.markForCheck());
-                    //     }
-                    // }
+                    if ((!isExpandButton(target) || !clickedItem.isCollapsible) && clickedItem.isSelectable && (!event.ctrlKey || !this.multiSelect) && (event.button === 0 || !clickedItem.selected)) {
+                        if (event.shiftKey && this.multiSelect) {
+                            // Select all from current to clicked
+                            const startIndex = Math.max(flatItemList.findIndex(item => this.currentItem === item), 0);
+                            const rangeSelection = flatItemList.slice(Math.min(startIndex, itemIndex), Math.max(startIndex, itemIndex) + 1).filter(item => item.isSelectable);
+                            this.raiseChangeCallback = true;
+                            this.itemService.setSelectedItems(rangeSelection);
+                            this.viewPortComponent.reloadViewPort();
+                            return of(null);
+                        }
+                    }
 
                     return fromEvent<MouseEvent>(element, 'mouseup').pipe(
                         filter(() => !this.disabled),
@@ -373,67 +481,293 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
                                 return;
                             }
 
-                            this.raiseChangeCallback = true;
-                            this.itemService.setSelectedItems([upItem]);
-                            this.viewPortComponent.reloadViewPort();
-                            //         if (upevt.shiftKey) {
-                            //             return of(null);
-                            //         }
+                            if (upevt.button !== 0) {
+                                // Right click menu
+                                return;
+                            }
 
-                            //         if (upevt.button !== 0) {
-                            //             // Right click menu
-                            //             return of(null);
-                            //         }
+                            if (upItem.isCollapsible && (isExpandButton(upTarget) || !upItem.isSelectable)) {
+                                //             const treeItem = upItem;
+                                //             return this.toggleCollapse$(upIndex, !treeItem.collapsed).pipe(
+                                //                 map(() => upIndex)
+                                //             );
 
-                            //         if (this.isCollapsible(upItem) && (isExpandButton(upTarget) || !this.isSelectable(upItem))) {
-                            //             const treeItem = upItem;
-                            //             return this.toggleCollapse$(upIndex, !treeItem.collapsed).pipe(
-                            //                 map(() => upIndex)
-                            //             );
+                            } else if (upItem.isSelectable) {
+                                this.raiseChangeCallback = true;
+                                if (upevt.ctrlKey && this.multiSelect) {
+                                    this.itemService.toggleSelect([upItem]);
+                                } else if (upevt.ctrlKey) {
+                                    if (upItem.selected) {
+                                        this.itemService.unselectAll();
+                                    } else {
+                                        this.itemService.setSelectedItems([upItem]);
+                                    }
+                                } else {
+                                    this.itemService.setSelectedItems([upItem]);
+                                }
 
-                            //         } else if (upevt.ctrlKey) {
-                            //             if (this.multiSelect) {
-                            //                 return this.toggleSelect$([upItem], !upItem.selected).pipe(
-                            //                     map(() => upIndex)
-                            //                 );
-                            //             } else {
-                            //                 const o$ = this.selectedItem && this.selectedItem !== upItem ? this.toggleSelect$([this.selectedItem], false).pipe(switchMap(() => this.toggleSelect$([upItem], true))) : this.toggleSelect$([upItem], !upItem.selected);
-                            //                 return o$.pipe(
-                            //                     map(() => upIndex)
-                            //                 );
-                            //             }
-                            //         }
-
-                            //         this.rangeStartIndex = -1;
-                            //         return of(null);
+                                this.keyboardStartIndex = undefined;
+                                this.currentItem = upItem;
+                                this.ensureItemVisible(upItem);
+                                this.viewPortComponent.reloadViewPort();
+                            }
                         })
-                        //     filter(currentIndex => currentIndex !== null),
-                        //     takeUntil(this.destroyed$)
-                        // ).subscribe(currentIndex => {
-                        //     this.currentItemIndex = currentIndex;
-                        //     this.changeDetectorRef.markForCheck();
                     );
-
-                    // return undefined;
                 })
             )),
             takeUntil(this.destroyed$)
         ).subscribe();
 
-        // itemService.itemList$.pipe(
-        //     takeUntil(this.destroyed$)
-        // ).subscribe(items => viewPortService.items$.next(items));
+        this.listElement$.pipe(
+            switchMap(listElement => {
+                const keyDown$ = fromEvent<KeyboardEvent>(listElement, 'keydown');
+                if (this.input) {
+                    const inputKeyDown$ = fromEvent<KeyboardEvent>(this.input.nativeElement, 'keydown');
+                    return merge(keyDown$, inputKeyDown$);
+                }
+                return keyDown$;
+            }),
+            filter(() => !this.disabled),
+            filter(event => {
+                const keyCode = event.code;
+                return keyCode === KeyCodes.Home ||
+                    keyCode === KeyCodes.End ||
+                    keyCode === KeyCodes.PageUp ||
+                    keyCode === KeyCodes.PageDown ||
+                    keyCode === KeyCodes.UpArrow ||
+                    keyCode === KeyCodes.DownArrow ||
+                    keyCode === KeyCodes.Space ||
+                    keyCode === KeyCodes.Enter;
+            }),
+            withLatestFrom(this.viewPort$, this.itemService.flatItemList$, this.listElement$),
+            takeUntil(this.destroyed$)
+        ).subscribe(([event, viewPort, flatItemList, listElement]) => {
+            let stopEvent = false;
 
-        // viewPortService.viewPort$.pipe(
-        //     takeUntil(this.destroyed$)
-        // ).subscribe(viewPort => {
-        //     console.log(viewPort);
-        // });
+            if (listElement?.clientHeight && this.viewPortRowHeight && this.pageSize === 0) {
+                this.pageSize = Math.floor(listElement.clientHeight / +this.viewPortRowHeight);
+            }
 
-        // from(this.clearFilterExpression$).pipe(
-        //     debounceTime(400),
-        //     takeUntil(this.destroyed$)
-        // ).subscribe(() => this.filterExpression = '');
+            // Set current item from index for keyboard features only
+            const setCurrentIndex = (index: number) => {
+                this.currentItem = viewPort.items[index] as Item<T>;
+                this.ensureItemVisible(this.currentItem);
+                this.viewPortComponent.reloadViewPort();
+            };
+
+            const selectRange = (currentIndex: number, target: number) => {
+                const rangeSelection = flatItemList.slice(Math.min(currentIndex, target), Math.max(currentIndex, target) + 1).filter(item => item.isSelectable);
+                this.raiseChangeCallback = true;
+                this.itemService.setSelectedItems(rangeSelection);
+            };
+
+            const navigateToIndex = (nextIndex: number) => {
+                if (this.multiSelect && event.shiftKey) {
+                    selectRange(currentIndex, nextIndex);
+                    this.ensureItemVisible(nextIndex);
+                    this.viewPortComponent.reloadViewPort();
+                } else if (!event.ctrlKey) {
+                    this.raiseChangeCallback = true;
+                    this.selectedItem = viewPort.items[nextIndex] as Item<T>;
+                    setCurrentIndex(nextIndex);
+                } else {
+                    setCurrentIndex(nextIndex);
+                }
+                this.keyboardStartIndex = nextIndex;
+                stopEvent = true;
+            };
+
+            const currentIndex = Math.max(flatItemList.findIndex(item => this.currentItem === item), 0);
+            let target: HTMLElement;
+
+            switch (event.code) {
+                case KeyCodes.Home:
+                    if (this.multiSelect && event.shiftKey) {
+                        // Select all from current to first élément
+                        selectRange(currentIndex, 0);
+                    } else if (!event.ctrlKey) {
+                        // Select first element
+                        this.raiseChangeCallback = true;
+                        this.selectedItem = viewPort.items[0] as Item<T>;
+                    }
+                    setCurrentIndex(0);
+                    this.keyboardStartIndex = 0;
+                    stopEvent = true;
+                    break;
+
+                case KeyCodes.End:
+                    if (this.multiSelect && event.shiftKey) {
+                        // Select all from current to last élément
+                        selectRange(currentIndex, flatItemList.length - 1);
+                    } else if (!event.ctrlKey) {
+                        // Select last element
+                        this.raiseChangeCallback = true;
+                        this.selectedItem = viewPort.items[viewPort.items.length - 1] as Item<T>;
+                    }
+                    setCurrentIndex(viewPort.items.length - 1);
+                    this.keyboardStartIndex = viewPort.items.length - 1;
+                    stopEvent = true;
+                    break;
+
+                case KeyCodes.PageUp:
+                    // Select previous page
+                    navigateToIndex(Math.max(0, (this.keyboardStartIndex ?? currentIndex) - this._pageSize));
+                    break;
+
+                case KeyCodes.PageDown:
+                    // Select next page
+                    navigateToIndex(Math.max(0, (this.keyboardStartIndex ?? currentIndex) + this._pageSize));
+                    break;
+
+                case KeyCodes.UpArrow:
+                    // Select previous element
+                    navigateToIndex(Math.max(0, (this.keyboardStartIndex ?? currentIndex) - 1));
+                    break;
+
+                case KeyCodes.DownArrow:
+                    // Select next element
+                    navigateToIndex(Math.min(viewPort.items.length - 1, (this.keyboardStartIndex ?? currentIndex) + 1));
+                    break;
+
+                case KeyCodes.Space:
+                    target = event.target as HTMLElement;
+                    if (target.tagName === 'INPUT' && !event.ctrlKey && !event.shiftKey) {
+                        return;
+                    }
+
+                    if (this.currentItem) {
+                        if (this.currentItem.isCollapsible) {
+                            // this.toggleCollapse$(currentIndex, !sitem.collapsed);
+                        } else {
+                            this.raiseChangeCallback = true;
+                            if (this.currentItem.selected || this.multiSelect && event.ctrlKey) {
+                                this.itemService.toggleSelect([this.currentItem]);
+                            } else {
+                                this.selectedItem = this.currentItem;
+                            }
+                            this.ensureItemVisible(this.currentItem);
+                            this.viewPortComponent.reloadViewPort();
+                        }
+                    }
+                    break;
+
+                case KeyCodes.Enter:
+                    if (this.currentItem) {
+                        if (this.currentItem.isCollapsible) {
+                            // this.toggleCollapse$(currentIndex, !eitem.collapsed);
+                        } else if (this.currentItem.isSelectable) {
+                            if (this.itemEnter.observers.length > 0) {
+                                this.itemEnter.next({
+                                    item: this.currentItem,
+                                    items: [this.currentItem],
+                                    model: this.currentItem.model,
+                                    models: this.currentItem.model && [this.currentItem.model]
+                                } as ItemEvent<T>);
+                            } else {
+                                this.raiseChangeCallback = true;
+                                this.selectedItem = this.currentItem;
+                                this.ensureItemVisible(this.currentItem);
+                                this.viewPortComponent.reloadViewPort();
+                            }
+                        }
+                    }
+                    break;
+
+                default:
+                    // eslint-disable-next-line no-debugger
+                    debugger;
+                    this.keyboardStartIndex = undefined;
+            }
+
+            if (stopEvent) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+        });
+
+        this.listElement$.pipe(
+            switchMap(listElement => {
+                const keyUp$ = fromEvent<KeyboardEvent>(listElement, 'keyup');
+                if (this.input) {
+                    const inputKeyup$ = fromEvent<KeyboardEvent>(this.input.nativeElement, 'keyup');
+                    const inputDrop$ = fromEvent<KeyboardEvent>(this.input.nativeElement, 'drop');
+                    return merge(keyUp$, inputKeyup$, inputDrop$);
+                }
+                return keyUp$;
+            }),
+            filter(() => !this.disabled),
+            tap(() => {
+                if ((this.query || '').length < this.minSearchlength) {
+                    // this._itemList = [];
+                    return;
+                }
+            }),
+            filter(event => {
+                const keyCode = event.code;
+                return keyCode >= KeyCodes.Key0 ||
+                    keyCode === KeyCodes.Backspace ||
+                    keyCode === KeyCodes.Space ||
+                    keyCode === KeyCodes.Delete;
+            }),
+            withLatestFrom(this.viewPort$),
+            filter(([_, viewPort]) => viewPort.items?.length > 0),
+            switchMap(([event, viewPort]) => {
+                if (!this.searchArea) {
+                    if ((/[a-zA-Z0-9]/).test(event.key)) {
+                        // Valid char
+                        const findNextMatch = () => {
+                            const rg = new RegExp(`^${this.filterExpression}`, 'i');
+                            const startIndex = Math.max(viewPort.items.findIndex(item => this.currentItem === item), 0);
+                            let nextIndex = this.filterExpression.length > 1 ? startIndex : startIndex + 1;
+                            // Just turn the number of items max
+                            return viewPort.items.some(() => {
+                                // That the real index and item in the loop
+                                const item = viewPort.items[nextIndex] as Item<T>;
+                                if (item?.isSelectable) {
+                                    if (rg.test(item.label)) {
+                                        // Found, set current item
+                                        this.raiseChangeCallback = true;
+                                        this.selectedItem = this.currentItem = item;
+                                        this.ensureItemVisible(this.currentItem);
+                                        this.viewPortComponent.reloadViewPort();
+                                        return true; // Find, stop the loop
+                                    }
+                                }
+                                nextIndex++;
+                                if (nextIndex >= viewPort.items.length) {
+                                    nextIndex = 0;
+                                }
+                                return false;
+                            });
+                        };
+
+                        // Search next
+                        this.filterExpression += event.key;
+                        if (findNextMatch()) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        } else {
+                            this.filterExpression = event.key;
+                            if (findNextMatch()) {
+                                event.preventDefault();
+                                event.stopPropagation();
+                            }
+                        }
+                    }
+                } else {
+                    // Autocomplete, filter the list
+                    // this.keyboardNavigation$.next();
+                }
+
+                // clear filterExpression after 1 second
+                // Timer is automatically canceled by the switchmap if a second character is typed before 1 second
+                return timer(1000);
+            }),
+            takeUntil(this.destroyed$)
+        ).subscribe(() => {
+            console.log('clear filterExpression', this.filterExpression);
+            this.filterExpression = '';
+        });
 
         // from(this.keyboardNavigation$).pipe(
         //     tap(() => this._keyboardNavigation = true),
@@ -441,15 +775,6 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
         //     takeUntil(this.destroyed$)
         // ).subscribe(() => {
         //     this._keyboardNavigation = false;
-        //     this.changeDetectorRef.markForCheck();
-        // });
-
-        // fromEvent(window, 'resize').pipe(
-        //     debounceTime(5),
-        //     takeUntil(this.destroyed$)
-        // ).subscribe(() => {
-        //     this.viewPortService.deleteSizeCache();
-        //     this.viewPortService.refresh();
         //     this.changeDetectorRef.markForCheck();
         // });
 
@@ -462,42 +787,6 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
         //     }),
         //     takeUntil(this.destroyed$)
         // ).subscribe();
-
-        // const selectItems$ = combineLatest([this.selectItems$, this.contentInitialized$]).pipe(
-        //     map(([value]) => value),
-        //     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-        //     map(value => this.getVirtualSelectedEntities(value)),
-        //     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-        //     map(value => (value instanceof Array && value) || (value && [value]) || [] as unknown[]),
-        //     tap(values => super.setSelectedItems(values)));
-
-        // const selectModels$ = combineLatest([this.writeValue$, this.contentInitialized$]).pipe(
-        //     map(([value]) => {
-        //         if (this.modelIsValue === undefined) {
-        //             if (value instanceof Array) {
-        //                 const av = value || [];
-        //                 const modelType = av.length && typeof av[0];
-        //                 this.modelIsValue = modelType === 'string' || modelType === 'number';
-        //             } else {
-        //                 const modelType = typeof value;
-        //                 this.modelIsValue = value === '' || modelType === 'string' || modelType === 'number';
-        //             }
-        //         }
-        //         if (this.modelIsValue) {
-        //             this.query = '';
-        //         }
-        //         return value;
-        //     }),
-        //     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-        //     map(value => this.getVirtualSelectedEntities(value)),
-        //     tap(value => super.setSelectedModels(!value || this._multiSelect || value instanceof Array ? value as unknown[] : [value])));
-
-        // merge(selectModels$, selectItems$).pipe(
-        //     takeUntil(this.destroyed$)
-        // ).subscribe(() => {
-        //     this.itemService.ensureSelection();
-        //     this.changeDetectorRef.markForCheck();
-        // });
 
         this.maxHeight = 0;
     }
@@ -547,23 +836,6 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
         return this._itemsDraggable;
     }
 
-    @Input()
-    /** Définit le nombre de lignes à sauter en cas de pression sur les touches PageUp ou PageDown */
-    public set pageSize(value: NumberInput) {
-        this._pageSize = coerceNumberProperty(value);
-    }
-
-    /** Retourne le nombre de lignes à sauter en cas de pression sur les touches PageUp ou PageDown */
-    public get pageSize(): NumberInput {
-        // if (this._pageSize === 0) {
-        //     const vpRowHeight = this.getViewPortRowHeight();
-        //     const containerHeight = this.getMaxHeight() || this.listElement.clientHeight;
-        //     return Math.floor(containerHeight / vpRowHeight);
-        // }
-
-        return this._pageSize;
-    }
-
     /** Définit un texte de conseil en cas d'erreur de validation ou autre */
     @Input()
     public set hintLabel(value: string) {
@@ -573,24 +845,6 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
     /** Retourne un texte de conseil en cas d'erreur de validation ou autre */
     public get hintLabel(): string {
         return this._hintLabel;
-    }
-
-    /** Retourne le champ utilisé pour la liste des enfants d'un parent */
-    @Input()
-    public set childrenField(value: string) {
-        this.itemService.childrenField$.next(value);
-    }
-
-    /** Définit le champ à utiliser comme valeur d'affichage. */
-    @Input()
-    public set textField(value: string) {
-        this.itemService.textField$.next(value);
-    }
-
-    /** Définit le champ à utiliser comme valeur de comparaison. */
-    @Input()
-    public set valueField(value: string) {
-        this.itemService.valueField$.next(value);
     }
 
     /** Définit le champ à utiliser comme champ de recherche.
@@ -618,21 +872,6 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
         return this._maxHeight;
     }
 
-    /** Définit la ligne courant ou ligne active */
-    @Input()
-    public set currentItem(item: Item<T>) {
-        this._currentItemIndex = item ? this.itemService.getItemIndex(item) : -1;
-        this._currentItem = item;
-    }
-
-    /** Retourne la ligne courant ou ligne active */
-    public get currentItem(): Item<T> {
-        if (!this._currentItem && this._currentItemIndex >= 0) {
-            this._currentItem = this.itemService.getItemFromIndex(this._currentItemIndex);
-        }
-        return this._currentItem;
-    }
-
     /** Retourne le nombre de niveau pour une liste hierarchique */
     public get depthMax(): number {
         return this._depthMax;
@@ -650,55 +889,6 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
     //     this.setGroupingService(value);
     // }
 
-    /** Définit la liste des éléments */
-    @Input()
-    public set items(items: Item<T>[]) {
-        delete this.hintLabel;
-        this.itemService.items$.next(items);
-    }
-
-    /**
-     * Set a observable called before the list will be displayed
-     */
-    // @Input()
-    // public set loadingItems(fn: (query: string | RegExp, selectedItems: Item<unknown>[]) => Observable<Item<unknown>[]>) {
-    //     this.hasLoadingEvent = !!fn;
-    //     super.setLoadingItems(fn);
-    // }
-
-    /**
-     * Set a promise or an observable called before an item expand
-     */
-    @Input()
-    public set expandingItem(_fn: (item: Item<unknown>) => Promise<Item<unknown>> | Observable<Item<unknown>>) {
-        // super.setExpandingItem(fn);
-    }
-
-    /**
-     * Set a promise or an observable called before an item collapse
-     */
-    @Input()
-    public set collapsingItem(_fn: (item: Item<unknown>) => Promise<Item<unknown>> | Observable<Item<unknown>>) {
-        // super.setCollapsingItem(fn);
-    }
-
-    /** Définit la liste des éléments (tout type d'objet métier) */
-    @Input() public set models(models: T[]) {
-        this.itemService.models$.next(models);
-    }
-
-    /** Permet de désactiver la liste */
-    @Input()
-    public set disabled(value: BooleanInput) {
-        const disabled = coerceBooleanProperty(value);
-        this._disabled = disabled || null;
-        this.changeDetectorRef.markForCheck();
-    }
-
-    public get disabled(): BooleanInput {
-        return this._disabled;
-    }
-
     /** Definit si le waiter doit être affiché dans la liste. */
     @Input()
     public set waiter(value: BooleanInput) {
@@ -715,14 +905,6 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
         if (value) {
             value.parentControl = this.control;
         }
-    }
-
-    public set currentItemIndex(value: number) {
-        this._currentItemIndex = value;
-    }
-
-    public get currentItemIndex(): number {
-        return this._currentItemIndex;
     }
 
     public get itemTemplate(): TemplateRef<unknown> {
@@ -752,7 +934,7 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
     // ************* ControlValueAccessor Implementation **************
     public get value(): NgControlType<T> {
         if (this._multiSelect) {
-            switch (this._modelType) {
+            switch (this._ngModelType) {
                 case 'item':
                     return this.selectedItems;
                 case 'model':
@@ -761,7 +943,7 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
                     return this.selectedValues;
             }
         } else {
-            switch (this._modelType) {
+            switch (this._ngModelType) {
                 case 'item':
                     return this.selectedItem;
                 case 'model':
@@ -810,8 +992,8 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
     }
 
     /** Positionne a scrollbar pour assurer que l'élément spécifié soit visible */
-    public ensureItemVisible(_item: Item<unknown> | number): void {
-        // super.ensureItemVisible(item);
+    public ensureItemVisible(item: Item<T> | number): void {
+        this.viewPortComponent.ensureVisible(item);
     }
 
     /** Recalcule le viewport. */
@@ -830,257 +1012,6 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
             this.viewPortComponent.clearViewPort();
         }
     }
-
-    // public ngAfterViewInit(): void {
-    // FIXME Issue angular/issues/6005
-    // see http://stackoverflow.com/questions/34364880/expression-has-changed-after-it-was-checked
-    // if (this._itemList.length === 0 && this.hasLoadingEvent) {
-    //     timer(1).pipe(
-    //         take(1),
-    //         switchMap(() => this.calcViewList$()),
-    //         takeUntil(this.destroyed$)
-    //     ).subscribe();
-    // }
-
-    // fromEvent(this.listElement, 'scroll').pipe(
-    //     map((event: Event) => {
-    //         const target = event.target as HTMLElement;
-    //         const e = {
-    //             originalEvent: event,
-    //             scrollLeft: target.scrollLeft,
-    //             scrollTop: target.scrollTop
-    //         } as TreeListScrollEvent;
-
-    //         this.scroll.emit(e);
-    //         return target.scrollTop;
-    //     }),
-    //     takeUntil(this.destroyed$)
-    // ).subscribe(scrollPos => this.viewPortService.scrollPosition$.next(scrollPos));
-
-    // let keyDown$ = fromEvent<KeyboardEvent>(this.listElement, 'keydown');
-    // if (this.input) {
-    //     const inputKeyDown$ = fromEvent(this.input.nativeElement, 'keydown');
-    //     keyDown$ = merge(keyDown$, inputKeyDown$) as Observable<KeyboardEvent>;
-    // }
-
-    // keyDown$.pipe(
-    //     filter(() => !this.disabled),
-    //     filter(event => {
-    //         const keyCode = event.code;
-    //         return keyCode === KeyCodes.Home ||
-    //             keyCode === KeyCodes.End ||
-    //             keyCode === KeyCodes.PageUp ||
-    //             keyCode === KeyCodes.PageDown ||
-    //             keyCode === KeyCodes.UpArrow ||
-    //             keyCode === KeyCodes.DownArrow ||
-    //             keyCode === KeyCodes.Space ||
-    //             keyCode === KeyCodes.Enter;
-    //     }),
-    //     switchMap(event => this.ensureListCaches$().pipe(
-    //         switchMap(() => {
-    //             if (!this.rowsCount) {
-    //                 return of(null);
-    //             }
-
-    //             // Set current item from index for keyboard features only
-    //             const setCurrentIndex = (index: number) => {
-    //                 this.currentItemIndex = index;
-    //                 this.ensureItemVisible(this.currentItemIndex);
-    //                 this.viewPortService.refresh();
-    //             };
-
-    //             const currentIndex = this.rangeStartIndex >= 0 ? this.rangeStartIndex : this.rangeStartIndex = this.currentItemIndex;
-    //             let upindex: number;
-    //             let dindex: number;
-    //             let uaindex: number;
-    //             let daindex: number;
-    //             let target: HTMLElement;
-    //             let eitem: Item<unknown>;
-    //             let sitem: Item<unknown>;
-
-    //             switch (event.code) {
-    //                 case KeyCodes.Home:
-    //                     setCurrentIndex(0);
-    //                     if (event.shiftKey) {
-    //                         return this.selectRange$(currentIndex, 0);
-    //                     } else if (!event.ctrlKey) {
-    //                         this.rangeStartIndex = 0;
-    //                         return this.selectRange$(this.rangeStartIndex);
-    //                     } else {
-    //                         return of(-1);
-    //                     }
-
-    //                 case KeyCodes.End:
-    //                     setCurrentIndex(this.rowsCount - 1);
-    //                     if (event.shiftKey) {
-    //                         return this.selectRange$(currentIndex, this.rowsCount - 1);
-    //                     } else if (!event.ctrlKey) {
-    //                         this.rangeStartIndex = this.rowsCount - 1;
-    //                         return this.selectRange$(this.rangeStartIndex);
-    //                     } else {
-    //                         return of(-1);
-    //                     }
-
-    //                 case KeyCodes.PageUp:
-    //                     upindex = Math.max(0, this.currentItemIndex - this._pageSize);
-    //                     setCurrentIndex(upindex);
-    //                     if (event.shiftKey) {
-    //                         return this.selectRange$(currentIndex, upindex);
-    //                     } else if (!event.ctrlKey) {
-    //                         this.rangeStartIndex = upindex;
-    //                         return this.selectRange$(this.rangeStartIndex);
-    //                     } else {
-    //                         return of(-1);
-    //                     }
-
-    //                 case KeyCodes.PageDown:
-    //                     dindex = Math.min(this.rowsCount - 1, this.currentItemIndex + this._pageSize);
-    //                     setCurrentIndex(dindex);
-    //                     if (event.shiftKey) {
-    //                         return this.selectRange$(currentIndex, dindex);
-    //                     } else if (!event.ctrlKey) {
-    //                         this.rangeStartIndex = dindex;
-    //                         return this.selectRange$(this.rangeStartIndex);
-    //                     } else {
-    //                         return of(-1);
-    //                     }
-
-    //                 case KeyCodes.UpArrow:
-    //                     uaindex = Math.max(0, this.currentItemIndex - 1);
-    //                     if (uaindex !== -1) {
-    //                         setCurrentIndex(uaindex);
-    //                         if (event.shiftKey) {
-    //                             return this.selectRange$(currentIndex, uaindex);
-    //                         } else if (!event.ctrlKey) {
-    //                             this.rangeStartIndex = uaindex;
-    //                             return this.selectRange$(this.rangeStartIndex);
-    //                         }
-    //                     }
-    //                     return of(-1);
-
-    //                 case KeyCodes.DownArrow:
-    //                     daindex = Math.min(this.rowsCount - 1, this.currentItemIndex + 1);
-    //                     if (daindex !== -1) {
-    //                         setCurrentIndex(daindex);
-    //                         if (event.shiftKey) {
-    //                             return this.selectRange$(currentIndex, daindex);
-    //                         } else if (!event.ctrlKey) {
-    //                             this.rangeStartIndex = daindex;
-    //                             return this.selectRange$(this.rangeStartIndex);
-    //                         }
-    //                     }
-    //                     return of(-1);
-
-    //                 case KeyCodes.Space:
-    //                     target = event.target as HTMLElement;
-    //                     if (target.tagName === 'INPUT' && !event.ctrlKey && !event.shiftKey) {
-    //                         return of(null);
-    //                     }
-
-    //                     sitem = this.currentItem;
-    //                     if (sitem) {
-    //                         if (this.isCollapsible(sitem)) {
-    //                             return this.toggleCollapse$(currentIndex, !sitem.collapsed);
-    //                         } else if (sitem.selected) {
-    //                             return this.toggleSelect$([sitem], false);
-    //                         } else if (this.multiSelect && event.ctrlKey) {
-    //                             return this.toggleSelect$([sitem], !sitem.selected);
-    //                         } else {
-    //                             return this.unselectAll$().pipe(
-    //                                 switchMap(() => this.toggleSelect$([sitem], true))
-    //                             );
-    //                         }
-    //                     }
-    //                     return of(-1);
-
-    //                 case KeyCodes.Enter:
-    //                     eitem = this.currentItem;
-    //                     if (eitem) {
-    //                         if (this.isCollapsible(eitem)) {
-    //                             return this.toggleCollapse$(currentIndex, !eitem.collapsed);
-    //                         } else if (this.isSelectable(eitem)) {
-    //                             return this.unselectAll$().pipe(
-    //                                 switchMap(() => this.toggleSelect$([eitem], true))
-    //                             );
-    //                         }
-    //                     }
-    //                     return of(-1);
-
-    //                 default:
-    //                     return of(null);
-    //             }
-    //         }),
-    //         map(continuePropagation => {
-    //             if (continuePropagation !== null) {
-    //                 this.keyboardNavigation$.next();
-    //                 this.changeDetectorRef.markForCheck();
-    //                 event.preventDefault();
-    //                 return false;
-    //             }
-    //             return undefined;
-    //         })
-    //     )),
-    //     takeUntil(this.destroyed$)
-    // ).subscribe();
-
-    // let keyUp$ = fromEvent<KeyboardEvent>(this.listElement, 'keyup');
-    // if (this.input) {
-    //     const inputKeyup$ = fromEvent(this.input.nativeElement, 'keyup');
-    //     const inputDrop$ = fromEvent(this.input.nativeElement, 'drop');
-    //     keyUp$ = merge(keyUp$, inputKeyup$, inputDrop$) as Observable<KeyboardEvent>;
-    // }
-
-    // Ensure list cache
-    // keyUp$.pipe(
-    //     filter(() => !this.disabled),
-    //     tap(() => {
-    //         if ((this.query || '').length < this.minSearchlength) {
-    //             this._itemList = [];
-    //             return;
-    //         }
-    //     }),
-    //     filter(event => {
-    //         const keyCode = event.code;
-    //         return keyCode >= KeyCodes.Key0 ||
-    //             keyCode === KeyCodes.Backspace ||
-    //             keyCode === KeyCodes.Space ||
-    //             keyCode === KeyCodes.Delete;
-    //     }),
-    //     switchMap(event => {
-    //         if (!this.searchArea) {
-    //             if ((/[a-zA-Z0-9]/).test(event.key)) {
-    //                 // Valid char
-    //                 this.clearFilterExpression$.next(null);
-
-    //                 // Search next
-    //                 this.filterExpression += event.key;
-    //                 const rg = new RegExp(`^${this.filterExpression}`, 'i');
-    //                 return this.findNextMatch$(item => {
-    //                     if (item && this.isSelectable(item)) {
-    //                         const label = this.getTextValue(item);
-    //                         if (rg.test(label)) {
-    //                             return true;
-    //                         }
-    //                     }
-    //                     event.preventDefault();
-    //                     return false;
-    //                 }, this.currentItemIndex);
-    //             }
-    //         } else {
-    //             // Autocomplete, filter the list
-    //             this.keyboardNavigation$.next();
-    //         }
-
-    //         return of(null as IFindItemResult<unknown>);
-    //     }),
-    //     filter(result => result?.index >= 0),
-    //     takeUntil(this.destroyed$)
-    // ).subscribe(result => {
-    //     // Set current item from index for keyboard features only
-    //     this.currentItemIndex = result.index;
-    //     this.ensureItemVisible(this.currentItemIndex);
-    // });
-    // }
 
     // public getDragContext(index: number): IDejaDragContext {
     //     if (!this.clipboardService || (!this.sortable && !this.itemsDraggable)) {
@@ -1179,47 +1110,6 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
     //     }
     // }
 
-    public onSelectionChange(): void {
-        // let outputEmitter = null;
-
-        // let output = null;
-
-        // if (this.multiSelect) {
-        //     const models = this.selectedModels as Record<string, unknown>[];
-
-        //     outputEmitter = {
-        //         items: this.selectedItems,
-        //         models: models
-        //     } as ItemEvent<Record<string, unknown>>;
-
-        //     if (this.modelIsValue) {
-        //         const valueField = this.getValueField();
-        //         if (models.find(m => !!m[valueField])) {
-        //             output = models.map(m => m[valueField] !== undefined ? m[valueField] : m);
-        //         }
-        //     } else {
-        //         output = models;
-        //     }
-        // } else {
-        //     const model = this.selectedModel as Record<string, unknown>;
-
-        //     outputEmitter = {
-        //         item: this.selectedItems[0],
-        //         model: model
-        //     } as ItemEvent<Record<string, unknown>>;
-
-        //     if (this.modelIsValue) {
-        //         const valueField = this.getValueField();
-        //         output = model[valueField] !== undefined ? model[valueField] : model;
-        //     } else {
-        //         output = model;
-        //     }
-        // }
-
-        // this.onChangeCallback(output);
-        // this.selectedChange.emit(outputEmitter);
-    }
-
     // public selectRange$(indexFrom: number, indexTo?: number): Observable<number> {
     //     return super.selectRange$(indexFrom, indexTo).pipe(tap(selectedCount => {
     //         if (selectedCount) {
@@ -1246,32 +1136,6 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
     //     return super.calcViewList$(this.query).pipe(
     //         tap(() => this.changeDetectorRef.markForCheck()));
     // }
-
-    public getItemClass(item: Item<unknown>): string {
-        const classNames = ['listitem'] as string[];
-        if (item.className) {
-            classNames.push(item.className);
-        }
-        if (item.collapsing || item.expanding) {
-            classNames.push('hide');
-        }
-        if (item.depth < this.depthMax) {
-            classNames.push('parent');
-        }
-        if (item.collapsed) {
-            classNames.push('collapsed');
-        }
-        if (item.selected) {
-            classNames.push('selected');
-        }
-        if (item.selectable === false) {
-            classNames.push('unselectable');
-        }
-        if (item.depth === this._depthMax && item.odd) {
-            classNames.push('odd');
-        }
-        return classNames.join(' ');
-    }
 
     // NgModel implementation
     public onTouchedCallback = (): void => undefined;

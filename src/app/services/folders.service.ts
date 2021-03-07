@@ -14,7 +14,6 @@ export class Folder {
 
     public constructor(level: number, item: number) {
         this.label = `Level ${level} - Item ${item}`;
-        this.children = [];
     }
 }
 
@@ -24,21 +23,21 @@ export class FoldersService {
     private folders = [] as Folder[];
 
     public constructor() {
-        this.addLevel(1, this.folders);
+        this.folders = this.addLevel(1);
     }
 
     public getFolders(): Folder[] {
         return this.folders;
     }
 
-    private addLevel(level: number, children: Folder[]) {
+    private addLevel(level: number): Folder[] {
         if (level > 15) {
-            return;
+            return null;
         }
 
         const child = new Folder(level, 1);
-        this.addLevel(level + 1, child.children);
+        child.children = this.addLevel(level + 1);
 
-        children.push(child);
+        return [child];
     }
 }

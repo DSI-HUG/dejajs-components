@@ -15,7 +15,7 @@
 <div [id]="listElementId" #listElement class="listcontainer" [attr.depth-max]="depthMax || null" [style.max-height.px]="maxHeight || null" tabindex="1" [class.hasheader]="headerTemplate" [class.dragover]="ddStartIndex !== undefined ? ddStartIndex : null" [attr.keynav]="keyboardNavigation()">
     <!-- <div id="nodata-holder" *ngIf="(!itemList || itemList.length === 0) && !waiter">{{ nodataholder }}</div> -->
     <!-- <div id="error-hint" *ngIf="hintLabel">{{ hintLabel }}</div> -->
-    <ng-container *ngIf="!waiter && itemService.itemList$ | async as itemList">
+    <ng-container *ngIf="!waiter && itemService.flatItemList$ | async as itemList">
         <viewport [items]="itemList" [itemSize]="viewPortRowHeight" [viewPortMode]="viewPortMode">
             <ng-template #viewPortItemTemplate let-item let-size="size" let-index="index">
                 <span id="expandbtn">

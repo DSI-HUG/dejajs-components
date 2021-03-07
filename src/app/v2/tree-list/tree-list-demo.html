@@ -30,7 +30,7 @@
             <div>Just passing an array of objects</div>
             <div class="flexLayout">
                 <span class="flex45p flexLayout flexColumn">
-                    <tree-list [(ngModel)]="country" modelType="model" textField="naqme" valueField="code" [models]="countries$ | async"></tree-list>
+                    <tree-list [(ngModel)]="country" ngModelType="model" textField="naqme" valueField="code" [models]="countries$ | async"></tree-list>
                 </span>
                 <span class="flex45p flexOffset5p">
                     <h4>Selected country model :</h4>
@@ -45,9 +45,9 @@
             <div>tree-list has some keyboard navigation feature</div>
             <div class="flexLayout">
                 <span class="flex45p flexLayout flexColumn">
-                    <tree-list class="flex50p" [(ngModel)]="country" textField="naqme" valueField="code" [models]="countries$ | async"></tree-list>
+                    <tree-list [(ngModel)]="country" textField="naqme" valueField="code" [models]="countries$ | async"></tree-list>
                 </span>
-                <ul class="flexOffset5p" id="shortcut-list">
+                <ul class="flex45p flexOffset5p" id="shortcut-list">
                     <li>Press
                         <span class="keyboard-key">↑</span> to select the previous item</li>
                     <li>Press
@@ -102,7 +102,7 @@
                     <item value="Pineapple" text="My preferred fruct is Pineapple"></item>
                     <item value="Watermelon" text="My preferred fruct is Watermelon"></item>
                 </tree-list>
-                <tree-list class="flex45p flexOffset5p demo-half-width optionstl" multiSelect="true" [selectedModels]="['Mango', 'Apricots', 'Coconut']">
+                <tree-list class="flex45p flexOffset5p demo-half-width optionstl" multiSelect="true" [selectedValues]="['Mango', 'Apricots', 'Coconut']">
                     <item value="Apricots" text="Apricots"></item>
                     <item value="Banana" text="Banana"></item>
                     <item value="Cantaloupe" text="Cantaloupe"></item>
@@ -136,7 +136,7 @@
             </div>
             <div class="flexLayout">
                 <span class="flex45p flexLayout flexColumn">
-                    <tree-list searchArea nodataholder="No record to display" maxHeight="auto" [disabled]="disabled" selectionClearable [(ngModel)]="deepCountry" textField="l1.l2.name" valueField="l1.l2.value" [models]="deepCountries$ | async"></tree-list>
+                    <tree-list searchArea nodataholder="No record to display" ngModelType="model" maxHeight="auto" [disabled]="disabled" selectionClearable [(ngModel)]="deepCountry" textField="l1.l2.name" valueField="l1.l2.value" [models]="deepCountries$ | async"></tree-list>
                 </span>
                 <span class="flex45p flexOffset5p">
                     <h4>Selected deep country model :</h4>
@@ -164,7 +164,7 @@
             <div>Multi selection example</div>
             <div class="flexLayout">
                 <span class="flex45p flexLayout flexColumn">
-                    <tree-list sortable multiSelect textField="naqme" valueField="code" [selectedItems]="multiselectModel" (itemDragStart)="onItemDragStart($event)" (selectedChange)="multiselectModelChange($any($event).items)" [items]="countriesForMultiselect">
+                    <tree-list sortable multiSelect textField="naqme" valueField="code" [selectedModels]="multiselectModel" (itemDragStart)="onItemDragStart($event)" (selectedChange)="multiselectModelChange($event.models)" [models]="countriesForMultiselect">
                     </tree-list>
                 </span>
                 <span class="flexLayout flexColumn flex45p flexOffset5p">

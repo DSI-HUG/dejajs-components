@@ -18,12 +18,17 @@
         .deja-listcontainer,
         .listcontainer {
 			div.listitem {
-				&[current="true"] {
+                &[current="true"],
+                &.current {
 					background-color: rgba(0, 0, 0, 0.03);
 				}
 				&.selected {
 					background-color: rgba(mat-color($primary), 0.75);
-					color: #fff;
+                    color: #fff;
+                    &[current="true"],
+                    &.current {
+                        background-color: rgba(mat-color($primary), 0.8);
+                    }
 				}
 			}
 		}

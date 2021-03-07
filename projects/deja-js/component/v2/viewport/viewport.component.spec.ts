@@ -79,7 +79,7 @@ describe('ViewPortComponent', () => {
             filter(result => result.viewPortSize > 0),
             take(1),
             tap(result => {
-                const listitems = fixture.debugElement.queryAll(By.css('viewport > #viewport-wrapper > .listitem'));
+                const listitems = fixture.debugElement.queryAll(By.css('viewport > .viewport-wrapper > .listitem'));
                 void expect(listitems.length).toEqual(elementCount);
                 void expect(result.beforeSize).toEqual(expectedBeforeSize);
                 void expect(result.afterSize).toEqual(expectedAfterSize);
@@ -102,7 +102,7 @@ describe('ViewPortComponent', () => {
         const fixture = TestBed.createComponent(ViewportContainerComponent);
         const viewPortDebugElement = fixture.debugElement.query(By.directive(ViewPortComponent));
         const viewPortInstance = viewPortDebugElement.componentInstance as ViewPortComponent<unknown>;
-        const viewPortElement = fixture.debugElement.query(By.css('#viewport-wrapper')).nativeElement as HTMLElement;
+        const viewPortElement = fixture.debugElement.query(By.css('.viewport-wrapper')).nativeElement as HTMLElement;
 
         observeViewPort$(fixture, 51, 0, 980, 1020, 0, 50).subscribe(() => {
             // tslint:disable-next-line:no-string-literal
@@ -264,7 +264,7 @@ describe('ViewPortComponent', () => {
             filter(result => result.visibleItems?.length && result.listSize > 0), // items must be sized
             take(1),
             tap(result => {
-                const listitems = fixture.debugElement.queryAll(By.css('-viewport > #viewport-wrapper > .listitem'));
+                const listitems = fixture.debugElement.queryAll(By.css('-viewport > .viewport-wrapper > .listitem'));
                 void expect(listitems.length).toEqual(elementCount);
                 void expect(result.beforeSize).toEqual(expectedBeforeSize);
                 void expect(result.afterSize).toEqual(expectedAfterSize);
@@ -309,7 +309,7 @@ describe('ViewPortComponent', () => {
         const fixture = TestBed.createComponent(ViewportAutoContainerComponent);
         const viewPortDebugElement = fixture.debugElement.query(By.directive(ViewPortComponent));
         const viewPortService = viewPortDebugElement.injector.get(ViewPortService);
-        const viewPortElement = fixture.debugElement.query(By.css('#viewport-wrapper')).nativeElement as HTMLElement;
+        const viewPortElement = fixture.debugElement.query(By.css('.viewport-wrapper')).nativeElement as HTMLElement;
 
         observeViewPort$(fixture, 29, 16480, 22360, 828, 412, 440).subscribe(() => {
             // tslint:disable-next-line:no-string-literal
@@ -326,7 +326,7 @@ describe('ViewPortComponent', () => {
         const viewPortDebugElement = fixture.debugElement.query(By.directive(ViewPortComponent));
         const viewPortElement = viewPortDebugElement.nativeElement as HTMLElement;
         const viewPortService = viewPortDebugElement.injector.get(ViewPortService);
-        const wrapperDebugElement = fixture.debugElement.query(By.css('viewport > #viewport-wrapper'));
+        const wrapperDebugElement = fixture.debugElement.query(By.css('viewport > #.viewport-wrapper'));
         const wrapperElement = wrapperDebugElement.nativeElement as HTMLElement;
         let pass = 0;
 
@@ -337,7 +337,7 @@ describe('ViewPortComponent', () => {
             filter(result => result.visibleItems?.length && result.listSize > 0), // items must be sized
             take(3)
         ).subscribe(result => {
-            const listitems = fixture.debugElement.queryAll(By.css('viewport > #viewport-wrapper > .listitem'));
+            const listitems = fixture.debugElement.queryAll(By.css('viewport > .viewport-wrapper > .listitem'));
             let customEvent: CustomEvent<unknown>;
             switch (pass++) {
                 case 0:

@@ -10,8 +10,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Injectable } from '@angular/core';
 import { GroupingService, IGroupInfo, ISortInfos, SortingService } from '@deja-js/component/core';
-import { BehaviorSubject, combineLatest, merge, Observable, of, ReplaySubject, Subscriber } from 'rxjs';
-import { debounceTime, map, shareReplay } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, merge, Observable, ReplaySubject, Subscriber } from 'rxjs';
+import { debounceTime, filter, map, shareReplay } from 'rxjs/operators';
 
 import { Item } from './item';
 import { ItemComponent } from './item.component';
@@ -96,23 +96,17 @@ export class ItemService<T> {
 
         this.flatItemList$ = this.itemList$.pipe(
             map(items => {
-                const list = new Array<Item<T>>();
-                const addItems = (itms: Item<T>[], depth: number) => {
-                    itms.forEach(item => {
-                        item.depth = depth;
-                        list.push(item);
-                        if (item.items) {
-                            addItems(item.items, depth + 1);
-                        }
-                    });
-                };
-                addItems(items, 0);
-                return list;
+                const addItems = (itms: Item<T>[], depth: number): Array<Item<T>> => itms?.flatMap(item => {
+                    item.depth = depth;
+                    return [item, ...addItems(item.items, depth + 1)];
+                }) || [];
+                return addItems(items, 0);
             }),
             shareReplay({ bufferSize: 1, refCount: false })
         );
 
         this.selectedItems$ = combineLatest([this.flatItemList$, this.valueField$, this.refreshSelection$]).pipe(
+            filter(([items]) => items?.length > 0),
             map(([items, valueField, refreshSelection]) => {
                 const select = refreshSelection.selectItems;
                 const unselect = refreshSelection.unselectItems;
@@ -142,18 +136,18 @@ export class ItemService<T> {
 
                 if (select) {
                     if (select === 'all') {
-                        return items.filter(item => item.selected = (selectParents || !item.items) && (!checkSelectable || item.selectable !== false));
+                        return items.filter(item => item.selected = (selectParents || !item.items) && (!checkSelectable || item.isSelectable));
                     } else if (select?.length) {
-                        select.forEach(item => item.selected = !checkSelectable || item.selectable !== false);
+                        select.forEach(item => item.selected = !checkSelectable || item.isSelectable);
                     }
                 }
 
                 if (selectModels) {
-                    items.forEach(item => item.selected = (!checkSelectable || item.selectable !== false) && selectModels.some(model => this.compareModels(model, item.model, valueField)));
+                    items.forEach(item => item.selected = (!checkSelectable || item.isSelectable) && selectModels.some(model => this.compareModels(model, item.model, valueField)));
                 }
 
                 if (selectValues) {
-                    items.forEach(item => item.selected = (!checkSelectable || item.selectable !== false) && selectValues.some(value => value === item.id));
+                    items.forEach(item => item.selected = (!checkSelectable || item.isSelectable) && selectValues.some(value => value === item.id));
                 }
 
                 if (toggle) {
@@ -182,8 +176,15 @@ export class ItemService<T> {
                 item.id = model;
                 item.label = model;
             } else {
-                item.label = this.extractValueField(model, textField) as string;
-                item.id = this.extractValueField(model, valueField) as string;
+                const label = this.extractValueField(model, textField) as string;
+                if (label !== undefined) {
+                    item.label = label;
+                }
+
+                const id = this.extractValueField(model, valueField) as string;
+                if (id !== undefined) {
+                    item.id = id;
+                }
 
                 if (childrenField) {
                     const children = this.extractValueField(model, childrenField) as T[];
@@ -204,7 +205,7 @@ export class ItemService<T> {
 
     /** Sélectionne tous les éléments */
     public selectAll(checkSelectable?: boolean): void {
-        this.refreshSelection$.next({ selectItems: 'all', checkSelectable: checkSelectable !== false });
+        this.refreshSelection$.next({ selectItems: 'all', checkSelectable });
     }
 
     /** Déselectionne l'élément spécifié
@@ -259,7 +260,7 @@ export class ItemService<T> {
     /** Change l'état de sélection de l'élément spécifié.
      * @param items Liste des éléments à modifier.
      */
-    public toggleSelect$(items: Item<T>[]): void {
+    public toggleSelect(items: Item<T>[]): void {
         this.refreshSelection$.next({ toggle: items });
     }
 
@@ -300,15 +301,6 @@ export class ItemService<T> {
      */
     public getItemFromIndex(index: number): Item<T> {
         return this._cache.visibleList ? this._cache.visibleList[index] : null;
-    }
-
-    /** Retourne l'index correspondant à l'élément spéficié dans la liste des éléments visibles
-     * @param item Element à chercher sur la liste des éléments visibles.
-     * @return Index correspondant à l'élément recherché.
-     */
-    public getItemIndex(_item: Item<T>): number {
-        return 0;
-        // return this._cache.visibleList ? this._cache.visibleList.findIndex(itm => this.compareItems(item, itm)) : -1;
     }
 
     /** Renvoie le service utilisé pour le tri de la liste
@@ -513,7 +505,7 @@ export class ItemService<T> {
     //  */
     // public toggleAll$(collapsed: boolean): Observable<Item<T>[]> {
     //     return of(this._cache.flatList).pipe(
-    //         map((items: Item<T>[]) => items.filter(item => item.items && item.collapsible !== false)),
+    //         map((items: Item<T>[]) => items.filter(item => item.items && item.isCollapsible)),
     //         tap(() => delete this._cache.visibleList), // Invalidate view cache
     //         switchMap(items => collapsed ? this.collapseItems$(items) : this.expandItems$(items)));
     // }
@@ -588,46 +580,6 @@ export class ItemService<T> {
     //             delete this._cache.visibleList;
     //         }));
     // }
-
-    /** Trouve l'élément suivant répondant à la fonction de comparaison spécifiée.
-     * @param compare Function de comparaison pour la recherche de l'élément.
-     * @param startIndex Index de départ sur la liste des éléments visibles.
-     * @return Observable résolu par la fonction.
-     */
-    public findNextMatch$(compare?: (item: Item<T>, index: number) => boolean, startIndex?: number): Observable<FindItemResult<T>> {
-        let result = { index: -1 } as FindItemResult<T>;
-
-        const list = this._cache.visibleList;
-        if (!list || !list.length) {
-            throw new Error('Empty cache on findNextMatch');
-        }
-
-        if (list.length) {
-            if (startIndex < 0 || startIndex >= list.length) {
-                startIndex = -1;
-            }
-            let idx = startIndex + 1;
-            // eslint-disable-next-line no-loops/no-loops
-            while (idx !== startIndex) {
-                const itm = list[idx];
-                if (compare(itm, idx)) {
-                    result = {
-                        index: idx,
-                        item: itm
-                    } as FindItemResult<T>;
-                    break;
-                }
-                idx++;
-                if (idx >= list.length) {
-                    if (startIndex === -1) {
-                        break;
-                    }
-                    idx = 0;
-                }
-            }
-        }
-        return of(result);
-    }
 
     /** Trie les éléments en fonction du modèle de tri spécifié
      * @param sortInfos Modèle de tri à appliquer.
@@ -1173,24 +1125,12 @@ export class ItemService<T> {
         const fields = field.split('.');
         return fields.reduce((mdl, fld) => mdl[fld], indexedModel);
     }
-
-    protected isVisible(item: Item<T>): boolean {
-        return item.visible !== false;
-    }
 }
 
 /** Structure de retour de getViewList. */
 export interface ViewListResult<T> {
     depthMax?: number;
     visibleList?: Item<T>[];
-}
-
-/** Structure de retour de findNextMatch. */
-export interface FindItemResult<T> {
-    /** Elément trouvé. */
-    item: Item<T>;
-    /** Index de l'élément dans la liste des éléments visibles. */
-    index: number;
 }
 
 /** Structure de retour de getParentListInfos. */
