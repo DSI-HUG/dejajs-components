@@ -520,12 +520,12 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
     }
 
     @Input()
-    /** Définit une valeur indiquant si les éléments selectionés doivent être masqué de la liste déroulante. */
+    /** Définit une valeur indiquant si les éléments sélectionnés doivent être masqué de la liste déroulante. */
     public set hideSelected(value: BooleanInput) {
         this.setHideSelected(coerceBooleanProperty(value));
     }
 
-    /** Renvoie une valeur indiquant si les éléments selectionés doivent être masqué de la liste déroulante. */
+    /** Renvoie une valeur indiquant si les éléments sélectionnés doivent être masqué de la liste déroulante. */
     public get hideSelected(): BooleanInput {
         return this._hideSelected;
     }
@@ -696,48 +696,48 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
         return this._type === 'autocomplete';
     }
 
-    /** Définit la liste des éléments selectionés en mode multiselect */
+    /** Définit la liste des éléments sélectionnés en mode multiselect */
     @Input()
     public set selectedItems(value: IItemBase<unknown>[]) {
         this.setSelectedItems(value);
     }
 
-    /** Retourne la liste des éléments selectionés en mode multiselect */
+    /** Retourne la liste des éléments sélectionnés en mode multiselect */
     public get selectedItems(): IItemBase<unknown>[] {
         return super.getSelectedItems();
     }
 
-    /** Définit l'éléments selectioné en mode single select */
+    /** Définit l'éléments sélectionné en mode single select */
     @Input()
     public set selectedItem(value: IItemBase<unknown>) {
         this.setSelectedItems(value !== undefined && value !== null ? [value] : []);
     }
 
-    /** Retourne l'élément selectioné en mode single select */
+    /** Retourne l'élément sélectionné en mode single select */
     public get selectedItem(): IItemBase<unknown> {
         const selectedItem = super.getSelectedItems();
         return selectedItem?.[0];
     }
 
-    /** Définit le model selectioné en mode single select */
+    /** Définit le model sélectionné en mode single select */
     @Input()
     public set selectedModel(value: unknown[] | unknown) {
         this.writeValue(value);
     }
 
-    /** Retourne le model selectioné en mode single select */
+    /** Retourne le model sélectionné en mode single select */
     public get selectedModel(): unknown {
         const selectedModel = super.getSelectedModels();
         return selectedModel?.[0] as unknown[];
     }
 
-    /** Définit la liste des models selectionés en mode multiselect */
+    /** Définit la liste des models sélectionnés en mode multiselect */
     @Input()
     public set selectedModels(value: unknown[]) {
         this.writeValue(value);
     }
 
-    /** Retourne la liste des models selectionés en mode multiselect */
+    /** Retourne la liste des models sélectionnés en mode multiselect */
     public get selectedModels(): unknown[] {
         return super.getSelectedModels();
     }

@@ -6,7 +6,7 @@
     &[disabled="true"]{
         .deja-listcontainer,
         .listcontainer {
-			>div.listitem {
+			div.listitem {
 				&.selected {
 					background-color: rgba(0, 0, 0, 0.8);
 					color: #fff;
@@ -17,7 +17,7 @@
 	&:not([disabled="true"]) {
         .deja-listcontainer,
         .listcontainer {
-			>div.listitem {
+			div.listitem {
 				&[current="true"] {
 					background-color: rgba(0, 0, 0, 0.03);
 				}

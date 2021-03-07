@@ -11,7 +11,7 @@ Composant de selection d'une couleur.
 ```
 
 #### Note
- - Le composant implémente `ngModel` sur la couleur selectionée. Utiliser ngModelChange pour être notifiés lorsque la couleur selectionée a changé.
+ - Le composant implémente `ngModel` sur la couleur sélectionnée. Utiliser ngModelChange pour être notifiés lorsque la couleur sélectionnée a changé.
 
 ### Propriétés
 
@@ -35,7 +35,7 @@ Composant de selection d'une couleur.
     <td>colors</td>
     <td>MaterialColor[]</td>
     <td>null</td>
-    <td>Retourne ou définit les couleurs selectionables affichées.</td>
+    <td>Retourne ou définit les couleurs sélectionnables affichées.</td>
 </tr>
 <tr>
     <td>resetcolor</td>

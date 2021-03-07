@@ -149,7 +149,7 @@ Crée une liste récursive.
             <td>multiSelect</td>
             <td>boolean</td>
             <td>false</td>
-            <td>Permet la multi-selection des items de la ligne (avec la touche shift ou ctrl)</td>
+            <td>Permet la multi-sélection des items de la ligne (avec la touche shift ou ctrl)</td>
         </tr>
         <tr>
             <td>textField</td>
@@ -185,31 +185,31 @@ Crée une liste récursive.
             <td>multiSelect</td>
             <td>boolean</td>
             <td>false</td>
-            <td>Retourne ou définit une valeur indiquant si plusieurs lignes peuvent être sélectionées.</td>
+            <td>Retourne ou définit une valeur indiquant si plusieurs lignes peuvent être sélectionnées.</td>
         </tr>
         <tr>
             <td>selectedItem</td>
             <td>IItemBase</td>
             <td></td>
-            <td>Retourne ou définit l'élément selectioné en mode single select</td>
+            <td>Retourne ou définit l'élément sélectionné en mode single select</td>
         </tr>
         <tr>
             <td>selectedItems</td>
             <td>IItemBase[]</td>
             <td></td>
-            <td>Retourne ou définit la liste des éléments selectionés en mode multiselect</td>
+            <td>Retourne ou définit la liste des éléments sélectionnés en mode multiselect</td>
         </tr>
         <tr>
             <td>selectedModel</td>
             <td>any</td>
             <td></td>
-            <td>Retourne ou définit le model selectioné en mode single select</td>
+            <td>Retourne ou définit le model sélectionné en mode single select</td>
         </tr>
         <tr>
             <td>selectedModels</td>
             <td>any[]</td>
             <td></td>
-            <td>Retourne ou définit la liste des models selectionés en mode multiselect</td>
+            <td>Retourne ou définit la liste des models sélectionnés en mode multiselect</td>
         </tr>
         <tr>
             <td>itemListService</td>
@@ -301,12 +301,12 @@ Crée une liste récursive.
 <tr>
     <td>selectingItem</td>
     <td>(item: IItemBase) => Promise<IItemBase> | Observable<IItemBase></td>
-    <td>Définit une promesse ou un observable appelé avant qu'un élément ne soit selectioné</td>
+    <td>Définit une promesse ou un observable appelé avant qu'un élément ne soit sélectionné</td>
 </tr>
 <tr>
     <td>unselectingItem</td>
     <td>(item: IItemBase) => Promise<IItemBase> | Observable<IItemBase></td>
-    <td>Définit une promesse ou un observable appelé avant qu'un élément ne soit déselectioné</td>
+    <td>Définit une promesse ou un observable appelé avant qu'un élément ne soit désélectionné</td>
 </tr>
 <tr>
     <td>expandingItem</td>

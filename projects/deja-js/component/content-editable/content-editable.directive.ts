@@ -234,7 +234,7 @@ export class DejaEditableDirective extends Destroy implements ControlValueAccess
         this.element.focus();
     }
 
-    /** Place toute la zone d'édition en selectioné. */
+    /** Place toute la zone d'édition en sélectionné. */
     public selectAll(): void {
         const range = document.createRange();
         range.selectNodeContents(this.element);

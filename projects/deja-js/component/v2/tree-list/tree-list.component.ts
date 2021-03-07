@@ -12,13 +12,16 @@ import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { DejaChildValidatorDirective, Destroy } from '@deja-js/component/core';
 import { IDejaDragEvent } from '@deja-js/component/dragdrop';
 import { Item, ItemComponent, ItemEvent, ItemService } from '@deja-js/component/v2/item-list';
-import { ViewPortComponent } from '@deja-js/component/v2/viewport';
-import { ViewPort, ViewPortMode, ViewPortService } from '@deja-js/component/v2/viewport';
-import { Observable, ReplaySubject, Subject } from 'rxjs';
-import { filter, switchMap } from 'rxjs/operators';
+import { ViewPort, ViewPortComponent, ViewPortMode, ViewPortService } from '@deja-js/component/v2/viewport';
+import { BehaviorSubject, combineLatest, fromEvent, Observable, ReplaySubject, Subject } from 'rxjs';
+import { filter, switchMap, takeUntil, tap, withLatestFrom } from 'rxjs/operators';
 
 import { TreeListScrollEvent } from './tree-list-scroll-event';
 
+
+export type NgModelType = 'item' | 'model' | 'value';
+
+export type NgControlType<T> = Item<T> | Item<T>[] | T | T[] | string | string[];
 
 /** Composant de liste évoluée avec gestion de viewport et templating */
 @Component({
@@ -94,17 +97,23 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
     // Drag drop
     public ddStartIndex: number;
     public ddTargetIndex: number;
-    public listElement: HTMLElement;
 
+    private _selectedItems: Item<T>[];
     private _keyboardNavigation = false;
     private _depthMax = 0;
-    private _multiSelect = false;
     private _currentItemIndex = -1;
     private _waiter = false;
     private _currentItem: Item<T>;
     private _maxHeight: number;
     private _hintLabel: string;
     private _pageSize = 0;
+    private modelType$ = new BehaviorSubject<NgModelType>('value');
+    private _modelType: NgModelType = 'value';
+    private writeValue$ = new ReplaySubject<NgControlType<T>>(1);
+    private multiSelect$ = new BehaviorSubject<boolean>(false);
+    private _multiSelect = false;
+    private listElement$ = new ReplaySubject<HTMLElement>(1);
+    private raiseChangeCallback = false;
 
     // protected _items: Item[]; In the base class, correspond to the model
     // private clickedItem: Item<unknown>;
@@ -114,32 +123,18 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
     private _sortable = false;
     private _itemsDraggable = false;
     // private hasLoadingEvent = false;
-    private _modelIsValue = false;
 
     // private keyboardNavigation$ = new Subject();
 
     // private mouseUp$sub: Subscription;
 
     // private clearFilterExpression$ = new BehaviorSubject<void>(null);
-    private writeValue$ = new Subject<unknown[] | unknown>();
-    private selectItems$ = new Subject<unknown[] | unknown>();
     private _minSearchLength = 0;
 
     private _viewPortRowHeight: number;
 
     private viewPortComponent$ = new ReplaySubject<ViewPortComponent<T>>(1);
     private _viewPortComponent: ViewPortComponent<T>;
-
-    /** Définit la longueur minimale de caractères dans le champ de recherche avant que la recherche ou le filtrage soient effectués */
-    // eslint-disable-next-line @angular-eslint/no-input-rename
-    @Input('min-search-length')
-    public set minSearchlength(value: NumberInput) {
-        this._minSearchLength = coerceNumberProperty(value);
-    }
-
-    public get minSearchlength(): NumberInput {
-        return this._minSearchLength;
-    }
 
     @ViewChild(ViewPortComponent)
     public set viewPortComponent(value: ViewPortComponent<T>) {
@@ -173,6 +168,91 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
         return this._viewPortRowHeight;
     }
 
+    /** Définit la liste des éléments sélectionnés en mode multiselect */
+    @Input()
+    public set selectedItems(value: Item<T>[]) {
+        this.itemService.setSelectedItems(value);
+    }
+
+    /** Retourne la liste des éléments sélectionnés en mode multiselect */
+    public get selectedItems(): Item<T>[] {
+        return this._selectedItems;
+    }
+
+    /** Définit l'élément sélectionné en mode single select */
+    @Input()
+    public set selectedItem(value: Item<T>) {
+        this.itemService.setSelectedItems(value && [value]);
+    }
+
+    /** Retourne l'éléments sélectionné en mode single select */
+    public get selectedItem(): Item<T> {
+        return this.selectedItems?.[0];
+    }
+
+    /** Définit le model sélectionné en mode single select */
+    @Input()
+    public set selectedModel(value: T) {
+        this.itemService.setSelectedModels(value && [value]);
+    }
+
+    /** Retourne le model sélectionné en mode single select */
+    public get selectedModel(): T {
+        return this.selectedModels?.[0];
+    }
+
+    /** Définit la liste des models sélectionnés en mode multiselect */
+    @Input()
+    public set selectedModels(value: T[]) {
+        this.itemService.setSelectedModels(value);
+
+    }
+
+    /** Retourne la liste des models sélectionnés en mode multiselect */
+    public get selectedModels(): T[] {
+        return this.selectedItems?.map(itm => itm.model);
+    }
+
+    /** Définit le model sélectionné en mode single select */
+    @Input()
+    public set selectedValue(value: string) {
+        this.itemService.setSelectedValues(value && [value]);
+    }
+
+    /** Retourne le model sélectionné en mode single select */
+    public get selectedValue(): string {
+        return this.selectedValues?.[0];
+    }
+
+    /** Définit la liste des models sélectionnés en mode multiselect */
+    @Input()
+    public set selectedValues(value: string[]) {
+        this.itemService.setSelectedValues(value);
+
+    }
+
+    /** Retourne la liste des models sélectionnés en mode multiselect */
+    public get selectedValues(): string[] {
+        return this.selectedItems?.map(itm => itm.id);
+    }
+
+    /** Définit une valeur indiquant si en reactive form le model renvoyé doit être un obeject oue une valeur */
+    @Input()
+    public set modelType(value: NgModelType) {
+        this.modelType$.next(value);
+    }
+
+    /** Définit une valeur indiquant si plusieurs lignes peuvent être sélectionnées. */
+    @Input()
+    public set multiSelect(value: BooleanInput) {
+        this.multiSelect$.next(coerceBooleanProperty(value));
+    }
+
+    @ViewChild('listElement', { static: true })
+    public set listElememtRef(elem: ElementRef) {
+        this.listElement$.next(elem.nativeElement);
+    }
+
     public constructor(
         public elementRef: ElementRef, @Self() @Optional()
         public control: NgControl,
@@ -192,6 +272,153 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
             filter(viewPortComponent => !!viewPortComponent),
             switchMap(viewPortComponent => viewPortComponent.viewPort$)
         );
+
+        this.itemService.selectedItems$.pipe(
+            takeUntil(this.destroyed$)
+        ).subscribe(selectedItems => {
+            this._selectedItems = selectedItems;
+            if (this.raiseChangeCallback) {
+                this.onChangeCallback(this.value);
+                this.onTouchedCallback();
+                this.raiseChangeCallback = false;
+            }
+        });
+
+        const modelType$ = this.modelType$.pipe(
+            tap(modelType => this._modelType = modelType)
+        );
+
+        combineLatest([this.multiSelect$, modelType$, this.writeValue$]).pipe(
+            takeUntil(this.destroyed$)
+        ).subscribe(([multiSelect, modelType, value]) => {
+            if (multiSelect) {
+                switch (modelType) {
+                    case 'item':
+                        this.selectedItems = value as Item<T>[];
+                        break;
+                    case 'model':
+                        this.selectedModels = value as T[];
+                        break;
+                    default:
+                        this.selectedValues = value as string[];
+                }
+            } else {
+                switch (modelType) {
+                    case 'item':
+                        this.selectedItem = value as Item<T>;
+                        break;
+                    case 'model':
+                        this.selectedModel = value as T;
+                        break;
+                    default:
+                        this.selectedValue = value as string;
+                }
+            }
+        });
+
+        this.listElement$.pipe(
+            switchMap(element => fromEvent<MouseEvent>(element, 'mousedown').pipe(
+                withLatestFrom(this.viewPort$),
+                switchMap(([event, viewPort]) => {
+                    if (this.disabled) {
+                        return undefined;
+                    }
+
+                    const target = event.target as HTMLElement;
+                    const itemIndex = itemService.getItemIndexFromHtmlElement(target);
+                    if (itemIndex === undefined) {
+                        return undefined;
+                    }
+
+                    // const isExpandButton = (el: HTMLElement) => el.id === 'expandbtn' || el.parentElement.id === 'expandbtn';
+
+                    const clickedItem = viewPort.visibleItems[itemIndex - viewPort.startIndex];
+
+                    // if ((!isExpandButton(target) || !this.isCollapsible(item)) && this.isSelectable(item) && (!e.ctrlKey || !this.multiSelect) && (e.button === 0 || !item.selected)) {
+                    //     if (e.shiftKey && this.multiSelect) {
+                    //         // Select all from current to clicked
+                    //         this.selectRange$(itemIndex, this.currentItemIndex).pipe(
+                    //             take(1),
+                    //             takeUntil(this.destroyed$)
+                    //         ).subscribe(() => this.changeDetectorRef.markForCheck());
+                    //         return false;
+                    //     } else if (!e.ctrlKey) {
+                    //         if (!this.multiSelect && item.selected) {
+                    //             return undefined;
+                    //         }
+
+                    //         this.unselectAll$().pipe(
+                    //             take(1),
+                    //             switchMap(() => {
+                    //                 this.currentItemIndex = itemIndex;
+                    //                 return this.toggleSelect$([item], true);
+                    //             }),
+                    //             take(1),
+                    //             takeUntil(this.destroyed$)
+                    //         ).subscribe(() => this.changeDetectorRef.markForCheck());
+                    //     }
+                    // }
+
+                    return fromEvent<MouseEvent>(element, 'mouseup').pipe(
+                        filter(() => !this.disabled),
+                        tap(upevt => {
+                            const upTarget = upevt.target as HTMLElement;
+                            const upIndex = itemService.getItemIndexFromHtmlElement(upTarget);
+                            if (upIndex === undefined) {
+                                return;
+                            }
+
+                            const upItem = viewPort.visibleItems[upIndex - viewPort.startIndex] as Item<T>;
+                            if (clickedItem && upItem !== clickedItem) {
+                                return;
+                            }
+
+                            this.raiseChangeCallback = true;
+                            this.itemService.setSelectedItems([upItem]);
+                            this.viewPortComponent.reloadViewPort();
+                            //         if (upevt.shiftKey) {
+                            //             return of(null);
+                            //         }
+
+                            //         if (upevt.button !== 0) {
+                            //             // Right click menu
+                            //             return of(null);
+                            //         }
+
+                            //         if (this.isCollapsible(upItem) && (isExpandButton(upTarget) || !this.isSelectable(upItem))) {
+                            //             const treeItem = upItem;
+                            //             return this.toggleCollapse$(upIndex, !treeItem.collapsed).pipe(
+                            //                 map(() => upIndex)
+                            //             );
+
+                            //         } else if (upevt.ctrlKey) {
+                            //             if (this.multiSelect) {
+                            //                 return this.toggleSelect$([upItem], !upItem.selected).pipe(
+                            //                     map(() => upIndex)
+                            //                 );
+                            //             } else {
+                            //                 const o$ = this.selectedItem && this.selectedItem !== upItem ? this.toggleSelect$([this.selectedItem], false).pipe(switchMap(() => this.toggleSelect$([upItem], true))) : this.toggleSelect$([upItem], !upItem.selected);
+                            //                 return o$.pipe(
+                            //                     map(() => upIndex)
+                            //                 );
+                            //             }
+                            //         }
+
+                            //         this.rangeStartIndex = -1;
+                            //         return of(null);
+                        })
+                        //     filter(currentIndex => currentIndex !== null),
+                        //     takeUntil(this.destroyed$)
+                        // ).subscribe(currentIndex => {
+                        //     this.currentItemIndex = currentIndex;
+                        //     this.changeDetectorRef.markForCheck();
+                    );
+
+                    // return undefined;
+                })
+            )),
+            takeUntil(this.destroyed$)
+        ).subscribe();
 
         // itemService.itemList$.pipe(
         //     takeUntil(this.destroyed$)
@@ -275,8 +502,15 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
         this.maxHeight = 0;
     }
 
-    @ViewChild('listElement', { static: true }) public set listElememtRef(elem: ElementRef) {
-        this.listElement = elem.nativeElement;
+    /** Définit la longueur minimale de caractères dans le champ de recherche avant que la recherche ou le filtrage soient effectués */
+    // eslint-disable-next-line @angular-eslint/no-input-rename
+    @Input('min-search-length')
+    public set minSearchlength(value: NumberInput) {
+        this._minSearchLength = coerceNumberProperty(value);
+    }
+
+    public get minSearchlength(): NumberInput {
+        return this._minSearchLength;
     }
 
     public keyboardNavigation(): boolean {
@@ -291,16 +525,6 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
 
     public get searchArea(): BooleanInput {
         return this._searchArea || this.minSearchlength > 0;
-    }
-
-    /** Définit une valeur indiquant si en reactive form le model renvoyé doit être un obeject oue une valeur */
-    @Input()
-    public set modelIsValue(value: BooleanInput) {
-        this._modelIsValue = coerceBooleanProperty(value);
-    }
-
-    public get modelIsValue(): BooleanInput {
-        return this._modelIsValue;
     }
 
     /** Retourne ou définit une valeur indiquant si les lignes de la liste peuvent être déplacées manuelement par l'utilisateur */
@@ -414,69 +638,6 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
         return this._depthMax;
     }
 
-    /** Définit une valeur indiquant si plusieurs lignes peuvent être sélectionées. */
-    @Input()
-    public set multiSelect(value: BooleanInput) {
-        this._multiSelect = coerceBooleanProperty(value);
-    }
-
-    /** Retourne une valeur indiquant si plusieurs lignes peuvent être sélectionées. */
-    public get multiSelect(): BooleanInput {
-        return this._multiSelect;
-    }
-
-    /** Définit la liste des éléments selectionés en mode multiselect */
-    @Input()
-    public set selectedItems(value: Item<unknown>[]) {
-        if (value !== undefined) {
-            this.selectItems$.next(value);
-        }
-    }
-
-    /** Retourne la liste des éléments selectionés en mode multiselect */
-    public get selectedItems(): Item<unknown>[] {
-        return this.itemService.getSelectedItems();
-    }
-
-    /** Définit l'élément selectioné en mode single select */
-    @Input()
-    public set selectedItem(value: unknown) {
-        if (value !== undefined) {
-            this.selectItems$.next(value);
-        }
-    }
-
-    /** Retourne l'éléments selectioné en mode single select */
-    public get selectedItem(): unknown {
-        return this.selectedItems?.[0];
-    }
-
-    /** Définit le model selectioné en mode single select */
-    @Input()
-    public set selectedModel(value: unknown) {
-        if (value !== undefined) {
-            this.writeValue(value);
-        }
-    }
-
-    /** Retourne le model selectioné en mode single select */
-    public get selectedModel(): unknown {
-        return this.selectedModels?.[0];
-    }
-
-    /** Définit la liste des models selectionés en mode multiselect */
-    @Input()
-    public set selectedModels(value: unknown[]) {
-        if (value !== undefined) {
-            this.writeValue(value);
-        }
-    }
-
-    /** Retourne la liste des models selectionés en mode multiselect */
-    public get selectedModels(): unknown[] {
-        return this.itemService.getSelectedItems().map(itm => itm.model !== undefined ? itm.model : itm);
-    }
-
     /** Definit le service utilisé pour le tri de la liste */
     // @Input()
     // public set sortingService(value: SortingService) {
@@ -494,19 +655,6 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
     public set items(items: Item<T>[]) {
         delete this.hintLabel;
         this.itemService.items$.next(items);
-        // super.setItems$(items).pipe(
-        //     switchMap(itms => {
-        //         if (this.minSearchlength > 0 && !this.query) {
-        //             // Waiting for query
-        //             this._itemList = [];
-        //             this.changeDetectorRef.markForCheck();
-        //             return of(itms);
-        //         } else {
-        //             return this.calcViewList$().pipe(map(() => itms));
-        //         }
-        //     }),
-        //     takeUntil(this.destroyed$)
-        // ).subscribe();
     }
 
     /**
@@ -517,22 +665,6 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
     //     this.hasLoadingEvent = !!fn;
     //     super.setLoadingItems(fn);
     // }
-
-    /**
-     * Set a promise or an observable called before an item selection
-     */
-    @Input()
-    public set selectingItem(_fn: (item: Item<unknown>) => Promise<Item<unknown>> | Observable<Item<unknown>>) {
-        // super.setSelectingItem(fn);
-    }
-
-    /**
-     * Set a promise or an observable called before an item deselection
-     */
-    @Input()
-    public set unselectingItem(_fn: (item: Item<unknown>) => Promise<Item<unknown>> | Observable<Item<unknown>>) {
-        // super.setUnselectingItem(fn);
-    }
 
     /**
      * Set a promise or an observable called before an item expand
@@ -618,17 +750,35 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
     }
 
     // ************* ControlValueAccessor Implementation **************
-    public get value(): unknown {
-        return this._multiSelect ? this.selectedItems : this.selectedItem;
+    public get value(): NgControlType<T> {
+        if (this._multiSelect) {
+            switch (this._modelType) {
+                case 'item':
+                    return this.selectedItems;
+                case 'model':
+                    return this.selectedModels;
+                default:
+                    return this.selectedValues;
+            }
+        } else {
+            switch (this._modelType) {
+                case 'item':
+                    return this.selectedItem;
+                case 'model':
+                    return this.selectedModel;
+                default:
+                    return this.selectedValue;
+            }
+        }
     }
 
-    public set value(val: unknown) {
+    public set value(val: NgControlType<T>) {
         this.writeValue(val);
         this.onChangeCallback(val);
         this.onTouchedCallback();
     }
 
-    public writeValue(value: Item<unknown>[] | Item<unknown>): void {
+    public writeValue(value: NgControlType<T>): void {
         this.writeValue$.next(value);
     }
 
@@ -931,111 +1081,6 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
     //     this.ensureItemVisible(this.currentItemIndex);
     // });
     // }
-
-    public mousedown(_e: MouseEvent): void {
-        // if (this.mouseUp$sub) {
-        //     this.mouseUp$sub.unsubscribe();
-        //     this.mouseUp$sub = undefined;
-        // }
-
-        // if (this.disabled) {
-        //     return undefined;
-        // }
-
-        // const target = e.target as HTMLElement;
-        // const itemIndex = this.getItemIndexFromHTMLElement(target);
-        // if (itemIndex === undefined) {
-        //     return undefined;
-        // }
-
-        // const isExpandButton = (el: HTMLElement) => el.id === 'expandbtn' || el.parentElement.id === 'expandbtn';
-
-        // const item = this._itemList[itemIndex - this.vpStartRow];
-        // this.clickedItem = item;
-
-        // if ((!isExpandButton(target) || !this.isCollapsible(item)) && this.isSelectable(item) && (!e.ctrlKey || !this.multiSelect) && (e.button === 0 || !item.selected)) {
-        //     if (e.shiftKey && this.multiSelect) {
-        //         // Select all from current to clicked
-        //         this.selectRange$(itemIndex, this.currentItemIndex).pipe(
-        //             take(1),
-        //             takeUntil(this.destroyed$)
-        //         ).subscribe(() => this.changeDetectorRef.markForCheck());
-        //         return false;
-        //     } else if (!e.ctrlKey) {
-        //         if (!this.multiSelect && item.selected) {
-        //             return undefined;
-        //         }
-
-        //         this.unselectAll$().pipe(
-        //             take(1),
-        //             switchMap(() => {
-        //                 this.currentItemIndex = itemIndex;
-        //                 return this.toggleSelect$([item], true);
-        //             }),
-        //             take(1),
-        //             takeUntil(this.destroyed$)
-        //         ).subscribe(() => this.changeDetectorRef.markForCheck());
-        //     }
-        // }
-
-        // this.mouseUp$sub = fromEvent(this.listElement, 'mouseup').pipe(
-        //     take(1),
-        //     filter(() => !this.disabled),
-        //     switchMap((upevt: MouseEvent) => {
-        //         // Because .take(1)
-        //         this.mouseUp$sub = undefined;
-
-        //         const upTarget = upevt.target as HTMLElement;
-        //         const upIndex = this.getItemIndexFromHTMLElement(upTarget);
-        //         if (upIndex === undefined) {
-        //             return of(null);
-        //         }
-
-        //         const upItem = this._itemList[upIndex - this.vpStartRow];
-        //         if (this.clickedItem && upItem !== this.clickedItem) {
-        //             return of(null);
-        //         }
-
-        //         if (upevt.shiftKey) {
-        //             return of(null);
-        //         }
-
-        //         if (upevt.button !== 0) {
-        //             // Right click menu
-        //             return of(null);
-        //         }
-
-        //         if (this.isCollapsible(upItem) && (isExpandButton(upTarget) || !this.isSelectable(upItem))) {
-        //             const treeItem = upItem;
-        //             return this.toggleCollapse$(upIndex, !treeItem.collapsed).pipe(
-        //                 map(() => upIndex)
-        //             );
-
-        //         } else if (upevt.ctrlKey) {
-        //             if (this.multiSelect) {
-        //                 return this.toggleSelect$([upItem], !upItem.selected).pipe(
-        //                     map(() => upIndex)
-        //                 );
-        //             } else {
-        //                 const o$ = this.selectedItem && this.selectedItem !== upItem ? this.toggleSelect$([this.selectedItem], false).pipe(switchMap(() => this.toggleSelect$([upItem], true))) : this.toggleSelect$([upItem], !upItem.selected);
-        //                 return o$.pipe(
-        //                     map(() => upIndex)
-        //                 );
-        //             }
-        //         }
-
-        //         this.rangeStartIndex = -1;
-        //         return of(null);
-        //     }),
-        //     filter(currentIndex => currentIndex !== null),
-        //     takeUntil(this.destroyed$)
-        // ).subscribe(currentIndex => {
-        //     this.currentItemIndex = currentIndex;
-        //     this.changeDetectorRef.markForCheck();
-        // });
-
-        // return undefined;
-    }
 
     // public getDragContext(index: number): IDejaDragContext {
     //     if (!this.clipboardService || (!this.sortable && !this.itemsDraggable)) {

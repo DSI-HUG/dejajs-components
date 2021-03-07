@@ -86,11 +86,11 @@ export class DejaGridComponent extends Destroy {
     @Input() public currentRow: unknown;
     /** Liste des éléments sélectionnés en mode multiselect */
     @Input() public selectedItems: unknown[];
-    /** Elément selectioné en mode single select */
+    /** Elément sélectionné en mode single select */
     @Input() public selectedItem: unknown;
-    /** Liste des models selectionés en mode multiselect */
+    /** Liste des models sélectionnés en mode multiselect */
     @Input() public selectedModels: unknown[];
-    /** Model selectioné en mode single select */
+    /** Model sélectionné en mode single select */
     @Input() public selectedModel: unknown;
     /** Definit le service de tri utilisé par ce composant. */
     @Input() public sortingService: SortingService;

@@ -28,7 +28,7 @@ export interface IColorEvent extends CustomEvent {
     color: Color;
 }
 
-/** Composant de selection d'une couleur. */
+/** Composant de sélection d'une couleur. */
 @Component({
     selector: 'deja-color-selector',
     styleUrls: [
@@ -250,9 +250,9 @@ export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestr
     }
 
     /**
-     * Definit les couleurs selectionables affichées.
+     * Definit les couleurs sélectionnables affichées.
      *
-     * @param colors Structure hierarchique des couleurs selectionablea suivant le modele MaterialColor.
+     * @param colors Structure hierarchique des couleurs sélectionnable suivant le modele MaterialColor.
      */
     @Input()
     public set colors(colors: Color[]) {

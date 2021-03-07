@@ -193,15 +193,15 @@ export class ItemListService<T> {
         return this._childrenField;
     }
 
-    /** Définit une valeur indiquant si les éléments selectionés doivent être masqué. Ce flag est principalement utilisé dans le cas d'un multi-select
-     * @param value True si les éléments selectionés doivent être masqués
+    /** Définit une valeur indiquant si les éléments sélectionnés doivent être masqué. Ce flag est principalement utilisé dans le cas d'un multi-select
+     * @param value True si les éléments sélectionnés doivent être masqués
      */
     public set hideSelected(value: boolean) {
         this._hideSelected = value;
     }
 
-    /** Renvoie une valeur indiquant si les éléments selectionés doivent être masqué.
-     * @return value True si les éléments selectionés sont masqués
+    /** Renvoie une valeur indiquant si les éléments sélectionnés doivent être masqué.
+     * @return value True si les éléments sélectionnés sont masqués
      */
     public get hideSelected(): boolean {
         return this._hideSelected;
@@ -604,15 +604,15 @@ export class ItemListService<T> {
             }));
     }
 
-    /** Retourne la liste des éléments sélectionés.
-     * @return Liste des éléments selectionés.
+    /** Retourne la liste des éléments sélectionnés.
+     * @return Liste des éléments sélectionnés.
      */
     public getSelectedItems(): IItemBase<T>[] {
         return this.selectedList || [];
     }
 
-    /** Définit la liste des éléments sélectionés.
-     * @param items Liste des éléments a selectioner.
+    /** Définit la liste des éléments sélectionnés.
+     * @param items Liste des éléments a sélectionner.
      */
     public setSelectedItems(items: IItemBase<T>[]): void {
         if (this.selectedList) {
@@ -628,7 +628,7 @@ export class ItemListService<T> {
         this.ensureSelectedItems(this.items);
     }
 
-    /** Déselectionne tous les éléments sélectionés.
+    /** Déselectionne tous les éléments sélectionnés.
      * @return Observable résolu par la fonction.
      */
     public unselectAll$(): Observable<IItemBase<T>[]> {
@@ -669,9 +669,9 @@ export class ItemListService<T> {
             switchMap(items => this.selectItems$(items).pipe(map(selected => selected.length))));
     }
 
-    /** Change l'état de selection de l'élément spécifié.
+    /** Change l'état de sélection de l'élément spécifié.
      * @param items Liste des éléments à modifier.
-     * @param selected True si les éléments divent être sélectionés, False si ils doivent être déselectionés.
+     * @param selected True si les éléments divent être sélectionnés, False si ils doivent être déselectionnés.
      * @return Observable résolu par la fonction.
      */
     public toggleSelect$(items: IItemBase<T>[], selected: boolean): Observable<IItemBase<T>[]> {
@@ -696,7 +696,7 @@ export class ItemListService<T> {
     }
 
     /** Déselectionne les éléments spécifiés
-     * @param items Liste des éléments à déselectioner.
+     * @param items Liste des éléments à déselectionner.
      * @return Observable résolu par la fonction.
      */
     public unSelectItems$(items: IItemBase<T>[]): Observable<IItemBase<T>[]> {
@@ -726,7 +726,7 @@ export class ItemListService<T> {
     }
 
     /** Déselectionne l'élément spécifié
-     * @param item Elément à déselectioner.
+     * @param item Elément à déselectionner.
      * @return Observable résolu par la fonction.
      */
     public unSelectItem$(item: IItemBase<T>): Observable<IItemBase<T>> {
@@ -1010,7 +1010,7 @@ export class ItemListService<T> {
     /** Retourne la liste à utilise pour la création des caches. Surcharger cetee méthode pour fournir une liste de façon lazy.
      * En cas de surcharge, retourner une nouvelle instance de la liste originale pour que le service regénère ses caches.
      * @param query Texte ou regular expression par laquelle la liste doit être filtrée.
-     * @param selectedItems Liste des éléments selectionés.
+     * @param selectedItems Liste des éléments sélectionnés.
      * @return Observable résolu par la fonction, qui retourne la liste à utiliser.
      */
     protected getItemList$(query?: RegExp | string, selectedItems?: IItemBase<T>[]): Observable<IItemBase<T>[]> {

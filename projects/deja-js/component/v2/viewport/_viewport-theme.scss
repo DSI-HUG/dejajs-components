@@ -1,6 +1,6 @@
 @import '~@angular/material/theming';
 
-@mixin viewport-theme($theme) {
+@mixin viewport-2-theme($theme) {
 	$primary: map-get($theme, primary);
 
 	viewport {

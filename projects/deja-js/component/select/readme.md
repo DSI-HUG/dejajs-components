@@ -99,19 +99,19 @@ Crée une liste déroulante.
     <td>selectionClearable</td>
     <td>boolean</td>
     <td>false</td>
-    <td>Indique ou détermine si le bouton pour effacer la selection doit être affiché</td>
+    <td>Indique ou détermine si le bouton pour effacer la sélection doit être affiché</td>
 </tr>
 <tr>
     <td>selectedItemsPosition</td>
     <td>DejaSelectSelectionPosition</td>
     <td>above</td>
-    <td>Retourne ou définit la position des éléments selectionées en multiselect</td>
+    <td>Retourne ou définit la position des éléments sélectionnées en multiselect</td>
 </tr>
 <tr>
     <td>hideSelected</td>
     <td>boolean</td>
     <td>false</td>
-    <td>Retourne ou définit une valeur indiquant si les éléments selectionés doivent être masqué de la liste déroulante.</td>
+    <td>Retourne ou définit une valeur indiquant si les éléments sélectionnés doivent être masqué de la liste déroulante.</td>
 </tr>
 <tr>
     <td>currentItem</td>
@@ -183,25 +183,25 @@ Crée une liste déroulante.
     <td>selectedItem</td>
     <td>IItemBase</td>
     <td></td>
-    <td>Retourne ou définit l'élément selectioné en mode single select</td>
+    <td>Retourne ou définit l'élément sélectionné en mode single select</td>
 </tr>
 <tr>
     <td>selectedItems</td>
     <td>IItemBase[]</td>
     <td></td>
-    <td>Retourne ou définit la liste des éléments selectionés en mode multiselect</td>
+    <td>Retourne ou définit la liste des éléments sélectionnés en mode multiselect</td>
 </tr>
 <tr>
     <td>selectedModel</td>
     <td>any</td>
     <td></td>
-    <td>Retourne ou définit le model selectioné en mode single select. **Le type de la valeur passé comme input détermine le type rendu en output: si en première instance on passe null, deja-select retourne un objet générique.**  </td>
+    <td>Retourne ou définit le model sélectionné en mode single select. **Le type de la valeur passé comme input détermine le type rendu en output: si en première instance on passe null, deja-select retourne un objet générique.**  </td>
 </tr>
 <tr>
     <td>selectedModels</td>
     <td>any[]</td>
     <td></td>
-    <td>Retourne ou définit la liste des models selectionés en mode multiselect. **Le type de la valeur passé comme input détermine le type rendu en output: si en première instance on passe null, deja-select retourne un objet générique.**  </td>
+    <td>Retourne ou définit la liste des models sélectionnés en mode multiselect. **Le type de la valeur passé comme input détermine le type rendu en output: si en première instance on passe null, deja-select retourne un objet générique.**  </td>
 </tr>
 <tr>
     <td>formControlName</td>
@@ -285,12 +285,12 @@ Crée une liste déroulante.
 <tr>
     <td>selectingItem</td>
     <td>(item: IItemBase) => Promise<IItemBase> | Observable<IItemBase></td>
-    <td>Définit une promesse ou un observable appelé avant qu'un élément ne soit selectioné</td>
+    <td>Définit une promesse ou un observable appelé avant qu'un élément ne soit sélectionné</td>
 </tr>
 <tr>
     <td>unselectingItem</td>
     <td>(item: IItemBase) => Promise<IItemBase> | Observable<IItemBase></td>
-    <td>Définit une promesse ou un observable appelé avant qu'un élément ne soit déselectioné</td>
+    <td>Définit une promesse ou un observable appelé avant qu'un élément ne soit désélectionné</td>
 </tr>
 <tr>
     <td>expandingItem</td>

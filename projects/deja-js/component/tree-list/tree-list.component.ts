@@ -392,18 +392,18 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
         return this._depthMax;
     }
 
-    /** Définit une valeur indiquant si plusieurs lignes peuvent être sélectionées. */
+    /** Définit une valeur indiquant si plusieurs lignes peuvent être sélectionnées. */
     @Input()
     public set multiSelect(value: BooleanInput) {
         super.setMultiSelect(coerceBooleanProperty(value));
     }
 
-    /** Retourne une valeur indiquant si plusieurs lignes peuvent être sélectionées. */
+    /** Retourne une valeur indiquant si plusieurs lignes peuvent être sélectionnées. */
     public get multiSelect(): BooleanInput {
         return this._multiSelect;
     }
 
-    /** Définit la liste des éléments selectionés en mode multiselect */
+    /** Définit la liste des éléments sélectionnés en mode multiselect */
     @Input()
     public set selectedItems(value: IItemBase<unknown>[]) {
         if (value !== undefined) {
@@ -411,12 +411,12 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
         }
     }
 
-    /** Retourne la liste des éléments selectionés en mode multiselect */
+    /** Retourne la liste des éléments sélectionnés en mode multiselect */
     public get selectedItems(): IItemBase<unknown>[] {
         return super.getSelectedItems();
     }
 
-    /** Définit l'élément selectioné en mode single select */
+    /** Définit l'élément sélectionné en mode single select */
     @Input()
     public set selectedItem(value: unknown) {
         if (value !== undefined) {
@@ -424,13 +424,13 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
         }
     }
 
-    /** Retourne l'éléments selectioné en mode single select */
+    /** Retourne l'éléments sélectionné en mode single select */
     public get selectedItem(): unknown {
         const selectedItem = super.getSelectedItems();
         return selectedItem?.[0];
     }
 
-    /** Définit le model selectioné en mode single select */
+    /** Définit le model sélectionné en mode single select */
     @Input()
     public set selectedModel(value: unknown) {
         if (value !== undefined) {
@@ -438,13 +438,13 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
         }
     }
 
-    /** Retourne le model selectioné en mode single select */
+    /** Retourne le model sélectionné en mode single select */
     public get selectedModel(): unknown {
         const selectedModel = super.getSelectedModels();
         return selectedModel?.[0];
     }
 
-    /** Définit la liste des models selectionés en mode multiselect */
+    /** Définit la liste des models sélectionnés en mode multiselect */
     @Input()
     public set selectedModels(value: unknown[]) {
         if (value !== undefined) {
@@ -452,7 +452,7 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
         }
     }
 
-    /** Retourne la liste des models selectionés en mode multiselect */
+    /** Retourne la liste des models sélectionnés en mode multiselect */
     public get selectedModels(): unknown[] {
         return super.getSelectedModels();
     }

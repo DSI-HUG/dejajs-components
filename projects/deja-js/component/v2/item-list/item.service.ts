@@ -9,12 +9,9 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Injectable } from '@angular/core';
-import { IGroupInfo } from '@deja-js/component/core';
-import { GroupingService } from '@deja-js/component/core';
-import { ISortInfos } from '@deja-js/component/core';
-import { SortingService } from '@deja-js/component/core';
-import { BehaviorSubject, combineLatest, concat, from, iif, merge, Observable, of, ReplaySubject, Subscriber } from 'rxjs';
-import { debounceTime, filter, map, reduce, shareReplay, switchMap, tap } from 'rxjs/operators';
+import { GroupingService, IGroupInfo, ISortInfos, SortingService } from '@deja-js/component/core';
+import { BehaviorSubject, combineLatest, merge, Observable, of, ReplaySubject, Subscriber } from 'rxjs';
+import { debounceTime, map, shareReplay } from 'rxjs/operators';
 
 import { Item } from './item';
 import { ItemComponent } from './item.component';
@@ -37,6 +34,10 @@ export class ItemService<T> {
     public searchField$ = new BehaviorSubject<string>(null);
 
     public itemList$: Observable<Item<T>[]>;
+    public flatItemList$: Observable<Item<T>[]>;
+    public selectedItems$: Observable<Item<T>[]>;
+
+    private refreshSelection$ = new BehaviorSubject<RefreshSelectionParams<T>>({});
 
     // Cache for lists (flat lists only, not recursive)
     private _cache = {} as {
@@ -46,10 +47,6 @@ export class ItemService<T> {
         flatList?: Item<T>[];
         visibleList?: Item<T>[];
     };
-
-    // Selected items cache
-    private selectedList: Item<T>[];
-    private _hideSelected: boolean;
 
     // Cache for last query. Flat list will be regenerated only if the query change
     private _lastQuery: RegExp | string;
@@ -67,27 +64,14 @@ export class ItemService<T> {
     private _ddCurrentIndex: number;
     // private _ddChildCount: number;
 
-    // Cnacelable pre events
-    // private loadingItems$: (query: string | RegExp, selectedItems: Item<T>[]) => Observable<Item<T>[]>;
-    private selectingItem$: (item: Item<T>) => Promise<Item<T>> | Observable<Item<T>>;
-    private unselectingItem$: (item: Item<T>) => Promise<Item<T>> | Observable<Item<T>>;
-    private expandingItem$: (item: Item<T>) => Promise<Item<T>> | Observable<Item<T>>;
-    private collapsingItem$: (item: Item<T>) => Promise<Item<T>> | Observable<Item<T>>;
-
-    // champs à utiliser comme valeur de comparaison
-    private _valueField: string;
-
     public constructor() {
 
         const itemsFromOptions$ = this.options$.pipe(
             debounceTime(1),
             map(options => {
                 const items = options.map(option => {
-                    const item = {
-                        label: option.text,
-                        value: option.value,
-                        selected: option.selected
-                    } as Item<T>;
+                    const item = new Item<T>(option.value, option.text);
+                    item.selected = option.selected === true || option.selected === '';
                     return item;
                 });
                 if (items.length > 100) {
@@ -96,7 +80,8 @@ export class ItemService<T> {
                     console.error('Select options with more than 100 items can have performance options. Please bind directly the items in code behind with items or models input.');
                 }
                 return items;
-            })
+            }),
+            shareReplay({ bufferSize: 1, refCount: false })
         );
 
         const itemsFromModels$ = combineLatest([this.models$, this.valueField$, this.textField$, this.childrenField$]).pipe(
@@ -105,16 +90,80 @@ export class ItemService<T> {
             shareReplay({ bufferSize: 1, refCount: false })
         );
 
-        const treeItemList$ = merge(this.items$, itemsFromModels$, itemsFromOptions$);
+        this.itemList$ = merge(this.items$, itemsFromModels$, itemsFromOptions$).pipe(
+            shareReplay({ bufferSize: 1, refCount: false })
+        );
 
+        this.flatItemList$ = this.itemList$.pipe(
+            map(items => {
+                const list = new Array<Item<T>>();
+                const addItems = (itms: Item<T>[], depth: number) => {
+                    itms.forEach(item => {
+                        item.depth = depth;
+                        list.push(item);
+                        if (item.items) {
+                            addItems(item.items, depth + 1);
+                        }
+                    });
+                };
+                addItems(items, 0);
+                return list;
+            }),
+            shareReplay({ bufferSize: 1, refCount: false })
+        );
 
-        this.itemList$ = treeItemList$;
-    }
+        this.selectedItems$ = combineLatest([this.flatItemList$, this.valueField$, this.refreshSelection$]).pipe(
+            map(([items, valueField, refreshSelection]) => {
+                const select = refreshSelection.selectItems;
+                const unselect = refreshSelection.unselectItems;
+                const toggle = refreshSelection.toggle;
+                const checkSelectable = refreshSelection.checkSelectable;
+                const selectParents = refreshSelection.selectParents;
+                const selectModels = refreshSelection.selectModels;
+                const selectValues = refreshSelection.selectValues;
+                delete refreshSelection.selectItems;
+                delete refreshSelection.unselectItems;
+                delete refreshSelection.toggle;
+                delete refreshSelection.checkSelectable;
+                delete refreshSelection.selectParents;
+                delete refreshSelection.selectModels;
+                delete refreshSelection.selectValues;
 
-    public extractValueField(model: T, field: string): unknown {
-        const indexedModel = model as unknown as Record<string, unknown>;
-        const fields = field.split('.');
-        return fields.reduce((mdl, fld) => mdl[fld], indexedModel);
+                if (unselect) {
+                    if (unselect === 'all') {
+                        items.forEach(item => item.selected = false);
+                        if (!select && !selectModels && !selectValues) {
+                            return [];
+                        }
+                    } else {
+                        unselect.forEach(item => item.selected = false);
+                    }
+                }
+
+                if (select) {
+                    if (select === 'all') {
+                        return items.filter(item => item.selected = (selectParents || !item.items) && (!checkSelectable || item.selectable !== false));
+                    } else if (select?.length) {
+                        select.forEach(item => item.selected = !checkSelectable || item.selectable !== false);
+                    }
+                }
+
+                if (selectModels) {
+                    items.forEach(item => item.selected = (!checkSelectable || item.selectable !== false) && selectModels.some(model => this.compareModels(model, item.model, valueField)));
+                }
+
+                if (selectValues) {
+                    items.forEach(item => item.selected = (!checkSelectable || item.selectable !== false) && selectValues.some(value => value === item.id));
+                }
+
+                if (toggle) {
+                    toggle.forEach(item => item.selected = !item.selected);
+                }
+
+                return items.filter(item => item.selected);
+            }),
+            shareReplay({ bufferSize: 1, refCount: false })
+        );
     }
 
     /** Map une structure de modèles en items
@@ -126,7 +175,7 @@ export class ItemService<T> {
      */
     public mapToItem(mods: T[], valueField: string, textField: string, childrenField?: string): Item<T>[] {
         return mods.map(model => {
-            const item = {} as Item<T>;
+            const item = new Item<T>();
             item.model = model;
 
             if (typeof model === 'string') {
@@ -148,67 +197,90 @@ export class ItemService<T> {
         });
     }
 
+    /** Désélectionne tous les éléments sélectionnés */
+    public unselectAll(): void {
+        this.refreshSelection$.next({ unselectItems: 'all' });
+    }
+
+    /** Sélectionne tous les éléments */
+    public selectAll(checkSelectable?: boolean): void {
+        this.refreshSelection$.next({ selectItems: 'all', checkSelectable: checkSelectable !== false });
+    }
+
+    /** Déselectionne l'élément spécifié
+     * @param item Elément à déselectionner.
+     */
+    public unSelectItem(item: Item<T>): void {
+        this.refreshSelection$.next({ unselectItems: [item] });
+    }
+
+    /** Sélectionne l'élément spécifié
+     * @param item Elément à sélectionner.
+     */
+    public selectItem(item: Item<T>): void {
+        this.refreshSelection$.next({ selectItems: [item] });
+    }
+
+    /** Déselectionne les éléments spécifiés
+     * @param items Liste des éléments à désélectionner.
+     */
+    public unSelectItems(items: Item<T>[]): void {
+        this.refreshSelection$.next({ unselectItems: items });
+    }
+
+    /** Sélectionne les éléments spécifiés
+     * @param items Liste des éléments à sélectionner.
+     */
+    public selectItems(items: Item<T>[]): void {
+        this.refreshSelection$.next({ selectItems: items });
+    }
+
+    /** Set la selection sur les éléments spécifiés
+     * @param items Liste des éléments à sélectionner.
+     */
+    public setSelectedItems(items: Item<T>[]): void {
+        this.refreshSelection$.next({ unselectItems: 'all', selectItems: items });
+    }
+
+    /** Set la selection sur les éléments spécifiés
+     * @param items Liste des modèles des éléments à sélectionner.
+     */
+    public setSelectedModels(models: T[]): void {
+        this.refreshSelection$.next({ unselectItems: 'all', selectModels: models });
+    }
+
+    /** Set la selection sur les ids des éléments spécifiés
+     * @param values Liste des ids des éléments à sélectionner.
+     */
+    public setSelectedValues(values: string[]): void {
+        this.refreshSelection$.next({ unselectItems: 'all', selectValues: values });
+    }
+
+    /** Change l'état de sélection de l'élément spécifié.
+     * @param items Liste des éléments à modifier.
+     */
+    public toggleSelect$(items: Item<T>[]): void {
+        this.refreshSelection$.next({ toggle: items });
+    }
+
+    /** Renvoie l'index de l'élément sur la liste plate corespondant à l'élément HTML spécifié
+     * @return Index sur la liste plate corespondant à l'élément HTML
+     */
+    public getItemIndexFromHtmlElement(element: HTMLElement): number {
+        // eslint-disable-next-line no-loops/no-loops
+        while (element?.parentElement && element.hasAttribute && !element.hasAttribute('flat') && element.parentElement.tagName !== 'BODY') {
+            element = element.parentElement;
+        }
+
+        if (!element || !element.hasAttribute('flat')) {
+            return undefined;
+        }
+
+        return +element.getAttribute('flat');
+    }
+
     public get lastQuery(): RegExp | string {
         return this._lastQuery;
-    }
-
-    /**
-     * Set a observable called before the list will be displayed
-     */
-    // public setLoadingItems(fn: (query: string | RegExp, selectedItems: Item<T>[]) => Observable<Item<T>[]>): void {
-    //     this.loadingItems$ = fn;
-    // }
-
-    /**
-     * Set a promise or an observable called before an item selection
-     */
-    public setSelectingItem(fn: (item: Item<T>) => Promise<Item<T>> | Observable<Item<T>>): void {
-        this.selectingItem$ = fn;
-    }
-
-    /**
-     * Set a promise or an observable called before an item deselection
-     */
-    public setUnselectingItem(fn: (item: Item<T>) => Promise<Item<T>> | Observable<Item<T>>): void {
-        this.unselectingItem$ = fn;
-    }
-
-    /**
-     * Set a promise or an observable called before an item expand
-     */
-    public setExpandingItem(fn: (item: Item<T>) => Promise<Item<T>> | Observable<Item<T>>): void {
-        this.expandingItem$ = fn;
-    }
-
-    /**
-     * Set a promise or an observable called before an item collapse
-     */
-    public setCollapsingItem(fn: (item: Item<T>) => Promise<Item<T>> | Observable<Item<T>>): void {
-        this.collapsingItem$ = fn;
-    }
-
-    /** Définit une valeur indiquant si les éléments selectionés doivent être masqué. Ce flag est principalement utilisé dans le cas d'un multi-select
-     * @param value True si les éléments selectionés doivent être masqués
-     */
-    public set hideSelected(value: boolean) {
-        this._hideSelected = value;
-    }
-
-    /** Renvoie une valeur indiquant si les éléments selectionés doivent être masqué.
-     * @return value True si les éléments selectionés sont masqués
-     */
-    public get hideSelected(): boolean {
-        return this._hideSelected;
-    }
-
-    /** Définit le champs à utiliser comme valeur de comparaison */
-    public set valueField(valueField: string) {
-        this._valueField = valueField;
-    }
-
-    /** Renvoie le champs à utiliser comme valeur de comparaison */
-    public get valueField(): string {
-        return this._valueField;
     }
 
     public get hasCache(): boolean {
@@ -435,230 +507,87 @@ export class ItemService<T> {
         });
     }
 
-    /** Change l'état d'expansion de tous les éléments.
-     * @param collapsed True si les éléments doivent être réduits.
-     * @return Observable résolu par la fonction.
-     */
-    public toggleAll$(collapsed: boolean): Observable<Item<T>[]> {
-        return of(this._cache.flatList).pipe(
-            map((items: Item<T>[]) => items.filter(item => item.items && item.collapsible !== false)),
-            tap(() => delete this._cache.visibleList), // Invalidate view cache
-            switchMap(items => collapsed ? this.collapseItems$(items) : this.expandItems$(items)));
-    }
+    // /** Change l'état d'expansion de tous les éléments.
+    //  * @param collapsed True si les éléments doivent être réduits.
+    //  * @return Observable résolu par la fonction.
+    //  */
+    // public toggleAll$(collapsed: boolean): Observable<Item<T>[]> {
+    //     return of(this._cache.flatList).pipe(
+    //         map((items: Item<T>[]) => items.filter(item => item.items && item.collapsible !== false)),
+    //         tap(() => delete this._cache.visibleList), // Invalidate view cache
+    //         switchMap(items => collapsed ? this.collapseItems$(items) : this.expandItems$(items)));
+    // }
 
-    /** Change l'état d'expansion de l'élément spécifié par son index sur la liste des éléments visibles.
-     * @param index Index sur la liste des éléments visibles de l'élément à changer.
-     * @param collapse Etat de l'élément. True pour réduire l'élément.
-     * @return Observable résolu par la fonction.
-     */
-    public toggleCollapse$(index: number, collapse?: boolean): Observable<Item<T>> {
-        const visibleList = this._cache.visibleList;
-        if (!visibleList || !visibleList.length) {
-            throw new Error('Empty cache on toggleCollapse');
-        }
+    // /** Change l'état d'expansion de l'élément spécifié par son index sur la liste des éléments visibles.
+    //  * @param index Index sur la liste des éléments visibles de l'élément à changer.
+    //  * @param collapse Etat de l'élément. True pour réduire l'élément.
+    //  * @return Observable résolu par la fonction.
+    //  */
+    // public toggleCollapse$(index: number, collapse?: boolean): Observable<Item<T>> {
+    //     const visibleList = this._cache.visibleList;
+    //     if (!visibleList || !visibleList.length) {
+    //         throw new Error('Empty cache on toggleCollapse');
+    //     }
 
-        const item = visibleList[index];
-        if (!item || item.collapsible === false) {
-            return of([] as Item<T>);
-        }
+    //     const item = visibleList[index];
+    //     if (!item || item.collapsible === false) {
+    //         return of([] as Item<T>);
+    //     }
 
-        const collapsed = collapse !== undefined ? collapse : !item.collapsed;
-        return collapsed ? this.collapseItem$(item) : this.expandItem$(item);
-    }
+    //     const collapsed = collapse !== undefined ? collapse : !item.collapsed;
+    //     return collapsed ? this.collapseItem$(item) : this.expandItem$(item);
+    // }
 
-    /** Etends les éléments spécifiés.
-     * @param items Liste des éléments à étendre.
-     * @return Observable résolu par la fonction.
-     */
-    public expandItems$(items: Item<T>[]): Observable<Item<T>[]> {
-        return from(items || []).pipe(
-            switchMap(item => this.expandItem$(item)),
-            reduce((acc, cur) => [...acc, cur], []));
-    }
+    // /** Etends les éléments spécifiés.
+    //  * @param items Liste des éléments à étendre.
+    //  * @return Observable résolu par la fonction.
+    //  */
+    // public expandItems$(items: Item<T>[]): Observable<Item<T>[]> {
+    //     return from(items || []).pipe(
+    //         switchMap(item => this.expandItem$(item)),
+    //         reduce((acc, cur) => [...acc, cur], []));
+    // }
 
-    /** Reduits les éléments spécifiés.
-     * @param items Liste des éléments à réduire.
-     * @return Observable résolu par la fonction.
-     */
-    public collapseItems$(items: Item<T>[]): Observable<Item<T>[]> {
-        return from(items || []).pipe(
-            switchMap(item => this.collapseItem$(item)),
-            reduce((acc, cur) => [...acc, cur], []));
-    }
+    // /** Reduits les éléments spécifiés.
+    //  * @param items Liste des éléments à réduire.
+    //  * @return Observable résolu par la fonction.
+    //  */
+    // public collapseItems(items: Item<T>[]): Item<T>[] {
+    //     return from(items || []).pipe(
+    //         reduce((acc, cur) => [...acc, cur], []));
+    // }
 
-    /** Etends l'élément spécifié.
-     * @param items Eléments à étendre.
-     * @return Observable résolu par la fonction.
-     */
-    public expandItem$(item: Item<T>): Observable<Item<T>> {
-        return of(item).pipe(
-            filter(itm => !!itm),
-            switchMap(itm => this.expandingItem$ ? this.expandingItem$(itm) : of(itm)),
-            filter(itm => !!itm),
-            tap(itm => {
-                itm.collapsed = false;
-                // Invalidate view cache
-                delete this._cache.visibleList;
-            }));
-    }
+    // /** Etends l'élément spécifié.
+    //  * @param items Eléments à étendre.
+    //  * @return Observable résolu par la fonction.
+    //  */
+    // public expandItem(item: Item<T>): Observable<Item<T>> {
+    //     return of(item).pipe(
+    //         filter(itm => !!itm),
+    //         switchMap(itm => this.expandingItem$ ? this.expandingItem$(itm) : of(itm)),
+    //         filter(itm => !!itm),
+    //         tap(itm => {
+    //             itm.collapsed = false;
+    //             // Invalidate view cache
+    //             delete this._cache.visibleList;
+    //         }));
+    // }
 
-    /** Réduit l'élément spécifié.
-     * @param items Eléments à réduire.
-     * @return Observable résolu par la fonction.
-     */
-    public collapseItem$(item: Item<T>): Observable<Item<T>> {
-        return of(item).pipe(
-            filter(itm => !!itm),
-            switchMap(itm => this.collapsingItem$ ? this.collapsingItem$(itm) : of(itm)),
-            filter(itm => !!itm),
-            tap(itm => {
-                itm.collapsed = true;
-                // Invalidate view cache
-                delete this._cache.visibleList;
-            }));
-    }
-
-    /** Retourne la liste des éléments sélectionés.
-     * @return Liste des éléments selectionés.
-     */
-    public getSelectedItems(): Item<T>[] {
-        return this.selectedList || [];
-    }
-
-    /** Définit la liste des éléments sélectionés.
-     * @param items Liste des éléments a selectioner.
-     */
-    public setSelectedItems(_items: Item<T>[]): void {
-        // TODO
-        // if (this.selectedList) {
-        //     this.selectedList.forEach(item => {
-        //         item.selected = false;
-        //     });
-        // }
-        // this.selectedList = items;
-        // if (this.hideSelected) {
-        //     delete this._cache.visibleList;
-        // }
-
-        // this.ensureSelectedItems(this.items);
-    }
-
-    /** Déselectionne tous les éléments sélectionés.
-     * @return Observable résolu par la fonction.
-     */
-    public unselectAll$(): Observable<Item<T>[]> {
-        if (this.hideSelected) {
-            delete this._cache.visibleList;
-        }
-
-        const selectedList = this.selectedList;
-        this.selectedList = [];
-
-        return this.unSelectItems$(selectedList);
-    }
-
-    /** Sélectionne une plage d'éléments en fonction de l'index de début et l'index de fin sur la liste des éléments visibles.
-     * @param indexFrom index sur la liste des éléments visibles du premier élément à sélectioner.
-     * @param indexTo index sur la liste des éléments visibles du dernier élément à sélectioner.
-     * @return Observable résolu par la fonction.
-     */
-    public selectRange$(indexFrom: number, indexTo?: number): Observable<number> {
-        if (indexTo === undefined) {
-            indexTo = indexFrom;
-        }
-
-        // Backup current visible list in case of unselectAll clear the cache
-        const visibleList = this._cache.visibleList;
-        if (!visibleList || !visibleList.length) {
-            throw new Error('Empty cache on selection');
-        }
-
-        return this.unselectAll$().pipe(
-            map(() => visibleList.slice(Math.min(indexFrom, indexTo), 1 + Math.max(indexFrom, indexTo))),
-            map(items => items.filter(itm => itm.selectable !== false)),
-            tap(() => {
-                if (this.hideSelected) {
-                    delete this._cache.visibleList;
-                }
-            }),
-            switchMap(items => this.selectItems$(items).pipe(map(selected => selected.length))));
-    }
-
-    /** Change l'état de selection de l'élément spécifié.
-     * @param items Liste des éléments à modifier.
-     * @param selected True si les éléments divent être sélectionés, False si ils doivent être déselectionés.
-     * @return Observable résolu par la fonction.
-     */
-    public toggleSelect$(items: Item<T>[], selected: boolean): Observable<Item<T>[]> {
-        items = items || [];
-        return iif(() => selected, this.selectItems$(items), this.unSelectItems$(items)).pipe(
-            map(() => {
-                if (this.hideSelected) {
-                    delete this._cache.visibleList;
-                }
-                return this.selectedList;
-            }));
-    }
-
-    /** Sélectionne les éléments spécifiés
-     * @param items Liste des éléments à sélectioner.
-     * @return Observable résolu par la fonction.
-     */
-    public selectItems$(items: Item<T>[]): Observable<Item<T>[]> {
-        return from(items || []).pipe(
-            switchMap(item => this.selectItem$(item)),
-            reduce((acc: Item<T>[], cur: Item<T>) => [...acc, cur], []));
-    }
-
-    /** Déselectionne les éléments spécifiés
-     * @param items Liste des éléments à déselectioner.
-     * @return Observable résolu par la fonction.
-     */
-    public unSelectItems$(items: Item<T>[]): Observable<Item<T>[]> {
-        return from(items || []).pipe(
-            filter(item => item.selected),
-            switchMap(item => this.unSelectItem$(item)),
-            reduce((acc: Item<T>[], cur: Item<T>) => [...acc, cur], []));
-    }
-
-    /** Sélectionne l'élément spécifié
-     * @param item Elément à sélectioner.
-     * @return Observable résolu par la fonction.
-     */
-    public selectItem$(item: Item<T>): Observable<Item<T>> {
-        return of(item).pipe(
-            filter(itm => !!itm),
-            switchMap(itm => this.selectingItem$ ? this.selectingItem$(itm) : of(itm)),
-            filter(itm => !!itm),
-            tap(itm => {
-                if (!this.selectedList) {
-                    this.selectedList = [];
-                }
-
-                itm.selected = true;
-                this.selectedList.push(itm);
-            }));
-    }
-
-    /** Déselectionne l'élément spécifié
-     * @param item Elément à déselectioner.
-     * @return Observable résolu par la fonction.
-     */
-    public unSelectItem$(item: Item<T>): Observable<Item<T>> {
-        return of(item).pipe(
-            filter(itm => !!itm),
-            switchMap(itm => this.unselectingItem$ ? this.unselectingItem$(itm) : of(itm)),
-            filter(itm => !!itm),
-            tap(itm => {
-                itm.selected = false;
-                if (this.selectedList?.length) {
-                    // const index = this.selectedList.findIndex(i => this.compareItems(i, itm));
-                    // if (index >= 0) {
-                    //     this.selectedList.splice(index, 1);
-                    // }
-                }
-            }));
-    }
+    // /** Réduit l'élément spécifié.
+    //  * @param items Eléments à réduire.
+    //  * @return Observable résolu par la fonction.
+    //  */
+    // public collapseItem(item: Item<T>): Observable<Item<T>> {
+    //     return of(item).pipe(
+    //         filter(itm => !!itm),
+    //         switchMap(itm => this.collapsingItem$ ? this.collapsingItem$(itm) : of(itm)),
+    //         filter(itm => !!itm),
+    //         tap(itm => {
+    //             itm.collapsed = true;
+    //             // Invalidate view cache
+    //             delete this._cache.visibleList;
+    //         }));
+    // }
 
     /** Trouve l'élément suivant répondant à la fonction de comparaison spécifiée.
      * @param compare Function de comparaison pour la recherche de l'élément.
@@ -915,14 +844,10 @@ export class ItemService<T> {
     //     }
     // }
 
-    public ensureSelection(): void {
-        // return this.ensureSelectedItems(this.items);
-    }
-
     /** Retourne la liste à utilise pour la création des caches. Surcharger cetee méthode pour fournir une liste de façon lazy.
      * En cas de surcharge, retourner une nouvelle instance de la liste originale pour que le service regénère ses caches.
      * @param query Texte ou regular expression par laquelle la liste doit être filtrée.
-     * @param selectedItems Liste des éléments selectionés.
+     * @param selectedItems Liste des éléments sélectionnés.
      * @return Observable résolu par la fonction, qui retourne la liste à utiliser.
      */
     // protected getItemList$(query?: RegExp | string, selectedItems?: Item<T>[]): Observable<Item<T>[]> {
@@ -1064,157 +989,63 @@ export class ItemService<T> {
      * @param items Liste des éléments hierarchique.
      * @return Observable résolu par la fonction, qui retourne la liste hierarchique mise à plat.
      */
-    protected getFlatList$(items: Item<T>[], isFiltered: boolean, multiSelect: boolean): Observable<Item<T>[]> {
-        if (!items) {
-            return of([]);
-        }
-
-        const visibleList = [] as Item<T>[];
-        const selectedList = [] as Item<T>[];
-        let depthMax = 0;
-        let isTree = false;
-        let odd = false;
-
-        const flatList$: any = (itms: Item<T>[], depth: number, hidden: boolean) => from(itms || []).pipe(
-            tap(item => {
-                if (depth > depthMax) {
-                    depthMax = depth;
-                }
-
-                // Fill system properties
-                item.depth = depth;
-
-                if (!hidden && this.isVisible(item) && !(item.selected && this.hideSelected)) {
-                    // For style
-                    item.odd = odd;
-                    odd = !odd;
-
-                    // Add to visible list only the visible items (uncollapsed)
-                    visibleList.push(item);
-                }
-
-                // Add to selected list only the visible items (uncollapsed) and selected
-                if (item.selected) {
-                    selectedList.push(item);
-                }
-            }),
-            switchMap(item => {
-                if (item.items) {
-                    isTree = true;
-                    odd = false;
-                    return concat(of(item), flatList$(item.items, depth + 1, hidden || item.collapsed));
-                } else {
-                    return of(item);
-                }
-            }));
-
-        return flatList$(items, 0, false).pipe(
-            tap(() => {
-                if (!multiSelect) {
-                    this.selectedList = selectedList;
-                }
-
-                if (!isFiltered) {
-                    this._cache.visibleList = visibleList;
-                }
-                this._cache.depthMax = isTree ? depthMax : 0;
-            }),
-            reduce((acc: any[], cur: Item<T>) => {
-                acc.push(cur);
-                return acc;
-            }, []));
-    }
-
-    /** Efface une partie des caches  */
-    protected invalidateViewCache(): void {
-        delete this._cache.flatList;
-        delete this._cache.visibleList;
-        delete this._cache.depthMax;
-        this._cache.rowsCount = 0;
-    }
-
-    // private ensureSelectedItems(items: Item<T>[]) {
-    //     if (this.selectedList && this.selectedList.length > 0) {
-    //         // Ensure selected flag
-    //         this.selectedList.forEach(item => item.selected = true);
-
-    //         if (!items) {
-    //             return this.selectedList;
-    //         }
-
-    //         const newSelectedList = [] as Item<T>[];
-    //         const ensureSelectedChildren = (children: Item<T>[]) => {
-    //             children.forEach(item => {
-    //                 const selectedItem = this.selectedList.find(selected => this.compareItems(selected, item));
-    //                 if (selectedItem) {
-    //                     selectedItem.selected = false;
-    //                     newSelectedList.push(item);
-    //                 }
-    //                 if (item.items) {
-    //                     ensureSelectedChildren(item.items);
-    //                 }
-    //             });
-    //         };
-
-    //         ensureSelectedChildren(items);
-
-    //         // Add not found selected items
-    //         this.selectedList.filter(item => item.selected).forEach(item => newSelectedList.push(item));
-
-    //         this.selectedList = newSelectedList;
-
-    //         // Ensure selected flag for the new items
-    //         this.selectedList.forEach(item => item.selected = true);
-
-    //     } else {
-    //         this.selectedList = [];
-
-    //         if (!items) {
-    //             return this.selectedList;
-    //         }
-
-    //         const ensureSelectedChildren = (children: Item<T>[]) => {
-    //             children.forEach(item => {
-    //                 if (item.selected) {
-    //                     this.selectedList.push(item);
-    //                 }
-    //                 if (item.items) {
-    //                     ensureSelectedChildren(item.items);
-    //                 }
-    //             });
-    //         };
-
-    //         ensureSelectedChildren(items);
+    // protected getFlatList$(items: Item<T>[], isFiltered: boolean, multiSelect: boolean): Observable<Item<T>[]> {
+    //     if (!items) {
+    //         return of([]);
     //     }
 
-    //     return this.selectedList;
+    //     const visibleList = [] as Item<T>[];
+    //     const selectedList = [] as Item<T>[];
+    //     let depthMax = 0;
+    //     let isTree = false;
+    //     let odd = false;
+
+    //     const flatList$: any = (itms: Item<T>[], depth: number, hidden: boolean) => from(itms || []).pipe(
+    //         tap(item => {
+    //             if (depth > depthMax) {
+    //                 depthMax = depth;
+    //             }
+
+    //             // Fill system properties
+    //             item.depth = depth;
+
+    //             if (!hidden && this.isVisible(item) && !(item.selected && this.hideSelected)) {
+    //                 // For style
+    //                 item.odd = odd;
+    //                 odd = !odd;
+
+    //                 // Add to visible list only the visible items (uncollapsed)
+    //                 visibleList.push(item);
+    //             }
+
+    //             // Add to selected list only the visible items (uncollapsed) and selected
+    //             if (item.selected) {
+    //                 selectedList.push(item);
+    //             }
+    //         }),
+    //         switchMap(item => {
+    //             if (item.items) {
+    //                 isTree = true;
+    //                 odd = false;
+    //                 return concat(of(item), flatList$(item.items, depth + 1, hidden || item.collapsed));
+    //             } else {
+    //                 return of(item);
+    //             }
+    //         }));
+
+    //     return flatList$(items, 0, false).pipe(
+    //         tap(() => {
+
+    //             if (!isFiltered) {
+    //                 this._cache.visibleList = visibleList;
+    //             }
+    //             this._cache.depthMax = isTree ? depthMax : 0;
+    //         }),
+    //         reduce((acc: any[], cur: Item<T>) => {
+    //             acc.push(cur);
+    //             return acc;
+    //         }, []));
     // }
-
-    // private compareItems = (item1: Item<T>, item2: Item<T>) => {
-    //     const isDefined = (value: any) => value !== undefined && value !== null;
-
-    //     const item1Comp = item1 as Comparable<T>;
-    //     const item2Comp = item2 as Comparable<T>;
-
-    //     // TODO
-    //     if (!isDefined(item1) || !isDefined(item2)) {
-    //         return false;
-    //     } else if (item1Comp.equals) {
-    //         return item1Comp.equals(item2);
-    //     } else if (item2Comp.equals) {
-    //         return item2Comp.equals(item1);
-    //     } else {
-    //         const model1 = item1.model as unknown as Comparable<T>;
-    //         const model2 = item1.model as unknown as Comparable<T>;
-    //         if (model1?.equals) {
-    //             return model1.equals(item2.model);
-    //         } else if (model2?.equals) {
-    //             return model2.equals(item1.model);
-    //         } else {
-    //             return this.getValue(item1, this._valueField) === this.getValue(item2, this._valueField);
-    //         }
-    //     }
-    // };
 
     // private ensureVisibleListCache$(_searchField: string, _regExp: RegExp, _expandTree: boolean, _multiSelect: boolean) {
     // if (this._cache.visibleList?.length) {
@@ -1295,7 +1126,55 @@ export class ItemService<T> {
     //     });
     // }
 
-    private isVisible(item: Item<T>) {
+    protected compareItems = (item1: Item<T>, item2: Item<T>): boolean => {
+        const isDefined = (value: any) => value !== undefined && value !== null;
+
+        if (!isDefined(item1) || !isDefined(item2)) {
+            return false;
+        } else {
+            const model1 = item1.model as unknown as Comparable<T>;
+            const model2 = item1.model as unknown as Comparable<T>;
+            if (model1?.equals) {
+                return model1.equals(item2.model);
+            } else if (model2?.equals) {
+                return model2.equals(item1.model);
+            } else if (item1.id && item2.id) {
+                return item1.id === item2.id;
+            } else {
+                return item1.model === item2.model;
+            }
+        }
+    };
+
+    protected compareModels = (model1: T, model2: T, valueField: string): boolean => {
+        const isDefined = (value: any) => value !== undefined && value !== null;
+
+        if (!isDefined(model1) || !isDefined(model2)) {
+            return false;
+        } else if (model1 === model2) {
+            return true;
+        } else {
+            const cmp1 = model1 as unknown as Comparable<T>;
+            const cmp2 = model2 as unknown as Comparable<T>;
+            if (cmp1?.equals) {
+                return cmp1.equals(model2);
+            } else if (cmp2?.equals) {
+                return cmp2.equals(model1);
+            } else if (valueField) {
+                return this.extractValueField(model1, valueField) === this.extractValueField(model2, valueField);
+            } else {
+                return false;
+            }
+        }
+    };
+
+    protected extractValueField(model: T, field: string): unknown {
+        const indexedModel = model as unknown as Record<string, unknown>;
+        const fields = field.split('.');
+        return fields.reduce((mdl, fld) => mdl[fld], indexedModel);
+    }
+
+    protected isVisible(item: Item<T>): boolean {
         return item.visible !== false;
     }
 }
@@ -1327,9 +1206,19 @@ export interface ParentListInfoResult<T> {
 //     index: number;
 // }
 
-// interface Comparable<T> {
-//     equals(itm: Item<T>): boolean;
-// }
+interface Comparable<T> {
+    equals(model: T): boolean;
+}
+
+interface RefreshSelectionParams<T> {
+    toggle?: Item<T>[];
+    selectItems?: Item<T>[] | 'all';
+    checkSelectable?: boolean;
+    selectParents?: boolean;
+    unselectItems?: Item<T>[] | 'all';
+    selectModels?: T[];
+    selectValues?: string[];
+}
 
 export interface IndexedItem<T> extends Item<T>, Record<string, unknown> {
 }

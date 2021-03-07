@@ -9,7 +9,7 @@
 import { coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, Component, ContentChild, ElementRef, HostBinding, Input, QueryList, TemplateRef, ViewChild, ViewChildren } from '@angular/core';
 import { Destroy } from '@deja-js/component/core';
-import { from, fromEvent, interval, merge, Observable, Subject, timer } from 'rxjs';
+import { BehaviorSubject, combineLatest, from, fromEvent, interval, merge, Observable, Subject, timer } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, map, mergeMap, switchMap, takeUntil, tap, withLatestFrom } from 'rxjs/operators';
 
 import { ViewPort, ViewPortDirection, ViewPortItem, ViewPortMode, ViewPortService } from './viewport.service';
@@ -40,6 +40,7 @@ export class ViewPortComponent<T> extends Destroy {
     public viewPort$: Observable<ViewPort<T>>;
 
     private _buttonsStep: NumberInput;
+    private reloadViewPort$ = new BehaviorSubject<void>(null);
 
     @Input()
     public set buttonsStep(value: NumberInput) {
@@ -129,7 +130,9 @@ export class ViewPortComponent<T> extends Destroy {
     ) {
         super();
 
-        this.viewPort$ = viewPortService.viewPort$;
+        this.viewPort$ = combineLatest([viewPortService.viewPort$, this.reloadViewPort$]).pipe(
+            map(([viewPort]) => viewPort)
+        );
 
         viewPortService.element$.pipe(
             distinctUntilChanged(),
@@ -233,6 +236,11 @@ export class ViewPortComponent<T> extends Destroy {
         this.viewPortService.refresh(clearMeasuredSize);
     }
 
+    /** Rebind le viewport */
+    public reloadViewPort(): void {
+        this.reloadViewPort$.next();
+    }
+
     /** Efface le viewport */
     public clearViewPort(): void {
         this.viewPortService.clear();
@@ -257,5 +265,16 @@ export class ViewPortComponent<T> extends Destroy {
         } else {
             return (item.size && item.size > 40) ? item.size : defaultItemSize;
         }
+    }
+
+    public getItemClassName(item: ViewPortItem<T>): string {
+        const classes = ['listitem'];
+        if (item.class instanceof Function) {
+            const className = item.class();
+            if (className) {
+                classes.push(className);
+            }
+        }
+        return classes.join(' ');
     }
 }

@@ -51,7 +51,7 @@ export class TreeListDemoComponent extends Destroy {
     @ViewChild('news') private newsList: TreeListComponent<News>;
     // @ViewChild('onexpand') private onExpandList: TreeListComponent<unknown>;
 
-    public fruct = 'apricots';
+    public fruct = 'Apricots';
     public fructs = [] as string[];
     public fructItems = [] as Item<unknown>[];
     public fructItemsWithPreSelection = [] as Item<unknown>[];
@@ -120,7 +120,7 @@ export class TreeListDemoComponent extends Destroy {
         // eslint-disable-next-line no-loops/no-loops
         for (let i = 0; i < 50; i++) {
             const rand = Math.floor(Math.random() * (70 - 33 + 1)) + 33; // random de 33 à 70
-            this.loremList[i] = {} as Item<unknown>;
+            this.loremList[i] = new Item<unknown>();
             this.loremList[i].size = rand;
             this.loremList[i].label = `${i} - Une ligne de test avec une taille de : ${rand}`;
         }
@@ -171,16 +171,13 @@ export class TreeListDemoComponent extends Destroy {
 
         this.fruits$ = of(this.fructs);
 
-        this.fructItems = this.fructs.map(fruct => ({
-            label: fruct,
-            value: fruct.toLowerCase()
-        } as Item<unknown>));
+        this.fructItems = this.fructs.map(fruct => new Item<unknown>(fruct.toLowerCase(), fruct));
 
-        this.fructItemsWithPreSelection = this.fructs.map((fruct, index) => ({
-            label: fruct,
-            value: fruct.toLowerCase(),
-            selected: index === 1
-        } as Item<unknown>));
+        this.fructItemsWithPreSelection = this.fructs.map((fruct, index) => {
+            const item = new Item<unknown>(fruct.toLowerCase(), fruct);
+            item.selected = index === 1;
+            return item;
+        });
 
         this.countries$.pipe(
             tap(value => this.countriesForMultiselect = value),
@@ -232,7 +229,7 @@ export class TreeListDemoComponent extends Destroy {
                     } as ICountryGroup);
                 }
 
-                countryMap[groupName].push({ model: country });
+                countryMap[groupName].push(new Item(undefined, undefined, country));
             });
 
             this.groupedCountries = result;

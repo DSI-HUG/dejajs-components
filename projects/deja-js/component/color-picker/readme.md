@@ -1,5 +1,5 @@
 # Color Selector
-Composant de selection d'une couleur sous forme d'un bouton.  
+Composant de sélection d'une couleur sous forme d'un bouton.  
 
 ### Utilisation 
 > Ne pas oublier d'importer le module `DejaColorPickerModule` dans les `imports` de votre module concerné !
@@ -11,7 +11,7 @@ Composant de selection d'une couleur sous forme d'un bouton.
 ```
 
 #### Note
- - Le composant implémente `ngModel` sur la couleur selectionée. Utiliser ngModelChange pour être notifiés lorsuqe la couleur selectionée à changer.
+ - Le composant implémente `ngModel` sur la couleur sélectionnée. Utiliser ngModelChange pour être notifiés lorsuqe la couleur sélectionnée à changer.
 
 ### Propriétés
 
@@ -41,7 +41,7 @@ Composant de selection d'une couleur sous forme d'un bouton.
     <td>colors</td>
     <td>MaterialColor[]</td>
     <td>null</td>
-    <td>Retourne ou définit les couleurs selectionables affichées.</td>
+    <td>Retourne ou définit les couleurs sélectionnables affichées.</td>
 </tr>
 <tr>
     <td>positions</td>

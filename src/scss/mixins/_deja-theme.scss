@@ -23,7 +23,9 @@
 @import '../../component/splitter/splitter-theme';
 @import '../../component/tooltip/tooltip-theme';
 @import '../../component/tree-list/tree-list-theme';
+@import '../../component/v2/tree-list/tree-list-theme';
 @import '../../component/viewport/viewport-theme';
+@import '../../component/v2/viewport/viewport-theme';
 @import '../../component/numeric-stepper/numeric-stepper-theme';
 @import './menu-theme';
 @import './popup';
@@ -53,6 +55,8 @@
     @include splitter-theme($custom-theme);
     @include tooltip-theme($custom-theme);
     @include tree-list-theme($custom-theme);
+    @include tree-list-2-theme($custom-theme);
     @include viewport-theme($custom-theme);
+    @include viewport-2-theme($custom-theme);
     @include deja-popup();
 }

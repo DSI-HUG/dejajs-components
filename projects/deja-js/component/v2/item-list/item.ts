@@ -8,26 +8,38 @@
 
 import { ViewPortItem } from '@deja-js/component/v2/viewport';
 
-export interface Item<T> extends ViewPortItem<T> {
-    id?: string;
-    label?: string;
-    selectable?: boolean;
-    selected?: boolean;
-    dragged?: boolean;
-    searchText?: string;
-    visible?: boolean;
-    odd?: boolean;
-    className?: string;
+export class Item<T> implements ViewPortItem<T> {
+    public size?: number;
+    public model?: T;
+    public id?: string;
+    public label?: string;
+    public selectable?: boolean;
+    public selected?: boolean;
+    public dragged?: boolean;
+    public searchText?: string;
+    public visible?: boolean;
+    public odd?: boolean;
+    public className?: string;
     /** Indique si l'élément peut être réduit. */
-    collapsible?: boolean;
+    public collapsible?: boolean;
     /** Indique si l'élément est réduit. */
-    collapsed?: boolean;
+    public collapsed?: boolean;
     /** Usage interne. */
-    expanding?: boolean;
+    public expanding?: boolean;
     /** Usage interne. */
-    collapsing?: boolean;
+    public collapsing?: boolean;
     /** Retourne la profondeur de l'élément dans la hierarchie. */
-    depth?: number;
+    public depth?: number;
     /** Enfants */
-    items?: Item<T>[];
+    public items?: Item<T>[];
+
+    public constructor(id?: string, label?: string, model?: T) {
+        this.model = model;
+        this.id = id;
+        this.label = label;
+    }
+
+    public class(): string {
+        return this.selected ? 'selected' : '';
+    }
 }

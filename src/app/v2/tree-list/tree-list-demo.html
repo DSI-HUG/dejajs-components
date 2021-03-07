@@ -30,7 +30,7 @@
             <div>Just passing an array of objects</div>
             <div class="flexLayout">
                 <span class="flex45p flexLayout flexColumn">
-                    <tree-list [(ngModel)]="country" textField="naqme" valueField="code" [models]="countries$ | async"></tree-list>
+                    <tree-list [(ngModel)]="country" modelType="model" textField="naqme" valueField="code" [models]="countries$ | async"></tree-list>
                 </span>
                 <span class="flex45p flexOffset5p">
                     <h4>Selected country model :</h4>
@@ -103,18 +103,18 @@
                     <item value="Watermelon" text="My preferred fruct is Watermelon"></item>
                 </tree-list>
                 <tree-list class="flex45p flexOffset5p demo-half-width optionstl" multiSelect="true" [selectedModels]="['Mango', 'Apricots', 'Coconut']">
-                    <item value="apricots" text="Apricots"></item>
-                    <item value="banana" text="Banana"></item>
-                    <item value="cantaloupe" text="Cantaloupe"></item>
-                    <item value="cherries" text="Cherries"></item>
-                    <item value="coconut" text="Coconut"></item>
-                    <item value="cranberries" text="Cranberries"></item>
-                    <item value="durian" text="Durian"></item>
-                    <item value="grapes" text="Grapes"></item>
-                    <item value="lemon" text="Lemon"></item>
-                    <item value="mango" text="Mango"></item>
-                    <item value="pineapple" text="Pineapple"></item>
-                    <item value="watermelon" text="Watermelon"></item>
+                    <item value="Apricots" text="Apricots"></item>
+                    <item value="Banana" text="Banana"></item>
+                    <item value="Cantaloupe" text="Cantaloupe"></item>
+                    <item value="Cherries" text="Cherries"></item>
+                    <item value="Coconut" text="Coconut"></item>
+                    <item value="Cranberries" text="Cranberries"></item>
+                    <item value="Durian" text="Durian"></item>
+                    <item value="Grapes" text="Grapes"></item>
+                    <item value="Lemon" text="Lemon"></item>
+                    <item value="Mango" text="Mango"></item>
+                    <item value="Pineapple" text="Pineapple"></item>
+                    <item value="Watermelon" text="Watermelon"></item>
                 </tree-list>
             </span>
         </mat-card-content>

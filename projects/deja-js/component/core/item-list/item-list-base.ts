@@ -168,8 +168,8 @@ export abstract class ItemListBase<T> extends Destroy {
         return this._itemListService.groupInfos;
     }
 
-    /** Définit une valeur indiquant si les éléments selectionés doivent être masqué. Ce flag est principalement utilisé dans le cas d'un multi-select
-     * @param value True si les éléments selectionés doivent être masqués
+    /** Définit une valeur indiquant si les éléments sélectionnés doivent être masqué. Ce flag est principalement utilisé dans le cas d'un multi-select
+     * @param value True si les éléments sélectionnés doivent être masqués
      */
     public setHideSelected(value: boolean): void {
         this._hideSelected = value;
@@ -225,15 +225,15 @@ export abstract class ItemListBase<T> extends Destroy {
         return this._itemListService;
     }
 
-    /** Retourne la liste des éléments sélectionés.
-     * @return Liste des éléments selectionés.
+    /** Retourne la liste des éléments sélectionnés.
+     * @return Liste des éléments sélectionnés.
      */
     public getSelectedItems(): IItemBase<T>[] {
         return this.getItemListService().getSelectedItems();
     }
 
-    /** Définit la liste des éléments sélectionés.
-     * @param items Liste des éléments a selectioner.
+    /** Définit la liste des éléments sélectionnés.
+     * @param items Liste des éléments a sélectionner.
      */
     public setSelectedItems(value: IItemBase<T>[]): void {
         this.getItemListService().setSelectedItems(value);
@@ -376,7 +376,7 @@ export abstract class ItemListBase<T> extends Destroy {
         );
     }
 
-    /** Déselectionne tous les éléments sélectionés.
+    /** Déselectionne tous les éléments sélectionnés.
      * @return Observable résolu par la fonction.
      */
     public unselectAll$(): Observable<IItemBase<T>[]> {
@@ -572,8 +572,8 @@ export abstract class ItemListBase<T> extends Destroy {
         return item && this.getItemListService() ? this.getItemListService().getItemIndex(item) : -1;
     }
 
-    /** Définit si plusieurs éléments peuvent être sélectionés.
-     * @param value True si plusieurs éléments peuvent être sélectionés.
+    /** Définit si plusieurs éléments peuvent être sélectionnés.
+     * @param value True si plusieurs éléments peuvent être sélectionnés.
      */
     protected setMultiSelect(value: boolean): void {
         this._multiSelect = value;
@@ -648,9 +648,9 @@ export abstract class ItemListBase<T> extends Destroy {
             switchMap(() => itemListService.selectRange$(indexFrom, indexTo)));
     }
 
-    /** Change l'état de selection de l'élément spécifié.
+    /** Change l'état de sélection de l'élément spécifié.
      * @param items Liste des éléments à modifier.
-     * @param selected True si les éléments divent être sélectionés, False si ils doivent être déselectionés.
+     * @param selected True si les éléments divent être sélectionnés, False si ils doivent être désélectionnés.
      * @return Observable résolu par la fonction.
      */
     protected toggleSelect$(items: IItemBase<T>[], selected: boolean): Observable<IItemBase<T>[]> {
@@ -666,9 +666,9 @@ export abstract class ItemListBase<T> extends Destroy {
         return item?.$items && item.collapsible !== false;
     }
 
-    /** Définit si l'élément spécifié est selectionable.
+    /** Définit si l'élément spécifié est sélectionnable.
      * @param item Elément à analyser.
-     * @return True si l'élément est selectionable.
+     * @return True si l'élément est sélectionnable.
      */
     protected isSelectable(item: IItemBase<T>): boolean {
         return item && item.selectable !== false;

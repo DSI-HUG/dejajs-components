@@ -594,4 +594,5 @@ export interface ViewPort<T> extends ViewPortParams {
 export interface ViewPortItem<T> {
     size?: number;
     model?: T;
+    class?(): string;
 }

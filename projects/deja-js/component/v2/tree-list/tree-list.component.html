@@ -12,12 +12,12 @@
 <div id="listheader" *ngIf="headerTemplate">
     <ng-template [ngTemplateOutlet]="headerTemplate"></ng-template>
 </div>
-<div [id]="listElementId" #listElement class="listcontainer" [attr.depth-max]="depthMax || null" [style.max-height.px]="maxHeight || null" tabindex="1" [class.hasheader]="headerTemplate" [class.dragover]="ddStartIndex !== undefined ? ddStartIndex : null" [attr.keynav]="keyboardNavigation()" (mousedown)="mousedown($event)">
+<div [id]="listElementId" #listElement class="listcontainer" [attr.depth-max]="depthMax || null" [style.max-height.px]="maxHeight || null" tabindex="1" [class.hasheader]="headerTemplate" [class.dragover]="ddStartIndex !== undefined ? ddStartIndex : null" [attr.keynav]="keyboardNavigation()">
     <!-- <div id="nodata-holder" *ngIf="(!itemList || itemList.length === 0) && !waiter">{{ nodataholder }}</div> -->
     <!-- <div id="error-hint" *ngIf="hintLabel">{{ hintLabel }}</div> -->
     <ng-container *ngIf="!waiter && itemService.itemList$ | async as itemList">
-        <viewport [models]="itemList" [itemSize]="viewPortRowHeight" [viewPortMode]="viewPortMode">
-            <ng-template #viewPortItemTemplate let-item="model" let-size="size" let-index="index">
+        <viewport [items]="itemList" [itemSize]="viewPortRowHeight" [viewPortMode]="viewPortMode">
+            <ng-template #viewPortItemTemplate let-item let-size="size" let-index="index">
                 <span id="expandbtn">
                     <mat-icon *ngIf="item.children?.length">arrow_drop_down</mat-icon>
                 </span>

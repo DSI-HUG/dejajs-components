@@ -37,7 +37,7 @@ import { DejaOverlayComponent } from '@deja-js/component/overlay';
 export class DejaColorPickerComponent implements ControlValueAccessor {
     @HostBinding('attr.disabled') public _disabled: boolean = null;
 
-    /** Retourne ou definit les couleurs selectionables affichées. */
+    /** Retourne ou definit les couleurs sélectionnables affichées. */
     @Input() public colors: Color[];
 
     @Input() public resetcolor: string = null;

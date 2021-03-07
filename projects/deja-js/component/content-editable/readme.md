@@ -66,7 +66,7 @@ Rend le contenu texte d'un élément HTML editable
 </tr>
 <tr>
     <td>selectAll</td>
-    <td>Place toute la zone d'édition en selectioné.</td>
+    <td>Place toute la zone d'édition en sélectionné.</td>
 </tr>
 <tr>
     <td>edit</td>
