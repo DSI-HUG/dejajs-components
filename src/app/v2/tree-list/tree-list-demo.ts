@@ -17,8 +17,8 @@ import { IDejaDragEvent } from '@deja-js/component/dragdrop';
 import { IDejaMouseDraggableContext, IDejaMouseDroppableContext, IDropCursorInfos } from '@deja-js/component/mouse-dragdrop';
 import { Item } from '@deja-js/component/v2/item-list';
 import { TreeListComponent } from '@deja-js/component/v2/tree-list';
-import { from, Observable, of, Subject, Subscription } from 'rxjs';
-import { delay, map, switchMap, take, takeUntil, tap, toArray } from 'rxjs/operators';
+import { from, Observable, of, range, Subject, Subscription } from 'rxjs';
+import { delay, groupBy, map, mergeMap, reduce, switchMap, take, takeUntil, tap, toArray, withLatestFrom } from 'rxjs/operators';
 
 import { News } from '../../common/news.model';
 import { cheeseValidator } from '../../select/validators';
@@ -60,13 +60,14 @@ export class TreeListDemoComponent extends Destroy {
     public tabIndex = 1;
     public deepCountries$: Observable<DeepCountry[]>;
     public countriesForMultiselect: Country[];
-    public onDemandGroupedCountries: ICountryGroup[];
     public multiselectModel: Country[];
     public fruitForm: FormGroup;
     public fruitFormModels: FormGroup;
     public fruits$: Observable<string[]>;
     public countries$: Observable<Country[]>;
-    public groupedCountries: ICountryGroup[];
+    public countryItems$: Observable<Item<Country>[]>;
+    public groupedCountryItems$: Observable<CountryGroupItem[]>;
+    public onDemandGroupedCountryItems$: Observable<CountryGroupItem[]>;
 
     public disabled: boolean;
     public country: Country;
@@ -89,7 +90,7 @@ export class TreeListDemoComponent extends Destroy {
 
     public viewPortInfos$: Subscription;
     public dialogResponse$: Subject<string> = new Subject<string>();
-    public loremList: Item<unknown>[] = [];
+    public loremList$: Observable<Item<unknown>[]>;
 
     private _dialogVisible = false;
 
@@ -117,19 +118,24 @@ export class TreeListDemoComponent extends Destroy {
         this.bigNews$ = newsService.getNews$(10000);
         this.bigCountries$ = countriesService.getCountries$(null, 100000);
 
-        // eslint-disable-next-line no-loops/no-loops
-        for (let i = 0; i < 50; i++) {
-            const rand = Math.floor(Math.random() * (70 - 33 + 1)) + 33; // random de 33 à 70
-            this.loremList[i] = new Item<unknown>();
-            this.loremList[i].size = rand;
-            this.loremList[i].label = `${i} - Une ligne de test avec une taille de : ${rand}`;
-        }
-
-        groupingService.group$(this.loremList, [{ groupByField: 'height' }]).pipe(
-            takeUntil(this.destroyed$)
-        ).subscribe(groupedResult => {
-            this.loremList = groupedResult;
-        });
+        this.loremList$ = range(0, 50).pipe(
+            map(value => {
+                const rand = Math.floor(Math.random() * (70 - 33 + 1)) + 33; // random de 33 à 70
+                const item = new Item<unknown>(value.toString(), `${value} - Une ligne de test avec une taille de : ${rand}`);
+                item.size = rand;
+                return item;
+            }),
+            groupBy(p => p.size, p => p),
+            mergeMap(group$ => group$.pipe(reduce((item, child) => {
+                if (!item.items) {
+                    item.label = child.label;
+                    item.items = new Array<Item<unknown>>();
+                }
+                item.items.push(child);
+                return item;
+            }, new Item<unknown>()))),
+            toArray()
+        );
 
         this.country = new Country();
         this.country.code = 'CH';
@@ -138,6 +144,10 @@ export class TreeListDemoComponent extends Destroy {
         this.country.color = 'rgb(211, 47, 47)';
 
         this.countries$ = this.countriesService.getCountries$();
+
+        this.countryItems$ = this.countries$.pipe(
+            map(countries => countries.map(country => new Item<Country>(country.code, country.naqme, country)))
+        );
 
         this.folders = this.folderService.getFolders();
 
@@ -171,10 +181,10 @@ export class TreeListDemoComponent extends Destroy {
 
         this.fruits$ = of(this.fructs);
 
-        this.fructItems = this.fructs.map(fruct => new Item<unknown>(fruct.toLowerCase(), fruct));
+        this.fructItems = this.fructs.map(fruct => new Item<string>(fruct.toLowerCase(), fruct));
 
         this.fructItemsWithPreSelection = this.fructs.map((fruct, index) => {
-            const item = new Item<unknown>(fruct.toLowerCase(), fruct);
+            const item = new Item<string>(fruct.toLowerCase(), fruct);
             item.selected = index === 1;
             return item;
         });
@@ -187,54 +197,61 @@ export class TreeListDemoComponent extends Destroy {
             this.multiselectModel = JSON.parse('[{"naqme":"ÅlandIslands","code":"AX","label":"ÅlandIslands","depth":0,"odd":true,"selected":true},{"naqme":"AmericanSamoa","code":"AS","label":"AmericanSamoa","depth":0,"odd":false,"selected":true},{"naqme":"Argentina","code":"AR","label":"Argentina","depth":0,"odd":false,"selected":true},{"naqme":"ChristmasIsland","code":"CX","label":"ChristmasIsland","depth":0,"odd":false,"selected":true},{"naqme":"Egypt","code":"EG","label":"Egypt","depth":0,"odd":true,"selected":true},{"naqme":"Dominica","code":"DM","label":"Dominica","depth":0,"odd":false,"selected":true}]');
         });
 
-        this.countries$.pipe(
-            takeUntil(this.destroyed$)
-        ).subscribe((value: Country[]) => {
-            const result = [] as ICountryGroup[];
-            const onDemandResult = [] as ICountryGroup[];
-            const countryMap = {} as { [groupName: string]: ISelectCountry[] };
+        this.groupedCountryItems$ = this.countries$.pipe(
+            map(countries => {
+                const countryMap = {} as { [groupName: string]: Item<Country>[] };
+                const result = [] as CountryGroupItem[];
 
-            result.push({
-                collapsible: true,
-                collapsed: true,
-                groupName: 'EmptyGroup',
-                items: [],
-                label: 'Empty Group',
-                selectable: false
-            } as ICountryGroup);
+                const emptyGroupItem = new CountryGroupItem(undefined, 'EmptyGroup');
+                emptyGroupItem.collapsible = true;
+                emptyGroupItem.collapsed = true;
+                emptyGroupItem.items = [];
+                emptyGroupItem.selectable = false;
+                result.push(emptyGroupItem);
 
-            value.forEach(country => {
-                const groupName = `Group ${country.naqme[0]}`;
-                if (!countryMap[groupName]) {
-                    countryMap[groupName] = [] as ICountryGroup[];
-                    result.push({
-                        collapsible: true,
-                        groupName: groupName,
-                        items: countryMap[groupName],
-                        label: groupName,
-                        selectable: false
-                    } as ICountryGroup);
+                return countries.reduce((res, country) => {
+                    const groupName = `Group ${country.naqme[0]}`;
+                    if (!countryMap[groupName]) {
+                        countryMap[groupName] = [] as CountryGroupItem[];
+                        const item = new CountryGroupItem(undefined, groupName);
+                        item.collapsible = true;
+                        item.items = countryMap[groupName];
+                        item.selectable = false;
+                        res.push(item);
+                    }
 
-                    onDemandResult.push({
-                        collapsible: true,
-                        collapsed: true,
-                        groupName: groupName,
-                        items: [{
-                            label: 'loading...',
-                            selectable: false
-                        }],
-                        label: groupName,
-                        selectable: false,
-                        loaded: false
-                    } as ICountryGroup);
-                }
+                    countryMap[groupName].push(new Item(country.code, country.naqme, country));
+                    return res;
+                }, result);
+            })
+        );
 
-                countryMap[groupName].push(new Item(undefined, undefined, country));
-            });
+        this.onDemandGroupedCountryItems$ = this.countries$.pipe(
+            map(countries => {
+                const countryMap = {} as { [groupName: string]: Item<Country>[] };
 
-            this.groupedCountries = result;
-            this.onDemandGroupedCountries = onDemandResult;
-        });
+                return countries.reduce((result, country) => {
+                    const groupName = `Group ${country.naqme[0]}`;
+                    if (!countryMap[groupName]) {
+                        countryMap[groupName] = [] as CountryGroupItem[];
+
+                        const loadingItem = new CountryGroupItem(undefined, 'loading...');
+                        loadingItem.selectable = false;
+
+                        const item = new CountryGroupItem(undefined, groupName);
+                        item.collapsible = true;
+                        item.collapsed = true;
+                        item.items = [loadingItem];
+                        item.selectable = false;
+                        item.loaded = false;
+                        result.push(item);
+                    }
+
+                    countryMap[groupName].push(new Item(country.code, country.naqme, country));
+                    return result;
+                }, [] as CountryGroupItem[]);
+            })
+        );
 
         this.fruitForm = this.fb.group({
             fruitName: ['', [cheeseValidator]]
@@ -250,31 +267,32 @@ export class TreeListDemoComponent extends Destroy {
     }
 
     public collapsingItems() {
-        return (item: Item<unknown>): Observable<Item<unknown>> => {
-            const country = item as ICountryGroup;
-            return country.loaded ? of(item) : this.confirmDialog()(item);
+        return (item: Item<Country>): Observable<Item<Country>> => {
+            const countryItem = item as CountryGroupItem;
+            return countryItem.loaded ? of(item) : this.confirmDialog()(item);
         };
     }
 
     public expandingItems() {
-        return (item: Item<unknown>): Observable<Item<unknown>> => {
-            const group = item as ICountryGroup;
+        return (item: Item<Country>): Observable<Item<Country>> => {
+            const group = item as CountryGroupItem;
             if (group.loaded) {
                 return of(item);
             } else {
                 return this.confirmDialog()(item).pipe(
                     switchMap(itm => {
                         if (!itm) {
-                            return of(null as Item<unknown>);
+                            return of(null as Item<Country>);
                         }
 
                         of(group).pipe(
                             delay(2000),
                             take(1),
+                            withLatestFrom(this.groupedCountryItems$),
                             takeUntil(this.destroyed$)
-                        ).subscribe(grp => {
+                        ).subscribe(([grp, groupedCountryItems]) => {
                             // Simulate asynchronous load
-                            const original = this.groupedCountries.find(c => c.label === grp.label);
+                            const original = groupedCountryItems.find(c => c.label === grp.label);
                             grp.items = original.items;
                             grp.loaded = true;
                             // this.onExpandList.refresh();
@@ -288,7 +306,7 @@ export class TreeListDemoComponent extends Destroy {
     }
 
     public confirmDialog() {
-        return (item: Item<unknown>): Observable<Item<unknown>> => {
+        return (item: Item<Country>): Observable<Item<Country>> => {
             this.dialogVisible = true;
             return from(this.dialogResponse$).pipe(
                 take(1),
@@ -385,14 +403,8 @@ export class TreeListDemoComponent extends Destroy {
     }
 }
 
-interface ISelectCountry extends Item<unknown> {
-    items?: Item<unknown>[];
-}
-
-interface ICountryGroup extends ISelectCountry {
-    groupName?: string;
-    items: Item<unknown>[];
-    loaded?: boolean;
+class CountryGroupItem extends Item<Country> {
+    public loaded?: boolean;
 }
 
 export interface IExtendedViewPortItem extends IViewPortItem<unknown> {

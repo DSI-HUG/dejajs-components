@@ -31,7 +31,8 @@
 			padding: 0;
             margin: 0;
             position: relative;
-
+            box-sizing: border-box;
+            
             &[mode="fixed"],
             &[mode="variable"] {
                 overflow: hidden;

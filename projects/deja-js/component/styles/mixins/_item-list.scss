@@ -26,14 +26,18 @@
 			transition-timing-function: ease-out;
 		}
 
-		#expandbtn {
+		#expandbtn,
+        [expandbtn] {
 			width: 24px;
-			cursor: pointer;
+            cursor: pointer;
+            opacity: 0.6;
+            padding-top: 2px;
 		}
 
 		&.parent {
 			&.collapsed {
-				#expandbtn {
+                #expandbtn,
+                [expandbtn] {
 					>.mat-icon {
 						-ms-transform: rotate(-90deg);
 						-webkit-transform: rotate(-90deg);

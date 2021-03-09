@@ -45,6 +45,7 @@ export class ViewPortComponent<T> extends Destroy {
     public hasDownButton: boolean = null;
     public buttons$ = new Subject<QueryList<ElementRef<HTMLElement>>>();
     public viewPort$: Observable<ViewPort<T>>;
+    public viewPortElementSize$ = new Subject<{ size: number }>();
 
     private _buttonsStep: NumberInput;
     private reloadViewPort$ = new BehaviorSubject<void>(null);
@@ -183,7 +184,23 @@ export class ViewPortComponent<T> extends Destroy {
                 } else {
                     viewPort.element.scrollTop = viewPort.targetScrollPos ?? viewPort.scrollPosition;
                 }
+
+                this.viewPortElementSize$.next({ size: viewPort.direction === 'horizontal' ? viewPort.element.clientWidth : viewPort.element.clientHeight });
             }
+        });
+
+        this.viewPortElementSize$.pipe(
+            debounceTime(1),
+            distinctUntilChanged(),
+            withLatestFrom(viewPortService.direction$, viewPortService.element$),
+            takeUntil(this.destroyed$)
+        ).subscribe(([viewPortElementSize, direction, element]) => {
+            const newElementSize = direction === 'horizontal' ? element.clientWidth : element.clientHeight;
+            if (viewPortElementSize.size > 0 && newElementSize > viewPortElementSize.size) {
+                console.warn('ViewPort element size to small, refresh view port');
+                this.viewPortService.refresh();
+            }
+            viewPortElementSize.size = newElementSize;
         });
 
         const buttons$ = this.buttons$.pipe(

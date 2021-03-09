@@ -46,5 +46,4 @@ import { TreeListComponent } from './tree-list.component';
 })
 export class TreeListModule { }
 
-export * from './tree-list-scroll-event';
 export * from './tree-list.component';

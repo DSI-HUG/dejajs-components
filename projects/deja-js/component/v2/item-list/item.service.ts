@@ -9,10 +9,11 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Injectable } from '@angular/core';
-import { GroupingService, IGroupInfo, ISortInfos, SortingService } from '@deja-js/component/core';
-import { BehaviorSubject, combineLatest, merge, Observable, ReplaySubject, Subscriber } from 'rxjs';
-import { debounceTime, filter, map, shareReplay } from 'rxjs/operators';
+import { IGroupInfo, ISortInfos } from '@deja-js/component/core';
+import { BehaviorSubject, combineLatest, merge, Observable, of, ReplaySubject, Subscriber } from 'rxjs';
+import { debounceTime, filter, map, shareReplay, switchMap, take } from 'rxjs/operators';
 
+import { Diacritics } from '../../core/diacritics/diacritics';
 import { Item } from './item';
 import { ItemComponent } from './item.component';
 
@@ -32,9 +33,15 @@ export class ItemService<T> {
     public textField$ = new BehaviorSubject<string>('label');
     public valueField$ = new BehaviorSubject<string>('value');
     public searchField$ = new BehaviorSubject<string>(null);
+    public query$ = new BehaviorSubject<RegExp | string>('');
+    public minSearchLength$ = new BehaviorSubject<number>(0);
 
     public itemList$: Observable<Item<T>[]>;
     public flatItemList$: Observable<Item<T>[]>;
+    public refreshFlatItemList$ = new BehaviorSubject<void>(undefined);
+    public fitleredItemList$: Observable<Item<T>[]>;
+    public refreshVisibleItemList$ = new BehaviorSubject<void>(undefined);
+    public visibleItemList$: Observable<Item<T>[]>;
     public selectedItems$: Observable<Item<T>[]>;
 
     private refreshSelection$ = new BehaviorSubject<RefreshSelectionParams<T>>({});
@@ -48,16 +55,7 @@ export class ItemService<T> {
         visibleList?: Item<T>[];
     };
 
-    // Cache for last query. Flat list will be regenerated only if the query change
-    private _lastQuery: RegExp | string;
-    // private internalQuery: RegExp;
-
-    // Sorting
-    private _sortingService: SortingService;
-
-    // grouping
-    private _groupInfos: IGroupInfo[];
-    private _groupingService: GroupingService;
+    private previousQuery: string;
 
     // Cache for drag and drop (flat list modified by the current drag).
     private _ddList: Item<T>[];
@@ -94,8 +92,8 @@ export class ItemService<T> {
             shareReplay({ bufferSize: 1, refCount: false })
         );
 
-        this.flatItemList$ = this.itemList$.pipe(
-            map(items => {
+        this.flatItemList$ = combineLatest([this.itemList$, this.refreshFlatItemList$]).pipe(
+            map(([items]) => {
                 const addItems = (itms: Item<T>[], depth: number): Array<Item<T>> => itms?.flatMap(item => {
                     item.depth = depth;
                     return [item, ...addItems(item.items, depth + 1)];
@@ -105,7 +103,110 @@ export class ItemService<T> {
             shareReplay({ bufferSize: 1, refCount: false })
         );
 
-        this.selectedItems$ = combineLatest([this.flatItemList$, this.valueField$, this.refreshSelection$]).pipe(
+        this.fitleredItemList$ = combineLatest([this.flatItemList$, this.query$, this.minSearchLength$, this.searchField$]).pipe(
+            switchMap(([flatItemList, query, minSearchLength, searchField]) => {
+                if (minSearchLength > 0 && (!query || typeof query === 'string' && query.length < minSearchLength)) {
+                    return of([]);
+                }
+
+                if (!query) {
+                    return of(flatItemList);
+                }
+
+                const listToFilter$ = typeof query === 'string' && this.previousQuery && query.includes(this.previousQuery) && this.fitleredItemList$ ? this.fitleredItemList$ : of(flatItemList);
+
+                this.previousQuery = typeof query === 'string' ? query : null;
+
+                const escapeChars = (text: string) => {
+                    const specialChars = ['\\', '/', '|', '&', ';', '$', '%', '@', '"', '<', '>', '(', ')', '+'];
+                    specialChars.forEach(c => text = text.replace(c, `\\${c}`));
+                    return text;
+                };
+
+                // Check regexp validity
+                // regExp.test(this.getTextValue(item));
+                let regExp: RegExp;
+                if (query) {
+                    if (typeof query === 'string') {
+                        try {
+                            query = Diacritics.remove(query);
+                            const escapedQuery = escapeChars(query);
+                            regExp = new RegExp(escapedQuery, 'i');
+                        } catch (exc) {
+                            console.log('Invalid search parameters');
+                        }
+                    } else {
+                        regExp = query;
+                        if (regExp.test === undefined) {
+                            regExp = undefined;
+                        }
+                    }
+                }
+
+                return listToFilter$.pipe(
+                    take(1),
+                    map(itemList => {
+                        // Filter the list
+                        let previousItem: Item<T>;
+                        return [...itemList].reverse().filter(item => {
+                            let isVisible: boolean;
+                            if (item.items === undefined) {
+                                // child
+                                isVisible = this.itemMatch(item, searchField, regExp);
+                            } else {
+                                // parent, visible only if a child is visible
+                                isVisible = previousItem && previousItem.depth === item.depth + 1;
+                            }
+                            if (isVisible) {
+                                previousItem = item;
+                            }
+                            return isVisible;
+                        }).reverse();
+                    })
+                );
+            }),
+            shareReplay({ bufferSize: 1, refCount: false })
+        );
+
+        this.visibleItemList$ = combineLatest([this.fitleredItemList$, this.refreshVisibleItemList$]).pipe(
+            map(([items]) => {
+                let isOdd = false;
+                let hideDepth = undefined as number;
+                return items.filter(item => {
+                    if (hideDepth !== undefined && hideDepth <= item.depth) {
+                        // hidden by parent
+                        return false;
+                    }
+                    if (item.isVisible) {
+                        if (item.collapsed) {
+                            // hide all children
+                            hideDepth = item.depth + 1;
+                        } else {
+                            // Clear children invisibility
+                            hideDepth = undefined;
+                        }
+
+                        if (item.items === undefined) {
+                            // child
+                            isOdd = !isOdd;
+                        } else {
+                            // parent
+                            isOdd = false;
+                        }
+                        item.odd = isOdd;
+
+                        return true;
+                    } else {
+                        // hide all children
+                        hideDepth = item.depth + 1;
+                        return false;
+                    }
+                });
+            }),
+            shareReplay({ bufferSize: 1, refCount: false })
+        );
+
+        this.selectedItems$ = combineLatest([this.visibleItemList$, this.valueField$, this.refreshSelection$]).pipe(
             filter(([items]) => items?.length > 0),
             map(([items, valueField, refreshSelection]) => {
                 const select = refreshSelection.selectItems;
@@ -280,19 +381,8 @@ export class ItemService<T> {
         return +element.getAttribute('flat');
     }
 
-    public get lastQuery(): RegExp | string {
-        return this._lastQuery;
-    }
-
     public get hasCache(): boolean {
         return this._cache && !!this._cache.visibleList;
-    }
-
-    /** Renvoie le modèle de grouping ajouté à la liste de base par le service. Ce modèle ne modifie pas la donée, mais est jsute ajouté à l'affichage
-     * @return value Modèle de grouping d'affichage de la liste.
-     */
-    public get groupInfos(): IGroupInfo[] {
-        return this._groupInfos;
     }
 
     /** Retourne l'élément corresondant à l'index spéficié dans la liste des éléments visibles.
@@ -301,40 +391,6 @@ export class ItemService<T> {
      */
     public getItemFromIndex(index: number): Item<T> {
         return this._cache.visibleList ? this._cache.visibleList[index] : null;
-    }
-
-    /** Renvoie le service utilisé pour le tri de la liste
-     * @return Service utilisé pour le tri.
-     */
-    public getSortingService(): SortingService {
-        if (!this._sortingService) {
-            this._sortingService = new SortingService();
-        }
-        return this._sortingService;
-    }
-
-    /** Définit le service utilisé pour le tri de la liste
-     * @param value  Service à utiliser pour le tri.
-     */
-    public setSortingService(value: SortingService): void {
-        this._sortingService = value;
-    }
-
-    /** Renvoie le service utilisé pour le regroupement de la liste
-     * @return Service utilisé pour le regroupement.
-     */
-    public getGroupingService(): GroupingService {
-        if (!this._groupingService) {
-            this._groupingService = new GroupingService();
-        }
-        return this._groupingService;
-    }
-
-    /** Définit le service utilisé pour le regroupement de la liste
-     * @param value Service à utiliser pour le regroupement.
-     */
-    public setGroupingService(value: GroupingService): void {
-        this._groupingService = value;
     }
 
     /** Usage interne. Termine le drag and drop en cours. */
@@ -499,56 +555,6 @@ export class ItemService<T> {
         });
     }
 
-    // /** Change l'état d'expansion de tous les éléments.
-    //  * @param collapsed True si les éléments doivent être réduits.
-    //  * @return Observable résolu par la fonction.
-    //  */
-    // public toggleAll$(collapsed: boolean): Observable<Item<T>[]> {
-    //     return of(this._cache.flatList).pipe(
-    //         map((items: Item<T>[]) => items.filter(item => item.items && item.isCollapsible)),
-    //         tap(() => delete this._cache.visibleList), // Invalidate view cache
-    //         switchMap(items => collapsed ? this.collapseItems$(items) : this.expandItems$(items)));
-    // }
-
-    // /** Change l'état d'expansion de l'élément spécifié par son index sur la liste des éléments visibles.
-    //  * @param index Index sur la liste des éléments visibles de l'élément à changer.
-    //  * @param collapse Etat de l'élément. True pour réduire l'élément.
-    //  * @return Observable résolu par la fonction.
-    //  */
-    // public toggleCollapse$(index: number, collapse?: boolean): Observable<Item<T>> {
-    //     const visibleList = this._cache.visibleList;
-    //     if (!visibleList || !visibleList.length) {
-    //         throw new Error('Empty cache on toggleCollapse');
-    //     }
-
-    //     const item = visibleList[index];
-    //     if (!item || item.collapsible === false) {
-    //         return of([] as Item<T>);
-    //     }
-
-    //     const collapsed = collapse !== undefined ? collapse : !item.collapsed;
-    //     return collapsed ? this.collapseItem$(item) : this.expandItem$(item);
-    // }
-
-    // /** Etends les éléments spécifiés.
-    //  * @param items Liste des éléments à étendre.
-    //  * @return Observable résolu par la fonction.
-    //  */
-    // public expandItems$(items: Item<T>[]): Observable<Item<T>[]> {
-    //     return from(items || []).pipe(
-    //         switchMap(item => this.expandItem$(item)),
-    //         reduce((acc, cur) => [...acc, cur], []));
-    // }
-
-    // /** Reduits les éléments spécifiés.
-    //  * @param items Liste des éléments à réduire.
-    //  * @return Observable résolu par la fonction.
-    //  */
-    // public collapseItems(items: Item<T>[]): Item<T>[] {
-    //     return from(items || []).pipe(
-    //         reduce((acc, cur) => [...acc, cur], []));
-    // }
-
     // /** Etends l'élément spécifié.
     //  * @param items Eléments à étendre.
     //  * @return Observable résolu par la fonction.
@@ -673,52 +679,10 @@ export class ItemService<T> {
         //     switchMap(search$));
     }
 
-    /** Supprime tous les caches internes. Ils seront recréés à la première demande de la portion de la liste à afficher. */
-    public invalidateCache(): void {
-        // this._cache = {};
-        // this.ensureChildrenProperties(this.items);
-    }
-
-    /** Efface la hauteur calculée des lignes en mode automatique */
-    public invalidateRowsHeightCache(): void {
-        // if (this._items) {
-        //     this._items.forEach(item => item.size = undefined);
-        // }
-    }
-
     /** Usage interne. Retourne la portion de la liste à afficher en fonction des paramètres spécifiés. */
     // public getViewList$(searchField: string, query?: RegExp | string, ignoreCache?: boolean, ddStartIndex?: number, ddTargetIndex?: number, multiSelect?: boolean): Observable<ViewListResult<T>> {
     //     const result = {} as ViewListResult<T>;
 
-    //     const queryChanged = (query?.toString()) !== (this._lastQuery?.toString());
-    //     ignoreCache = ignoreCache || queryChanged || !this.items || !this.items.length;
-    //     this._lastQuery = query;
-
-    //     const escapeChars = (text: string) => {
-    //         const specialChars = ['\\', '/', '|', '&', ';', '$', '%', '@', '"', '<', '>', '(', ')', '+'];
-    //         specialChars.forEach(c => text = text.replace(c, `\\${c}`));
-    //         return text;
-    //     };
-
-    //     // Check regexp validity
-    //     // regExp.test(this.getTextValue(item));
-    //     let regExp: RegExp;
-    //     if (query) {
-    //         if (typeof query === 'string') {
-    //             try {
-    //                 query = Diacritics.remove(query);
-    //                 const escapedQuery = escapeChars(query);
-    //                 regExp = new RegExp(escapedQuery, 'i');
-    //             } catch (exc) {
-    //                 console.log('Invalid search parameters');
-    //             }
-    //         } else {
-    //             regExp = query;
-    //             if (regExp.test === undefined) {
-    //                 regExp = undefined;
-    //             }
-    //         }
-    //     }
 
     //     const loadViewList = () => {
     //         let viewList: Item<T>[];
@@ -796,40 +760,6 @@ export class ItemService<T> {
     //     }
     // }
 
-    /** Retourne la liste à utilise pour la création des caches. Surcharger cetee méthode pour fournir une liste de façon lazy.
-     * En cas de surcharge, retourner une nouvelle instance de la liste originale pour que le service regénère ses caches.
-     * @param query Texte ou regular expression par laquelle la liste doit être filtrée.
-     * @param selectedItems Liste des éléments sélectionnés.
-     * @return Observable résolu par la fonction, qui retourne la liste à utiliser.
-     */
-    // protected getItemList$(query?: RegExp | string, selectedItems?: Item<T>[]): Observable<Item<T>[]> {
-    //     return this.loadingItems$ ? this.loadingItems$(query, selectedItems) : of(this.items);
-    // }
-
-    /** Retourne une valeur indiquant si l'élément spécifié correspond aux critères de recherche spécifiés
-     * @param item Elément à analyser.
-     * @param searchField Nom du champ à utiliser pour la recherche. Le champ représenté peut-être une valeur ou une function.
-     * @param regExp Expression de test sur le champs spécifié.
-     * @return True si l'élément correspond aux critères de recherche.
-     */
-    // protected itemMatch(item: Item<T>, searchField: string, regExp: RegExp): boolean {
-    //     const itmTree = item;
-    //     if (itmTree.items) {
-    //         return true;
-    //     }
-    //     const field = (<any>item)[searchField];
-    //     const value = typeof field === 'function' ? field() : field || this.getTextValue(item, searchField);
-    //     return value && regExp.test(Diacritics.remove(value));
-    // }
-
-    /** Retourne une liste groupée si un modèle de groupe interne est spécifié.
-     * En cas de surcharge, retourner une nouvelle instance de la liste originale pour que le service regénère ses caches.
-     * @param items Liste des éléments à grouper.
-     * @return Observable résolu par la fonction, qui retourne la liste groupés.
-     */
-    protected getGroupedList$(_items: Item<T>[]): void {
-        // return items ? this.getGroupingService().group$(this.items, this.groupInfos, '$items') : of([]);
-    }
 
     /** Retourne la liste des éléments visibles. Si la liste des éléments est hièrarchique, cette fonction retourne une liste plate. Cette liste est utilisé pour calculer la portion de la liste à afficher.
      * En cas de surcharge, retourner une nouvelle instance de la liste originale pour que le service regénère ses caches.
@@ -1077,6 +1007,18 @@ export class ItemService<T> {
     //         }
     //     });
     // }
+
+    /** Retourne une valeur indiquant si l'élément spécifié correspond aux critères de recherche spécifiés
+     * @param item Elément à analyser.
+     * @param searchField Nom du champ à utiliser pour la recherche. Le champ représenté peut-être une valeur ou une function.
+     * @param regExp Expression de test sur le champs spécifié.
+     * @return True si l'élément correspond aux critères de recherche.
+     */
+    protected itemMatch(item: Item<T>, searchField: string, regExp: RegExp): boolean {
+        const indexedItem = item as IndexedItem<T>;
+        const value = (searchField && indexedItem[searchField] as string) ?? item.label;
+        return value && regExp.test(Diacritics.remove(value));
+    }
 
     protected compareItems = (item1: Item<T>, item2: Item<T>): boolean => {
         const isDefined = (value: any) => value !== undefined && value !== null;

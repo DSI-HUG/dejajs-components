@@ -15,23 +15,24 @@ export class Item<T> implements ViewPortItem<T> {
     public label?: string;
     public selectable?: boolean;
     public selected?: boolean;
-    public dragged?: boolean;
-    public searchText?: string;
     public visible?: boolean;
     public odd?: boolean;
+    public searchText?: string;
     public className?: string;
     /** Indique si l'élément peut être réduit. */
     public collapsible?: boolean;
     /** Indique si l'élément est réduit. */
     public collapsed?: boolean;
-    /** Usage interne. */
-    public expanding?: boolean;
-    /** Usage interne. */
-    public collapsing?: boolean;
     /** Retourne la profondeur de l'élément dans la hierarchie. */
     public depth?: number;
     /** Enfants */
     public items?: Item<T>[];
+
+    public dragged?: boolean;
+    /** Usage interne. */
+    public expanding?: boolean;
+    /** Usage interne. */
+    public collapsing?: boolean;
 
     /** Définit si l'élément peut être réduit.
      * @return True si l'élément peut être réduit.

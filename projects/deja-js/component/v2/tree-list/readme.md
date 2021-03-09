@@ -362,10 +362,3 @@ TODO
 	</button>
 </ng-template>
 ```
-  
-  - `loaderTemplate`
-```html
-<ng-template #loaderTemplate>
-	<span>Chargement en cours ...</span>
-</ng-template>
-```

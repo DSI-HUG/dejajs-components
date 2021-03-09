@@ -18,7 +18,6 @@ import { filter, switchMap, takeUntil, tap, withLatestFrom } from 'rxjs/operator
 
 import { KeyCodes } from '../../core/keycodes.enum';
 import { ViewPortItemClassEvent } from '../viewport/viewport.component';
-import { TreeListScrollEvent } from './tree-list-scroll-event';
 
 export type NgModelType = 'item' | 'model' | 'value';
 
@@ -38,9 +37,6 @@ export type NgControlType<T> = Item<T> | Item<T>[] | T | T[] | string | string[]
     templateUrl: './tree-list.component.html'
 })
 export class TreeListComponent<T> extends Destroy implements ControlValueAccessor {
-    /** Exécuté lorsque la scrollbar change de position. */
-    // eslint-disable-next-line @angular-eslint/no-output-native
-    @Output() public readonly scroll = new EventEmitter<TreeListScrollEvent>();
     /** Texte à afficher par default dans la zone de recherche */
     @Input() public placeholder: string;
     /**
@@ -57,31 +53,25 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
     @Input() public itemTemplateExternal: TemplateRef<unknown>;
     /** Permet de définir un template de ligne parente par binding. */
     @Input() public parentItemTemplateExternal: TemplateRef<unknown>;
-    /** Permet de définir un template pour le loader par binding. */
-    @Input() public loaderTemplateExternal: TemplateRef<unknown>;
     /** Permet de définir un template d'entête de colonne par binding. */
     @Input() public headerTemplateExternal: TemplateRef<unknown>;
     /** Permet de définir un template comme prefixe de la zone de recherche par binding. */
     @Input() public searchPrefixTemplateExternal: TemplateRef<unknown>;
     /** Permet de définir un template comme suffixe de la zone de recherche par binding. */
     @Input() public searchSuffixTemplateExternal: TemplateRef<unknown>;
-    /** Largeur des éléments par defaut si différent de 100% */
-    @Input() public itemsWidth: number = null;
+    /** Exécuté lorsque l'utilisateur sélectionne ou désélectionne une ligne. */
+    @Output() public readonly selectedChange = new EventEmitter<ItemEvent<T>>();
+    /** Exécuté lorsque l'utilisateur tape enter sur une ligne. */
+    @Output() public readonly itemEnter = new EventEmitter<ItemEvent<T>>();
     /** Exécuté lorsque le déplacement d'une ligne est terminée. */
     @Output() public readonly itemDragEnd = new EventEmitter<IDejaDragEvent>();
     /** Exécuté lorsque le déplacement d'une ligne commence. */
     @Output() public readonly itemDragStart = new EventEmitter<IDejaDragEvent>();
-    /** Exécuté lorsque l'utilisateur sélectionne ou désélectionne une ligne. */
-    @Output() public readonly selectedChange = new EventEmitter<ItemEvent<T>>();
-    /** Exécuté lorsque le calcul du viewPort est executé. */
-    @Output() public readonly viewPortChanged = new EventEmitter<ViewPort<T>>();
-    /** Exécuté lorsque l'utilisateur tape enter sur une ligne. */
-    @Output() public readonly itemEnter = new EventEmitter<ItemEvent<T>>();
 
     // Cnacelable pre events
-    @Input() public selectingItems$: Observable<Item<T>[]>;
-    @Input() public expandingItem$: Observable<Item<T>>;
-    @Input() public collapsingItem$: Observable<Item<T>>;
+    @Input() public selectingItems: (items: Item<T>[]) => Observable<Item<T>[]>;
+    @Input() public expandingItem: (items: Item<T>) => Observable<Item<T>>;
+    @Input() public collapsingItem: (items: Item<T>) => Observable<Item<T>>;
 
 
     /** Internal use */
@@ -92,15 +82,12 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
     // Templates
     @ContentChild('itemTemplate') private itemTemplateInternal: TemplateRef<unknown>;
     @ContentChild('parentItemTemplate') private parentItemTemplateInternal: TemplateRef<unknown>;
-    @ContentChild('loaderTemplate') private loaderTemplateInternal: TemplateRef<unknown>;
     @ContentChild('headerTemplate') private headerTemplateInternal: TemplateRef<unknown>;
     @ContentChild('searchPrefixTemplate') private searchPrefixTemplateInternal: TemplateRef<unknown>;
     @ContentChild('searchSuffixTemplate') private searchSuffixTemplateInternal: TemplateRef<unknown>;
 
     public viewPort$: Observable<ViewPort<T>>;
     public listElementId: string;
-
-    public setQuery$ = new Subject<string>();
 
     // Drag drop
     public ddStartIndex: number;
@@ -117,24 +104,22 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
     private _currentItem: Item<T>;
     private _pageSize = 0;
     private filterExpression = '';
+    private _maxHeight: number;
+    private viewPortComponent$ = new ReplaySubject<ViewPortComponent<T>>(1);
+    private _viewPortComponent: ViewPortComponent<T>;
+    private _viewPortRowHeight = 40;
+    private keyboardStartIndex = undefined as number;
+    private collapseItem$ = new Subject<Item<T>>();
+    private _hintLabel: string;
+    private _searchArea = false;
 
     private _keyboardNavigation = false;
     private _depthMax = 0;
     private _waiter = false;
-    private _maxHeight: number;
-    private _hintLabel: string;
-    private _viewPortRowHeight = 40;
-    private viewPortComponent$ = new ReplaySubject<ViewPortComponent<T>>(1);
-    private _viewPortComponent: ViewPortComponent<T>;
-    private keyboardStartIndex = undefined as number;
-
-    // private clickedItem: Item<unknown>;
-    private _searchArea = false;
-    private _sortable = false;
     private _itemsDraggable = false;
+    // private clickedItem: Item<unknown>;
     // private hasLoadingEvent = false;
     // private keyboardNavigation$ = new Subject();
-    private _minSearchLength = 0;
 
     @ViewChild(ViewPortComponent)
     public set viewPortComponent(viewPortComponent: ViewPortComponent<T>) {
@@ -321,6 +306,33 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
         return this._pageSize;
     }
 
+    /** Définit la hauteur maximum avant que le composant affiche une scrollbar
+     * spécifier une grande valeur pour ne jamais afficher de scrollbar
+     * Spécifier 0 pour que le composant determine sa hauteur à partir du container
+     */
+    @Input()
+    public set maxHeight(value: NumberInput) {
+        this._maxHeight = coerceNumberProperty(value);
+    }
+
+    /** Retourne la hauteur maximum avant que le composant affiche une scrollbar
+     * spécifier une grande valeur pour ne jamais afficher de scrollbar
+     * Spécifier 0 pour que le composant determine sa hauteur à partir du container
+     */
+    public get maxHeight(): NumberInput {
+        return this._maxHeight;
+    }
+
+    /** Affiche un barre de recherche au dessus de la liste. */
+    @Input()
+    public set searchArea(value: BooleanInput) {
+        this._searchArea = coerceBooleanProperty(value);
+    }
+
+    public get searchArea(): BooleanInput {
+        return this._searchArea;
+    }
+
     public constructor(
         public elementRef: ElementRef, @Self() @Optional()
         public control: NgControl,
@@ -378,11 +390,13 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
 
         this.itemService.selectedItems$.pipe(
             switchMap(selectedItems => {
-                if (!this.raiseChangeCallback || !this.selectingItems$) {
+                if (this.raiseChangeCallback && this.selectingItems) {
+                    return this.selectingItems(selectedItems);
+                } else {
                     return of(selectedItems);
                 }
-                return this.selectingItems$;
             }),
+            filter(selectedItems => !!selectedItems),
             takeUntil(this.destroyed$)
         ).subscribe(selectedItems => {
             this._selectedItems = selectedItems;
@@ -402,6 +416,11 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
                 }
             }
         });
+
+        this.itemService.query$.pipe(
+            filter(query => typeof query === 'string'),
+            takeUntil(this.destroyed$)
+        ).subscribe(query => this.query = query as string);
 
         const modelType$ = this.ngModelType$.pipe(
             tap(modelType => this._ngModelType = modelType)
@@ -439,8 +458,8 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
 
         this.listElement$.pipe(
             switchMap(element => fromEvent<MouseEvent>(element, 'mousedown').pipe(
-                withLatestFrom(this.viewPort$, this.itemService.flatItemList$),
-                switchMap(([event, viewPort, flatItemList]) => {
+                withLatestFrom(this.viewPort$, this.itemService.visibleItemList$),
+                switchMap(([event, viewPort, visibleItemList]) => {
                     if (this.disabled) {
                         return of(null);
                     }
@@ -451,15 +470,15 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
                         return of(null);
                     }
 
-                    const isExpandButton = (el: HTMLElement) => el.id === 'expandbtn' || el.parentElement.id === 'expandbtn';
+                    const isExpandButton = (el: HTMLElement) => el.hasAttribute('expandbtn') || el.parentElement.hasAttribute('expandbtn');
 
                     const clickedItem = viewPort.visibleItems[itemIndex - viewPort.startIndex] as Item<T>;
 
                     if ((!isExpandButton(target) || !clickedItem.isCollapsible) && clickedItem.isSelectable && (!event.ctrlKey || !this.multiSelect) && (event.button === 0 || !clickedItem.selected)) {
                         if (event.shiftKey && this.multiSelect) {
                             // Select all from current to clicked
-                            const startIndex = Math.max(flatItemList.findIndex(item => this.currentItem === item), 0);
-                            const rangeSelection = flatItemList.slice(Math.min(startIndex, itemIndex), Math.max(startIndex, itemIndex) + 1).filter(item => item.isSelectable);
+                            const startIndex = Math.max(visibleItemList.findIndex(item => this.currentItem === item), 0);
+                            const rangeSelection = visibleItemList.slice(Math.min(startIndex, itemIndex), Math.max(startIndex, itemIndex) + 1).filter(item => item.isSelectable);
                             this.raiseChangeCallback = true;
                             this.itemService.setSelectedItems(rangeSelection);
                             this.viewPortComponent.reloadViewPort();
@@ -487,10 +506,8 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
                             }
 
                             if (upItem.isCollapsible && (isExpandButton(upTarget) || !upItem.isSelectable)) {
-                                //             const treeItem = upItem;
-                                //             return this.toggleCollapse$(upIndex, !treeItem.collapsed).pipe(
-                                //                 map(() => upIndex)
-                                //             );
+                                this.collapseItem$.next(upItem);
+                                this.ensureItemVisible(upItem);
 
                             } else if (upItem.isSelectable) {
                                 this.raiseChangeCallback = true;
@@ -539,9 +556,9 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
                     keyCode === KeyCodes.Space ||
                     keyCode === KeyCodes.Enter;
             }),
-            withLatestFrom(this.viewPort$, this.itemService.flatItemList$, this.listElement$),
+            withLatestFrom(this.viewPort$, this.itemService.visibleItemList$, this.listElement$),
             takeUntil(this.destroyed$)
-        ).subscribe(([event, viewPort, flatItemList, listElement]) => {
+        ).subscribe(([event, viewPort, visibleItemList, listElement]) => {
             let stopEvent = false;
 
             if (listElement?.clientHeight && this.viewPortRowHeight && this.pageSize === 0) {
@@ -556,7 +573,7 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
             };
 
             const selectRange = (currentIndex: number, target: number) => {
-                const rangeSelection = flatItemList.slice(Math.min(currentIndex, target), Math.max(currentIndex, target) + 1).filter(item => item.isSelectable);
+                const rangeSelection = visibleItemList.slice(Math.min(currentIndex, target), Math.max(currentIndex, target) + 1).filter(item => item.isSelectable);
                 this.raiseChangeCallback = true;
                 this.itemService.setSelectedItems(rangeSelection);
             };
@@ -577,7 +594,7 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
                 stopEvent = true;
             };
 
-            const currentIndex = Math.max(flatItemList.findIndex(item => this.currentItem === item), 0);
+            const currentIndex = Math.max(visibleItemList.findIndex(item => this.currentItem === item), 0);
             let target: HTMLElement;
 
             switch (event.code) {
@@ -598,7 +615,7 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
                 case KeyCodes.End:
                     if (this.multiSelect && event.shiftKey) {
                         // Select all from current to last élément
-                        selectRange(currentIndex, flatItemList.length - 1);
+                        selectRange(currentIndex, visibleItemList.length - 1);
                     } else if (!event.ctrlKey) {
                         // Select last element
                         this.raiseChangeCallback = true;
@@ -637,7 +654,8 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
 
                     if (this.currentItem) {
                         if (this.currentItem.isCollapsible) {
-                            // this.toggleCollapse$(currentIndex, !sitem.collapsed);
+                            this.collapseItem$.next(this.currentItem);
+                            this.ensureItemVisible(this.currentItem);
                         } else {
                             this.raiseChangeCallback = true;
                             if (this.currentItem.selected || this.multiSelect && event.ctrlKey) {
@@ -654,7 +672,9 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
                 case KeyCodes.Enter:
                     if (this.currentItem) {
                         if (this.currentItem.isCollapsible) {
-                            // this.toggleCollapse$(currentIndex, !eitem.collapsed);
+                            this.collapseItem$.next(this.currentItem);
+                            this.ensureItemVisible(this.currentItem);
+
                         } else if (this.currentItem.isSelectable) {
                             if (this.itemEnter.observers.length > 0) {
                                 this.itemEnter.next({
@@ -696,12 +716,6 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
                 return keyUp$;
             }),
             filter(() => !this.disabled),
-            tap(() => {
-                if ((this.query || '').length < this.minSearchlength) {
-                    // this._itemList = [];
-                    return;
-                }
-            }),
             filter(event => {
                 const keyCode = event.code;
                 return keyCode >= KeyCodes.Key0 ||
@@ -765,10 +779,25 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
             }),
             takeUntil(this.destroyed$)
         ).subscribe(() => {
-            console.log('clear filterExpression', this.filterExpression);
             this.filterExpression = '';
         });
 
+        this.collapseItem$.pipe(
+            switchMap(item => {
+                if (item.collapsed && this.collapsingItem) {
+                    return this.collapsingItem(item);
+                } else if (this.expandingItem) {
+                    return this.expandingItem(item);
+                } else {
+                    return of(item);
+                }
+            }),
+            filter(item => !!item),
+            takeUntil(this.destroyed$)
+        ).subscribe(item => {
+            item.collapsed = !item.collapsed;
+            this.itemService.refreshVisibleItemList$.next();
+        });
         // from(this.keyboardNavigation$).pipe(
         //     tap(() => this._keyboardNavigation = true),
         //     debounceTime(1000),
@@ -778,16 +807,6 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
         //     this.changeDetectorRef.markForCheck();
         // });
 
-        // from(this.setQuery$).pipe(
-        //     debounceTime(250),
-        //     switchMap(query => {
-        //         this.query = query;
-        //         this.setCurrentItem(undefined);
-        //         return this.calcViewList$();
-        //     }),
-        //     takeUntil(this.destroyed$)
-        // ).subscribe();
-
         this.maxHeight = 0;
     }
 
@@ -795,35 +814,11 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
     // eslint-disable-next-line @angular-eslint/no-input-rename
     @Input('min-search-length')
     public set minSearchlength(value: NumberInput) {
-        this._minSearchLength = coerceNumberProperty(value);
-    }
-
-    public get minSearchlength(): NumberInput {
-        return this._minSearchLength;
+        this.itemService.minSearchLength$.next(coerceNumberProperty(value));
     }
 
     public keyboardNavigation(): boolean {
         return this._keyboardNavigation;
-    }
-
-    /** Affiche un barre de recherche au dessus de la liste. */
-    @Input()
-    public set searchArea(value: BooleanInput) {
-        this._searchArea = coerceBooleanProperty(value);
-    }
-
-    public get searchArea(): BooleanInput {
-        return this._searchArea || this.minSearchlength > 0;
-    }
-
-    /** Retourne ou définit une valeur indiquant si les lignes de la liste peuvent être déplacées manuelement par l'utilisateur */
-    @Input()
-    public set sortable(value: BooleanInput) {
-        this._sortable = coerceBooleanProperty(value);
-    }
-
-    public get sortable(): BooleanInput {
-        return this._sortable;
     }
 
     /** Retourne ou définit une valeur indiquant si les lignes peuvent être déplacées vers un autre composant */
@@ -855,39 +850,10 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
         this.itemService.searchField$.next(value);
     }
 
-    /** Définit la hauteur maximum avant que le composant affiche une scrollbar
-     * spécifier une grande valeur pour ne jamais afficher de scrollbar
-     * Spécifier 0 pour que le composant determine sa hauteur à partir du container
-     */
-    @Input()
-    public set maxHeight(value: NumberInput) {
-        this._maxHeight = coerceNumberProperty(value);
-    }
-
-    /** Retourne la hauteur maximum avant que le composant affiche une scrollbar
-     * spécifier une grande valeur pour ne jamais afficher de scrollbar
-     * Spécifier 0 pour que le composant determine sa hauteur à partir du container
-     */
-    public get maxHeight(): NumberInput {
-        return this._maxHeight;
-    }
-
     /** Retourne le nombre de niveau pour une liste hierarchique */
     public get depthMax(): number {
         return this._depthMax;
     }
-
-    /** Definit le service utilisé pour le tri de la liste */
-    // @Input()
-    // public set sortingService(value: SortingService) {
-    //     this.setSortingService(value);
-    // }
-
-    /** Definit le service utilisé pour le regroupement de la liste */
-    // @Input()
-    // public set groupingService(value: GroupingService) {
-    //     this.setGroupingService(value);
-    // }
 
     /** Definit si le waiter doit être affiché dans la liste. */
     @Input()
@@ -913,10 +879,6 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
 
     public get parentItemTemplate(): TemplateRef<unknown> {
         return this.parentItemTemplateExternal || this.parentItemTemplateInternal;
-    }
-
-    public get loaderTemplate(): TemplateRef<unknown> {
-        return this.loaderTemplateExternal || this.loaderTemplateInternal;
     }
 
     public get headerTemplate(): TemplateRef<unknown> {
@@ -976,20 +938,6 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
         this.disabled = isDisabled;
     }
     // ************* End of ControlValueAccessor Implementation **************
-
-    /** Change l'état d'expansion de toute les lignes parentes */
-    // public toggleAll$(collapsed?: boolean): Observable<Item<unknown>[]> {
-    //     return super.toggleAll$(collapsed).pipe(
-    //         switchMap(items => this.calcViewList$().pipe(take(1), map(() => items))));
-    // }
-
-    /** Change l'état d'expansion de toute les lignes parentes */
-    public toggleAll(_collapsed?: boolean): void {
-        // this.toggleAll$(collapsed).pipe(
-        //     take(1),
-        //     takeUntil(this.destroyed$)
-        // ).subscribe();
-    }
 
     /** Positionne a scrollbar pour assurer que l'élément spécifié soit visible */
     public ensureItemVisible(item: Item<T> | number): void {
@@ -1108,33 +1056,6 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
     //             takeUntil(this.destroyed$)
     //         ).subscribe();
     //     }
-    // }
-
-    // public selectRange$(indexFrom: number, indexTo?: number): Observable<number> {
-    //     return super.selectRange$(indexFrom, indexTo).pipe(tap(selectedCount => {
-    //         if (selectedCount) {
-    //             // Raise event
-    //             this.onSelectionChange();
-    //         }
-    //         return selectedCount;
-    //     }), tap(() => this.changeDetectorRef.markForCheck()));
-    // }
-
-    // public toggleSelect$(items: Item<unknown>[], state: boolean): Observable<Item<unknown>[]> {
-    //     if (!this._multiSelect && !items[0].selected === !state) {
-    //         return of(items);
-    //     } else {
-    //         return super.toggleSelect$(items, state).pipe(
-    //             tap(() => {
-    //                 // Raise event
-    //                 this.onSelectionChange();
-    //             }));
-    //     }
-    // }
-
-    // public calcViewList$(): Observable<IViewListResult<unknown>> {
-    //     return super.calcViewList$(this.query).pipe(
-    //         tap(() => this.changeDetectorRef.markForCheck()));
     // }
 
     // NgModel implementation

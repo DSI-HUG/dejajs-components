@@ -30,7 +30,6 @@ export class ViewPortDemoComponent {
     public ensureIndex: number;
     public scrollPosition: number;
 
-
     public exampleValue = `
     <viewport [models]="news$ | async" itemSize="120">
         <ng-template #viewPortItemTemplate let-item>
