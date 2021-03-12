@@ -1,3 +1,11 @@
+# [11.6.0](https://github.com/DSI-HUG/dejajs-components/compare/v11.5.0...v11.6.0) (2021-03-12)
+
+
+### Bug Fixes
+
+* **angular.json:** remove useless reference to angular2-text-mask ([0c55c71](https://github.com/DSI-HUG/dejajs-components/commit/0c55c71b184459a8bf31516c2e5079fd4d85f4f5))
+* **date-picker:** replaced value undefined by null ([e3bc604](https://github.com/DSI-HUG/dejajs-components/commit/e3bc604203e74f52364cae5fe3141d146658bbcc))
+
 ## [11.5.1-next.2](https://github.com/DSI-HUG/dejajs-components/compare/v11.5.1-next.1...v11.5.1-next.2) (2021-03-12)
 
 
