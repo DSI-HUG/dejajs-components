@@ -1,3 +1,10 @@
+## [11.5.1-next.2](https://github.com/DSI-HUG/dejajs-components/compare/v11.5.1-next.1...v11.5.1-next.2) (2021-03-12)
+
+
+### Bug Fixes
+
+* **date-picker:** replaced value undefined by null ([e3bc604](https://github.com/DSI-HUG/dejajs-components/commit/e3bc604203e74f52364cae5fe3141d146658bbcc))
+
 ## [11.5.1-next.1](https://github.com/DSI-HUG/dejajs-components/compare/v11.5.0...v11.5.1-next.1) (2021-02-02)
 
 
