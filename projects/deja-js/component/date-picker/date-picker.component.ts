@@ -637,7 +637,7 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
         timer(0).pipe(
             takeUntil(this.destroyed$)
         ).subscribe(() => {
-            this.value = undefined;
+            this.value = null;
             delete this._inputModel;
         });
         this.close();
