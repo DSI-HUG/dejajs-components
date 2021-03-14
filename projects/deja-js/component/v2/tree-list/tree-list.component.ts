@@ -9,15 +9,11 @@
 import { BooleanInput, coerceBooleanProperty, coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ContentChildren, ElementRef, EventEmitter, HostBinding, Input, Optional, Output, Self, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
-import { DejaChildValidatorDirective, Destroy } from '@deja-js/component/core';
+import { DejaChildValidatorDirective, Destroy, KeyCodes } from '@deja-js/component/core';
 import { Item, ItemComponent, ItemEvent, ItemService } from '@deja-js/component/v2/item-list';
-import { ViewPort, ViewPortComponent, ViewPortMode } from '@deja-js/component/v2/viewport';
+import { ViewPort, ViewPortComponent, ViewPortItemClassEvent, ViewPortMode } from '@deja-js/component/v2/viewport';
 import { BehaviorSubject, combineLatest, fromEvent, merge, Observable, of, ReplaySubject, Subject, timer } from 'rxjs';
 import { delay, filter, map, switchMap, takeUntil, tap, withLatestFrom } from 'rxjs/operators';
-
-import { KeyCodes } from '../../core/keycodes.enum';
-import { ViewPortItemClassEvent } from '../viewport/viewport.component';
-
 
 export type NgModelType = 'item' | 'model' | 'value';
 

@@ -14,7 +14,6 @@ import { debounceTime, distinctUntilChanged, filter, map, mergeMap, switchMap, t
 
 import { ViewPort, ViewPortDirection, ViewPortItem, ViewPortMode, ViewPortService } from './viewport.service';
 
-
 export type ViewPortScrollStyleType = 'scrollbar' | 'buttons';
 
 export class ViewPortItemClassEvent<T> {

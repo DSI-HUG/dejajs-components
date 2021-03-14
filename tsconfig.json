@@ -3,10 +3,10 @@
     "compilerOptions": {
         "paths": {
             "@deja-js/component": [
-                "projects/deja-js/component"
+                "dist/deja-js/component"
             ],
             "@deja-js/component/*": [
-                "projects/deja-js/component/*"
+                "dist/deja-js/component/*"
             ]
         }
     }

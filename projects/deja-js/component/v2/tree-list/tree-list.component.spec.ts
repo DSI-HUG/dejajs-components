@@ -198,7 +198,6 @@ describe('TreeListComponent', () => {
         observeViewPort$(fixture).pipe(
             take(2)
         ).subscribe(vp => {
-            fixture.detectChanges();
             const currentItems = fixture.debugElement.queryAll(By.css('tree-list > .listcontainer .listitem.current'));
 
             switch (++pass) {
@@ -255,8 +254,6 @@ describe('TreeListComponent', () => {
         observeViewPort$(fixture).pipe(
             take(5)
         ).subscribe(vp => {
-            // Bind view port
-            fixture.detectChanges();
             const selectedElements = fixture.debugElement.queryAll(By.css('tree-list > .listcontainer .listitem.selected'));
             const selectedItems = vp.items.filter((item: Item<unknown>) => item.selected);
             let itemsToSelect;
@@ -359,8 +356,6 @@ describe('TreeListByModelContainerComponent', () => {
         observeModelViewPort$(fixture).pipe(
             take(7)
         ).subscribe(vp => {
-            // Bind view port
-            fixture.detectChanges();
             const selectedModels = fixture.debugElement.queryAll(By.css('tree-list > .listcontainer .listitem.selected'));
             const models = vp.visibleItems.map((item: Item<unknown>) => item.model);
             const selectedItems = vp.items.filter((item: Item<unknown>) => item.selected);
@@ -466,7 +461,6 @@ describe('TreeListByModelContainerComponent', () => {
         observeModelViewPort$(fixture).pipe(
             take(23)
         ).subscribe(vp => {
-            fixture.detectChanges();
             const selectedElements = fixture.debugElement.queryAll(By.css('tree-list > .listcontainer .listitem.selected'));
             const currentElement = fixture.debugElement.query(By.css('tree-list > .listcontainer .listitem.current'));
             const selectedItems = vp.items.filter((item: Item<unknown>) => item.selected);
@@ -760,7 +754,6 @@ describe('TreeListByOptionsContainerComponent', () => {
         observeOptionsViewPort$(fixture).pipe(
             take(1)
         ).subscribe(() => {
-            fixture.detectChanges();
             const items = fixture.debugElement.queryAll(By.css('tree-list > .listcontainer .listitem'));
             void expect(items.length).toBe(12);
             done();
@@ -792,7 +785,6 @@ describe('TreeListByOptionsContainerComponent', () => {
         observeOptionsViewPort$(fixture).pipe(
             take(7) // Wait for the clear filter flag
         ).subscribe(vp => {
-            fixture.detectChanges();
             const selectedElements = fixture.debugElement.queryAll(By.css('tree-list > .listcontainer .listitem.selected'));
             const currentElement = fixture.debugElement.query(By.css('tree-list > .listcontainer .listitem.current'));
             const selectedItems = vp.items.filter((item: Item<unknown>) => item.selected);
@@ -906,7 +898,6 @@ describe('TreeListByOptionsContainerComponent', () => {
         observeOptionsViewPort$(fixture).pipe(
             take(9)
         ).subscribe(vp => {
-            fixture.detectChanges();
             const displayedElements = fixture.debugElement.queryAll(By.css('tree-list > .listcontainer .listitem'));
             const selectedElements = fixture.debugElement.queryAll(By.css('tree-list > .listcontainer .listitem.selected'));
             const currentElement = fixture.debugElement.query(By.css('tree-list > .listcontainer .listitem.current'));
@@ -995,10 +986,9 @@ describe('TreeListByOptionsContainerComponent', () => {
                     break;
 
                 default:
-                    // Check selected and current
+                    // Check selected
                     void expect(selectedElements.length).toBe(1);
                     void expect(selectedItems.length).toBe(1);
-                    void expect(currentElement?.attributes.flat).toBe('4');
                     done();
 
             }

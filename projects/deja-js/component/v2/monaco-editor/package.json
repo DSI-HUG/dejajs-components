@@ -1,0 +1,11 @@
+{
+    "ngPackage": {
+        "lib": {
+            "entryFile": "./index.ts",
+            "umdModuleIds": {}
+        }
+    },
+    "peerDependencies": {
+        "monaco-editor": "0.21.2"
+    }
+}

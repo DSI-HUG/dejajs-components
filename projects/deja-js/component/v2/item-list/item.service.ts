@@ -9,10 +9,10 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Injectable } from '@angular/core';
+import { Diacritics } from '@deja-js/component/core';
 import { BehaviorSubject, combineLatest, merge, Observable, of, ReplaySubject } from 'rxjs';
 import { filter, map, shareReplay, switchMap, take } from 'rxjs/operators';
 
-import { Diacritics } from '../../core/diacritics/diacritics';
 import { Item } from './item';
 import { ItemComponent } from './item.component';
 
