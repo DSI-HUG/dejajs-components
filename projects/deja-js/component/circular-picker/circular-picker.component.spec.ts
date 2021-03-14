@@ -123,10 +123,10 @@ describe('DejaCircularPickerComponent', () => {
                 tap(() => {
                     sendMouseEvent(htmlElement.ownerDocument, 'mousemove', valueBounds.left + 1, valueBounds.top + 1, 0);
                     void expect(component.value).toEqual(9);
-                }))
-                .subscribe(() => {
-                    done();
-                });
+                })
+            ).subscribe(() => {
+                done();
+            });
         });
     });
 });

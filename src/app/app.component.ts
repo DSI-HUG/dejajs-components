@@ -13,7 +13,7 @@ import { ViewEncapsulation } from '@angular/core';
 import { DejaTextMetricsService } from '@deja-js/component/core';
 import { IconService } from '@deja-js/component/core';
 import { Destroy } from '@deja-js/component/core';
-import { BehaviorSubject, from } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
@@ -43,7 +43,7 @@ export class AppComponent extends Destroy {
             this._theme = 'blue';
         }
         this.theme$ = new BehaviorSubject<string>(this._theme);
-        from(this.theme$).pipe(
+        this.theme$.pipe(
             takeUntil(this.destroyed$)
         ).subscribe(theme => document.body.setAttribute('theme', theme));
 

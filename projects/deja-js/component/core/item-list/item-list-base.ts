@@ -507,7 +507,7 @@ export abstract class ItemListBase<T> extends Destroy {
             this._itemListService.hideSelected = this._hideSelected;
             this._itemListService.childrenField = this._childrenField;
             this._itemListService.valueField = this._valueField;
-            this.waiter$sub = from(this._itemListService.waiter$).pipe(
+            this.waiter$sub = this._itemListService.waiter$.pipe(
                 takeUntil(this.destroyed$)
             ).subscribe(status => {
                 this._waiter = status;

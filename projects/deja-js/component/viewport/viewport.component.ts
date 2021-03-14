@@ -23,7 +23,7 @@ import { IViewPortRefreshParams } from '@deja-js/component/core';
 import { ViewportDirection } from '@deja-js/component/core';
 import { ViewportMode } from '@deja-js/component/core';
 import { ViewPortService } from '@deja-js/component/core';
-import { BehaviorSubject, from, fromEvent, interval, merge, Observable, of, Subject, timer } from 'rxjs';
+import { BehaviorSubject, fromEvent, interval, merge, Observable, of, Subject, timer } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
 
 export type DejaViewPortScrollStyleType = 'scrollbar' | 'buttons';
@@ -281,11 +281,11 @@ export class DejaViewPortComponent extends Destroy {
             );
         };
 
-        const downButton$ = from(this.downButton$).pipe(
+        const downButton$ = this.downButton$.pipe(
             distinctUntilChanged()
         );
 
-        const upButton$ = from(this.upButton$).pipe(
+        const upButton$ = this.upButton$.pipe(
             distinctUntilChanged()
         );
 

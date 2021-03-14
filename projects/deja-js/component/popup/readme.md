@@ -14,8 +14,8 @@ Exemple
                 "Titre",
                 "Etes-vous sure de vouloire faire cela ?",
                 this.viewContainerRef,
-                [DpiDialogButton.Save])
-            .subscribe((response: DpiDialogReponse) => {
+                [DpiDialogButton.Save]
+            ).subscribe((response: DpiDialogReponse) => {
                 if (response.accepted) {
                     // Ca roule!
                 }

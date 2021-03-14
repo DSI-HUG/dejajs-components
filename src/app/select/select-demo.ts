@@ -15,7 +15,7 @@ import { IItemBase } from '@deja-js/component/core';
 import { IItemTree } from '@deja-js/component/core';
 import { IViewPortItem } from '@deja-js/component/core';
 import { DejaSelectComponent } from '@deja-js/component/select';
-import { from, Observable, of, Subject, Subscription } from 'rxjs';
+import { Observable, of, Subject, Subscription } from 'rxjs';
 import { delay, map, take, takeUntil, tap } from 'rxjs/operators';
 
 import { News } from '../common/news.model';
@@ -233,7 +233,7 @@ export class SelectDemoComponent extends Destroy {
     public confirmDialog(): (item: IItemBase<unknown>) => Observable<IItemBase<unknown>> {
         return (item: IItemBase<unknown>) => {
             this.dialogVisible = true;
-            return from(this.dialogResponse$).pipe(
+            return this.dialogResponse$.pipe(
                 take(1),
                 map(response => {
                     this.dialogVisible = false;

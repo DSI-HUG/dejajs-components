@@ -105,7 +105,7 @@ export class DejaTilesLayoutProvider extends Destroy {
     public constructor(@Optional() private clipboardService: DejaClipboardService) {
         super();
 
-        from(this.refreshTiles$).pipe(
+        this.refreshTiles$.pipe(
             debounceTime(30),
             tap(() => {
                 this.container.style.width = '';
@@ -209,7 +209,7 @@ export class DejaTilesLayoutProvider extends Destroy {
             this.layoutCompleted.next(event);
         });
 
-        const ensureTile$ = from(this.ensureVisible$).pipe(
+        const ensureTile$ = this.ensureVisible$.pipe(
             delay(1),
             map(id => this.tilesDic.get(id)),
             filter(tile => !!tile),
@@ -250,7 +250,7 @@ export class DejaTilesLayoutProvider extends Destroy {
             }
         });
 
-        from(this.dragSelection$).pipe(
+        this.dragSelection$.pipe(
             switchMap(dragSelection => {
                 const mouseUp$ = fromEvent(this._container.ownerDocument, 'mouseup').pipe(
                     tap(() => this.selectionRect$.next(null))
@@ -276,9 +276,9 @@ export class DejaTilesLayoutProvider extends Destroy {
             takeUntil(this.destroyed$)
         ).subscribe();
 
-        const leave$ = from(this.dragleave$);
+        const leave$ = this.dragleave$;
 
-        from(this.dragDropInfos$).pipe(
+        this.dragDropInfos$.pipe(
             switchMap(dragDropInfos => {
                 const tiles = dragDropInfos && ((dragDropInfos.tiles?.length && dragDropInfos.tiles) || (dragDropInfos.currentTile && [dragDropInfos.currentTile]));
                 if (!tiles) {
@@ -307,7 +307,7 @@ export class DejaTilesLayoutProvider extends Destroy {
 
                 const kill$ = merge(mouseUp$, cancel$);
 
-                const dragover$ = from(this.dragover$).pipe(
+                const dragover$ = this.dragover$.pipe(
                     map(cursor => cursor.originalEvent)
                 );
 
@@ -367,7 +367,7 @@ export class DejaTilesLayoutProvider extends Destroy {
         ).subscribe();
 
         // Delete stream for clipboard
-        from(this.deleteTiles$).pipe(
+        this.deleteTiles$.pipe(
             takeUntil(this.destroyed$)
         ).subscribe(tilesToDelete => this.deleteTiles(tilesToDelete));
     }

@@ -12,7 +12,7 @@ import { ViewChild } from '@angular/core';
 import { ViewEncapsulation } from '@angular/core';
 import { Destroy } from '@deja-js/component/core';
 import { Position } from '@deja-js/component/core';
-import { BehaviorSubject, combineLatest, from } from 'rxjs';
+import { BehaviorSubject, combineLatest } from 'rxjs';
 import { delay, filter, takeUntil, tap } from 'rxjs/operators';
 
 import { IDragCursorInfos } from './mouse-drag-cursor-infos.interface';
@@ -38,14 +38,14 @@ export class DejaMouseDragDropCursorComponent extends Destroy {
 
         const element = elementRef.nativeElement as HTMLElement;
 
-        from(this.position$).pipe(
+        this.position$.pipe(
             takeUntil(this.destroyed$)
         ).subscribe(pos => {
             element.style.left = pos ? `${pos.left}px` : '-1000px';
             element.style.top = pos ? `${pos.top}px` : '-1000px';
         });
 
-        const cursor$ = from(this.cursor$);
+        const cursor$ = this.cursor$;
 
         // Hide
         cursor$.pipe(

@@ -46,7 +46,7 @@ import { SortingService } from '@deja-js/component/core';
 import { ViewportMode } from '@deja-js/component/core';
 import { ViewPortService } from '@deja-js/component/core';
 import { IDejaDragContext, IDejaDragEvent, IDejaDropContext } from '@deja-js/component/dragdrop';
-import { BehaviorSubject, combineLatest, from, fromEvent, merge, Observable, of, Subject, Subscription, timer } from 'rxjs';
+import { BehaviorSubject, combineLatest, fromEvent, merge, Observable, of, Subject, Subscription, timer } from 'rxjs';
 import { debounceTime, filter, map, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 
 import { DejaTreeListScrollEvent } from './tree-list-scroll-event';
@@ -154,12 +154,12 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
             this.control.valueAccessor = this;
         }
 
-        from(this.clearFilterExpression$).pipe(
+        this.clearFilterExpression$.pipe(
             debounceTime(400),
             takeUntil(this.destroyed$)
         ).subscribe(() => this.filterExpression = '');
 
-        from(this.keyboardNavigation$).pipe(
+        this.keyboardNavigation$.pipe(
             tap(() => this._keyboardNavigation = true),
             debounceTime(1000),
             takeUntil(this.destroyed$)
@@ -177,7 +177,7 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
             this.changeDetectorRef.markForCheck();
         });
 
-        from(this.setQuery$).pipe(
+        this.setQuery$.pipe(
             debounceTime(250),
             switchMap(query => {
                 this.query = query;
