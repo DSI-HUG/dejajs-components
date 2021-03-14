@@ -192,6 +192,8 @@ export class DejaViewPortComponent extends Destroy {
     public constructor(private changeDetectorRef: ChangeDetectorRef, private viewPort: ViewPortService) {
         super();
 
+        console.warn('@deja-js/component/viewport is deprecated, and will be removed in a further version. Please use @deja-js/component/v2/viewport instead.');
+
         fromEvent(window, 'resize').pipe(
             debounceTime(5),
             takeUntil(this.destroyed$)

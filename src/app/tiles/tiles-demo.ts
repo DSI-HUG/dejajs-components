@@ -10,9 +10,9 @@ import { Component } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ViewEncapsulation } from '@angular/core';
 import { Rect } from '@deja-js/component/core';
+import { DejaMessageBoxType } from '@deja-js/component/message-box';
 import { IDejaMouseDraggableContext, IDejaMouseDroppableContext, IDropCursorInfos } from '@deja-js/component/mouse-dragdrop';
 import { DejaTile, IDejaTilesAddEvent, IDejaTilesRemoveEvent } from '@deja-js/component/tiles';
-import { DejaMessageBoxType } from 'projects/deja-js/component/message-box';
 import { from, Observable, Subject } from 'rxjs';
 import { defaultIfEmpty, map, reduce, scan, switchMap, take } from 'rxjs/operators';
 
