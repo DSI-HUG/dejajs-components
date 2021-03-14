@@ -7,49 +7,47 @@
  */
 
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { DebugElement } from '@angular/core';
+import { Component, DebugElement } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { GroupingService } from '@deja-js/component/core';
-import { KeyCodes } from '@deja-js/component/core';
-import { ItemModule, SortingService } from '@deja-js/component/v2/item-list';
+import { Destroy, GroupingService, KeyCodes } from '@deja-js/component/core';
+import { ItemModule, SortInfos, SortingService } from '@deja-js/component/v2/item-list';
 import { Item } from '@deja-js/component/v2/item-list';
-import { SortInfos } from '@deja-js/component/v2/item-list';
-import { ViewPortService } from '@deja-js/component/v2/viewport';
 import { timer } from 'rxjs';
-import { debounceTime, filter, take } from 'rxjs/operators';
+import { debounceTime, delay, filter, take, takeUntil, tap } from 'rxjs/operators';
 
 import { TreeListModule } from './index';
 import { TreeListComponent } from './tree-list.component';
 
+
 @Component({
     selector: 'TreeListContainerComponent',
-    template: `<deja-tree-list style="height: 500px;width: 1000px;" [items]="itemList" multiSelect viewportMode="variable" searchArea sortable itemsDraggable pageSize="10">
-                    <ng-template #itemTemplate let-item>Item {{ item.displayName }}</ng-template>
-                </deja-tree-list>`,
+    template: `<tree-list style="height:500px;width:1000px;" [items]="itemList" multiSelect viewPortMode="variable" searchArea pageSize="10">
+                    <ng-template #itemTemplate let-item>Item {{ item.label }}</ng-template>
+                </tree-list>`,
     providers: [
         GroupingService
     ]
 })
-class TreeListContainerComponent {
+class TreeListContainerComponent extends Destroy {
     public itemList = [] as Item<unknown>[];
 
     public constructor(groupingService: GroupingService) {
+        super();
+
         // eslint-disable-next-line prefer-spread
         const itemList = Array.apply(null, { length: 2000 }).map((_n: unknown, i: number) => {
             const rand = Math.floor(Math.random() * (70 - 33 + 1)) + 33; // random de 33 à 70
-            return {
-                size: rand,
-                label: `${i} - Une ligne de test avec une taille de : ${rand}`
-            } as Item<unknown>;
+            const item = new Item<unknown>(i.toString(), `${i} - Une ligne de test avec une taille de : ${rand}`);
+            item.size = rand;
+            return item;
         });
 
         groupingService.group$(itemList, [{ groupByField: 'size' }]).pipe(
-            take(1)
-            // eslint-disable-next-line rxjs-angular/prefer-takeuntil
+            take(1),
+            takeUntil(this.destroyed$)
         ).subscribe(groupedResult => {
             this.itemList = groupedResult;
         });
@@ -59,13 +57,13 @@ class TreeListContainerComponent {
 @Component({
     selector: 'TreeListByModelContainerComponent',
     // eslint-disable-next-line @angular-eslint/component-max-inline-declarations
-    template: `<deja-tree-list style="height: 500px;width: 1000px;" [(ngModel)]="selectedModels" [models]="modelsList$" multiSelect viewportMode="fixed" searchArea pageSize="10" valueField="id">
+    template: `<tree-list style="height:500px;width:1000px;" ngModelType="value" [(ngModel)]="selectedModels" [models]="modelsList" multiSelect viewPortMode="fixed" searchArea pageSize="10" textField="label" valueField="id">
                     <ng-template #itemTemplate let-item>
                         <span [style.background-color]="backgroundColor(item)">
-                            Item {{ item.model.displayName }}
+                            Item {{ item.model.label }}
                         </span>
                     </ng-template>
-                </deja-tree-list>`,
+                </tree-list>`,
     providers: [
         SortingService
     ]
@@ -81,7 +79,7 @@ class TreeListByModelContainerComponent {
             return {
                 id: i,
                 value: rand,
-                displayName: `${i} - Une ligne de test avec une valeur de : ${rand}`
+                label: `${i} - Une ligne de test avec une valeur de : ${rand}`
             };
         });
 
@@ -97,25 +95,24 @@ class TreeListByModelContainerComponent {
 @Component({
     selector: 'TreeListByOptionsContainerComponent',
     // eslint-disable-next-line @angular-eslint/component-max-inline-declarations
-    template: `<deja-tree-list style="height: 800px;width: 1000px;" viewportMode="fixed" multiSelect sortable itemsDraggable>
-                    <deja-item value="Apricots" text="Apricots"></deja-item>
-                    <deja-item value="Banana" text="Banana"></deja-item>
-                    <deja-item value="Cantaloupe" text="Cantaloupe"></deja-item>
-                    <deja-item value="Cherries" text="Cherries"></deja-item>
-                    <deja-item value="Coconut" text="Coconut"></deja-item>
-                    <deja-item value="Cranberries" text="Cranberries"></deja-item>
-                    <deja-item value="Durian" text="Durian"></deja-item>
-                    <deja-item value="Grapes" text="Grapes"></deja-item>
-                    <deja-item value="Lemon" text="Lemon"></deja-item>
-                    <deja-item value="Mango" text="Mango"></deja-item>
-                    <deja-item value="Pineapple" text="Pineapple"></deja-item>
-                    <deja-item value="Watermelon" text="Watermelon"></deja-item>
-                </deja-tree-list>`
+    template: `<tree-list style="height:800px;width:1000px;" ngModelType="value" viewPortMode="fixed" multiSelect>
+                    <item value="Apricots" text="Apricots"></item>
+                    <item value="Banana" text="Banana" ></item>
+                    <item value="Cantaloupe" text="Cantaloupe" selected="true"></item>
+                    <item value="Cherries" text="Cherries" selected="true"></item>
+                    <item value="Coconut" text="Coconut"></item>
+                    <item value="Cranberries" text="Cranberries"></item>
+                    <item value="Durian" text="Durian"></item>
+                    <item value="Grapes" text="Grapes"></item>
+                    <item value="Lemon" text="Lemon"></item>
+                    <item value="Mango" text="Mango"></item>
+                    <item value="Pineapple" text="Pineapple"></item>
+                    <item value="Watermelon" text="Watermelon"></item>
+                </tree-list>`
 })
-class TreeListByOptionsContainerComponent {
-}
+class TreeListByOptionsContainerComponent { }
 
-fdescribe('TreeListComponent', () => {
+describe('TreeListComponent', () => {
     beforeEach(waitForAsync(() => {
         void TestBed.configureTestingModule({
             declarations: [
@@ -132,10 +129,14 @@ fdescribe('TreeListComponent', () => {
 
     const observeViewPort$ = (fixture: ComponentFixture<TreeListContainerComponent>) => {
         const treeListDebugElement = fixture.debugElement.query(By.directive(TreeListComponent));
-        const viewPortService = treeListDebugElement.injector.get(ViewPortService);
+        const treeListInstance = treeListDebugElement.componentInstance as TreeListComponent<unknown>;
 
-        return viewPortService.viewPort$.pipe(
-            filter(result => result.viewPortSize > 0));
+        return treeListInstance.viewPort$.pipe(
+            delay(1),
+            tap(() => fixture.detectChanges(true)),
+            debounceTime(10),
+            filter(result => result.viewPortSize > 0)
+        );
     };
 
     it('should create the component', waitForAsync(() => {
@@ -146,40 +147,40 @@ fdescribe('TreeListComponent', () => {
         void expect(treeListInstance).toBeTruthy();
     }));
 
-    it('should return the write property', (() => {
+    it('should return the correct property', (() => {
         const fixture = TestBed.createComponent(TreeListContainerComponent);
+        fixture.detectChanges();
         const treeListDebugElement = fixture.debugElement.query(By.directive(TreeListComponent));
         const treeListInstance = treeListDebugElement.componentInstance as TreeListComponent<unknown>;
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const tl = treeListInstance as any;
-        fixture.detectChanges();
 
         void expect(treeListInstance.pageSize).toBeGreaterThanOrEqual(10);
         treeListInstance.pageSize = '5';
-        void expect(tl.pageSize).toBe(5);
+        void expect(+treeListInstance.pageSize).toBe(5);
         treeListInstance.pageSize = 0;
-        void expect(treeListInstance.pageSize).toBeGreaterThanOrEqual(10);
+        void expect(treeListInstance.pageSize).toBe(0);
 
         void expect(treeListInstance.hintLabel).toBeUndefined();
         treeListInstance.hintLabel = 'I am a hint label';
         void expect(treeListInstance.hintLabel).toEqual('I am a hint label');
 
-        void expect(tl._viewPortRowHeight).toBe(ViewPortService.itemDefaultSize);
+        void expect(treeListInstance.viewPortRowHeight).toBe(40);
         treeListInstance.viewPortRowHeight = 100;
-        void expect(tl._viewPortRowHeight).toBe(100);
+        void expect(treeListInstance.viewPortRowHeight).toBe(100);
 
-        void expect(tl.getTextField()).toEqual(d.defaultTextField);
+        // eslint-disable-next-line rxjs/no-subject-value
+        void expect(treeListInstance.itemService.textField$.getValue()).toEqual('label');
         treeListInstance.textField = 'text';
-        void expect(tl.getTextField()).toEqual('text');
-
+        // eslint-disable-next-line rxjs/no-subject-value
+        void expect(treeListInstance.itemService.textField$.getValue()).toEqual('text');
 
         void expect(treeListInstance.multiSelect).toBeTruthy();
         treeListInstance.multiSelect = 'false';
         void expect(treeListInstance.multiSelect).toBeFalsy();
 
-        void expect(treeListInstance.minSearchlength).toBe(0);
+        void expect(treeListInstance.minSearchlength).toBe(undefined);
         treeListInstance.minSearchlength = '3';
-        void expect(tl.minSearchlength).toBe(3);
+        // eslint-disable-next-line rxjs/no-subject-value
+        void expect(treeListInstance.itemService.minSearchLength$.getValue()).toBe(3);
 
         void expect(treeListInstance.disabled).toBeNull();
         treeListInstance.disabled = true;
@@ -192,43 +193,29 @@ fdescribe('TreeListComponent', () => {
         const fixture = TestBed.createComponent(TreeListContainerComponent);
         const treeListDebugElement = fixture.debugElement.query(By.directive(TreeListComponent));
         const treeListInstance = treeListDebugElement.componentInstance as TreeListComponent<unknown>;
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const tl = treeListInstance as any;
         let pass = 0;
 
         observeViewPort$(fixture).pipe(
-            debounceTime(100) // Debounce here, because ensureVisible move the scroll and more than one viewPort can be raised
+            take(2)
         ).subscribe(vp => {
             fixture.detectChanges();
-            const currentItems = fixture.debugElement.queryAll(By.css('deja-tree-list > .deja-listcontainer > .listitem[current="true"]'));
+            const currentItems = fixture.debugElement.queryAll(By.css('tree-list > .listcontainer .listitem.current'));
 
             switch (++pass) {
                 case 1:
                     void expect(currentItems.length).toBe(0);
-                    // Set current item by index
-                    tl.currentItemIndex = 20;
-                    void expect(tl.currentItemIndex).toBe(20);
-                    treeListInstance.ensureItemVisible(tl.currentItemIndex);
-                    fixture.detectChanges();
-                    break;
-
-                case 2:
-                    // Check currentItem by index
-                    void expect(currentItems.length).toBe(1);
-                    void expect(currentItems[0]?.attributes.flat).toBe('20');
-                    void expect(vp.endIndex).toBe(20);
-                    void expect(treeListInstance.currentItem).toBe(vp.items[20]);
-                    // Set current item by item
-                    treeListInstance.currentItem = vp.items[1];
+                    // Set current item
+                    treeListInstance.currentItem = vp.items[1] as Item<unknown>;
+                    treeListInstance.refreshViewPort();
                     fixture.detectChanges();
                     break;
 
                 default:
-                    // Check currentItem by item
+                    // Check currentItem
                     void expect(currentItems.length).toBe(1);
                     void expect(currentItems[0]?.attributes.flat).toBe('1');
-                    void expect(vp.startIndex).toBe(1);
-                    void expect(treeListInstance.currentItem).toBe(vp.items[1]);
+                    void expect(vp.startIndex).toBe(0);
+                    void expect(treeListInstance.currentItem).toBe(vp.items[1] as Item<unknown>);
                     done();
             }
         });
@@ -237,33 +224,25 @@ fdescribe('TreeListComponent', () => {
     });
 
     it('should not load items if minSearchlength is defined', done => {
-        let pass = 0;
         const fixture = TestBed.createComponent(TreeListContainerComponent);
         const treeListDebugElement = fixture.debugElement.query(By.directive(TreeListComponent));
         const treeListInstance = treeListDebugElement.componentInstance as TreeListComponent<unknown>;
         treeListInstance.minSearchlength = 2;
-        const viewPortService = treeListDebugElement.injector.get(ViewPortService);
+        fixture.detectChanges();
 
-        viewPortService.viewPort$.pipe(
-            debounceTime(100)
-        ).subscribe(_vp => {
+        observeViewPort$(fixture).pipe(
+            take(1)
+        ).subscribe(() => {
             // Bind view port
             fixture.detectChanges();
-            const listItems = fixture.debugElement.queryAll(By.css('deja-tree-list > .deja-listcontainer > .listitem'));
-            switch (++pass) {
-                case 1:
-                    void expect(listItems.length).toBe(0);
-                    treeListInstance.query = '33';
-                    treeListInstance.refresh();
-                    fixture.detectChanges();
-                    break;
-
-                default:
-                    void expect(listItems.length).toBeGreaterThan(0);
-                    done();
-            }
+            const listItems = fixture.debugElement.queryAll(By.css('tree-list > .listcontainer .listitem'));
+            void expect(listItems.length).toBeGreaterThan(0);
+            done();
         });
 
+        const listItems = fixture.debugElement.queryAll(By.css('tree-list > .listcontainer .listitem'));
+        void expect(listItems.length).toBe(0);
+        treeListInstance.itemService.query$.next('33');
         fixture.detectChanges();
     });
 
@@ -274,22 +253,22 @@ fdescribe('TreeListComponent', () => {
         const treeListInstance = treeListDebugElement.componentInstance as TreeListComponent<unknown>;
 
         observeViewPort$(fixture).pipe(
-            debounceTime(10)
+            take(5)
         ).subscribe(vp => {
             // Bind view port
             fixture.detectChanges();
-            const selectedElements = fixture.debugElement.queryAll(By.css('deja-tree-list > .deja-listcontainer > .listitem.selected'));
+            const selectedElements = fixture.debugElement.queryAll(By.css('tree-list > .listcontainer .listitem.selected'));
             const selectedItems = vp.items.filter((item: Item<unknown>) => item.selected);
+            let itemsToSelect;
 
             switch (++pass) {
                 case 1:
                     void expect(selectedElements.length).toBe(0);
                     // Set selected items
-                    treeListInstance.selectedItems = [vp.items[vp.startIndex], vp.items[vp.endIndex], vp.items[vp.items.length - 1]];
+                    itemsToSelect = [vp.items[vp.startIndex], vp.items[vp.endIndex], vp.items[vp.items.length - 1]] as Item<unknown>[];
+                    treeListInstance.selectedItems = itemsToSelect;
                     void expect(treeListInstance.selectedItems).toBeDefined();
                     void expect(treeListInstance.selectedItems.length).toBe(3);
-                    treeListInstance.refreshViewPort();
-                    fixture.detectChanges();
                     break;
 
                 case 2:
@@ -300,7 +279,7 @@ fdescribe('TreeListComponent', () => {
                     void expect(selectedItems.length).toBe(3);
                     // Clear selection
                     treeListInstance.selectedItems = null;
-                    treeListInstance.refreshViewPort();
+                    treeListInstance.reloadViewPort();
                     fixture.detectChanges();
                     break;
 
@@ -309,9 +288,8 @@ fdescribe('TreeListComponent', () => {
                     void expect(selectedElements.length).toBe(0);
                     void expect(selectedItems.length).toBe(0);
                     // Set selected item
-                    treeListInstance.selectedItem = vp.items[5];
-                    void expect(treeListInstance.selectedItem).toBe(vp.items[5]);
-                    treeListInstance.refreshViewPort();
+                    treeListInstance.selectedItem = vp.items[5] as Item<unknown>;
+                    void expect(treeListInstance.selectedItem).toBe(vp.items[5] as Item<unknown>);
                     fixture.detectChanges();
                     break;
 
@@ -322,7 +300,6 @@ fdescribe('TreeListComponent', () => {
                     void expect(selectedItems.length).toBe(1);
                     // Clear selection
                     treeListInstance.selectedItem = null;
-                    treeListInstance.refreshViewPort();
                     fixture.detectChanges();
                     break;
 
@@ -338,7 +315,7 @@ fdescribe('TreeListComponent', () => {
     });
 });
 
-fdescribe('TreeListByModelContainerComponent', () => {
+describe('TreeListByModelContainerComponent', () => {
     beforeEach(waitForAsync(() => {
         void TestBed.configureTestingModule({
             declarations: [
@@ -355,9 +332,12 @@ fdescribe('TreeListByModelContainerComponent', () => {
 
     const observeModelViewPort$ = (fixture: ComponentFixture<TreeListByModelContainerComponent>) => {
         const treeListDebugElement = fixture.debugElement.query(By.directive(TreeListComponent));
-        const viewPortService = treeListDebugElement.injector.get(ViewPortService);
+        const treeListInstance = treeListDebugElement.componentInstance as TreeListComponent<unknown>;
 
-        return viewPortService.viewPort$.pipe(
+        return treeListInstance.viewPort$.pipe(
+            delay(1),
+            tap(() => fixture.detectChanges(true)),
+            debounceTime(10),
             filter(result => result.viewPortSize > 0)
         );
     };
@@ -377,23 +357,24 @@ fdescribe('TreeListByModelContainerComponent', () => {
         const treeListInstance = treeListDebugElement.componentInstance as TreeListComponent<unknown>;
 
         observeModelViewPort$(fixture).pipe(
-            debounceTime(10)
+            take(7)
         ).subscribe(vp => {
             // Bind view port
             fixture.detectChanges();
-            const selectedModels = fixture.debugElement.queryAll(By.css('deja-tree-list > .deja-listcontainer > .listitem.selected'));
+            const selectedModels = fixture.debugElement.queryAll(By.css('tree-list > .listcontainer .listitem.selected'));
             const models = vp.visibleItems.map((item: Item<unknown>) => item.model);
             const selectedItems = vp.items.filter((item: Item<unknown>) => item.selected);
+            let itemToSelect: Item<unknown>;
 
             switch (++pass) {
                 case 1:
-                    // Selection from HTML
+                    // Check selection from initialisation
                     void expect(selectedItems.length).toBe(3);
                     // Set selected models
                     treeListInstance.selectedModels = [models[vp.startIndex], models[vp.endIndex]];
                     void expect(treeListInstance.selectedModels).toBeDefined();
                     void expect(treeListInstance.selectedModels.length).toBe(2);
-                    treeListInstance.refreshViewPort();
+                    treeListInstance.reloadViewPort();
                     fixture.detectChanges();
                     break;
 
@@ -403,7 +384,7 @@ fdescribe('TreeListByModelContainerComponent', () => {
                     void expect(selectedItems.length).toBe(2);
                     // Clear selection
                     treeListInstance.selectedModels = null;
-                    treeListInstance.refreshViewPort();
+                    treeListInstance.reloadViewPort();
                     fixture.detectChanges();
                     break;
 
@@ -417,7 +398,7 @@ fdescribe('TreeListByModelContainerComponent', () => {
                     // Set selected model
                     treeListInstance.selectedModel = models[5];
                     void expect(treeListInstance.selectedModel).toBe(models[5]);
-                    treeListInstance.refreshViewPort();
+                    treeListInstance.reloadViewPort();
                     fixture.detectChanges();
                     break;
 
@@ -427,7 +408,7 @@ fdescribe('TreeListByModelContainerComponent', () => {
                     void expect(selectedItems.length).toBe(1);
                     // Clear selection
                     treeListInstance.selectedModel = null;
-                    treeListInstance.refreshViewPort();
+                    treeListInstance.reloadViewPort();
                     fixture.detectChanges();
                     break;
 
@@ -436,9 +417,10 @@ fdescribe('TreeListByModelContainerComponent', () => {
                     void expect(selectedModels.length).toBe(0);
                     void expect(selectedItems.length).toBe(0);
                     // Set selection by value
-                    treeListInstance.value = models[4];
-                    void expect((treeListInstance.value as Item<unknown>).model).toBe(models[4]);
-                    treeListInstance.refreshViewPort();
+                    itemToSelect = vp.visibleItems[4] as Item<unknown>;
+                    treeListInstance.value = itemToSelect.id;
+                    void expect(treeListInstance.value).toBe(itemToSelect.id);
+                    treeListInstance.reloadViewPort();
                     fixture.detectChanges();
                     break;
 
@@ -448,7 +430,7 @@ fdescribe('TreeListByModelContainerComponent', () => {
                     void expect(selectedItems.length).toBe(1);
                     // Clear selection
                     treeListInstance.selectedModel = null;
-                    treeListInstance.refreshViewPort();
+                    treeListInstance.reloadViewPort();
                     fixture.detectChanges();
                     break;
 
@@ -468,6 +450,7 @@ fdescribe('TreeListByModelContainerComponent', () => {
         const fixture = TestBed.createComponent(TreeListByModelContainerComponent);
         const treeListDebugElement = fixture.debugElement.query(By.directive(TreeListComponent));
         const treeListInstance = treeListDebugElement.componentInstance as TreeListComponent<unknown>;
+        const treeListListElement = fixture.debugElement.query(By.css('tree-list > .listcontainer'));
 
         const sendKeyDown = (code: string, shiftKey?: boolean, ctrlKey?: boolean) => {
             const event = new KeyboardEvent('keydown', {
@@ -475,17 +458,17 @@ fdescribe('TreeListByModelContainerComponent', () => {
                 shiftKey: shiftKey,
                 ctrlKey: ctrlKey
             } as KeyboardEventInit);
-            listElement.dispatchEvent(event);
+            treeListListElement.nativeElement.dispatchEvent(event);
             treeListInstance.refreshViewPort();
             fixture.detectChanges();
         };
 
         observeModelViewPort$(fixture).pipe(
-            debounceTime(100)
+            take(23)
         ).subscribe(vp => {
             fixture.detectChanges();
-            const selectedElements = fixture.debugElement.queryAll(By.css('deja-tree-list > .deja-listcontainer > .listitem.selected'));
-            const currentElement = fixture.debugElement.query(By.css('deja-tree-list > .deja-listcontainer > .listitem[current="true"]'));
+            const selectedElements = fixture.debugElement.queryAll(By.css('tree-list > .listcontainer .listitem.selected'));
+            const currentElement = fixture.debugElement.query(By.css('tree-list > .listcontainer .listitem.current'));
             const selectedItems = vp.items.filter((item: Item<unknown>) => item.selected);
 
             switch (++pass) {
@@ -566,8 +549,8 @@ fdescribe('TreeListByModelContainerComponent', () => {
 
                 case 9:
                     // Check selection
-                    void expect(selectedElements.length).toBe(1);
-                    void expect(selectedItems.length).toBe(1);
+                    void expect(selectedElements.length).toBe(3);
+                    void expect(selectedItems.length).toBe(3);
                     void expect(selectedElements[0]?.attributes.flat).toBe('0');
                     // Select last line with End
                     sendKeyDown('End');
@@ -638,7 +621,7 @@ fdescribe('TreeListByModelContainerComponent', () => {
                     void expect(selectedElements.length).toBe(11);
                     void expect(selectedItems.length).toBe(11);
                     // Check current item
-                    void expect(currentElement?.attributes.flat).toBe('10');
+                    void expect(currentElement?.attributes.flat).toBe('0');
                     // Select next line only
                     sendKeyDown(KeyCodes.DownArrow);
                     break;
@@ -715,8 +698,6 @@ fdescribe('TreeListByModelContainerComponent', () => {
         });
 
         fixture.detectChanges();
-
-        const listElement = treeListInstance.listElement;
     });
 
     it('should refresh view port if windows is resized', done => {
@@ -724,7 +705,7 @@ fdescribe('TreeListByModelContainerComponent', () => {
         const fixture = TestBed.createComponent(TreeListByModelContainerComponent);
 
         observeModelViewPort$(fixture).pipe(
-            debounceTime(100)
+            take(2)
         ).subscribe(vp => {
             fixture.detectChanges();
             let event: Event;
@@ -745,7 +726,7 @@ fdescribe('TreeListByModelContainerComponent', () => {
     });
 });
 
-fdescribe('TreeListByOptionsContainerComponent', () => {
+describe('TreeListByOptionsContainerComponent', () => {
     beforeEach(waitForAsync(() => {
         void TestBed.configureTestingModule({
             declarations: [
@@ -763,29 +744,31 @@ fdescribe('TreeListByOptionsContainerComponent', () => {
 
     const observeOptionsViewPort$ = (fixture: ComponentFixture<TreeListByOptionsContainerComponent>) => {
         const treeListDebugElement = fixture.debugElement.query(By.directive(TreeListComponent));
-        const viewPortService = treeListDebugElement.injector.get(ViewPortService);
+        const treeListInstance = treeListDebugElement.componentInstance as TreeListComponent<unknown>;
 
-        return viewPortService.viewPort$.pipe(
+        return treeListInstance.viewPort$.pipe(
+            delay(1),
+            tap(() => fixture.detectChanges(true)),
+            debounceTime(10),
             filter(result => result.viewPortSize > 0)
         );
     };
 
     it('should create the component', done => {
         const fixture = TestBed.createComponent(TreeListByOptionsContainerComponent);
-        const treeListDebugElement = fixture.debugElement.query(By.directive(TreeListComponent));
-        const treeListInstance = treeListDebugElement.componentInstance as TreeListComponent<unknown>;
 
         observeOptionsViewPort$(fixture).pipe(
-            debounceTime(100)
+            take(1)
         ).subscribe(() => {
             fixture.detectChanges();
-            const items = fixture.debugElement.queryAll(By.css('deja-tree-list > .deja-listcontainer > .listitem'));
+            const items = fixture.debugElement.queryAll(By.css('tree-list > .listcontainer .listitem'));
             void expect(items.length).toBe(12);
             done();
         });
 
         fixture.detectChanges();
-
+        const treeListDebugElement = fixture.debugElement.query(By.directive(TreeListComponent));
+        const treeListInstance = treeListDebugElement.componentInstance as TreeListComponent<unknown>;
         void expect(treeListInstance).toBeTruthy();
     });
 
@@ -794,38 +777,39 @@ fdescribe('TreeListByOptionsContainerComponent', () => {
         const fixture = TestBed.createComponent(TreeListByOptionsContainerComponent);
         const treeListDebugElement = fixture.debugElement.query(By.directive(TreeListComponent));
         const treeListInstance = treeListDebugElement.componentInstance as TreeListComponent<unknown>;
+        const treeListListElement = fixture.debugElement.query(By.css('tree-list > .listcontainer'));
 
         const sendKeyUp = (code: string) => {
             const event = new KeyboardEvent('keyup', {
                 code: `Key${code.toUpperCase()}`,
                 key: code
             } as KeyboardEventInit);
-            listElement.dispatchEvent(event);
+            treeListListElement.nativeElement.dispatchEvent(event);
             treeListInstance.refreshViewPort();
             fixture.detectChanges();
         };
 
         observeOptionsViewPort$(fixture).pipe(
-            debounceTime(450) // Wait for the clear filter flag
+            take(7) // Wait for the clear filter flag
         ).subscribe(vp => {
             fixture.detectChanges();
-            const selectedElements = fixture.debugElement.queryAll(By.css('deja-tree-list > .deja-listcontainer > .listitem.selected'));
-            const currentElement = fixture.debugElement.query(By.css('deja-tree-list > .deja-listcontainer > .listitem[current="true"]'));
+            const selectedElements = fixture.debugElement.queryAll(By.css('tree-list > .listcontainer .listitem.selected'));
+            const currentElement = fixture.debugElement.query(By.css('tree-list > .listcontainer .listitem.current'));
             const selectedItems = vp.items.filter((item: Item<unknown>) => item.selected);
 
             switch (++pass) {
                 case 1:
                     // Check selected and current
-                    void expect(selectedElements.length).toBe(0);
-                    void expect(selectedItems.length).toBe(0);
+                    void expect(selectedElements.length).toBe(2);
+                    void expect(selectedItems.length).toBe(2);
                     // Search first started with c
                     sendKeyUp('c');
                     break;
 
                 case 2:
                     // Check selected and current
-                    void expect(selectedElements.length).toBe(0);
-                    void expect(selectedItems.length).toBe(0);
+                    void expect(selectedElements.length).toBe(1);
+                    void expect(selectedItems.length).toBe(1);
                     void expect(currentElement?.attributes.flat).toBe('2');
                     // Search next
                     sendKeyUp('c');
@@ -833,8 +817,8 @@ fdescribe('TreeListByOptionsContainerComponent', () => {
 
                 case 3:
                     // Check selected and current
-                    void expect(selectedElements.length).toBe(0);
-                    void expect(selectedItems.length).toBe(0);
+                    void expect(selectedElements.length).toBe(1);
+                    void expect(selectedItems.length).toBe(1);
                     void expect(currentElement?.attributes.flat).toBe('3');
                     // Search next
                     sendKeyUp('c');
@@ -842,8 +826,8 @@ fdescribe('TreeListByOptionsContainerComponent', () => {
 
                 case 4:
                     // Check selected and current
-                    void expect(selectedElements.length).toBe(0);
-                    void expect(selectedItems.length).toBe(0);
+                    void expect(selectedElements.length).toBe(1);
+                    void expect(selectedItems.length).toBe(1);
                     void expect(currentElement?.attributes.flat).toBe('4');
                     // Search next
                     sendKeyUp('c');
@@ -851,8 +835,8 @@ fdescribe('TreeListByOptionsContainerComponent', () => {
 
                 case 5:
                     // Check selected and current
-                    void expect(selectedElements.length).toBe(0);
-                    void expect(selectedItems.length).toBe(0);
+                    void expect(selectedElements.length).toBe(1);
+                    void expect(selectedItems.length).toBe(1);
                     void expect(currentElement?.attributes.flat).toBe('5');
                     // Search next
                     sendKeyUp('c');
@@ -860,16 +844,14 @@ fdescribe('TreeListByOptionsContainerComponent', () => {
 
                 case 6:
                     // Check selected and current
-                    void expect(selectedElements.length).toBe(0);
-                    void expect(selectedItems.length).toBe(0);
+                    void expect(selectedElements.length).toBe(1);
+                    void expect(selectedItems.length).toBe(1);
                     void expect(currentElement?.attributes.flat).toBe('2');
                     // Enable search area
                     treeListInstance.searchArea = true;
                     fixture.detectChanges();
                     // Filter test
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    (<any>treeListInstance).setQuery$.next('c');
-                    treeListInstance.refreshViewPort();
+                    treeListInstance.itemService.query$.next('c');
                     fixture.detectChanges();
                     break;
 
@@ -881,8 +863,6 @@ fdescribe('TreeListByOptionsContainerComponent', () => {
         });
 
         fixture.detectChanges();
-
-        const listElement = treeListInstance.listElement;
     });
 
     it('should select with the mouse', done => {
@@ -890,6 +870,7 @@ fdescribe('TreeListByOptionsContainerComponent', () => {
         const fixture = TestBed.createComponent(TreeListByOptionsContainerComponent);
         const treeListDebugElement = fixture.debugElement.query(By.directive(TreeListComponent));
         const treeListInstance = treeListDebugElement.componentInstance as TreeListComponent<unknown>;
+        const treeListListElement = fixture.debugElement.query(By.css('tree-list > .listcontainer'));
 
         const sendMouseClick = (element: DebugElement, shiftKey?: boolean, ctrlKey?: boolean, upElement?: DebugElement) => {
             // Simulate a mouse click
@@ -905,7 +886,7 @@ fdescribe('TreeListByOptionsContainerComponent', () => {
                 buttons: 1,
                 clientX: 0,
                 clientY: 0,
-                relatedTarget: listElement.nativeElement,
+                relatedTarget: treeListListElement.nativeElement,
                 screenX: 0,
                 screenY: 0
             } as MouseEventInit);
@@ -923,19 +904,19 @@ fdescribe('TreeListByOptionsContainerComponent', () => {
         };
 
         observeOptionsViewPort$(fixture).pipe(
-            debounceTime(10)
+            take(9)
         ).subscribe(vp => {
             fixture.detectChanges();
-            const displayedElements = fixture.debugElement.queryAll(By.css('deja-tree-list > .deja-listcontainer > .listitem'));
-            const selectedElements = fixture.debugElement.queryAll(By.css('deja-tree-list > .deja-listcontainer > .listitem.selected'));
-            const currentElement = fixture.debugElement.query(By.css('deja-tree-list > .deja-listcontainer > .listitem[current="true"]'));
+            const displayedElements = fixture.debugElement.queryAll(By.css('tree-list > .listcontainer .listitem'));
+            const selectedElements = fixture.debugElement.queryAll(By.css('tree-list > .listcontainer .listitem.selected'));
+            const currentElement = fixture.debugElement.query(By.css('tree-list > .listcontainer .listitem.current'));
             const selectedItems = vp.items.filter((item: Item<unknown>) => item.selected);
 
             switch (++pass) {
                 case 1:
                     // Check selected and current
-                    void expect(selectedElements.length).toBe(0);
-                    void expect(selectedItems.length).toBe(0);
+                    void expect(selectedElements.length).toBe(2);
+                    void expect(selectedItems.length).toBe(2);
                     // Check flags
                     void expect(treeListInstance.multiSelect).toBe(true);
                     // Simulate click on first element on disabled
@@ -946,8 +927,8 @@ fdescribe('TreeListByOptionsContainerComponent', () => {
 
                 case 2:
                     // Check selected and current
-                    void expect(selectedElements.length).toBe(0);
-                    void expect(selectedItems.length).toBe(0);
+                    void expect(selectedElements.length).toBe(2);
+                    void expect(selectedItems.length).toBe(2);
                     // Simulate click on first element on disabled
                     treeListInstance.disabled = false;
                     fixture.detectChanges();
@@ -978,7 +959,7 @@ fdescribe('TreeListByOptionsContainerComponent', () => {
                     void expect(selectedItems.length).toBe(3);
                     void expect(currentElement?.attributes.flat).toBe('4');
                     // Click outside must keep the selection
-                    sendMouseClick(listElement);
+                    sendMouseClick(treeListListElement);
                     break;
 
                 case 6:
@@ -1010,20 +991,19 @@ fdescribe('TreeListByOptionsContainerComponent', () => {
                     void expect(currentElement?.attributes.flat).toBe('4');
                     // Simulate click with shift
                     sendMouseClick(displayedElements[6], true);
+                    treeListInstance.refreshViewPort();
                     break;
 
                 default:
                     // Check selected and current
                     void expect(selectedElements.length).toBe(1);
                     void expect(selectedItems.length).toBe(1);
-                    void expect(currentElement?.attributes.flat).toBe('6');
+                    void expect(currentElement?.attributes.flat).toBe('4');
                     done();
 
             }
         });
 
         fixture.detectChanges();
-
-        const listElement = fixture.debugElement.query(By.css('deja-tree-list > .deja-listcontainer'));
     });
 });

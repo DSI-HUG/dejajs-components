@@ -588,7 +588,7 @@ describe('DejaTilesComponent', () => {
         });
     });
 
-    it('should be able to size a tile with the mouse from the right border', done => {
+    it('should be able to size a tile with the mouse from the correct border', done => {
         const fixture = TestBed.createComponent(DejaTilesContainerComponent);
         const tilesDebugElement = fixture.debugElement.query(By.directive(DejaTilesComponent));
         const tilesInstance = tilesDebugElement.componentInstance as DejaTilesComponent;

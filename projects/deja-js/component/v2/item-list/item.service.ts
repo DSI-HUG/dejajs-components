@@ -10,7 +10,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, combineLatest, merge, Observable, of, ReplaySubject } from 'rxjs';
-import { debounceTime, filter, map, shareReplay, switchMap, take } from 'rxjs/operators';
+import { filter, map, shareReplay, switchMap, take } from 'rxjs/operators';
 
 import { Diacritics } from '../../core/diacritics/diacritics';
 import { Item } from './item';
@@ -52,7 +52,6 @@ export class ItemService<T> {
     public constructor() {
 
         const itemsFromOptions$ = this.options$.pipe(
-            debounceTime(1),
             map(options => {
                 const items = options.map(option => {
                     const item = new Item<T>(option.value, option.text);
@@ -70,7 +69,6 @@ export class ItemService<T> {
         );
 
         const itemsFromModels$ = combineLatest([this.models$, this.valueField$, this.textField$, this.childrenField$]).pipe(
-            debounceTime(1),
             map(([models, valueField, textField, childrenField]) => (models && models instanceof Array && this.mapToItem(models, valueField, textField, childrenField)) || []),
             shareReplay({ bufferSize: 1, refCount: false })
         );
@@ -164,7 +162,7 @@ export class ItemService<T> {
                         // hidden by parent
                         return false;
                     }
-                    if (item.isVisible) {
+                    if (item.isVisible !== false) {
                         if (item.collapsed) {
                             // hide all children
                             hideDepth = item.depth + 1;

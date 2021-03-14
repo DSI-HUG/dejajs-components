@@ -13,7 +13,7 @@ import { DejaChildValidatorDirective, Destroy } from '@deja-js/component/core';
 import { Item, ItemComponent, ItemEvent, ItemService } from '@deja-js/component/v2/item-list';
 import { ViewPort, ViewPortComponent, ViewPortMode } from '@deja-js/component/v2/viewport';
 import { BehaviorSubject, combineLatest, fromEvent, merge, Observable, of, ReplaySubject, Subject, timer } from 'rxjs';
-import { delay, filter, switchMap, takeUntil, tap, withLatestFrom } from 'rxjs/operators';
+import { delay, filter, map, switchMap, takeUntil, tap, withLatestFrom } from 'rxjs/operators';
 
 import { KeyCodes } from '../../core/keycodes.enum';
 import { ViewPortItemClassEvent } from '../viewport/viewport.component';
@@ -105,6 +105,7 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
     private _hintLabel: string;
     private _searchArea = false;
     private lastClickedItem: Item<T>; // Double-click detection
+    private reloadViewPort$ = new BehaviorSubject<void>(undefined);
 
     @ViewChild(ViewPortComponent)
     public set viewPortComponent(viewPortComponent: ViewPortComponent<T>) {
@@ -343,9 +344,13 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
             this.control.valueAccessor = this;
         }
 
-        this.viewPort$ = this.viewPortComponent$.pipe(
+        const viewPort$ = this.viewPortComponent$.pipe(
             filter(viewPortComponent => !!viewPortComponent),
             switchMap(viewPortComponent => viewPortComponent.viewPort$)
+        );
+
+        this.viewPort$ = combineLatest([viewPort$, this.reloadViewPort$]).pipe(
+            map(([viewPort]) => viewPort)
         );
 
         this.viewPortComponent$.pipe(
@@ -933,6 +938,11 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
     /** Positionne a scrollbar pour assurer que l'élément spécifié soit visible */
     public ensureItemVisible(item: Item<T> | number): void {
         this.viewPortComponent.ensureVisible(item);
+    }
+
+    /** Rebind le viewport */
+    public reloadViewPort(): void {
+        this.reloadViewPort$.next();
     }
 
     /** Recalcule le viewport. */
