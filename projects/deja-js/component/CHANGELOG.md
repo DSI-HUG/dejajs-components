@@ -1,3 +1,10 @@
+## [11.6.1-next.1](https://github.com/DSI-HUG/dejajs-components/compare/v11.6.0...v11.6.1-next.1) (2021-03-15)
+
+
+### Bug Fixes
+
+* **monaco-editor:** fix options generation after review ([eec86f9](https://github.com/DSI-HUG/dejajs-components/commit/eec86f9123c24da921c99c4c6f3d53af58f47c67))
+
 # [11.6.0](https://github.com/DSI-HUG/dejajs-components/compare/v11.5.0...v11.6.0) (2021-03-12)
 
 
