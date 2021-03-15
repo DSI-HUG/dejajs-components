@@ -139,8 +139,8 @@ describe('SortingService', () => {
 
     it('Should, sort an empty array', () => {
         service.sort$([], null).pipe(
-            take(1))
-            .subscribe(sorted => void expect(sorted).toEqual([]));
+            take(1)
+        ).subscribe(sorted => void expect(sorted).toEqual([]));
     });
 
     it('Should, sort an array by first level ascending', () => {
@@ -150,11 +150,11 @@ describe('SortingService', () => {
         } as ISortInfos;
 
         service.sort$(fructs, si).pipe(
-            take(1))
-            .subscribe(sorted => {
-                void expect(sorted.length).toBe(sortedValues.length);
-                sorted.forEach((value, i) => void expect(value.name).toEqual(sortedValues[i]));
-            });
+            take(1)
+        ).subscribe(sorted => {
+            void expect(sorted.length).toBe(sortedValues.length);
+            sorted.forEach((value, i) => void expect(value.name).toEqual(sortedValues[i]));
+        });
     });
 
     it('Should, sort an array by first level descending', () => {
@@ -165,11 +165,11 @@ describe('SortingService', () => {
 
         const reverseValues = [...sortedValues].reverse();
         service.sort$(fructs, si).pipe(
-            take(1))
-            .subscribe(sorted => {
-                void expect(sorted.length).toBe(reverseValues.length);
-                sorted.forEach((value, i) => void expect(value.name).toEqual(reverseValues[i]));
-            });
+            take(1)
+        ).subscribe(sorted => {
+            void expect(sorted.length).toBe(reverseValues.length);
+            sorted.forEach((value, i) => void expect(value.name).toEqual(reverseValues[i]));
+        });
     });
 
     it('Should, sort by number', () => {
@@ -179,11 +179,11 @@ describe('SortingService', () => {
         } as ISortInfos;
 
         service.sort$(fructs, si).pipe(
-            take(1))
-            .subscribe(sorted => {
-                void expect(sorted.length).toBe(fructs.length);
-                sorted.forEach((value, i) => void expect(value.value).toEqual(i));
-            });
+            take(1)
+        ).subscribe(sorted => {
+            void expect(sorted.length).toBe(fructs.length);
+            sorted.forEach((value, i) => void expect(value.value).toEqual(i));
+        });
     });
 
     it('Should, sort by date', () => {
@@ -193,11 +193,11 @@ describe('SortingService', () => {
         } as ISortInfos;
 
         service.sort$(fructs, si).pipe(
-            take(1))
-            .subscribe(sorted => {
-                void expect(sorted.length).toBe(fructs.length);
-                sorted.forEach((value, i) => void expect(value.value).toEqual(i));
-            });
+            take(1)
+        ).subscribe(sorted => {
+            void expect(sorted.length).toBe(fructs.length);
+            sorted.forEach((value, i) => void expect(value.value).toEqual(i));
+        });
     });
 
     it('Should, sort by date when type date is specified', () => {
@@ -208,11 +208,11 @@ describe('SortingService', () => {
         } as ISortInfos;
 
         service.sort$(fructs, si).pipe(
-            take(1))
-            .subscribe(sorted => {
-                void expect(sorted.length).toBe(fructs.length);
-                sorted.forEach((value, i) => void expect(value.value).toEqual(i));
-            });
+            take(1)
+        ).subscribe(sorted => {
+            void expect(sorted.length).toBe(fructs.length);
+            sorted.forEach((value, i) => void expect(value.value).toEqual(i));
+        });
     });
 
     it('Should, sort a tree', () => {
@@ -224,16 +224,16 @@ describe('SortingService', () => {
         }] as ISortInfos[];
 
         service.sortTree$(fructs, si, 'colors').pipe(
-            take(1))
-            .subscribe(sorted => {
-                void expect(sorted.length).toBe(sortedValues.length);
-                sorted.forEach((value, i) => void expect(value.name).toEqual(sortedValues[i]));
-                void expect(sorted[4].colors[0]).toEqual('white');
-                void expect(sorted[4].colors[1]).toEqual('green');
-                void expect(sorted[4].colors[2]).toEqual('braun');
-                void expect(sorted[7].colors[0]).toEqual('red');
-                void expect(sorted[7].colors[1]).toEqual('green');
-                void expect(sorted[7].colors[2]).toEqual('black');
-            });
+            take(1)
+        ).subscribe(sorted => {
+            void expect(sorted.length).toBe(sortedValues.length);
+            sorted.forEach((value, i) => void expect(value.name).toEqual(sortedValues[i]));
+            void expect(sorted[4].colors[0]).toEqual('white');
+            void expect(sorted[4].colors[1]).toEqual('green');
+            void expect(sorted[4].colors[2]).toEqual('braun');
+            void expect(sorted[7].colors[0]).toEqual('red');
+            void expect(sorted[7].colors[1]).toEqual('green');
+            void expect(sorted[7].colors[2]).toEqual('black');
+        });
     });
 });

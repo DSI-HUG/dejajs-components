@@ -7,10 +7,11 @@
  */
 
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, from, Observable, range, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, range, Subject } from 'rxjs';
 import { delay, filter, map, switchMap, take, takeUntil, toArray } from 'rxjs/operators';
 
 import { Destroy } from '../destroy/destroy';
+
 
 /**
  * Service to measure the theorical size of a text inside a container
@@ -29,7 +30,7 @@ export class DejaTextMetricsService extends Destroy {
     public constructor() {
         super();
 
-        from(this.element$).pipe(
+        this.element$.pipe(
             delay(1),
             take(1),
             switchMap(element => range(0, 255).pipe(

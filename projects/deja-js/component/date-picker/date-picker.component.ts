@@ -17,7 +17,7 @@ import { DejaChildValidatorDirective, DejaConnectionPositionPair, formatWithLoca
 import { _MatInputMixinBase } from '@deja-js/component/core/util';
 import { DateComponentLayout, DaysOfWeek, DejaDateSelectorComponent } from '@deja-js/component/date-selector';
 import { add, isValid, parse, startOfToday } from 'date-fns';
-import { combineLatest, from, fromEvent, merge, Observable, ReplaySubject, Subject, timer } from 'rxjs';
+import { combineLatest, fromEvent, merge, Observable, ReplaySubject, Subject, timer } from 'rxjs';
 import { delay, filter, map, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 
 import { formatToMask, formatToPattern, formatToUnitOfTime } from './format-to-mask';
@@ -267,11 +267,11 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
             takeUntil(this.destroyed$)
         ).subscribe(() => this.inputElement.setSelectionRange(0, 0));
 
-        const keydown$ = from(this.inputElement$).pipe(
+        const keydown$ = this.inputElement$.pipe(
             switchMap(element => fromEvent(element, 'keydown'))
         ) as Observable<KeyboardEvent>;
 
-        const cursorChanged$ = from(this.inputElement$).pipe(
+        const cursorChanged$ = this.inputElement$.pipe(
             switchMap(element => merge(fromEvent(element, 'mouseup'), fromEvent(element, 'focus'), fromEvent(element, 'keyup')).pipe(
                 map(() => element.selectionStart)
             ))

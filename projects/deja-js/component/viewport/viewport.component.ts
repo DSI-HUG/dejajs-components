@@ -23,7 +23,7 @@ import { IViewPortRefreshParams } from '@deja-js/component/core';
 import { ViewportDirection } from '@deja-js/component/core';
 import { ViewportMode } from '@deja-js/component/core';
 import { ViewPortService } from '@deja-js/component/core';
-import { BehaviorSubject, from, fromEvent, interval, merge, Observable, of, Subject, timer } from 'rxjs';
+import { BehaviorSubject, fromEvent, interval, merge, Observable, of, Subject, timer } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
 
 export type DejaViewPortScrollStyleType = 'scrollbar' | 'buttons';
@@ -192,6 +192,8 @@ export class DejaViewPortComponent extends Destroy {
     public constructor(private changeDetectorRef: ChangeDetectorRef, private viewPort: ViewPortService) {
         super();
 
+        console.warn('@deja-js/component/viewport is deprecated, and will be removed in a further version. Please use @deja-js/component/v2/viewport instead.');
+
         fromEvent(window, 'resize').pipe(
             debounceTime(5),
             takeUntil(this.destroyed$)
@@ -279,11 +281,11 @@ export class DejaViewPortComponent extends Destroy {
             );
         };
 
-        const downButton$ = from(this.downButton$).pipe(
+        const downButton$ = this.downButton$.pipe(
             distinctUntilChanged()
         );
 
-        const upButton$ = from(this.upButton$).pipe(
+        const upButton$ = this.upButton$.pipe(
             distinctUntilChanged()
         );
 

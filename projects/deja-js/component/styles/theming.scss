@@ -32,6 +32,9 @@ $MaterialIcons_FontPath: "~material-icons-font/fonts"; // for CLI project we cha
 @import '../tooltip/tooltip-theme';
 @import '../tree-list/tree-list-theme';
 @import '../viewport/viewport-theme';
+@import '../v2/mouse-dragdrop/mouse-dragdrop-theme';
+@import '../v2/tree-list/tree-list-theme';
+@import '../v2/viewport/viewport-theme';
 /* specials themes */
 @import './material/material';
 @import './mixins/menu-theme';
@@ -65,4 +68,7 @@ $MaterialIcons_FontPath: "~material-icons-font/fonts"; // for CLI project we cha
     @include tooltip-theme($custom-theme);
     @include tree-list-theme($custom-theme);
     @include viewport-theme($custom-theme);
+    @include mouse-dragdrop-2-theme($custom-theme);
+    @include tree-list-2-theme($custom-theme);
+    @include viewport-2-theme($custom-theme);
 }

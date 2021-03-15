@@ -126,8 +126,8 @@ describe('GroupingService', () => {
 
     it('Should, group an empty array', () => {
         service.group$([], null).pipe(
-            take(1))
-            .subscribe(grouped => void expect(grouped).toEqual([]));
+            take(1)
+        ).subscribe(grouped => void expect(grouped).toEqual([]));
     });
 
     it('Should, group an array by title', () => {
@@ -136,16 +136,16 @@ describe('GroupingService', () => {
         } as IGroupInfo;
 
         service.group$(datas, gi).pipe(
-            take(1))
-            .subscribe(grouped => {
-                void expect(grouped.length).toBe(3);
-                void expect(grouped[0].toString()).toEqual('Pizza Party');
-                void expect(grouped[0].items.length).toBe(1);
-                void expect(grouped[1].toString()).toEqual('Burger Bonanza');
-                void expect(grouped[1].items.length).toBe(1);
-                void expect(grouped[2].toString()).toEqual('Fondue gourmet');
-                void expect(grouped[2].items.length).toBe(1);
-            });
+            take(1)
+        ).subscribe(grouped => {
+            void expect(grouped.length).toBe(3);
+            void expect(grouped[0].toString()).toEqual('Pizza Party');
+            void expect(grouped[0].items.length).toBe(1);
+            void expect(grouped[1].toString()).toEqual('Burger Bonanza');
+            void expect(grouped[1].items.length).toBe(1);
+            void expect(grouped[2].toString()).toEqual('Fondue gourmet');
+            void expect(grouped[2].items.length).toBe(1);
+        });
     });
 
     it('Should, group a tree', () => {
@@ -154,19 +154,19 @@ describe('GroupingService', () => {
         } as IGroupInfo;
 
         service.group$(datas, gi, 'questions').pipe(
-            take(1))
-            .subscribe(grouped => {
-                void expect(grouped.length).toBe(3);
-                void expect(grouped[0].questions.length).toBe(2);
-                void expect(grouped[0].questions[0].toString()).toEqual('radio');
-                void expect(grouped[0].questions[1].toString()).toEqual('text');
-                void expect(grouped[1].questions.length).toBe(2);
-                void expect(grouped[1].questions[0].toString()).toEqual('select');
-                void expect(grouped[1].questions[1].toString()).toEqual('textarea');
-                void expect(grouped[2].questions.length).toBe(2);
-                void expect(grouped[2].questions[0].toString()).toEqual('input');
-                void expect(grouped[2].questions[1].toString()).toEqual('textarea');
-            });
+            take(1)
+        ).subscribe(grouped => {
+            void expect(grouped.length).toBe(3);
+            void expect(grouped[0].questions.length).toBe(2);
+            void expect(grouped[0].questions[0].toString()).toEqual('radio');
+            void expect(grouped[0].questions[1].toString()).toEqual('text');
+            void expect(grouped[1].questions.length).toBe(2);
+            void expect(grouped[1].questions[0].toString()).toEqual('select');
+            void expect(grouped[1].questions[1].toString()).toEqual('textarea');
+            void expect(grouped[2].questions.length).toBe(2);
+            void expect(grouped[2].questions[0].toString()).toEqual('input');
+            void expect(grouped[2].questions[1].toString()).toEqual('textarea');
+        });
     });
 
     it('Should, group by a function', () => {
@@ -175,16 +175,16 @@ describe('GroupingService', () => {
         } as IGroupInfo;
 
         service.group$(datas, gi).pipe(
-            take(1))
-            .subscribe(grouped => {
-                void expect(grouped.length).toBe(3);
-                void expect(grouped[0].toString()).toEqual('Pizza Party');
-                void expect(grouped[0].items.length).toBe(1);
-                void expect(grouped[1].toString()).toEqual('Burger Bonanza');
-                void expect(grouped[1].items.length).toBe(1);
-                void expect(grouped[2].toString()).toEqual('Fondue gourmet');
-                void expect(grouped[2].items.length).toBe(1);
-            });
+            take(1)
+        ).subscribe(grouped => {
+            void expect(grouped.length).toBe(3);
+            void expect(grouped[0].toString()).toEqual('Pizza Party');
+            void expect(grouped[0].items.length).toBe(1);
+            void expect(grouped[1].toString()).toEqual('Burger Bonanza');
+            void expect(grouped[1].items.length).toBe(1);
+            void expect(grouped[2].toString()).toEqual('Fondue gourmet');
+            void expect(grouped[2].items.length).toBe(1);
+        });
     });
 
     it('Should, group by the displayName if the field is not specified', () => {
@@ -193,16 +193,16 @@ describe('GroupingService', () => {
         });
 
         service.group$(datas, {} as IGroupInfo).pipe(
-            take(1))
-            .subscribe(grouped => {
-                void expect(grouped.length).toBe(3);
-                void expect(grouped[0].toString()).toEqual('Pizza Party');
-                void expect(grouped[0].items.length).toBe(1);
-                void expect(grouped[1].toString()).toEqual('Burger Bonanza');
-                void expect(grouped[1].items.length).toBe(1);
-                void expect(grouped[2].toString()).toEqual('Fondue gourmet');
-                void expect(grouped[2].items.length).toBe(1);
-            });
+            take(1)
+        ).subscribe(grouped => {
+            void expect(grouped.length).toBe(3);
+            void expect(grouped[0].toString()).toEqual('Pizza Party');
+            void expect(grouped[0].items.length).toBe(1);
+            void expect(grouped[1].toString()).toEqual('Burger Bonanza');
+            void expect(grouped[1].items.length).toBe(1);
+            void expect(grouped[2].toString()).toEqual('Fondue gourmet');
+            void expect(grouped[2].items.length).toBe(1);
+        });
     });
 
     it('Should, group by the toString() if the field is not specified', () => {
@@ -211,16 +211,16 @@ describe('GroupingService', () => {
         });
 
         service.group$(datas, {} as IGroupInfo).pipe(
-            take(1))
-            .subscribe(grouped => {
-                void expect(grouped.length).toBe(3);
-                void expect(grouped[0].toString()).toEqual('Pizza Party');
-                void expect(grouped[0].items.length).toBe(1);
-                void expect(grouped[1].toString()).toEqual('Burger Bonanza');
-                void expect(grouped[1].items.length).toBe(1);
-                void expect(grouped[2].toString()).toEqual('Fondue gourmet');
-                void expect(grouped[2].items.length).toBe(1);
-            });
+            take(1)
+        ).subscribe(grouped => {
+            void expect(grouped.length).toBe(3);
+            void expect(grouped[0].toString()).toEqual('Pizza Party');
+            void expect(grouped[0].items.length).toBe(1);
+            void expect(grouped[1].toString()).toEqual('Burger Bonanza');
+            void expect(grouped[1].items.length).toBe(1);
+            void expect(grouped[2].toString()).toEqual('Fondue gourmet');
+            void expect(grouped[2].items.length).toBe(1);
+        });
     });
 
     it('Should, sort if sotinfos are specified', () => {
@@ -233,15 +233,15 @@ describe('GroupingService', () => {
         } as IGroupInfo;
 
         service.group$(datas, gi).pipe(
-            take(1))
-            .subscribe(grouped => {
-                void expect(grouped.length).toBe(3);
-                void expect(grouped[0].toString()).toEqual('Pizza Party');
-                void expect(grouped[0].items.length).toBe(1);
-                void expect(grouped[1].toString()).toEqual('Fondue gourmet');
-                void expect(grouped[1].items.length).toBe(1);
-                void expect(grouped[2].toString()).toEqual('Burger Bonanza');
-                void expect(grouped[2].items.length).toBe(1);
-            });
+            take(1)
+        ).subscribe(grouped => {
+            void expect(grouped.length).toBe(3);
+            void expect(grouped[0].toString()).toEqual('Pizza Party');
+            void expect(grouped[0].items.length).toBe(1);
+            void expect(grouped[1].toString()).toEqual('Fondue gourmet');
+            void expect(grouped[1].items.length).toBe(1);
+            void expect(grouped[2].toString()).toEqual('Burger Bonanza');
+            void expect(grouped[2].items.length).toBe(1);
+        });
     });
 });

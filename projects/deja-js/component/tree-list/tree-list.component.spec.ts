@@ -22,7 +22,7 @@ import { ItemListService } from '@deja-js/component/core';
 import { KeyCodes } from '@deja-js/component/core';
 import { SortingService } from '@deja-js/component/core';
 import { ViewPortService } from '@deja-js/component/core';
-import { from, Observable, timer } from 'rxjs';
+import { Observable, timer } from 'rxjs';
 import { debounceTime, delay, filter, take, tap } from 'rxjs/operators';
 
 import { DejaTreeListModule } from './index';
@@ -137,7 +137,7 @@ describe('DejaTreeListComponent', () => {
         const treeListDebugElement = fixture.debugElement.query(By.directive(DejaTreeListComponent));
         const viewPortService = treeListDebugElement.injector.get(ViewPortService);
 
-        return from(viewPortService.viewPortResult$).pipe(
+        return viewPortService.viewPortResult$.pipe(
             filter(result => result.viewPortSize > 0));
     };
 
@@ -233,7 +233,7 @@ describe('DejaTreeListComponent', () => {
         void expect(treeListInstance.waiter).toBeTruthy();
     }));
 
-    it('should return the write item class', (() => {
+    it('should calc the item class', (() => {
         const fixture = TestBed.createComponent(DejaTreeListContainerComponent);
         fixture.detectChanges();
         const treeListDebugElement = fixture.debugElement.query(By.directive(DejaTreeListComponent));
@@ -292,41 +292,41 @@ describe('DejaTreeListComponent', () => {
         let pass = 0;
 
         observeViewPort$(fixture).pipe(
-            debounceTime(100)) // Debounce here, because ensureVisible move the scroll and more than one viewPort can be raised
-            .subscribe(vp => {
-                fixture.detectChanges();
-                const currentItems = fixture.debugElement.queryAll(By.css('deja-tree-list > .deja-listcontainer > .listitem[current="true"]'));
+            debounceTime(100)// Debounce here, because ensureVisible move the scroll and more than one viewPort can be raised
+        ).subscribe(vp => {
+            fixture.detectChanges();
+            const currentItems = fixture.debugElement.queryAll(By.css('deja-tree-list > .deja-listcontainer > .listitem[current="true"]'));
 
-                switch (++pass) {
-                    case 1:
-                        void expect(currentItems.length).toBe(0);
-                        // Set current item by index
-                        tl.currentItemIndex = 20;
-                        void expect(tl.currentItemIndex).toBe(20);
-                        treeListInstance.ensureItemVisible(tl.currentItemIndex);
-                        fixture.detectChanges();
-                        break;
+            switch (++pass) {
+                case 1:
+                    void expect(currentItems.length).toBe(0);
+                    // Set current item by index
+                    tl.currentItemIndex = 20;
+                    void expect(tl.currentItemIndex).toBe(20);
+                    treeListInstance.ensureItemVisible(tl.currentItemIndex);
+                    fixture.detectChanges();
+                    break;
 
-                    case 2:
-                        // Check currentItem by index
-                        void expect(currentItems.length).toBe(1);
-                        void expect(currentItems[0]?.attributes.flat).toBe('20');
-                        void expect(vp.endIndex).toBe(20);
-                        void expect(treeListInstance.currentItem).toBe(vp.items[20]);
-                        // Set current item by item
-                        treeListInstance.currentItem = vp.items[1];
-                        fixture.detectChanges();
-                        break;
+                case 2:
+                    // Check currentItem by index
+                    void expect(currentItems.length).toBe(1);
+                    void expect(currentItems[0]?.attributes.flat).toBe('20');
+                    void expect(vp.endIndex).toBe(20);
+                    void expect(treeListInstance.currentItem).toBe(vp.items[20]);
+                    // Set current item by item
+                    treeListInstance.currentItem = vp.items[1];
+                    fixture.detectChanges();
+                    break;
 
-                    default:
-                        // Check currentItem by item
-                        void expect(currentItems.length).toBe(1);
-                        void expect(currentItems[0]?.attributes.flat).toBe('1');
-                        void expect(vp.startIndex).toBe(1);
-                        void expect(treeListInstance.currentItem).toBe(vp.items[1]);
-                        done();
-                }
-            });
+                default:
+                    // Check currentItem by item
+                    void expect(currentItems.length).toBe(1);
+                    void expect(currentItems[0]?.attributes.flat).toBe('1');
+                    void expect(vp.startIndex).toBe(1);
+                    void expect(treeListInstance.currentItem).toBe(vp.items[1]);
+                    done();
+            }
+        });
 
         fixture.detectChanges();
     });
@@ -339,25 +339,25 @@ describe('DejaTreeListComponent', () => {
         treeListInstance.minSearchlength = 2;
         const viewPortService = treeListDebugElement.injector.get(ViewPortService);
 
-        from(viewPortService.viewPortResult$).pipe(
-            debounceTime(100))
-            .subscribe(_vp => {
-                // Bind view port
-                fixture.detectChanges();
-                const listItems = fixture.debugElement.queryAll(By.css('deja-tree-list > .deja-listcontainer > .listitem'));
-                switch (++pass) {
-                    case 1:
-                        void expect(listItems.length).toBe(0);
-                        treeListInstance.query = '33';
-                        treeListInstance.refresh();
-                        fixture.detectChanges();
-                        break;
+        viewPortService.viewPortResult$.pipe(
+            debounceTime(100)
+        ).subscribe(_vp => {
+            // Bind view port
+            fixture.detectChanges();
+            const listItems = fixture.debugElement.queryAll(By.css('deja-tree-list > .deja-listcontainer > .listitem'));
+            switch (++pass) {
+                case 1:
+                    void expect(listItems.length).toBe(0);
+                    treeListInstance.query = '33';
+                    treeListInstance.refresh();
+                    fixture.detectChanges();
+                    break;
 
-                    default:
-                        void expect(listItems.length).toBeGreaterThan(0);
-                        done();
-                }
-            });
+                default:
+                    void expect(listItems.length).toBeGreaterThan(0);
+                    done();
+            }
+        });
 
         fixture.detectChanges();
     });
@@ -369,65 +369,65 @@ describe('DejaTreeListComponent', () => {
         const treeListInstance = treeListDebugElement.componentInstance as DejaTreeListComponent;
 
         observeViewPort$(fixture).pipe(
-            debounceTime(10))
-            .subscribe(vp => {
-                // Bind view port
-                fixture.detectChanges();
-                const selectedElements = fixture.debugElement.queryAll(By.css('deja-tree-list > .deja-listcontainer > .listitem.selected'));
-                const selectedItems = vp.items.filter((item: IItemBase<unknown>) => item.selected);
+            debounceTime(10)
+        ).subscribe(vp => {
+            // Bind view port
+            fixture.detectChanges();
+            const selectedElements = fixture.debugElement.queryAll(By.css('deja-tree-list > .deja-listcontainer > .listitem.selected'));
+            const selectedItems = vp.items.filter((item: IItemBase<unknown>) => item.selected);
 
-                switch (++pass) {
-                    case 1:
-                        void expect(selectedElements.length).toBe(0);
-                        // Set selected items
-                        treeListInstance.selectedItems = [vp.items[vp.startIndex], vp.items[vp.endIndex], vp.items[vp.items.length - 1]];
-                        void expect(treeListInstance.selectedItems).toBeDefined();
-                        void expect(treeListInstance.selectedItems.length).toBe(3);
-                        treeListInstance.refreshViewPort();
-                        fixture.detectChanges();
-                        break;
+            switch (++pass) {
+                case 1:
+                    void expect(selectedElements.length).toBe(0);
+                    // Set selected items
+                    treeListInstance.selectedItems = [vp.items[vp.startIndex], vp.items[vp.endIndex], vp.items[vp.items.length - 1]];
+                    void expect(treeListInstance.selectedItems).toBeDefined();
+                    void expect(treeListInstance.selectedItems.length).toBe(3);
+                    treeListInstance.refreshViewPort();
+                    fixture.detectChanges();
+                    break;
 
-                    case 2:
-                        // Check selected items
-                        void expect(selectedElements.length).toBe(2);
-                        void expect(selectedElements[0]?.attributes.flat).toBe(`${vp.startIndex}`);
-                        void expect(selectedElements[1]?.attributes.flat).toBe(`${vp.endIndex}`);
-                        void expect(selectedItems.length).toBe(3);
-                        // Clear selection
-                        treeListInstance.selectedItems = null;
-                        treeListInstance.refreshViewPort();
-                        fixture.detectChanges();
-                        break;
+                case 2:
+                    // Check selected items
+                    void expect(selectedElements.length).toBe(2);
+                    void expect(selectedElements[0]?.attributes.flat).toBe(`${vp.startIndex}`);
+                    void expect(selectedElements[1]?.attributes.flat).toBe(`${vp.endIndex}`);
+                    void expect(selectedItems.length).toBe(3);
+                    // Clear selection
+                    treeListInstance.selectedItems = null;
+                    treeListInstance.refreshViewPort();
+                    fixture.detectChanges();
+                    break;
 
-                    case 3:
-                        // Check no selected
-                        void expect(selectedElements.length).toBe(0);
-                        void expect(selectedItems.length).toBe(0);
-                        // Set selected item
-                        treeListInstance.selectedItem = vp.items[5];
-                        void expect(treeListInstance.selectedItem).toBe(vp.items[5]);
-                        treeListInstance.refreshViewPort();
-                        fixture.detectChanges();
-                        break;
+                case 3:
+                    // Check no selected
+                    void expect(selectedElements.length).toBe(0);
+                    void expect(selectedItems.length).toBe(0);
+                    // Set selected item
+                    treeListInstance.selectedItem = vp.items[5];
+                    void expect(treeListInstance.selectedItem).toBe(vp.items[5]);
+                    treeListInstance.refreshViewPort();
+                    fixture.detectChanges();
+                    break;
 
-                    case 4:
-                        // Check selected item
-                        void expect(selectedElements.length).toBe(1);
-                        void expect(selectedElements[0]?.attributes.flat).toBe('5');
-                        void expect(selectedItems.length).toBe(1);
-                        // Clear selection
-                        treeListInstance.selectedItem = null;
-                        treeListInstance.refreshViewPort();
-                        fixture.detectChanges();
-                        break;
+                case 4:
+                    // Check selected item
+                    void expect(selectedElements.length).toBe(1);
+                    void expect(selectedElements[0]?.attributes.flat).toBe('5');
+                    void expect(selectedItems.length).toBe(1);
+                    // Clear selection
+                    treeListInstance.selectedItem = null;
+                    treeListInstance.refreshViewPort();
+                    fixture.detectChanges();
+                    break;
 
-                    default:
-                        // Check no selected
-                        void expect(selectedElements.length).toBe(0);
-                        void expect(selectedItems.length).toBe(0);
-                        done();
-                }
-            });
+                default:
+                    // Check no selected
+                    void expect(selectedElements.length).toBe(0);
+                    void expect(selectedItems.length).toBe(0);
+                    done();
+            }
+        });
 
         fixture.detectChanges();
     });
@@ -439,40 +439,40 @@ describe('DejaTreeListComponent', () => {
         const treeListInstance = treeListDebugElement.componentInstance as DejaTreeListComponent;
 
         observeViewPort$(fixture).pipe(
-            debounceTime(10))
-            .subscribe(vp => {
-                // Bind view port
-                fixture.detectChanges();
-                const collapsed = fixture.debugElement.queryAll(By.css('deja-tree-list > .deja-listcontainer > .listitem.parent.collapsed'));
-                const collapsedItems = vp.items.filter((item: IItemTree<unknown>) => item.collapsed);
-                const parentItems = vp.items.filter((item: IItemTree<unknown>) => item.depth === 0);
-                switch (++pass) {
-                    case 1:
-                        void expect(collapsed.length).toBe(0);
-                        void expect(collapsedItems.length).toBe(0);
-                        // Toggle all items
-                        treeListInstance.toggleAll();
-                        treeListInstance.refreshViewPort();
-                        fixture.detectChanges();
-                        break;
+            debounceTime(10)
+        ).subscribe(vp => {
+            // Bind view port
+            fixture.detectChanges();
+            const collapsed = fixture.debugElement.queryAll(By.css('deja-tree-list > .deja-listcontainer > .listitem.parent.collapsed'));
+            const collapsedItems = vp.items.filter((item: IItemTree<unknown>) => item.collapsed);
+            const parentItems = vp.items.filter((item: IItemTree<unknown>) => item.depth === 0);
+            switch (++pass) {
+                case 1:
+                    void expect(collapsed.length).toBe(0);
+                    void expect(collapsedItems.length).toBe(0);
+                    // Toggle all items
+                    treeListInstance.toggleAll();
+                    treeListInstance.refreshViewPort();
+                    fixture.detectChanges();
+                    break;
 
-                    case 2:
-                        // Check collapsed items
-                        void expect(collapsed.length).toBeGreaterThan(0);
-                        void expect(collapsedItems.length).toBe(parentItems.length);
-                        // Clear toogle
-                        treeListInstance.toggleAll(false);
-                        treeListInstance.refreshViewPort();
-                        fixture.detectChanges();
-                        break;
+                case 2:
+                    // Check collapsed items
+                    void expect(collapsed.length).toBeGreaterThan(0);
+                    void expect(collapsedItems.length).toBe(parentItems.length);
+                    // Clear toogle
+                    treeListInstance.toggleAll(false);
+                    treeListInstance.refreshViewPort();
+                    fixture.detectChanges();
+                    break;
 
-                    default:
-                        // Check no collapsed
-                        void expect(collapsed.length).toBe(0);
-                        void expect(collapsedItems.length).toBe(0);
-                        done();
-                }
-            });
+                default:
+                    // Check no collapsed
+                    void expect(collapsed.length).toBe(0);
+                    void expect(collapsedItems.length).toBe(0);
+                    done();
+            }
+        });
 
         fixture.detectChanges();
     });
@@ -497,7 +497,7 @@ describe('DejaTreeListByModelContainerComponent', () => {
         const treeListDebugElement = fixture.debugElement.query(By.directive(DejaTreeListComponent));
         const viewPortService = treeListDebugElement.injector.get(ViewPortService);
 
-        return from(viewPortService.viewPortResult$).pipe(
+        return viewPortService.viewPortResult$.pipe(
             filter(result => result.viewPortSize > 0));
     };
 
@@ -516,88 +516,88 @@ describe('DejaTreeListByModelContainerComponent', () => {
         const treeListInstance = treeListDebugElement.componentInstance as DejaTreeListComponent;
 
         observeModelViewPort$(fixture).pipe(
-            debounceTime(10))
-            .subscribe(vp => {
-                // Bind view port
-                fixture.detectChanges();
-                const selectedModels = fixture.debugElement.queryAll(By.css('deja-tree-list > .deja-listcontainer > .listitem.selected'));
-                const models = vp.visibleItems.map((item: IItemBase<unknown>) => item.model);
-                const selectedItems = vp.items.filter((item: IItemBase<unknown>) => item.selected);
+            debounceTime(10)
+        ).subscribe(vp => {
+            // Bind view port
+            fixture.detectChanges();
+            const selectedModels = fixture.debugElement.queryAll(By.css('deja-tree-list > .deja-listcontainer > .listitem.selected'));
+            const models = vp.visibleItems.map((item: IItemBase<unknown>) => item.model);
+            const selectedItems = vp.items.filter((item: IItemBase<unknown>) => item.selected);
 
-                switch (++pass) {
-                    case 1:
-                        // Selection from HTML
-                        void expect(selectedItems.length).toBe(3);
-                        // Set selected models
-                        treeListInstance.selectedModels = [models[vp.startIndex], models[vp.endIndex]];
-                        void expect(treeListInstance.selectedModels).toBeDefined();
-                        void expect(treeListInstance.selectedModels.length).toBe(2);
-                        treeListInstance.refreshViewPort();
-                        fixture.detectChanges();
-                        break;
+            switch (++pass) {
+                case 1:
+                    // Selection from HTML
+                    void expect(selectedItems.length).toBe(3);
+                    // Set selected models
+                    treeListInstance.selectedModels = [models[vp.startIndex], models[vp.endIndex]];
+                    void expect(treeListInstance.selectedModels).toBeDefined();
+                    void expect(treeListInstance.selectedModels.length).toBe(2);
+                    treeListInstance.refreshViewPort();
+                    fixture.detectChanges();
+                    break;
 
-                    case 2:
-                        // Check selected models
-                        void expect(selectedModels.length).toBe(2);
-                        void expect(selectedItems.length).toBe(2);
-                        // Clear selection
-                        treeListInstance.selectedModels = null;
-                        treeListInstance.refreshViewPort();
-                        fixture.detectChanges();
-                        break;
+                case 2:
+                    // Check selected models
+                    void expect(selectedModels.length).toBe(2);
+                    void expect(selectedItems.length).toBe(2);
+                    // Clear selection
+                    treeListInstance.selectedModels = null;
+                    treeListInstance.refreshViewPort();
+                    fixture.detectChanges();
+                    break;
 
-                    case 3:
-                        // Check no selected
-                        void expect(selectedModels.length).toBe(0);
-                        void expect(selectedItems.length).toBe(0);
-                        // Single select list
-                        treeListInstance.multiSelect = false;
-                        fixture.detectChanges();
-                        // Set selected model
-                        treeListInstance.selectedModel = models[5];
-                        void expect(treeListInstance.selectedModel).toBe(models[5]);
-                        treeListInstance.refreshViewPort();
-                        fixture.detectChanges();
-                        break;
+                case 3:
+                    // Check no selected
+                    void expect(selectedModels.length).toBe(0);
+                    void expect(selectedItems.length).toBe(0);
+                    // Single select list
+                    treeListInstance.multiSelect = false;
+                    fixture.detectChanges();
+                    // Set selected model
+                    treeListInstance.selectedModel = models[5];
+                    void expect(treeListInstance.selectedModel).toBe(models[5]);
+                    treeListInstance.refreshViewPort();
+                    fixture.detectChanges();
+                    break;
 
-                    case 4:
-                        // Check selected item
-                        void expect(selectedModels.length).toBe(1);
-                        void expect(selectedItems.length).toBe(1);
-                        // Clear selection
-                        treeListInstance.selectedModel = null;
-                        treeListInstance.refreshViewPort();
-                        fixture.detectChanges();
-                        break;
+                case 4:
+                    // Check selected item
+                    void expect(selectedModels.length).toBe(1);
+                    void expect(selectedItems.length).toBe(1);
+                    // Clear selection
+                    treeListInstance.selectedModel = null;
+                    treeListInstance.refreshViewPort();
+                    fixture.detectChanges();
+                    break;
 
-                    case 5:
-                        // Check no selected
-                        void expect(selectedModels.length).toBe(0);
-                        void expect(selectedItems.length).toBe(0);
-                        // Set selection by value
-                        treeListInstance.value = models[4];
-                        void expect((treeListInstance.value as IItemBase<unknown>).model).toBe(models[4]);
-                        treeListInstance.refreshViewPort();
-                        fixture.detectChanges();
-                        break;
+                case 5:
+                    // Check no selected
+                    void expect(selectedModels.length).toBe(0);
+                    void expect(selectedItems.length).toBe(0);
+                    // Set selection by value
+                    treeListInstance.value = models[4];
+                    void expect((treeListInstance.value as IItemBase<unknown>).model).toBe(models[4]);
+                    treeListInstance.refreshViewPort();
+                    fixture.detectChanges();
+                    break;
 
-                    case 6:
-                        // Check selected item
-                        void expect(selectedModels.length).toBe(1);
-                        void expect(selectedItems.length).toBe(1);
-                        // Clear selection
-                        treeListInstance.selectedModel = null;
-                        treeListInstance.refreshViewPort();
-                        fixture.detectChanges();
-                        break;
+                case 6:
+                    // Check selected item
+                    void expect(selectedModels.length).toBe(1);
+                    void expect(selectedItems.length).toBe(1);
+                    // Clear selection
+                    treeListInstance.selectedModel = null;
+                    treeListInstance.refreshViewPort();
+                    fixture.detectChanges();
+                    break;
 
-                    default:
-                        // Check no selected
-                        void expect(selectedModels.length).toBe(0);
-                        void expect(selectedItems.length).toBe(0);
-                        done();
-                }
-            });
+                default:
+                    // Check no selected
+                    void expect(selectedModels.length).toBe(0);
+                    void expect(selectedItems.length).toBe(0);
+                    done();
+            }
+        });
 
         fixture.detectChanges();
     });
@@ -610,11 +610,11 @@ describe('DejaTreeListByModelContainerComponent', () => {
         observeModelViewPort$(fixture).pipe(
             debounceTime(100),
             tap(() => void expect(treeListInstance.keyboardNavigation()).toBeTruthy()),
-            delay(1000))
-            .subscribe(() => {
-                void expect(treeListInstance.keyboardNavigation()).toBeFalsy();
-                done();
-            });
+            delay(1000)
+        ).subscribe(() => {
+            void expect(treeListInstance.keyboardNavigation()).toBeFalsy();
+            done();
+        });
 
         const sendKeyDown = (code: string, shiftKey?: boolean, ctrlKey?: boolean) => {
             const event = new KeyboardEvent('keydown', {
@@ -649,238 +649,238 @@ describe('DejaTreeListByModelContainerComponent', () => {
         };
 
         observeModelViewPort$(fixture).pipe(
-            debounceTime(100))
-            .subscribe(vp => {
-                fixture.detectChanges();
-                const selectedElements = fixture.debugElement.queryAll(By.css('deja-tree-list > .deja-listcontainer > .listitem.selected'));
-                const currentElement = fixture.debugElement.query(By.css('deja-tree-list > .deja-listcontainer > .listitem[current="true"]'));
-                const selectedItems = vp.items.filter((item: IItemBase<unknown>) => item.selected);
+            debounceTime(100)
+        ).subscribe(vp => {
+            fixture.detectChanges();
+            const selectedElements = fixture.debugElement.queryAll(By.css('deja-tree-list > .deja-listcontainer > .listitem.selected'));
+            const currentElement = fixture.debugElement.query(By.css('deja-tree-list > .deja-listcontainer > .listitem[current="true"]'));
+            const selectedItems = vp.items.filter((item: IItemBase<unknown>) => item.selected);
 
-                switch (++pass) {
-                    case 1:
-                        // Selection from HTML
-                        void expect(vp.items.filter((item: IItemBase<unknown>) => item.selected).length).toBe(3);
-                        // Clear selection
-                        treeListInstance.selectedModel = null;
-                        treeListInstance.refreshViewPort();
-                        fixture.detectChanges();
-                        break;
+            switch (++pass) {
+                case 1:
+                    // Selection from HTML
+                    void expect(vp.items.filter((item: IItemBase<unknown>) => item.selected).length).toBe(3);
+                    // Clear selection
+                    treeListInstance.selectedModel = null;
+                    treeListInstance.refreshViewPort();
+                    fixture.detectChanges();
+                    break;
 
-                    case 2:
-                        // Check no selected
-                        void expect(selectedElements.length).toBe(0);
-                        void expect(selectedItems.length).toBe(0);
-                        // Select first line by keydown
-                        sendKeyDown(KeyCodes.DownArrow);
-                        break;
+                case 2:
+                    // Check no selected
+                    void expect(selectedElements.length).toBe(0);
+                    void expect(selectedItems.length).toBe(0);
+                    // Select first line by keydown
+                    sendKeyDown(KeyCodes.DownArrow);
+                    break;
 
-                    case 3:
-                        // Check selection
-                        void expect(selectedElements.length).toBe(1);
-                        void expect(selectedItems.length).toBe(1);
-                        void expect(selectedElements[0]?.attributes.flat).toBe('0');
-                        // Select second line by keydown
-                        sendKeyDown(KeyCodes.DownArrow);
-                        break;
+                case 3:
+                    // Check selection
+                    void expect(selectedElements.length).toBe(1);
+                    void expect(selectedItems.length).toBe(1);
+                    void expect(selectedElements[0]?.attributes.flat).toBe('0');
+                    // Select second line by keydown
+                    sendKeyDown(KeyCodes.DownArrow);
+                    break;
 
-                    case 4:
-                        // Check selection
-                        void expect(selectedElements.length).toBe(1);
-                        void expect(selectedItems.length).toBe(1);
-                        void expect(selectedElements[0]?.attributes.flat).toBe('1');
-                        // Select first line by keyup
-                        sendKeyDown(KeyCodes.UpArrow);
-                        break;
+                case 4:
+                    // Check selection
+                    void expect(selectedElements.length).toBe(1);
+                    void expect(selectedItems.length).toBe(1);
+                    void expect(selectedElements[0]?.attributes.flat).toBe('1');
+                    // Select first line by keyup
+                    sendKeyDown(KeyCodes.UpArrow);
+                    break;
 
-                    case 5:
-                        // Check selection
-                        void expect(selectedElements.length).toBe(1);
-                        void expect(selectedItems.length).toBe(1);
-                        void expect(selectedElements[0]?.attributes.flat).toBe('0');
-                        // Select first and second lines by shift+keydown
-                        sendKeyDown(KeyCodes.DownArrow, true);
-                        break;
+                case 5:
+                    // Check selection
+                    void expect(selectedElements.length).toBe(1);
+                    void expect(selectedItems.length).toBe(1);
+                    void expect(selectedElements[0]?.attributes.flat).toBe('0');
+                    // Select first and second lines by shift+keydown
+                    sendKeyDown(KeyCodes.DownArrow, true);
+                    break;
 
-                    case 6:
-                        // Check selection
-                        void expect(selectedElements.length).toBe(2);
-                        void expect(selectedItems.length).toBe(2);
-                        void expect(selectedElements[0]?.attributes.flat).toBe('0');
-                        void expect(selectedElements[1]?.attributes.flat).toBe('1');
-                        // Keep selection, but pass current line to the third line
-                        sendKeyDown(KeyCodes.DownArrow, false, true);
-                        break;
+                case 6:
+                    // Check selection
+                    void expect(selectedElements.length).toBe(2);
+                    void expect(selectedItems.length).toBe(2);
+                    void expect(selectedElements[0]?.attributes.flat).toBe('0');
+                    void expect(selectedElements[1]?.attributes.flat).toBe('1');
+                    // Keep selection, but pass current line to the third line
+                    sendKeyDown(KeyCodes.DownArrow, false, true);
+                    break;
 
-                    case 7:
-                        // Check selection
-                        void expect(selectedElements.length).toBe(2);
-                        void expect(selectedItems.length).toBe(2);
-                        void expect(selectedElements[0]?.attributes.flat).toBe('0');
-                        void expect(selectedElements[1]?.attributes.flat).toBe('1');
-                        // Check current item
-                        void expect(currentElement.attributes.flat).toBe('2');
-                        // Select third line only
-                        sendKeyDown('Space');
-                        break;
+                case 7:
+                    // Check selection
+                    void expect(selectedElements.length).toBe(2);
+                    void expect(selectedItems.length).toBe(2);
+                    void expect(selectedElements[0]?.attributes.flat).toBe('0');
+                    void expect(selectedElements[1]?.attributes.flat).toBe('1');
+                    // Check current item
+                    void expect(currentElement.attributes.flat).toBe('2');
+                    // Select third line only
+                    sendKeyDown('Space');
+                    break;
 
-                    case 8:
-                        // Check selection
-                        void expect(selectedElements.length).toBe(1);
-                        void expect(selectedItems.length).toBe(1);
-                        void expect(selectedElements[0]?.attributes.flat).toBe('2');
-                        // Select first line with Home
-                        sendKeyDown('Home', true);
-                        break;
+                case 8:
+                    // Check selection
+                    void expect(selectedElements.length).toBe(1);
+                    void expect(selectedItems.length).toBe(1);
+                    void expect(selectedElements[0]?.attributes.flat).toBe('2');
+                    // Select first line with Home
+                    sendKeyDown('Home', true);
+                    break;
 
-                    case 9:
-                        // Check selection
-                        void expect(selectedElements.length).toBe(1);
-                        void expect(selectedItems.length).toBe(1);
-                        void expect(selectedElements[0]?.attributes.flat).toBe('0');
-                        // Select last line with End
-                        sendKeyDown('End');
-                        break;
+                case 9:
+                    // Check selection
+                    void expect(selectedElements.length).toBe(1);
+                    void expect(selectedItems.length).toBe(1);
+                    void expect(selectedElements[0]?.attributes.flat).toBe('0');
+                    // Select last line with End
+                    sendKeyDown('End');
+                    break;
 
-                    case 10:
-                        // Check selection
-                        void expect(selectedElements.length).toBe(1);
-                        void expect(selectedItems.length).toBe(1);
-                        void expect(selectedElements[0]?.attributes.flat).toBe('1999');
-                        // Select the two last lines with Shift+PageUp
-                        sendKeyDown(KeyCodes.UpArrow, true);
-                        break;
+                case 10:
+                    // Check selection
+                    void expect(selectedElements.length).toBe(1);
+                    void expect(selectedItems.length).toBe(1);
+                    void expect(selectedElements[0]?.attributes.flat).toBe('1999');
+                    // Select the two last lines with Shift+PageUp
+                    sendKeyDown(KeyCodes.UpArrow, true);
+                    break;
 
-                    case 11:
-                        // Check selection
-                        void expect(selectedElements.length).toBe(2);
-                        void expect(selectedItems.length).toBe(2);
-                        void expect(selectedElements[0]?.attributes.flat).toBe('1998');
-                        void expect(selectedElements[1]?.attributes.flat).toBe('1999');
-                        // Keep selection, but pass current line to the first line
-                        sendKeyDown('Home', false, true);
-                        break;
+                case 11:
+                    // Check selection
+                    void expect(selectedElements.length).toBe(2);
+                    void expect(selectedItems.length).toBe(2);
+                    void expect(selectedElements[0]?.attributes.flat).toBe('1998');
+                    void expect(selectedElements[1]?.attributes.flat).toBe('1999');
+                    // Keep selection, but pass current line to the first line
+                    sendKeyDown('Home', false, true);
+                    break;
 
-                    case 12:
-                        // Check selection
-                        void expect(selectedElements.length).toBe(0);
-                        void expect(selectedItems.length).toBe(2);
-                        // Check current item
-                        void expect(currentElement?.attributes.flat).toBe('0');
-                        // Select line 11 (PageSize=10)
-                        sendKeyDown('PageDown');
-                        break;
+                case 12:
+                    // Check selection
+                    void expect(selectedElements.length).toBe(0);
+                    void expect(selectedItems.length).toBe(2);
+                    // Check current item
+                    void expect(currentElement?.attributes.flat).toBe('0');
+                    // Select line 11 (PageSize=10)
+                    sendKeyDown('PageDown');
+                    break;
 
-                    case 13:
-                        // Check selection
-                        void expect(selectedElements.length).toBe(1);
-                        void expect(selectedItems.length).toBe(1);
-                        void expect(selectedElements[0]?.attributes.flat).toBe('10');
-                        // Check current item
-                        void expect(currentElement?.attributes.flat).toBe('10');
-                        // Select from line 11 to last line
-                        sendKeyDown('End', true);
-                        break;
+                case 13:
+                    // Check selection
+                    void expect(selectedElements.length).toBe(1);
+                    void expect(selectedItems.length).toBe(1);
+                    void expect(selectedElements[0]?.attributes.flat).toBe('10');
+                    // Check current item
+                    void expect(currentElement?.attributes.flat).toBe('10');
+                    // Select from line 11 to last line
+                    sendKeyDown('End', true);
+                    break;
 
-                    case 14:
-                        // Check selection
-                        void expect(selectedElements.length).toBe(vp.visibleItems.length);
-                        void expect(selectedItems.length).toBe(vp.items.length - 10);
-                        // Check current item
-                        void expect(currentElement?.attributes.flat).toBe('1999');
-                        // Select first line with Home
-                        sendKeyDown('Home');
-                        break;
+                case 14:
+                    // Check selection
+                    void expect(selectedElements.length).toBe(vp.visibleItems.length);
+                    void expect(selectedItems.length).toBe(vp.items.length - 10);
+                    // Check current item
+                    void expect(currentElement?.attributes.flat).toBe('1999');
+                    // Select first line with Home
+                    sendKeyDown('Home');
+                    break;
 
-                    case 15:
-                        // Check selection
-                        void expect(selectedElements.length).toBe(1);
-                        void expect(selectedItems.length).toBe(1);
-                        // Check current item
-                        void expect(currentElement?.attributes.flat).toBe('0');
-                        // Select until line 11
-                        sendKeyDown('PageDown', true);
-                        break;
+                case 15:
+                    // Check selection
+                    void expect(selectedElements.length).toBe(1);
+                    void expect(selectedItems.length).toBe(1);
+                    // Check current item
+                    void expect(currentElement?.attributes.flat).toBe('0');
+                    // Select until line 11
+                    sendKeyDown('PageDown', true);
+                    break;
 
-                    case 16:
-                        // Check selection
-                        void expect(selectedElements.length).toBe(11);
-                        void expect(selectedItems.length).toBe(11);
-                        // Check current item
-                        void expect(currentElement?.attributes.flat).toBe('10');
-                        // Select next line only
-                        sendKeyDown(KeyCodes.DownArrow);
-                        break;
+                case 16:
+                    // Check selection
+                    void expect(selectedElements.length).toBe(11);
+                    void expect(selectedItems.length).toBe(11);
+                    // Check current item
+                    void expect(currentElement?.attributes.flat).toBe('10');
+                    // Select next line only
+                    sendKeyDown(KeyCodes.DownArrow);
+                    break;
 
-                    case 17:
-                        // Check selection
-                        void expect(selectedElements.length).toBe(1);
-                        void expect(selectedItems.length).toBe(1);
-                        // Check current item
-                        void expect(currentElement?.attributes.flat).toBe('11');
-                        // Select second line with PageUp
-                        sendKeyDown('PageUp');
-                        break;
+                case 17:
+                    // Check selection
+                    void expect(selectedElements.length).toBe(1);
+                    void expect(selectedItems.length).toBe(1);
+                    // Check current item
+                    void expect(currentElement?.attributes.flat).toBe('11');
+                    // Select second line with PageUp
+                    sendKeyDown('PageUp');
+                    break;
 
-                    case 18:
-                        // Check selection
-                        void expect(selectedElements.length).toBe(1);
-                        void expect(selectedItems.length).toBe(1);
-                        // Check current item
-                        void expect(currentElement?.attributes.flat).toBe('1');
-                        // Select last line
-                        sendKeyDown('End');
-                        break;
+                case 18:
+                    // Check selection
+                    void expect(selectedElements.length).toBe(1);
+                    void expect(selectedItems.length).toBe(1);
+                    // Check current item
+                    void expect(currentElement?.attributes.flat).toBe('1');
+                    // Select last line
+                    sendKeyDown('End');
+                    break;
 
-                    case 19:
-                        // Check selection
-                        void expect(selectedElements.length).toBe(1);
-                        void expect(selectedItems.length).toBe(1);
-                        void expect(selectedElements[0]?.attributes.flat).toBe('1999');
-                        // Check current item
-                        void expect(currentElement?.attributes.flat).toBe('1999');
-                        // Select from line 11 to last line
-                        sendKeyDown('PageUp', true);
-                        break;
+                case 19:
+                    // Check selection
+                    void expect(selectedElements.length).toBe(1);
+                    void expect(selectedItems.length).toBe(1);
+                    void expect(selectedElements[0]?.attributes.flat).toBe('1999');
+                    // Check current item
+                    void expect(currentElement?.attributes.flat).toBe('1999');
+                    // Select from line 11 to last line
+                    sendKeyDown('PageUp', true);
+                    break;
 
-                    case 20:
-                        // Check selection
-                        void expect(selectedElements.length).toBe(11);
-                        void expect(selectedItems.length).toBe(11);
-                        // Select first line
-                        sendKeyDown('Home');
-                        break;
+                case 20:
+                    // Check selection
+                    void expect(selectedElements.length).toBe(11);
+                    void expect(selectedItems.length).toBe(11);
+                    // Select first line
+                    sendKeyDown('Home');
+                    break;
 
-                    case 21:
-                        // Check selection
-                        void expect(selectedElements.length).toBe(1);
-                        void expect(selectedItems.length).toBe(1);
-                        void expect(selectedElements[0]?.attributes.flat).toBe('0');
-                        // Check current item
-                        void expect(currentElement?.attributes.flat).toBe('0');
-                        // Toggle first line selection with ctrl
-                        sendKeyDown('Space', false, true);
-                        break;
+                case 21:
+                    // Check selection
+                    void expect(selectedElements.length).toBe(1);
+                    void expect(selectedItems.length).toBe(1);
+                    void expect(selectedElements[0]?.attributes.flat).toBe('0');
+                    // Check current item
+                    void expect(currentElement?.attributes.flat).toBe('0');
+                    // Toggle first line selection with ctrl
+                    sendKeyDown('Space', false, true);
+                    break;
 
-                    case 22:
-                        // Check selection
-                        void expect(selectedElements.length).toBe(0);
-                        void expect(selectedItems.length).toBe(0);
-                        // Check current item
-                        void expect(currentElement?.attributes.flat).toBe('0');
-                        // Select first line with enter in single select
-                        treeListInstance.multiSelect = false;
-                        fixture.detectChanges();
-                        sendKeyDown('Enter');
-                        break;
+                case 22:
+                    // Check selection
+                    void expect(selectedElements.length).toBe(0);
+                    void expect(selectedItems.length).toBe(0);
+                    // Check current item
+                    void expect(currentElement?.attributes.flat).toBe('0');
+                    // Select first line with enter in single select
+                    treeListInstance.multiSelect = false;
+                    fixture.detectChanges();
+                    sendKeyDown('Enter');
+                    break;
 
-                    default:
-                        void expect(selectedElements.length).toBe(1);
-                        void expect(selectedItems.length).toBe(1);
-                        void expect(selectedElements[0]?.attributes.flat).toBe('0');
-                        void expect(currentElement?.attributes.flat).toBe('0');
-                        done();
-                }
-            });
+                default:
+                    void expect(selectedElements.length).toBe(1);
+                    void expect(selectedItems.length).toBe(1);
+                    void expect(selectedElements[0]?.attributes.flat).toBe('0');
+                    void expect(currentElement?.attributes.flat).toBe('0');
+                    done();
+            }
+        });
 
         fixture.detectChanges();
 
@@ -892,22 +892,22 @@ describe('DejaTreeListByModelContainerComponent', () => {
         const fixture = TestBed.createComponent(DejaTreeListByModelContainerComponent);
 
         observeModelViewPort$(fixture).pipe(
-            debounceTime(100))
-            .subscribe(vp => {
-                fixture.detectChanges();
-                let event: Event;
-                switch (++pass) {
-                    case 1:
-                        event = new Event('resize', {});
-                        window.dispatchEvent(event);
-                        break;
+            debounceTime(100)
+        ).subscribe(vp => {
+            fixture.detectChanges();
+            let event: Event;
+            switch (++pass) {
+                case 1:
+                    event = new Event('resize', {});
+                    window.dispatchEvent(event);
+                    break;
 
-                    default:
-                        void expect(vp.visibleItems.length).toBeGreaterThan(10);
-                        done();
+                default:
+                    void expect(vp.visibleItems.length).toBeGreaterThan(10);
+                    done();
 
-                }
-            });
+            }
+        });
 
         fixture.detectChanges();
     });
@@ -933,7 +933,7 @@ describe('DejaTreeListByOptionsContainerComponent', () => {
         const treeListDebugElement = fixture.debugElement.query(By.directive(DejaTreeListComponent));
         const viewPortService = treeListDebugElement.injector.get(ViewPortService);
 
-        return from(viewPortService.viewPortResult$).pipe(
+        return viewPortService.viewPortResult$.pipe(
             filter(result => result.viewPortSize > 0));
     };
 
@@ -943,13 +943,13 @@ describe('DejaTreeListByOptionsContainerComponent', () => {
         const treeListInstance = treeListDebugElement.componentInstance as DejaTreeListComponent;
 
         observeOptionsViewPort$(fixture).pipe(
-            debounceTime(100))
-            .subscribe(() => {
-                fixture.detectChanges();
-                const items = fixture.debugElement.queryAll(By.css('deja-tree-list > .deja-listcontainer > .listitem'));
-                void expect(items.length).toBe(12);
-                done();
-            });
+            debounceTime(100)
+        ).subscribe(() => {
+            fixture.detectChanges();
+            const items = fixture.debugElement.queryAll(By.css('deja-tree-list > .deja-listcontainer > .listitem'));
+            void expect(items.length).toBe(12);
+            done();
+        });
 
         fixture.detectChanges();
 
@@ -973,79 +973,79 @@ describe('DejaTreeListByOptionsContainerComponent', () => {
         };
 
         observeOptionsViewPort$(fixture).pipe(
-            debounceTime(450)) // Wait for the clear filter flag
-            .subscribe(vp => {
-                fixture.detectChanges();
-                const selectedElements = fixture.debugElement.queryAll(By.css('deja-tree-list > .deja-listcontainer > .listitem.selected'));
-                const currentElement = fixture.debugElement.query(By.css('deja-tree-list > .deja-listcontainer > .listitem[current="true"]'));
-                const selectedItems = vp.items.filter((item: IItemBase<unknown>) => item.selected);
+            debounceTime(450) // Wait for the clear filter flag
+        ).subscribe(vp => {
+            fixture.detectChanges();
+            const selectedElements = fixture.debugElement.queryAll(By.css('deja-tree-list > .deja-listcontainer > .listitem.selected'));
+            const currentElement = fixture.debugElement.query(By.css('deja-tree-list > .deja-listcontainer > .listitem[current="true"]'));
+            const selectedItems = vp.items.filter((item: IItemBase<unknown>) => item.selected);
 
-                switch (++pass) {
-                    case 1:
-                        // Check selected and current
-                        void expect(selectedElements.length).toBe(0);
-                        void expect(selectedItems.length).toBe(0);
-                        // Search first started with c
-                        sendKeyUp('c');
-                        break;
+            switch (++pass) {
+                case 1:
+                    // Check selected and current
+                    void expect(selectedElements.length).toBe(0);
+                    void expect(selectedItems.length).toBe(0);
+                    // Search first started with c
+                    sendKeyUp('c');
+                    break;
 
-                    case 2:
-                        // Check selected and current
-                        void expect(selectedElements.length).toBe(0);
-                        void expect(selectedItems.length).toBe(0);
-                        void expect(currentElement?.attributes.flat).toBe('2');
-                        // Search next
-                        sendKeyUp('c');
-                        break;
+                case 2:
+                    // Check selected and current
+                    void expect(selectedElements.length).toBe(0);
+                    void expect(selectedItems.length).toBe(0);
+                    void expect(currentElement?.attributes.flat).toBe('2');
+                    // Search next
+                    sendKeyUp('c');
+                    break;
 
-                    case 3:
-                        // Check selected and current
-                        void expect(selectedElements.length).toBe(0);
-                        void expect(selectedItems.length).toBe(0);
-                        void expect(currentElement?.attributes.flat).toBe('3');
-                        // Search next
-                        sendKeyUp('c');
-                        break;
+                case 3:
+                    // Check selected and current
+                    void expect(selectedElements.length).toBe(0);
+                    void expect(selectedItems.length).toBe(0);
+                    void expect(currentElement?.attributes.flat).toBe('3');
+                    // Search next
+                    sendKeyUp('c');
+                    break;
 
-                    case 4:
-                        // Check selected and current
-                        void expect(selectedElements.length).toBe(0);
-                        void expect(selectedItems.length).toBe(0);
-                        void expect(currentElement?.attributes.flat).toBe('4');
-                        // Search next
-                        sendKeyUp('c');
-                        break;
+                case 4:
+                    // Check selected and current
+                    void expect(selectedElements.length).toBe(0);
+                    void expect(selectedItems.length).toBe(0);
+                    void expect(currentElement?.attributes.flat).toBe('4');
+                    // Search next
+                    sendKeyUp('c');
+                    break;
 
-                    case 5:
-                        // Check selected and current
-                        void expect(selectedElements.length).toBe(0);
-                        void expect(selectedItems.length).toBe(0);
-                        void expect(currentElement?.attributes.flat).toBe('5');
-                        // Search next
-                        sendKeyUp('c');
-                        break;
+                case 5:
+                    // Check selected and current
+                    void expect(selectedElements.length).toBe(0);
+                    void expect(selectedItems.length).toBe(0);
+                    void expect(currentElement?.attributes.flat).toBe('5');
+                    // Search next
+                    sendKeyUp('c');
+                    break;
 
-                    case 6:
-                        // Check selected and current
-                        void expect(selectedElements.length).toBe(0);
-                        void expect(selectedItems.length).toBe(0);
-                        void expect(currentElement?.attributes.flat).toBe('2');
-                        // Enable search area
-                        treeListInstance.searchArea = true;
-                        fixture.detectChanges();
-                        // Filter test
-                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                        (<any>treeListInstance).setQuery$.next('c');
-                        treeListInstance.refreshViewPort();
-                        fixture.detectChanges();
-                        break;
+                case 6:
+                    // Check selected and current
+                    void expect(selectedElements.length).toBe(0);
+                    void expect(selectedItems.length).toBe(0);
+                    void expect(currentElement?.attributes.flat).toBe('2');
+                    // Enable search area
+                    treeListInstance.searchArea = true;
+                    fixture.detectChanges();
+                    // Filter test
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    (<any>treeListInstance).setQuery$.next('c');
+                    treeListInstance.refreshViewPort();
+                    fixture.detectChanges();
+                    break;
 
-                    default:
-                        void expect(vp.visibleItems.length).toBe(5);
-                        done();
+                default:
+                    void expect(vp.visibleItems.length).toBe(5);
+                    done();
 
-                }
-            });
+            }
+        });
 
         fixture.detectChanges();
 
@@ -1090,104 +1090,104 @@ describe('DejaTreeListByOptionsContainerComponent', () => {
         };
 
         observeOptionsViewPort$(fixture).pipe(
-            debounceTime(10))
-            .subscribe(vp => {
-                fixture.detectChanges();
-                const displayedElements = fixture.debugElement.queryAll(By.css('deja-tree-list > .deja-listcontainer > .listitem'));
-                const selectedElements = fixture.debugElement.queryAll(By.css('deja-tree-list > .deja-listcontainer > .listitem.selected'));
-                const currentElement = fixture.debugElement.query(By.css('deja-tree-list > .deja-listcontainer > .listitem[current="true"]'));
-                const selectedItems = vp.items.filter((item: IItemBase<unknown>) => item.selected);
+            debounceTime(10)
+        ).subscribe(vp => {
+            fixture.detectChanges();
+            const displayedElements = fixture.debugElement.queryAll(By.css('deja-tree-list > .deja-listcontainer > .listitem'));
+            const selectedElements = fixture.debugElement.queryAll(By.css('deja-tree-list > .deja-listcontainer > .listitem.selected'));
+            const currentElement = fixture.debugElement.query(By.css('deja-tree-list > .deja-listcontainer > .listitem[current="true"]'));
+            const selectedItems = vp.items.filter((item: IItemBase<unknown>) => item.selected);
 
-                switch (++pass) {
-                    case 1:
-                        // Check selected and current
-                        void expect(selectedElements.length).toBe(0);
-                        void expect(selectedItems.length).toBe(0);
-                        // Check flags
-                        void expect(treeListInstance.isMultiSelect).toBe(true);
-                        // Simulate click on first element on disabled
-                        treeListInstance.disabled = true;
-                        fixture.detectChanges();
-                        sendMouseClick(displayedElements[1]);
-                        break;
+            switch (++pass) {
+                case 1:
+                    // Check selected and current
+                    void expect(selectedElements.length).toBe(0);
+                    void expect(selectedItems.length).toBe(0);
+                    // Check flags
+                    void expect(treeListInstance.isMultiSelect).toBe(true);
+                    // Simulate click on first element on disabled
+                    treeListInstance.disabled = true;
+                    fixture.detectChanges();
+                    sendMouseClick(displayedElements[1]);
+                    break;
 
-                    case 2:
-                        // Check selected and current
-                        void expect(selectedElements.length).toBe(0);
-                        void expect(selectedItems.length).toBe(0);
-                        // Simulate click on first element on disabled
-                        treeListInstance.disabled = false;
-                        fixture.detectChanges();
-                        sendMouseClick(displayedElements[1]);
-                        break;
+                case 2:
+                    // Check selected and current
+                    void expect(selectedElements.length).toBe(0);
+                    void expect(selectedItems.length).toBe(0);
+                    // Simulate click on first element on disabled
+                    treeListInstance.disabled = false;
+                    fixture.detectChanges();
+                    sendMouseClick(displayedElements[1]);
+                    break;
 
-                    case 3:
-                        // Check selected and current
-                        void expect(selectedElements.length).toBe(1);
-                        void expect(selectedItems.length).toBe(1);
-                        void expect(currentElement?.attributes.flat).toBe('1');
-                        // Simulate click with ctrl
-                        sendMouseClick(displayedElements[4], false, true);
-                        break;
+                case 3:
+                    // Check selected and current
+                    void expect(selectedElements.length).toBe(1);
+                    void expect(selectedItems.length).toBe(1);
+                    void expect(currentElement?.attributes.flat).toBe('1');
+                    // Simulate click with ctrl
+                    sendMouseClick(displayedElements[4], false, true);
+                    break;
 
-                    case 4:
-                        // Check selected and current
-                        void expect(selectedElements.length).toBe(2);
-                        void expect(selectedItems.length).toBe(2);
-                        void expect(currentElement?.attributes.flat).toBe('4');
-                        // Simulate click with shift
-                        sendMouseClick(displayedElements[6], true);
-                        break;
+                case 4:
+                    // Check selected and current
+                    void expect(selectedElements.length).toBe(2);
+                    void expect(selectedItems.length).toBe(2);
+                    void expect(currentElement?.attributes.flat).toBe('4');
+                    // Simulate click with shift
+                    sendMouseClick(displayedElements[6], true);
+                    break;
 
-                    case 5:
-                        // Check selected and current
-                        void expect(selectedElements.length).toBe(3);
-                        void expect(selectedItems.length).toBe(3);
-                        void expect(currentElement?.attributes.flat).toBe('4');
-                        // Click outside must keep the selection
-                        sendMouseClick(listElement);
-                        break;
+                case 5:
+                    // Check selected and current
+                    void expect(selectedElements.length).toBe(3);
+                    void expect(selectedItems.length).toBe(3);
+                    void expect(currentElement?.attributes.flat).toBe('4');
+                    // Click outside must keep the selection
+                    sendMouseClick(listElement);
+                    break;
 
-                    case 6:
-                        // Check selected and current
-                        void expect(selectedElements.length).toBe(3);
-                        void expect(selectedItems.length).toBe(3);
-                        void expect(currentElement?.attributes.flat).toBe('4');
-                        // Switch to single select
-                        treeListInstance.multiSelect = false;
-                        void expect(treeListInstance.isMultiSelect).toBe(false);
-                        fixture.detectChanges();
-                        // Click first line
-                        sendMouseClick(displayedElements[0]);
-                        break;
+                case 6:
+                    // Check selected and current
+                    void expect(selectedElements.length).toBe(3);
+                    void expect(selectedItems.length).toBe(3);
+                    void expect(currentElement?.attributes.flat).toBe('4');
+                    // Switch to single select
+                    treeListInstance.multiSelect = false;
+                    void expect(treeListInstance.isMultiSelect).toBe(false);
+                    fixture.detectChanges();
+                    // Click first line
+                    sendMouseClick(displayedElements[0]);
+                    break;
 
-                    case 7:
-                        // Check selected and current
-                        void expect(selectedElements.length).toBe(1);
-                        void expect(selectedItems.length).toBe(1);
-                        void expect(currentElement?.attributes.flat).toBe('0');
-                        // Simulate click with ctrl
-                        sendMouseClick(displayedElements[4], false, true);
-                        break;
+                case 7:
+                    // Check selected and current
+                    void expect(selectedElements.length).toBe(1);
+                    void expect(selectedItems.length).toBe(1);
+                    void expect(currentElement?.attributes.flat).toBe('0');
+                    // Simulate click with ctrl
+                    sendMouseClick(displayedElements[4], false, true);
+                    break;
 
-                    case 8:
-                        // Check selected and current
-                        void expect(selectedElements.length).toBe(1);
-                        void expect(selectedItems.length).toBe(1);
-                        void expect(currentElement?.attributes.flat).toBe('4');
-                        // Simulate click with shift
-                        sendMouseClick(displayedElements[6], true);
-                        break;
+                case 8:
+                    // Check selected and current
+                    void expect(selectedElements.length).toBe(1);
+                    void expect(selectedItems.length).toBe(1);
+                    void expect(currentElement?.attributes.flat).toBe('4');
+                    // Simulate click with shift
+                    sendMouseClick(displayedElements[6], true);
+                    break;
 
-                    default:
-                        // Check selected and current
-                        void expect(selectedElements.length).toBe(1);
-                        void expect(selectedItems.length).toBe(1);
-                        void expect(currentElement?.attributes.flat).toBe('6');
-                        done();
+                default:
+                    // Check selected and current
+                    void expect(selectedElements.length).toBe(1);
+                    void expect(selectedItems.length).toBe(1);
+                    void expect(currentElement?.attributes.flat).toBe('6');
+                    done();
 
-                }
-            });
+            }
+        });
 
         fixture.detectChanges();
 

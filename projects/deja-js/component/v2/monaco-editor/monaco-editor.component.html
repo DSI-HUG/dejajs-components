@@ -1,0 +1,3 @@
+<ng-container *ngIf="monacoEditorService.monacoApi$ | async as monacoApi">
+    <monaco-editor-control [options]="options" [monacoEditorApi]="monacoApi" [isDiffEditor]="isDiffEditor" [editableValue]="value" [readOnlyValue]="valueToCompare" (valueChange)="onValueChange($event)"></monaco-editor-control>
+</ng-container>

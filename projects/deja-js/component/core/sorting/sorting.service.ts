@@ -20,6 +20,10 @@ export type SortOrder = 'ascending' | 'descending';
 /** Classe de tri d'une liste plate ou hierarchique */
 @Injectable()
 export class SortingService {
+    public constructor() {
+        console.warn('@deja-js/component/core/SortingService is deprecated, and will be removed in a further version. Please use @deja-js/component/v2/tem-list/SortingService instead.');
+    }
+
     /** Trie les éléments de la liste plate spécifiée en fonction du modèle de tri spécifié. Peut être surchargé pour implémenter un tri asynchrone
      * @param list Liste à trier.
      * @param sortInfos Modèle de tri à appliquer.

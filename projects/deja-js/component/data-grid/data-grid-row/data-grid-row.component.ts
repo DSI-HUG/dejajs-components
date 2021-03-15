@@ -6,19 +6,14 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { ChangeDetectionStrategy } from '@angular/core';
-import { TemplateRef } from '@angular/core';
-import { ChangeDetectorRef } from '@angular/core';
-import { Component } from '@angular/core';
-import { ContentChild } from '@angular/core';
-import { Input } from '@angular/core';
-import { Destroy } from '@deja-js/component/core';
-import { ItemListService } from '@deja-js/component/core';
-import { from, Subscription } from 'rxjs';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, Input, TemplateRef } from '@angular/core';
+import { Destroy, ItemListService } from '@deja-js/component/core';
+import { Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { IDejaGridColumnLayout } from '../data-grid-column/data-grid-column-layout';
 import { IDejaGridRow } from './data-grid-row';
+
 
 /** Composant représentant une ligne de la grille */
 @Component({
@@ -59,7 +54,7 @@ export class DejaGridRowComponent extends Destroy {
         };
 
         if (this._columnLayout.refresh$) {
-            this.refresh$sub = from(this._columnLayout.refresh$).pipe(
+            this.refresh$sub = this._columnLayout.refresh$.pipe(
                 takeUntil(this.destroyed$)
             ).subscribe(() => this.changeDetectorRef.markForCheck());
         }

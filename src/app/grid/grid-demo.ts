@@ -20,7 +20,7 @@ import { IViewPortItem } from '@deja-js/component/core';
 import { DejaGridComponent, IDejaGridColumn, IDejaGridColumnSizeEvent, IDejaGridRow } from '@deja-js/component/data-grid';
 import { IDejaDragContext, IDejaDropContext, IDejaDropEvent } from '@deja-js/component/dragdrop';
 import { cloneDeep } from 'lodash-es';
-import { from, Observable, of, Subject, Subscription } from 'rxjs';
+import { Observable, of, Subject, Subscription } from 'rxjs';
 import { debounceTime, delay, map, reduce, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 
 import { News } from '../common/news.model';
@@ -833,7 +833,7 @@ export class DejaGridDemoComponent extends Destroy {
     public confirmDialog() {
         return (row: IDejaGridRow<unknown>): Observable<IDejaGridRow<unknown>> => {
             this.dialogVisible = true;
-            return from(this.dialogResponse$).pipe(
+            return this.dialogResponse$.pipe(
                 take(1),
                 map(response => {
                     this.dialogVisible = false;
