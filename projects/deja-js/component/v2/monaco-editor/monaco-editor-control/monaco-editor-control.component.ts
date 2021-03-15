@@ -125,6 +125,8 @@ export class MonacoEditorControlComponent extends Destroy implements OnInit {
     ) {
         super();
 
+        console.log('MonacoEditorControlComponent constructor');
+
         this.createEditor$.pipe(
             tap(() => this.editor = null),
             debounceTime(100),

@@ -45,7 +45,7 @@ export class MonacoEditorComponent {
      */
     @Input()
     public set experimentalScreenReader(value: BooleanInput) {
-        this.options.experimentalScreenReader = coerceBooleanProperty(value);
+        this.updateOptions({ experimentalScreenReader: coerceBooleanProperty(value) } as EditorOptions);
     }
 
     public get experimentalScreenReader(): BooleanInput {
@@ -57,7 +57,7 @@ export class MonacoEditorComponent {
      */
     @Input()
     public set ariaLabel(value: string) {
-        this.options.ariaLabel = value;
+        this.updateOptions({ ariaLabel: value } as EditorOptions);
     }
 
     public get ariaLabel(): string {
@@ -70,7 +70,7 @@ export class MonacoEditorComponent {
      */
     @Input()
     public set rulers(value: number[]) {
-        this.options.rulers = value;
+        this.updateOptions({ rulers: value } as EditorOptions);
     }
 
     public get rulers(): number[] {
@@ -83,7 +83,7 @@ export class MonacoEditorComponent {
      */
     @Input()
     public set wordSeparators(value: string) {
-        this.options.wordSeparators = value;
+        this.updateOptions({ wordSeparators: value } as EditorOptions);
     }
 
     public get wordSeparators(): string {
@@ -96,7 +96,7 @@ export class MonacoEditorComponent {
      */
     @Input()
     public set selectionClipboard(value: BooleanInput) {
-        this.options.selectionClipboard = coerceBooleanProperty(value);
+        this.updateOptions({ selectionClipboard: coerceBooleanProperty(value) } as EditorOptions);
     }
 
     public get selectionClipboard(): BooleanInput {
@@ -112,7 +112,7 @@ export class MonacoEditorComponent {
      */
     @Input()
     public set lineNumbers(value: LineNumbers) {
-        this.options.lineNumbers = value;
+        this.updateOptions({ lineNumbers: value } as EditorOptions);
     }
 
     public get lineNumbers(): LineNumbers {
@@ -125,7 +125,7 @@ export class MonacoEditorComponent {
      */
     @Input()
     public set selectOnLineNumbers(value: BooleanInput) {
-        this.options.selectOnLineNumbers = coerceBooleanProperty(value);
+        this.updateOptions({ selectOnLineNumbers: coerceBooleanProperty(value) } as EditorOptions);
     }
 
     public get selectOnLineNumbers(): BooleanInput {
@@ -138,7 +138,7 @@ export class MonacoEditorComponent {
      */
     @Input()
     public set lineNumbersMinChars(value: NumberInput) {
-        this.options.lineNumbersMinChars = coerceNumberProperty(value);
+        this.updateOptions({ lineNumbersMinChars: coerceNumberProperty(value) } as EditorOptions);
     }
 
     public get lineNumbersMinChars(): NumberInput {
@@ -151,7 +151,7 @@ export class MonacoEditorComponent {
      */
     @Input()
     public set glyphMargin(value: BooleanInput) {
-        this.options.glyphMargin = coerceBooleanProperty(value);
+        this.updateOptions({ glyphMargin: coerceBooleanProperty(value) } as EditorOptions);
     }
 
     public get glyphMargin(): BooleanInput {
@@ -166,7 +166,7 @@ export class MonacoEditorComponent {
      */
     @Input()
     public set lineDecorationsWidth(value: NumberInput) {
-        this.options.lineDecorationsWidth = coerceNumberProperty(value);
+        this.updateOptions({ lineDecorationsWidth: coerceNumberProperty(value) } as EditorOptions);
     }
 
     public get lineDecorationsWidth(): NumberInput {
@@ -180,7 +180,7 @@ export class MonacoEditorComponent {
      */
     @Input()
     public set revealHorizontalRightPadding(value: NumberInput) {
-        this.options.revealHorizontalRightPadding = coerceNumberProperty(value);
+        this.updateOptions({ revealHorizontalRightPadding: coerceNumberProperty(value) } as EditorOptions);
     }
 
     public get revealHorizontalRightPadding(): NumberInput {
@@ -193,7 +193,7 @@ export class MonacoEditorComponent {
      */
     @Input()
     public set roundedSelection(value: BooleanInput) {
-        this.options.roundedSelection = coerceBooleanProperty(value);
+        this.updateOptions({ roundedSelection: coerceBooleanProperty(value) } as EditorOptions);
     }
 
     public get roundedSelection(): BooleanInput {
@@ -207,7 +207,7 @@ export class MonacoEditorComponent {
      */
     @Input()
     public set theme(value: string) {
-        this.options.theme = value;
+        this.updateOptions({ theme: value } as EditorOptions);
     }
 
     public get theme(): string {
@@ -220,7 +220,7 @@ export class MonacoEditorComponent {
      */
     @Input()
     public set readOnly(value: BooleanInput) {
-        this.options.readOnly = coerceBooleanProperty(value);
+        this.updateOptions({ readOnly: coerceBooleanProperty(value) } as EditorOptions);
     }
 
     public get readOnly(): BooleanInput {
@@ -232,7 +232,7 @@ export class MonacoEditorComponent {
      */
     @Input()
     public set scrollbar(value: EditorScrollbarOptions) {
-        this.options.scrollbar = value;
+        this.updateOptions({ scrollbar: value } as EditorOptions);
     }
 
     public get scrollbar(): EditorScrollbarOptions {
@@ -245,7 +245,7 @@ export class MonacoEditorComponent {
      */
     @Input()
     public set fixedOverflowWidgets(value: BooleanInput) {
-        this.options.fixedOverflowWidgets = coerceBooleanProperty(value);
+        this.updateOptions({ fixedOverflowWidgets: coerceBooleanProperty(value) } as EditorOptions);
     }
 
     public get fixedOverflowWidgets(): BooleanInput {
@@ -258,7 +258,7 @@ export class MonacoEditorComponent {
      */
     @Input()
     public set overviewRulerLanes(value: NumberInput) {
-        this.options.overviewRulerLanes = coerceNumberProperty(value);
+        this.updateOptions({ overviewRulerLanes: coerceNumberProperty(value) } as EditorOptions);
     }
 
     public get overviewRulerLanes(): NumberInput {
@@ -271,7 +271,7 @@ export class MonacoEditorComponent {
      */
     @Input()
     public set cursorBlinking(value: string) {
-        this.options.cursorBlinking = value;
+        this.updateOptions({ cursorBlinking: value } as EditorOptions);
     }
 
     public get cursorBlinking(): string {
@@ -284,7 +284,7 @@ export class MonacoEditorComponent {
      */
     @Input()
     public set mouseWheelZoom(value: BooleanInput) {
-        this.options.mouseWheelZoom = coerceBooleanProperty(value);
+        this.updateOptions({ mouseWheelZoom: coerceBooleanProperty(value) } as EditorOptions);
     }
 
     public get mouseWheelZoom(): BooleanInput {
@@ -297,7 +297,7 @@ export class MonacoEditorComponent {
      */
     @Input()
     public set cursorStyle(value: string) {
-        this.options.cursorStyle = value;
+        this.updateOptions({ cursorStyle: value } as EditorOptions);
     }
 
     public get cursorStyle(): string {
@@ -310,7 +310,7 @@ export class MonacoEditorComponent {
      */
     @Input()
     public set fontLigatures(value: BooleanInput) {
-        this.options.fontLigatures = coerceBooleanProperty(value);
+        this.updateOptions({ fontLigatures: coerceBooleanProperty(value) } as EditorOptions);
     }
 
     public get fontLigatures(): BooleanInput {
@@ -323,7 +323,7 @@ export class MonacoEditorComponent {
      */
     @Input()
     public set disableTranslate3d(value: BooleanInput) {
-        this.options.disableTranslate3d = coerceBooleanProperty(value);
+        this.updateOptions({ disableTranslate3d: coerceBooleanProperty(value) } as EditorOptions);
     }
 
     public get disableTranslate3d(): BooleanInput {
@@ -336,7 +336,7 @@ export class MonacoEditorComponent {
      */
     @Input()
     public set disableMonospaceOptimizations(value: BooleanInput) {
-        this.options.disableMonospaceOptimizations = coerceBooleanProperty(value);
+        this.updateOptions({ disableMonospaceOptimizations: coerceBooleanProperty(value) } as EditorOptions);
     }
 
     public get disableMonospaceOptimizations(): BooleanInput {
@@ -349,7 +349,7 @@ export class MonacoEditorComponent {
      */
     @Input()
     public set hideCursorInOverviewRuler(value: BooleanInput) {
-        this.options.hideCursorInOverviewRuler = coerceBooleanProperty(value);
+        this.updateOptions({ hideCursorInOverviewRuler: coerceBooleanProperty(value) } as EditorOptions);
     }
 
     public get hideCursorInOverviewRuler(): BooleanInput {
@@ -362,7 +362,7 @@ export class MonacoEditorComponent {
      */
     @Input()
     public set scrollBeyondLastLine(value: BooleanInput) {
-        this.options.scrollBeyondLastLine = coerceBooleanProperty(value);
+        this.updateOptions({ scrollBeyondLastLine: coerceBooleanProperty(value) } as EditorOptions);
     }
 
     public get scrollBeyondLastLine(): BooleanInput {
@@ -376,7 +376,7 @@ export class MonacoEditorComponent {
      */
     @Input()
     public set automaticLayout(value: BooleanInput) {
-        this.options.automaticLayout = coerceBooleanProperty(value);
+        this.updateOptions({ automaticLayout: coerceBooleanProperty(value) } as EditorOptions);
     }
 
     public get automaticLayout(): BooleanInput {
@@ -392,7 +392,7 @@ export class MonacoEditorComponent {
      */
     @Input()
     public set wrappingColumn(value: NumberInput) {
-        this.options.wrappingColumn = coerceNumberProperty(value);
+        this.updateOptions({ wrappingColumn: coerceNumberProperty(value) } as EditorOptions);
     }
 
     public get wrappingColumn(): NumberInput {
@@ -406,7 +406,7 @@ export class MonacoEditorComponent {
      */
     @Input()
     public set wordWrap(value: BooleanInput) {
-        this.options.wordWrap = coerceBooleanProperty(value);
+        this.updateOptions({ wordWrap: coerceBooleanProperty(value) } as EditorOptions);
     }
 
     public get wordWrap(): BooleanInput {
@@ -419,7 +419,7 @@ export class MonacoEditorComponent {
      */
     @Input()
     public set wrappingIndent(value: string) {
-        this.options.wrappingIndent = value;
+        this.updateOptions({ wrappingIndent: value } as EditorOptions);
     }
 
     public get wrappingIndent(): string {
@@ -432,7 +432,7 @@ export class MonacoEditorComponent {
      */
     @Input()
     public set wordWrapBreakBeforeCharacters(value: string) {
-        this.options.wordWrapBreakBeforeCharacters = value;
+        this.updateOptions({ wordWrapBreakBeforeCharacters: value } as EditorOptions);
     }
 
     public get wordWrapBreakBeforeCharacters(): string {
@@ -445,7 +445,7 @@ export class MonacoEditorComponent {
      */
     @Input()
     public set wordWrapBreakAfterCharacters(value: string) {
-        this.options.wordWrapBreakAfterCharacters = value;
+        this.updateOptions({ wordWrapBreakAfterCharacters: value } as EditorOptions);
     }
 
     public get wordWrapBreakAfterCharacters(): string {
@@ -458,7 +458,7 @@ export class MonacoEditorComponent {
      */
     @Input()
     public set wordWrapBreakObtrusiveCharacters(value: string) {
-        this.options.wordWrapBreakObtrusiveCharacters = value;
+        this.updateOptions({ wordWrapBreakObtrusiveCharacters: value } as EditorOptions);
     }
 
     public get wordWrapBreakObtrusiveCharacters(): string {
@@ -472,7 +472,7 @@ export class MonacoEditorComponent {
      */
     @Input()
     public set stopRenderingLineAfter(value: NumberInput) {
-        this.options.stopRenderingLineAfter = coerceNumberProperty(value);
+        this.updateOptions({ stopRenderingLineAfter: coerceNumberProperty(value) } as EditorOptions);
     }
 
     public get stopRenderingLineAfter(): NumberInput {
@@ -485,7 +485,7 @@ export class MonacoEditorComponent {
      */
     @Input()
     public set hover(value: BooleanInput) {
-        this.options.hover = coerceBooleanProperty(value);
+        this.updateOptions({ hover: coerceBooleanProperty(value) } as EditorOptions);
     }
 
     public get hover(): BooleanInput {
@@ -498,7 +498,7 @@ export class MonacoEditorComponent {
      */
     @Input()
     public set contextmenu(value: BooleanInput) {
-        this.options.contextmenu = coerceBooleanProperty(value);
+        this.updateOptions({ contextmenu: coerceBooleanProperty(value) } as EditorOptions);
     }
 
     public get contextmenu(): BooleanInput {
@@ -511,7 +511,7 @@ export class MonacoEditorComponent {
      */
     @Input()
     public set mouseWheelScrollSensitivity(value: NumberInput) {
-        this.options.mouseWheelScrollSensitivity = coerceNumberProperty(value);
+        this.updateOptions({ mouseWheelScrollSensitivity: coerceNumberProperty(value) } as EditorOptions);
     }
 
     public get mouseWheelScrollSensitivity(): NumberInput {
@@ -524,7 +524,7 @@ export class MonacoEditorComponent {
      */
     @Input()
     public set quickSuggestions(value: BooleanInput) {
-        this.options.quickSuggestions = coerceBooleanProperty(value);
+        this.updateOptions({ quickSuggestions: coerceBooleanProperty(value) } as EditorOptions);
     }
 
     public get quickSuggestions(): BooleanInput {
@@ -537,7 +537,7 @@ export class MonacoEditorComponent {
      */
     @Input()
     public set quickSuggestionsDelay(value: NumberInput) {
-        this.options.quickSuggestionsDelay = coerceNumberProperty(value);
+        this.updateOptions({ quickSuggestionsDelay: coerceNumberProperty(value) } as EditorOptions);
     }
 
     public get quickSuggestionsDelay(): NumberInput {
@@ -549,7 +549,7 @@ export class MonacoEditorComponent {
      */
     @Input()
     public set parameterHints(value: BooleanInput) {
-        this.options.parameterHints = coerceBooleanProperty(value);
+        this.updateOptions({ parameterHints: coerceBooleanProperty(value) } as EditorOptions);
     }
 
     public get parameterHints(): BooleanInput {
@@ -562,7 +562,7 @@ export class MonacoEditorComponent {
      */
     @Input()
     public set iconsInSuggestions(value: BooleanInput) {
-        this.options.iconsInSuggestions = coerceBooleanProperty(value);
+        this.updateOptions({ iconsInSuggestions: coerceBooleanProperty(value) } as EditorOptions);
     }
 
     public get iconsInSuggestions(): BooleanInput {
@@ -575,7 +575,7 @@ export class MonacoEditorComponent {
      */
     @Input()
     public set autoClosingBrackets(value: BooleanInput) {
-        this.options.autoClosingBrackets = coerceBooleanProperty(value);
+        this.updateOptions({ autoClosingBrackets: coerceBooleanProperty(value) } as EditorOptions);
     }
 
     public get autoClosingBrackets(): BooleanInput {
@@ -588,7 +588,7 @@ export class MonacoEditorComponent {
      */
     @Input()
     public set formatOnType(value: BooleanInput) {
-        this.options.formatOnType = coerceBooleanProperty(value);
+        this.updateOptions({ formatOnType: coerceBooleanProperty(value) } as EditorOptions);
     }
 
     public get formatOnType(): BooleanInput {
@@ -601,7 +601,7 @@ export class MonacoEditorComponent {
      */
     @Input()
     public set formatOnPaste(value: BooleanInput) {
-        this.options.formatOnPaste = coerceBooleanProperty(value);
+        this.updateOptions({ formatOnPaste: coerceBooleanProperty(value) } as EditorOptions);
     }
 
     public get formatOnPaste(): BooleanInput {
@@ -614,7 +614,7 @@ export class MonacoEditorComponent {
      */
     @Input()
     public set suggestOnTriggerCharacters(value: BooleanInput) {
-        this.options.suggestOnTriggerCharacters = coerceBooleanProperty(value);
+        this.updateOptions({ suggestOnTriggerCharacters: coerceBooleanProperty(value) } as EditorOptions);
     }
 
     public get suggestOnTriggerCharacters(): BooleanInput {
@@ -627,7 +627,7 @@ export class MonacoEditorComponent {
      */
     @Input()
     public set acceptSuggestionOnEnter(value: BooleanInput) {
-        this.options.acceptSuggestionOnEnter = coerceBooleanProperty(value);
+        this.updateOptions({ acceptSuggestionOnEnter: coerceBooleanProperty(value) } as EditorOptions);
     }
 
     public get acceptSuggestionOnEnter(): BooleanInput {
@@ -640,7 +640,7 @@ export class MonacoEditorComponent {
      */
     @Input()
     public set acceptSuggestionOnCommitCharacter(value: BooleanInput) {
-        this.options.acceptSuggestionOnCommitCharacter = coerceBooleanProperty(value);
+        this.updateOptions({ acceptSuggestionOnCommitCharacter: coerceBooleanProperty(value) } as EditorOptions);
     }
 
     public get acceptSuggestionOnCommitCharacter(): BooleanInput {
@@ -652,7 +652,7 @@ export class MonacoEditorComponent {
      */
     @Input()
     public set snippetSuggestions(value: SnippetSuggestions) {
-        this.options.snippetSuggestions = value;
+        this.updateOptions({ snippetSuggestions: value } as EditorOptions);
     }
 
     public get snippetSuggestions(): SnippetSuggestions {
@@ -664,7 +664,7 @@ export class MonacoEditorComponent {
      */
     @Input()
     public set emptySelectionClipboard(value: BooleanInput) {
-        this.options.emptySelectionClipboard = coerceBooleanProperty(value);
+        this.updateOptions({ emptySelectionClipboard: coerceBooleanProperty(value) } as EditorOptions);
     }
 
     public get emptySelectionClipboard(): BooleanInput {
@@ -676,7 +676,7 @@ export class MonacoEditorComponent {
      */
     @Input()
     public set tabCompletion(value: BooleanInput) {
-        this.options.tabCompletion = coerceBooleanProperty(value);
+        this.updateOptions({ tabCompletion: coerceBooleanProperty(value) } as EditorOptions);
     }
 
     public get tabCompletion(): BooleanInput {
@@ -688,7 +688,7 @@ export class MonacoEditorComponent {
      */
     @Input()
     public set wordBasedSuggestions(value: BooleanInput) {
-        this.options.wordBasedSuggestions = coerceBooleanProperty(value);
+        this.updateOptions({ wordBasedSuggestions: coerceBooleanProperty(value) } as EditorOptions);
     }
 
     public get wordBasedSuggestions(): BooleanInput {
@@ -701,7 +701,7 @@ export class MonacoEditorComponent {
      */
     @Input()
     public set suggestFontSize(value: NumberInput) {
-        this.options.suggestFontSize = coerceNumberProperty(value);
+        this.updateOptions({ suggestFontSize: coerceNumberProperty(value) } as EditorOptions);
     }
 
     public get suggestFontSize(): NumberInput {
@@ -714,7 +714,7 @@ export class MonacoEditorComponent {
      */
     @Input()
     public set suggestLineHeight(value: NumberInput) {
-        this.options.suggestLineHeight = coerceNumberProperty(value);
+        this.updateOptions({ suggestLineHeight: coerceNumberProperty(value) } as EditorOptions);
     }
 
     public get suggestLineHeight(): NumberInput {
@@ -727,7 +727,7 @@ export class MonacoEditorComponent {
      */
     @Input()
     public set selectionHighlight(value: BooleanInput) {
-        this.options.selectionHighlight = coerceBooleanProperty(value);
+        this.updateOptions({ selectionHighlight: coerceBooleanProperty(value) } as EditorOptions);
     }
 
     public get selectionHighlight(): BooleanInput {
@@ -740,7 +740,7 @@ export class MonacoEditorComponent {
      */
     @Input()
     public set codeLens(value: BooleanInput) {
-        this.options.codeLens = coerceBooleanProperty(value);
+        this.updateOptions({ codeLens: coerceBooleanProperty(value) } as EditorOptions);
     }
 
     public get codeLens(): BooleanInput {
@@ -753,7 +753,7 @@ export class MonacoEditorComponent {
      */
     @Input()
     public set folding(value: BooleanInput) {
-        this.options.folding = coerceBooleanProperty(value);
+        this.updateOptions({ folding: coerceBooleanProperty(value) } as EditorOptions);
     }
 
     public get folding(): BooleanInput {
@@ -766,7 +766,7 @@ export class MonacoEditorComponent {
      */
     @Input()
     public set renderWhitespace(value: RenderWhitespace) {
-        this.options.renderWhitespace = value;
+        this.updateOptions({ renderWhitespace: value } as EditorOptions);
     }
 
     public get renderWhitespace(): RenderWhitespace {
@@ -779,7 +779,7 @@ export class MonacoEditorComponent {
      */
     @Input()
     public set renderControlCharacters(value: BooleanInput) {
-        this.options.renderControlCharacters = coerceBooleanProperty(value);
+        this.updateOptions({ renderControlCharacters: coerceBooleanProperty(value) } as EditorOptions);
     }
 
     public get renderControlCharacters(): BooleanInput {
@@ -792,7 +792,7 @@ export class MonacoEditorComponent {
      */
     @Input()
     public set renderIndentGuides(value: BooleanInput) {
-        this.options.renderIndentGuides = coerceBooleanProperty(value);
+        this.updateOptions({ renderIndentGuides: coerceBooleanProperty(value) } as EditorOptions);
     }
 
     public get renderIndentGuides(): BooleanInput {
@@ -805,7 +805,7 @@ export class MonacoEditorComponent {
      */
     @Input()
     public set renderLineHighlight(value: RenderLineHighlight) {
-        this.options.renderLineHighlight = value;
+        this.updateOptions({ renderLineHighlight: value } as EditorOptions);
     }
 
     public get renderLineHighlight(): RenderLineHighlight {
@@ -817,7 +817,7 @@ export class MonacoEditorComponent {
      */
     @Input()
     public set useTabStops(value: BooleanInput) {
-        this.options.useTabStops = coerceBooleanProperty(value);
+        this.updateOptions({ useTabStops: coerceBooleanProperty(value) } as EditorOptions);
     }
 
     public get useTabStops(): BooleanInput {
@@ -829,7 +829,7 @@ export class MonacoEditorComponent {
      */
     @Input()
     public set fontFamily(value: string) {
-        this.options.fontFamily = value;
+        this.updateOptions({ fontFamily: value } as EditorOptions);
     }
 
     public get fontFamily(): string {
@@ -841,7 +841,7 @@ export class MonacoEditorComponent {
      */
     @Input()
     public set fontWeight(value: FontWeight) {
-        this.options.fontWeight = value;
+        this.updateOptions({ fontWeight: value } as EditorOptions);
     }
 
     public get fontWeight(): FontWeight {
@@ -853,7 +853,7 @@ export class MonacoEditorComponent {
      */
     @Input()
     public set fontSize(value: NumberInput) {
-        this.options.fontSize = coerceNumberProperty(value);
+        this.updateOptions({ fontSize: coerceNumberProperty(value) } as EditorOptions);
     }
 
     public get fontSize(): NumberInput {
@@ -865,7 +865,7 @@ export class MonacoEditorComponent {
      */
     @Input()
     public set lineHeight(value: NumberInput) {
-        this.options.lineHeight = coerceNumberProperty(value);
+        this.updateOptions({ lineHeight: coerceNumberProperty(value) } as EditorOptions);
     }
 
     public get lineHeight(): NumberInput {
@@ -877,7 +877,7 @@ export class MonacoEditorComponent {
     */
     @Input()
     public set language(value: Language) {
-        this.options.language = value;
+        this.updateOptions({ language: value } as EditorOptions);
     }
 
     public get language(): Language {
@@ -902,7 +902,8 @@ export class MonacoEditorComponent {
         return this._valueToCompare;
     }
 
-    private options: EditorOptions;
+    public options: EditorOptions;
+
     private _isDiffEditor: boolean;
     private _value: string;
     private _valueToCompare: string;
@@ -915,8 +916,8 @@ export class MonacoEditorComponent {
         } as EditorOptions;
     }
 
-    public getOptions(): EditorOptions {
-        return { ...this.options };
+    public updateOptions(options: EditorOptions): void {
+        this.options = { ...this.options, ...options };
     }
 
     public onValueChange(value: string): void {
