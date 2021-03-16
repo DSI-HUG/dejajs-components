@@ -11,7 +11,7 @@
 import { Injectable } from '@angular/core';
 import { Diacritics } from '@deja-js/component/core';
 import { BehaviorSubject, combineLatest, merge, Observable, of, ReplaySubject } from 'rxjs';
-import { filter, map, shareReplay, switchMap, take } from 'rxjs/operators';
+import { filter, map, shareReplay, switchMap, take, tap } from 'rxjs/operators';
 
 import { Item } from './item';
 import { ItemComponent } from './item.component';
@@ -37,7 +37,7 @@ export class ItemService<T> {
     public itemList$: Observable<Item<T>[]>;
     public flatItemList$: Observable<Item<T>[]>;
     public refreshFlatItemList$ = new BehaviorSubject<void>(undefined);
-    public fitleredItemList$: Observable<Item<T>[]>;
+    public filteredItemList$: Observable<Item<T>[]>;
     public refreshVisibleItemList$ = new BehaviorSubject<void>(undefined);
     public visibleItemList$: Observable<Item<T>[]>;
     public selectedItems$: Observable<Item<T>[]>;
@@ -85,10 +85,13 @@ export class ItemService<T> {
                 }) || [];
                 return addItems(items, 0);
             }),
+            tap(() => {
+                this.previousQuery = undefined;
+            }),
             shareReplay({ bufferSize: 1, refCount: false })
         );
 
-        this.fitleredItemList$ = combineLatest([this.flatItemList$, this.query$, this.minSearchLength$, this.searchField$]).pipe(
+        this.filteredItemList$ = combineLatest([this.flatItemList$, this.query$, this.minSearchLength$, this.searchField$]).pipe(
             switchMap(([flatItemList, query, minSearchLength, searchField]) => {
                 if (minSearchLength > 0 && (!query || typeof query === 'string' && query.length < minSearchLength)) {
                     return of([]);
@@ -98,7 +101,7 @@ export class ItemService<T> {
                     return of(flatItemList);
                 }
 
-                const listToFilter$ = typeof query === 'string' && this.previousQuery && query.includes(this.previousQuery) && this.fitleredItemList$ ? this.fitleredItemList$ : of(flatItemList);
+                const listToFilter$ = typeof query === 'string' && this.previousQuery && query.includes(this.previousQuery) && this.filteredItemList$ ? this.filteredItemList$ : of(flatItemList);
 
                 this.previousQuery = typeof query === 'string' ? query : null;
 
@@ -153,7 +156,7 @@ export class ItemService<T> {
             shareReplay({ bufferSize: 1, refCount: false })
         );
 
-        this.visibleItemList$ = combineLatest([this.fitleredItemList$, this.refreshVisibleItemList$]).pipe(
+        this.visibleItemList$ = combineLatest([this.filteredItemList$, this.refreshVisibleItemList$]).pipe(
             map(([items]) => {
                 let isOdd = false;
                 let hideDepth = undefined as number;
