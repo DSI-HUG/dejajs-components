@@ -1,3 +1,10 @@
+## [11.6.1-next.5](https://github.com/DSI-HUG/dejajs-components/compare/v11.6.1-next.4...v11.6.1-next.5) (2021-03-16)
+
+
+### Bug Fixes
+
+* **tree-list:** expand collapse preevents inverted ([deaab65](https://github.com/DSI-HUG/dejajs-components/commit/deaab65d16d6299206514c02f7960e66e0026012))
+
 ## [11.6.1-next.4](https://github.com/DSI-HUG/dejajs-components/compare/v11.6.1-next.3...v11.6.1-next.4) (2021-03-16)
 
 
