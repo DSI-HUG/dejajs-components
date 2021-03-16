@@ -61,6 +61,8 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
     @Output() public readonly itemExpand = new EventEmitter<ItemEvent<T>>();
     /** Exécuté lorsque l'utilisateur tape enter sur une ligne. */
     @Output() public readonly itemEnter = new EventEmitter<ItemEvent<T>>();
+    /** Exécuté lorsque l'utilisateur a modifié le filtrage de la liste. */
+    @Output() public readonly queryChange = new EventEmitter<string>();
 
     // Cnacelable pre events
     @Input() public expandingItem: (items: Item<T>) => Observable<Item<T>>;
@@ -425,7 +427,12 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
         this.itemService.query$.pipe(
             filter(query => typeof query === 'string'),
             takeUntil(this.destroyed$)
-        ).subscribe(query => this._query = query as string);
+        ).subscribe(query => {
+            if (this._query !== query) {
+                this._query = query as string;
+                this.queryChange.emit(this._query);
+            }
+        });
 
         const modelType$ = this.ngModelType$.pipe(
             tap(modelType => this._ngModelType = modelType)
