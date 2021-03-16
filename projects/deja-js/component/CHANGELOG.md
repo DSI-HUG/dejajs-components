@@ -1,3 +1,10 @@
+## [11.6.1-next.4](https://github.com/DSI-HUG/dejajs-components/compare/v11.6.1-next.3...v11.6.1-next.4) (2021-03-16)
+
+
+### Bug Fixes
+
+* **tree-list:** add bidirectional query param ([3e09599](https://github.com/DSI-HUG/dejajs-components/commit/3e0959932dafb36a7178d22c3c83be700302d628))
+
 ## [11.6.1-next.3](https://github.com/DSI-HUG/dejajs-components/compare/v11.6.1-next.2...v11.6.1-next.3) (2021-03-16)
 
 
