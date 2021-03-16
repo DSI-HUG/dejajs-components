@@ -234,8 +234,8 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
     /** Correspond au ngModel du champ de filtrage ou recherche */
     @Input()
     public set query(value: string) {
-        this.itemService.query$.next(value);
         this._query = value;
+        this.itemService.query$.next(value);
     }
 
     public get query(): string {
@@ -820,7 +820,7 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
 
         this.collapseItem$.pipe(
             switchMap(item => {
-                if (item.collapsed && this.collapsingItem) {
+                if (!item.collapsed && this.collapsingItem) {
                     return this.collapsingItem(item);
                 } else if (this.expandingItem) {
                     return this.expandingItem(item);
@@ -950,7 +950,9 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
 
     /** Positionne a scrollbar pour assurer que l'élément spécifié soit visible */
     public ensureItemVisible(item: Item<T> | number): void {
-        this.viewPortComponent.ensureVisible(item);
+        if (this.viewPortComponent) {
+            this.viewPortComponent.ensureVisible(item);
+        }
     }
 
     /** Rebind le viewport */
