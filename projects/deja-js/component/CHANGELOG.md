@@ -1,3 +1,10 @@
+## [11.6.1-next.2](https://github.com/DSI-HUG/dejajs-components/compare/v11.6.1-next.1...v11.6.1-next.2) (2021-03-16)
+
+
+### Bug Fixes
+
+* fix compile issue with same types ([bdcaf04](https://github.com/DSI-HUG/dejajs-components/commit/bdcaf04c2fe3215d54c64ec8f4ecdee6d10ab535))
+
 ## [11.6.1-next.1](https://github.com/DSI-HUG/dejajs-components/compare/v11.6.0...v11.6.1-next.1) (2021-03-15)
 
 
