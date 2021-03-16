@@ -1,3 +1,10 @@
+## [11.6.1-next.3](https://github.com/DSI-HUG/dejajs-components/compare/v11.6.1-next.2...v11.6.1-next.3) (2021-03-16)
+
+
+### Bug Fixes
+
+* **tree-list:** fix set query feature ([e6db889](https://github.com/DSI-HUG/dejajs-components/commit/e6db889bd84921f502030a5bf6e6c8148e90a89d))
+
 ## [11.6.1-next.2](https://github.com/DSI-HUG/dejajs-components/compare/v11.6.1-next.1...v11.6.1-next.2) (2021-03-16)
 
 
