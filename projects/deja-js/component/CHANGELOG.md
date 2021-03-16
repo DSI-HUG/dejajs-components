@@ -1,3 +1,10 @@
+## [11.6.1-next.6](https://github.com/DSI-HUG/dejajs-components/compare/v11.6.1-next.5...v11.6.1-next.6) (2021-03-16)
+
+
+### Bug Fixes
+
+* **treelist:** fix flatlist cache on query change ([ba6fc09](https://github.com/DSI-HUG/dejajs-components/commit/ba6fc0923a7c655a40b05ca978ba3bb2efd17335))
+
 ## [11.6.1-next.5](https://github.com/DSI-HUG/dejajs-components/compare/v11.6.1-next.4...v11.6.1-next.5) (2021-03-16)
 
 
