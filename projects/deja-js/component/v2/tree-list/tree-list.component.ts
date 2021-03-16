@@ -43,8 +43,6 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
     @Input() public viewPortMode: ViewPortMode;
     /** Texte affiché si aucune donnée n'est présente dans le tableau */
     @Input() public nodataholder: string;
-    /** Correspond au ngModel du champ de filtrage ou recherche */
-    @Input() public query = '';
     /** Permet de définir un template de ligne par binding */
     @Input() public itemTemplateExternal: TemplateRef<unknown>;
     /** Permet de définir un template de ligne parente par binding. */
@@ -102,6 +100,7 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
     private _searchArea = false;
     private lastClickedItem: Item<T>; // Double-click detection
     private reloadViewPort$ = new BehaviorSubject<void>(undefined);
+    private _query: string;
 
     @ViewChild(ViewPortComponent)
     public set viewPortComponent(viewPortComponent: ViewPortComponent<T>) {
@@ -228,6 +227,17 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
 
     public get multiSelect(): BooleanInput {
         return this._multiSelect;
+    }
+
+    /** Correspond au ngModel du champ de filtrage ou recherche */
+    @Input()
+    public set query(value: string) {
+        this.itemService.query$.next(value);
+        this._query = value;
+    }
+
+    public get query(): string {
+        return this._query;
     }
 
     @Input() public set selectingItems(value: (items: Item<T>[]) => Observable<Item<T>[]>) {
@@ -415,7 +425,7 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
         this.itemService.query$.pipe(
             filter(query => typeof query === 'string'),
             takeUntil(this.destroyed$)
-        ).subscribe(query => this.query = query as string);
+        ).subscribe(query => this._query = query as string);
 
         const modelType$ = this.ngModelType$.pipe(
             tap(modelType => this._ngModelType = modelType)
