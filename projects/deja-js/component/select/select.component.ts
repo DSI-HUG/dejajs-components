@@ -51,7 +51,6 @@ import { IViewListResult } from '@deja-js/component/core';
 import { IViewPort } from '@deja-js/component/core';
 import { KeyCodes } from '@deja-js/component/core';
 import { MediaService } from '@deja-js/component/core';
-import { ViewportMode } from '@deja-js/component/core';
 import { GroupingService } from '@deja-js/component/core';
 import { SortingService } from '@deja-js/component/core';
 import { ViewPortService } from '@deja-js/component/core';
@@ -580,7 +579,7 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
      * est suceptible de contenir beaucoup d'éléments.
      */
     @Input()
-    public set viewportMode(mode: ViewportMode) {
+    public set viewportMode(mode: string) {
         this.setViewportMode(mode);
     }
 

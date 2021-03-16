@@ -20,8 +20,6 @@ import { Destroy } from '@deja-js/component/core';
 import { IViewPort } from '@deja-js/component/core';
 import { IViewPortItem } from '@deja-js/component/core';
 import { IViewPortRefreshParams } from '@deja-js/component/core';
-import { ViewportDirection } from '@deja-js/component/core';
-import { ViewportMode } from '@deja-js/component/core';
 import { ViewPortService } from '@deja-js/component/core';
 import { BehaviorSubject, fromEvent, interval, merge, Observable, of, Subject, timer } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
@@ -119,7 +117,7 @@ export class DejaViewPortComponent extends Destroy {
      * horizontal: The item are displayed horizontally
      */
     @Input()
-    public set direction(value: ViewportDirection) {
+    public set direction(value: string) {
         this.viewPort.direction$.next(value);
         this._isHorizontal = value === 'horizontal';
         this.changeDetectorRef.markForCheck();
@@ -181,11 +179,11 @@ export class DejaViewPortComponent extends Destroy {
      * auto: Seul les éléments visibles sont rendus. La taille des éléments est calculée automatiquement (performances --)
      */
     @Input()
-    public set viewportMode(mode: ViewportMode) {
+    public set viewportMode(mode: string) {
         this.viewPort.mode$.next(mode);
     }
 
-    public get viewportMode(): ViewportMode {
+    public get viewportMode(): string {
         return this.viewPort.mode;
     }
 

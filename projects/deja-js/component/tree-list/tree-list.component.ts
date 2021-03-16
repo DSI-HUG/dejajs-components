@@ -43,7 +43,6 @@ import { KeyCodes } from '@deja-js/component/core';
 import { Position } from '@deja-js/component/core';
 import { Rect } from '@deja-js/component/core';
 import { SortingService } from '@deja-js/component/core';
-import { ViewportMode } from '@deja-js/component/core';
 import { ViewPortService } from '@deja-js/component/core';
 import { IDejaDragContext, IDejaDragEvent, IDejaDropContext } from '@deja-js/component/dragdrop';
 import { BehaviorSubject, combineLatest, fromEvent, merge, Observable, of, Subject, Subscription, timer } from 'rxjs';
@@ -317,7 +316,7 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
      * est suceptible de contenir beaucoup d'éléments.
      */
     @Input()
-    public set viewportMode(mode: ViewportMode) {
+    public set viewportMode(mode: string) {
         this.setViewportMode(mode);
     }
 

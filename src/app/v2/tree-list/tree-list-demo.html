@@ -172,20 +172,20 @@
                     <ul id="shortcut-list">
                         <li>Press
                             <span class="keyboard-key">Ctrl</span>
-                            <span class="keyboard-key">Space</span> to add/remove the current item to the selection</li>
-                        <li>Press
-                            <span class="keyboard-key">Shift</span>
-                            <span class="keyboard-key">↑</span> to select a range orf items</li>
-                        <li>Press
-                            <span class="keyboard-key">Shift</span>
-                            <span class="keyboard-key">↓</span> to select a range orf items</li>
-                    </ul>
-                    <h4>Selected country model :</h4>
-                    <ul>
-                        <li *ngFor="let item of multiselectModel">
-                            <span>{{ $any(item).naqme }}</span>
-                        </li>
-                    </ul>
+                <span class="keyboard-key">Space</span> to add/remove the current item to the selection</li>
+                <li>Press
+                    <span class="keyboard-key">Shift</span>
+                    <span class="keyboard-key">↑</span> to select a range orf items</li>
+                <li>Press
+                    <span class="keyboard-key">Shift</span>
+                    <span class="keyboard-key">↓</span> to select a range orf items</li>
+                </ul>
+                <h4>Selected country model :</h4>
+                <ul>
+                    <li *ngFor="let item of multiselectModel">
+                        <span>{{ $any(item).naqme }}</span>
+                    </li>
+                </ul>
                 </span>
             </div>
         </mat-card-content>
@@ -197,12 +197,12 @@
                     <tree-list #dragdroplist [items]="groupedCountryItems$ | async" [mouse-draggable]="getDragContext(dragdroplist)">
                         <ng-template #itemTemplate let-item let-flatindex="flatindex">
                             <span>{{ item.label }}</span>
-                        </ng-template>
-                        <ng-template #parentItemTemplate let-item>
-                            <mat-icon id="placeholder-icon">public</mat-icon>&nbsp;
-                            <span>{{ item.label }}</span>
-                        </ng-template>
-                    </tree-list>
+                </ng-template>
+                <ng-template #parentItemTemplate let-item>
+                    <mat-icon id="placeholder-icon">public</mat-icon>&nbsp;
+                    <span>{{ item.label }}</span>
+                </ng-template>
+                </tree-list>
                 </span>
                 <span class="flex45p flexOffset5p">
                     <div>You can drag and drop items the the area bellow (That will display a JSON representation of the dropped model) :</div>
@@ -248,18 +248,18 @@
                                 <span id="title">
                                     This is a header template, click to sort the list.
                                 </span>
-                                <deja-sort-indicator [sort-infos]="sortInfos$ | async"></deja-sort-indicator>
-                            </span>
-                        </ng-template>
-                    </tree-list>
+                <deja-sort-indicator [sort-infos]="sortInfos$ | async"></deja-sort-indicator>
+                </span>
+                </ng-template>
+                </tree-list>
                 </span>
                 <span class="flex45p flexLayout flexColumn flexOffset5p">
                     <tree-list textField="naqme" [items]="groupedCountryItems$ | async">
                         <ng-template #parentItemTemplate let-item>
                             <mat-icon id="placeholder-icon">public</mat-icon>&nbsp;
                             <span>{{ item.groupName }}</span>
-                        </ng-template>
-                    </tree-list>
+                </ng-template>
+                </tree-list>
                 </span>
             </div>
             <h1>Search Prefix and Suffix Templates</h1>
@@ -318,10 +318,10 @@
         <mat-card-content>
             <h1>Confirm Selection</h1>
             <div>A dialog will confirm the selection of an item</div>
-            <tree-list class="demo-half-width fixed-height" multiSelect textField="naqme" valueField="code" [selectingItems]="confirmDialog()" [models]="countries$ | async"> </tree-list>
+            <tree-list class="demo-half-width fixed-height" multiSelect textField="naqme" valueField="code" [selectingItems]="selectingItems()" [models]="countries$ | async"> </tree-list>
             <h1>Confirm Expand and Collapse </h1>
             <div>A dialog will confirm the expand and collapse or an item if the children are not loaded. The children will be loaded asynchronously after the item expansion.</div>
-            <tree-list #onexpand class="demo-half-width fixed-height" [items]="onDemandGroupedCountryItems$ | async" (itemExpand)="itemExpand$.next($event.item)" [expandingItem]="expandingItems()" [collapsingItem]="collapsingItems()"></tree-list>
+            <tree-list #onexpand class="demo-half-width fixed-height" [items]="onDemandGroupedCountryItems$ | async" (itemExpand)="itemExpand$.next($event.item)" [expandingItem]="expandingItem()" [collapsingItem]="collapsingItem()"></tree-list>
         </mat-card-content>
     </mat-card>
 </div>
@@ -336,7 +336,7 @@
                 <mat-form-field class="flexFixedAuto">
                     <input matInput type="number" [(ngModel)]="ensureIndex" autocomplete="off">
                 </mat-form-field>
-                <button class="flexFixedAuto" mat-button (click)="news.ensureItemVisible(ensureIndex)">Ensure index</button>
+                    <button class="flexFixedAuto" mat-button (click)="news.ensureItemVisible(ensureIndex)">Ensure index</button>
             </div>
             <tree-list #news class="news" viewPortMode="auto" viewPortRowHeight="200" textField="title" searchField="description" [models]="bigNews$ | async">
                 <ng-template #itemTemplate let-item let-flatindex="flatindex">
@@ -352,12 +352,12 @@
                     <h4 id="vptitle">Viewport Infos:</h4>
                     <div *ngFor="let info of viewPortInfos">
                         <span class="vpinfoname">{{info.name}}</span>
-                        <span>{{info.value}}</span>
-                    </div>
-                </span>
-            </span>
-        </mat-card-content>
-    </mat-card>
+            <span>{{info.value}}</span>
+</div>
+</span>
+</span>
+</mat-card-content>
+</mat-card>
 </div>
 
 <div *ngIf="tabIndex === 7">

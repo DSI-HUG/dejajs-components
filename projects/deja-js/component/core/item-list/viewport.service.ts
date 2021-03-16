@@ -14,10 +14,6 @@ import { debounceTime, distinctUntilChanged, filter, map, switchMap, takeUntil, 
 
 import { Destroy } from '../destroy/destroy';
 
-export type ViewportMode = 'disabled' | 'fixed' | 'variable' | 'auto';
-
-export type ViewportDirection = 'vertical' | 'horizontal';
-
 /** Service de gestion du viewport d'une liste.
  * Ce service permet la gestion du viewport verticalement ou horizontalement.
  */
@@ -39,14 +35,14 @@ export class ViewPortService extends Destroy {
         items: []
     } as IViewPort;
 
-    public mode$ = new BehaviorSubject<ViewportMode>('fixed');
+    public mode$ = new BehaviorSubject<string>('fixed');
     public items$ = new BehaviorSubject<IViewPortItem[]>([]);
     public maxSize$ = new BehaviorSubject<NumberInput>(0);
     public ensureItem$ = new BehaviorSubject<IViewPortItem | number>(null);
     public scrollPosition$ = new BehaviorSubject<number>(0);
     public element$ = new ReplaySubject<HTMLElement>(1);
     public itemsSize$ = new BehaviorSubject<number>(0);
-    public direction$ = new BehaviorSubject<ViewportDirection>('vertical');
+    public direction$ = new BehaviorSubject<string>('vertical');
     public ensureParams$: Observable<IEnsureParams>;
     public viewPortResult$ = new BehaviorSubject<IViewPort>(this.emptyViewPort);
 
@@ -66,14 +62,14 @@ export class ViewPortService extends Destroy {
         items: []
     } as IViewPort;
 
-    private _mode: ViewportMode = 'fixed';
+    private _mode= 'fixed';
     private _itemsSize = ViewPortService.itemDefaultSize;
-    private _direction: ViewportDirection = 'vertical';
+    private _direction = 'vertical';
     private _scrollPosition = 0;
     private viewPort: IViewPort;
     private ignoreScrollCount = 0;
 
-    public get mode(): ViewportMode {
+    public get mode(): string {
         return this._mode;
     }
 
@@ -81,7 +77,7 @@ export class ViewPortService extends Destroy {
         return this._itemsSize;
     }
 
-    public get direction(): ViewportDirection {
+    public get direction(): string {
         return this._direction;
     }
 

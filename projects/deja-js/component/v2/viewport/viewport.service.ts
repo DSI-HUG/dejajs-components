@@ -13,7 +13,7 @@ import { debounceTime, delay, distinctUntilChanged, filter, map, shareReplay, st
 
 export type ViewPortMode = 'disabled' | 'fixed' | 'variable' | 'auto';
 
-export type ViewPortDirection = 'vertical' | 'horizontal';
+export type ViewPortDirection = 'horizontal' | 'vertical';
 
 export type ViewPortMaxSize = number | 'auto';
 

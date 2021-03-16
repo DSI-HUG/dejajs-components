@@ -9,7 +9,7 @@ import { ChangeDetectorRef, Component, ViewChild, ViewEncapsulation } from '@ang
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Destroy, GroupingService } from '@deja-js/component/core';
 import { Item } from '@deja-js/component/v2/item-list';
-import { SortInfos, SortingService } from '@deja-js/component/v2/item-list/sorting.service';
+import { SortInfos, SortingService } from '@deja-js/component/v2/item-list';
 import { DropCursorInfos, MouseDraggableContext, MouseDroppableContext } from '@deja-js/component/v2/mouse-dragdrop';
 import { TreeListComponent } from '@deja-js/component/v2/tree-list';
 import { ViewPortItem } from '@deja-js/component/v2/viewport';
@@ -304,14 +304,14 @@ export class TreeListDemoComponent extends Destroy {
         return (_query: string | RegExp, _selectedItems: Item<unknown>[]): Observable<Country[]> => this.countriesService.getCountries$().pipe(delay(3000));
     }
 
-    public collapsingItems() {
+    public collapsingItem() {
         return (item: Item<Country>): Observable<Item<Country>> => {
             const countryItem = item as CountryGroupItem;
             return countryItem.loaded ? of(item) : this.confirmDialog()(item);
         };
     }
 
-    public expandingItems() {
+    public expandingItem() {
         return (item: Item<Country>): Observable<Item<Country>> => {
             const group = item as CountryGroupItem;
             if (group.loaded) {
@@ -340,6 +340,18 @@ export class TreeListDemoComponent extends Destroy {
                     })
                 );
             }
+        };
+    }
+
+    public selectingItems() {
+        return (items: Item<Country>[]): Observable<Item<Country>[]> => {
+            this.dialogVisible = true;
+            return this.dialogResponse$.pipe(
+                take(1),
+                map(response => {
+                    this.dialogVisible = false;
+                    return response === 'ok' ? items : null;
+                }));
         };
     }
 

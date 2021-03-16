@@ -22,7 +22,7 @@ import { SortingService } from '../sorting/sorting.service';
 import { IItemBase } from './item-base';
 import { IFindItemResult, IParentListInfoResult, ItemListService, IViewListResult } from './item-list.service';
 import { IItemTree } from './item-tree';
-import { IViewPort, IViewPortRefreshParams, ViewportMode, ViewPortService } from './viewport.service';
+import { IViewPort, IViewPortRefreshParams, ViewPortService } from './viewport.service';
 
 /** Classe de base pour tous les composants à listes (deja-treelist, deja-select, deja-grid) */
 export abstract class ItemListBase<T> extends Destroy {
@@ -286,7 +286,7 @@ export abstract class ItemListBase<T> extends Destroy {
      *
      * @param mode Mode du viewport (sans viewport, avec un viewport tailles des rows fixes ou dynamiques)
      */
-    public setViewportMode(mode: ViewportMode): void {
+    public setViewportMode(mode: string): void {
         this.viewPort.mode$.next(mode);
     }
 
