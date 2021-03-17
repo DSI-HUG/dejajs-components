@@ -30,7 +30,7 @@ export class ItemService<T> {
     public childrenField$ = new BehaviorSubject<string>('items');
     public textField$ = new BehaviorSubject<string>('label');
     public valueField$ = new BehaviorSubject<string>('value');
-    public searchField$ = new BehaviorSubject<string>(null);
+    public searchField$ = new BehaviorSubject<string>('searchText');
     public query$ = new BehaviorSubject<RegExp | string>('');
     public minSearchLength$ = new BehaviorSubject<number>(0);
 
