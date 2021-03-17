@@ -1,3 +1,10 @@
+## [11.6.1-next.8](https://github.com/DSI-HUG/dejajs-components/compare/v11.6.1-next.7...v11.6.1-next.8) (2021-03-17)
+
+
+### Bug Fixes
+
+* **treelist:** fix default search field ([b4412f5](https://github.com/DSI-HUG/dejajs-components/commit/b4412f5b9408a18f77bb5f3f4a1db6afe9cdf27b))
+
 ## [11.6.1-next.7](https://github.com/DSI-HUG/dejajs-components/compare/v11.6.1-next.6...v11.6.1-next.7) (2021-03-17)
 
 
