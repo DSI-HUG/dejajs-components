@@ -1,3 +1,10 @@
+## [11.6.1-next.7](https://github.com/DSI-HUG/dejajs-components/compare/v11.6.1-next.6...v11.6.1-next.7) (2021-03-17)
+
+
+### Bug Fixes
+
+* **viewport:** fix refresh with existing measured size ([d7835c3](https://github.com/DSI-HUG/dejajs-components/commit/d7835c30c52e8a894c9c4cca50f035f379baf362))
+
 ## [11.6.1-next.6](https://github.com/DSI-HUG/dejajs-components/compare/v11.6.1-next.5...v11.6.1-next.6) (2021-03-16)
 
 
