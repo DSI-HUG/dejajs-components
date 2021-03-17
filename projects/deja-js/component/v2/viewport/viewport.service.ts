@@ -471,11 +471,11 @@ export class ViewPortService<T> {
         );
 
         const refresh$ = merge(this.refresh$, resize$).pipe(
-            withLatestFrom(this.viewPort$ || of(null as ViewPort<T>)),
-            tap(([clearMeasuredSize, viewPort]) => {
-                if (clearMeasuredSize && viewPort?.visibleItems?.length) {
+            withLatestFrom(this.items$),
+            tap(([clearMeasuredSize, items]) => {
+                if (clearMeasuredSize && items?.length) {
                     this.lastCalculatedSize = undefined;
-                    viewPort?.visibleItems.forEach(item => item.size = undefined);
+                    items.forEach(item => item.size = undefined);
                 }
             }),
             debounceTime(100)
