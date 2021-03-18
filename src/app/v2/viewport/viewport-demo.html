@@ -34,7 +34,7 @@
                 <button type="button" mat-button (click)="viewport.viewPortService.scrollPosition$.next(scrollPosition)">Go</button>
             </span>
         </div>
-        <viewport #viewport [models]="news$ | async" viewPortMode="disabled" itemSize="41" [direction]="isHorizontal ? 'horizontal': 'vertical'" [scrollingStyle]="hasButtons ? 'buttons' : 'scrollbar'">
+        <viewport #viewport [models]="news$ | async" viewPortMode="auto" itemSize="41" [direction]="isHorizontal ? 'horizontal': 'vertical'" [scrollingStyle]="hasButtons ? 'buttons' : 'scrollbar'">
             <ng-template #viewPortItemTemplate let-item let-size="size">
                 <news-card [item]="item.model" (imageLoaded)="imageLoaded(item)"></news-card>
             </ng-template>

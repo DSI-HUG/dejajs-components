@@ -64,9 +64,11 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
     /** Exécuté lorsque l'utilisateur a modifié le filtrage de la liste. */
     @Output() public readonly queryChange = new EventEmitter<string>();
 
-    // Cnacelable pre events
+    // Cancelable pre events
     @Input() public expandingItem: (items: Item<T>) => Observable<Item<T>>;
     @Input() public collapsingItem: (items: Item<T>) => Observable<Item<T>>;
+
+    @Input() public debugMode = false;
 
     @HostBinding('attr.disabled') public _disabled: boolean = null;
 

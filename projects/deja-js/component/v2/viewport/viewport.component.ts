@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
+import { BooleanInput, coerceBooleanProperty, coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, Component, ContentChild, ElementRef, EventEmitter, HostBinding, Input, Output, QueryList, TemplateRef, ViewChild, ViewChildren } from '@angular/core';
 import { Destroy } from '@deja-js/component/core';
 import { BehaviorSubject, combineLatest, from, fromEvent, interval, merge, Observable, Subject, timer } from 'rxjs';
@@ -129,6 +129,11 @@ export class ViewPortComponent<T> extends Destroy {
     @Input()
     public set viewPortMode(mode: ViewPortMode) {
         this.viewPortService.mode$.next(mode);
+    }
+
+    @Input()
+    public set debugMode(value: BooleanInput) {
+        this.viewPortService.debug = coerceBooleanProperty(value);
     }
 
     public constructor(

@@ -16,7 +16,7 @@
     <div id="error-hint" *ngIf="hintLabel">{{ hintLabel }}</div>
     <ng-container *ngIf="itemService.visibleItemList$ | async as itemList">
         <div id="nodata-holder" *ngIf="!itemList.length">{{ nodataholder }}</div>
-        <viewport *ngIf="itemList.length" [items]="itemList" [itemSize]="viewPortRowHeight" [viewPortMode]="viewPortMode">
+        <viewport *ngIf="itemList.length" [items]="itemList" [itemSize]="viewPortRowHeight" [viewPortMode]="viewPortMode" [debugMode]="debugMode">
             <ng-template #viewPortItemTemplate let-item let-size="size" let-index="index">
                 <span expandbtn>
                     <mat-icon *ngIf="item.items?.length">arrow_drop_down</mat-icon>
