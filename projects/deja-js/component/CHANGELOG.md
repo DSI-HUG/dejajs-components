@@ -1,3 +1,10 @@
+## [11.6.1-next.10](https://github.com/DSI-HUG/dejajs-components/compare/v11.6.1-next.9...v11.6.1-next.10) (2021-03-18)
+
+
+### Bug Fixes
+
+* **vuewport:** add some optionals logs ([8b6f446](https://github.com/DSI-HUG/dejajs-components/commit/8b6f44641b2ae4e586ef8ddad0c47fbf2c0fdd53))
+
 ## [11.6.1-next.9](https://github.com/DSI-HUG/dejajs-components/compare/v11.6.1-next.8...v11.6.1-next.9) (2021-03-18)
 
 
