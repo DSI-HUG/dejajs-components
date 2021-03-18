@@ -264,7 +264,7 @@ export class ViewPortService<T> {
                                     const item = viewPort.visibleItems[index - viewPort.startIndex];
                                     if (item) {
                                         item.size = clientSize(itemElement as HTMLElement, params.direction);
-                                        this.log('calcAutoSizeViewPort: item found', item, 'measured size', item.size);
+                                        this.log('calcAutoSizeViewPort: item found', item, 'measured size', item.size, 'HTML Element', itemElement);
                                     } else {
                                         this.log('calcAutoSizeViewPort: item not found', item);
                                     }
