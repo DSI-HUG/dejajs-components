@@ -81,13 +81,14 @@ export class TreeListDemoComponent extends Destroy {
     };
 
     public news$: Observable<News[]>;
-    public bigNews$: Observable<News[]>;
     public sortedCountries$: Observable<Country[]>;
     public bigCountries$: Observable<Country[]>;
     public viewPortInfos: {
         name: string;
         value: string;
     }[];
+
+    public bigNews$: Observable<News[]>;
 
     public viewPortInfos$: Subscription;
     public dialogResponse$: Subject<string> = new Subject<string>();
@@ -121,8 +122,15 @@ export class TreeListDemoComponent extends Destroy {
         super();
         this.multiselectModel = JSON.parse('[{"naqme":"ÅlandIslands","code":"AX","label":"ÅlandIslands","depth":0,"odd":true,"selected":true},{"naqme":"AmericanSamoa","code":"AS","label":"AmericanSamoa","depth":0,"odd":false,"selected":true},{"naqme":"Argentina","code":"AR","label":"Argentina","depth":0,"odd":false,"selected":true},{"naqme":"ChristmasIsland","code":"CX","label":"ChristmasIsland","depth":0,"odd":false,"selected":true},{"naqme":"Egypt","code":"EG","label":"Egypt","depth":0,"odd":true,"selected":true},{"naqme":"Dominica","code":"DM","label":"Dominica","depth":0,"odd":false,"selected":true}]');
         this.news$ = newsService.getNews$(50);
-        this.bigNews$ = newsService.getNews$(10000);
         this.bigCountries$ = countriesService.getCountries$(null, 100000);
+
+        const bigNews$ = newsService.getNews$(10000).pipe(
+            shareReplay({ bufferSize: 1, refCount: false })
+        );
+
+        this.bigNews$ = bigNews$.pipe(
+            shareReplay({ bufferSize: 1, refCount: false })
+        );
 
         this.loremList$ = range(0, 50).pipe(
             map(value => {

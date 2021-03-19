@@ -6,13 +6,14 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Component } from '@angular/core';
-import { ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { ViewPortComponent, ViewPortItem } from '@deja-js/component/v2/viewport';
 import { Observable } from 'rxjs';
+import { shareReplay } from 'rxjs/operators';
 
 import { News } from '../../common/news.model';
 import { NewsService } from '../../services/news.service';
+
 
 @Component({
     selector: 'viewport-demo',
@@ -51,7 +52,15 @@ export class ViewPortDemoComponent {
     public news$: Observable<News[]>;
 
     public constructor(newsService: NewsService) {
-        this.news$ = newsService.getNews$(50);
+        this.news$ = newsService.getNews$(50).pipe(
+            shareReplay({ bufferSize: 1, refCount: false })
+        );
+    }
+
+    public reload(): void {
+        if (this.viewport) {
+            this.viewport.reloadViewPort();
+        }
     }
 
     public imageLoaded(item: IExtendedViewPortItem): void {

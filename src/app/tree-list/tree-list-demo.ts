@@ -323,7 +323,8 @@ export class DejaTreeListDemoComponent extends Destroy {
         const itemExt = item as IExtendedViewPortItem;
         if (!itemExt.loaded) {
             itemExt.loaded = true;
-            this.newsList.refreshViewPort(itemExt);
+            itemExt.size = undefined;
+            this.newsList.refreshViewPort();
         }
     }
 

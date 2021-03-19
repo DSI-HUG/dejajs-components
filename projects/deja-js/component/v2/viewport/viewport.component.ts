@@ -115,8 +115,9 @@ export class ViewPortComponent<T> extends Destroy {
     }
 
     public set scrollPos(value: number) {
-        const scrollPos = Math.max(coerceNumberProperty(value), 0);
-        this.viewPortService.scrollPosition$.next(scrollPos);
+        const scrollPosition = Math.max(coerceNumberProperty(value), 0);
+        console.log('viewPortElement scroll 2', scrollPosition);
+        this.viewPortService.scrollPosition$.next(scrollPosition);
     }
 
     /**
@@ -142,7 +143,7 @@ export class ViewPortComponent<T> extends Destroy {
         super();
 
         this.viewPort$ = combineLatest([viewPortService.viewPort$, this.reloadViewPort$]).pipe(
-            map(([viewPort]) => viewPort)
+            map(([viewPort]) => ({ ...viewPort }))
         );
 
         viewPortService.element$.pipe(
@@ -154,6 +155,7 @@ export class ViewPortComponent<T> extends Destroy {
             )),
             takeUntil(this.destroyed$)
         ).subscribe(scrollPosition => {
+            console.log('viewPortElement scroll 1', scrollPosition);
             this.viewPortService.scrollPosition$.next(scrollPosition);
         });
 
@@ -277,12 +279,12 @@ export class ViewPortComponent<T> extends Destroy {
         this.viewPortService.ensureItem$.next(item);
     }
 
-    public getCssSize(item: ViewPortItem<T>, defaultItemSize: number, mode: ViewPortMode): string {
+    public getCssSize(item: ViewPortItem < T >, defaultItemSize: number, mode: ViewPortMode): string {
         const itemSize = this.getItemSize(item, defaultItemSize, mode);
         return itemSize ? `${itemSize}px` : 'auto';
     }
 
-    public getItemSize(item: ViewPortItem<T>, defaultItemSize: number, mode: ViewPortMode): NumberInput {
+    public getItemSize(item: ViewPortItem < T >, defaultItemSize: number, mode: ViewPortMode): NumberInput {
         if (mode === 'disabled') {
             return null;
         } else if (mode === 'fixed') {

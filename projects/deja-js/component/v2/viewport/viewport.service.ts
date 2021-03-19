@@ -562,7 +562,7 @@ export class ViewPortService<T> {
 
     private log(message: unknown, ...optionalParams: unknown[]) {
         if (this.debug) {
-            console.log(message, optionalParams);
+            console.log(message, optionalParams.length ? optionalParams : undefined);
         }
     }
 }

@@ -333,6 +333,9 @@
             <h1>10K items with Item Template </h1>
             <div class="flexContainer flexLayout flexAlignCenter flexJustifyStart">
                 <span class="flexExtendCollapseAuto">An exemple with 10000 auto sized templatized items</span>
+                <a mat-button (click)="news.reloadViewPort()">
+                    <mat-icon>refresh</mat-icon>
+                </a>
                 <mat-form-field class="flexFixedAuto">
                     <input matInput type="number" [(ngModel)]="ensureIndex" autocomplete="off">
                 </mat-form-field>

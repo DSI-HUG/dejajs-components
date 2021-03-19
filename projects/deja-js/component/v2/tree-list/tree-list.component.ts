@@ -959,14 +959,13 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
 
     /** Rebind le viewport */
     public reloadViewPort(): void {
-        this.reloadViewPort$.next();
+        if (this.viewPortComponent) {
+            this.viewPortComponent.reloadViewPort();
+        }
     }
 
     /** Recalcule le viewport. */
-    public refreshViewPort(item?: Item<T>, clearMeasuredSize?: boolean): void {
-        if (item) {
-            item.size = undefined;
-        }
+    public refreshViewPort(clearMeasuredSize?: boolean): void {
         if (this.viewPortComponent) {
             this.viewPortComponent.refreshViewPort(clearMeasuredSize);
         }

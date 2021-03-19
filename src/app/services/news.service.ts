@@ -11,9 +11,10 @@ import { Injectable } from '@angular/core';
 import { ObjectMapper } from 'json-object-mapper';
 import { cloneDeep } from 'lodash-es';
 import { Observable } from 'rxjs';
-import { map, publishLast, refCount, switchMap } from 'rxjs/operators';
+import { map, shareReplay, switchMap } from 'rxjs/operators';
 
 import { News, NewsArticles, NewsSource, NewsSources } from '../common/news.model';
+
 
 @Injectable()
 export class NewsService {
@@ -22,27 +23,26 @@ export class NewsService {
     public getNews$(recordCount?: number): Observable<News[]> {
         return this.httpClient.get<Record<string, unknown>>('https://newsapi.org/v1/sources?language=en').pipe(
             map(response => ObjectMapper.deserialize(NewsSources, response)),
-            map((resp: NewsSources) => {
+            map(resp => {
                 if (resp.status !== 'ok') {
                     throw new Error('Fail to get news');
                 }
                 return resp.sources;
             }),
-            map((sources: NewsSource[]) => sources.filter(source => source.category === 'technology' || source.category === 'gaming')),
+            map(sources => sources.filter(source => source.category === 'technology' || source.category === 'gaming')),
             switchMap((sources: NewsSource[]) => {
                 const source = sources[Math.round(Math.random() * (sources.length - 1))];
                 return this.httpClient.get<Record<string, unknown>>(`https://newsapi.org/v1/articles?source=${source.id}&apiKey=228bc9410a2a4f608d2ad2e5626896f3`);
             }),
             map(response => ObjectMapper.deserialize(NewsArticles, response)),
-            map((resp: NewsArticles) => {
+            map(resp => {
                 if (resp.status !== 'ok') {
                     throw new Error('Fail to get news');
                 }
                 return resp.articles;
             }),
-            publishLast(),
-            refCount(),
-            map((news: News[]) => {
+            shareReplay({ bufferSize: 1, refCount: false }),
+            map(news => {
                 let returnNews = news;
                 if (recordCount) {
                     // eslint-disable-next-line no-loops/no-loops
@@ -52,6 +52,7 @@ export class NewsService {
                     }
                 }
                 return returnNews;
-            }));
+            })
+        );
     }
 }
