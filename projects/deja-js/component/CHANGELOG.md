@@ -1,3 +1,10 @@
+## [11.6.1-next.14](https://github.com/DSI-HUG/dejajs-components/compare/v11.6.1-next.13...v11.6.1-next.14) (2021-03-19)
+
+
+### Bug Fixes
+
+* **treelist:** optional overriding for ItemService ([453515a](https://github.com/DSI-HUG/dejajs-components/commit/453515af087a72287013e77c59076c481d86eef6))
+
 ## [11.6.1-next.13](https://github.com/DSI-HUG/dejajs-components/compare/v11.6.1-next.12...v11.6.1-next.13) (2021-03-19)
 
 
