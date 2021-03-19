@@ -38,8 +38,9 @@ export class ItemService<T> {
     public flatItemList$: Observable<Item<T>[]>;
     public refreshFlatItemList$ = new BehaviorSubject<void>(undefined);
     public filteredItemList$: Observable<Item<T>[]>;
-    public refreshVisibleItemList$ = new BehaviorSubject<void>(undefined);
+    public refreshFilterItemList$ = new BehaviorSubject<void>(undefined);
     public visibleItemList$: Observable<Item<T>[]>;
+    public refreshVisibleItemList$ = new BehaviorSubject<void>(undefined);
     public selectedItems$: Observable<Item<T>[]>;
 
     public selectingItems: (items: Item<T>[]) => Observable<Item<T>[]>;
@@ -91,7 +92,13 @@ export class ItemService<T> {
             shareReplay({ bufferSize: 1, refCount: false })
         );
 
-        this.filteredItemList$ = combineLatest([this.flatItemList$, this.query$, this.minSearchLength$, this.searchField$]).pipe(
+        const refreshFilterItemList$ = this.refreshFilterItemList$.pipe(
+            tap(() => {
+                this.previousQuery = undefined;
+            })
+        );
+
+        this.filteredItemList$ = combineLatest([this.flatItemList$, this.query$, this.minSearchLength$, this.searchField$, refreshFilterItemList$]).pipe(
             switchMap(([flatItemList, query, minSearchLength, searchField]) => {
                 if (minSearchLength > 0 && (!query || typeof query === 'string' && query.length < minSearchLength)) {
                     return of([]);
