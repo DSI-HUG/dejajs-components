@@ -1,3 +1,10 @@
+## [11.6.1-next.11](https://github.com/DSI-HUG/dejajs-components/compare/v11.6.1-next.10...v11.6.1-next.11) (2021-03-19)
+
+
+### Bug Fixes
+
+* **view-port:** fix reload viewport function (must keep items size) ([03e4b63](https://github.com/DSI-HUG/dejajs-components/commit/03e4b631577db85001590a18f1ea9a2bbba4eccc))
+
 ## [11.6.1-next.10](https://github.com/DSI-HUG/dejajs-components/compare/v11.6.1-next.9...v11.6.1-next.10) (2021-03-18)
 
 
