@@ -7,7 +7,7 @@
  */
 
 import { BooleanInput, coerceBooleanProperty, coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ContentChildren, ElementRef, EventEmitter, HostBinding, Input, Optional, Output, Self, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ContentChildren, ElementRef, EventEmitter, HostBinding, Input, Optional, Output, Self, SkipSelf, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { DejaChildValidatorDirective, Destroy, KeyCodes } from '@deja-js/component/core';
 import { Item, ItemComponent, ItemEvent, ItemService } from '@deja-js/component/v2/item-list';
@@ -341,9 +341,9 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
     }
 
     public constructor(
-        public elementRef: ElementRef, @Self() @Optional()
-        public control: NgControl,
-        public itemService: ItemService<T>,
+        public elementRef: ElementRef,
+        @Self() @Optional() public control: NgControl,
+        @SkipSelf() public itemService: ItemService<T>,
         public changeDetectorRef: ChangeDetectorRef
     ) {
         super();
