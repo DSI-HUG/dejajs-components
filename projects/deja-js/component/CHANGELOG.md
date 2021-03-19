@@ -1,3 +1,10 @@
+## [11.6.1-next.15](https://github.com/DSI-HUG/dejajs-components/compare/v11.6.1-next.14...v11.6.1-next.15) (2021-03-19)
+
+
+### Bug Fixes
+
+* **treelist:** add refresh for FilterItemList$ ([962a389](https://github.com/DSI-HUG/dejajs-components/commit/962a38993563b667ec49c4017d0557ab35de5838))
+
 ## [11.6.1-next.14](https://github.com/DSI-HUG/dejajs-components/compare/v11.6.1-next.13...v11.6.1-next.14) (2021-03-19)
 
 
