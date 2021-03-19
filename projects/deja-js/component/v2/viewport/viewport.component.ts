@@ -116,7 +116,6 @@ export class ViewPortComponent<T> extends Destroy {
 
     public set scrollPos(value: number) {
         const scrollPosition = Math.max(coerceNumberProperty(value), 0);
-        console.log('viewPortElement scroll 2', scrollPosition);
         this.viewPortService.scrollPosition$.next(scrollPosition);
     }
 
@@ -155,7 +154,6 @@ export class ViewPortComponent<T> extends Destroy {
             )),
             takeUntil(this.destroyed$)
         ).subscribe(scrollPosition => {
-            console.log('viewPortElement scroll 1', scrollPosition);
             this.viewPortService.scrollPosition$.next(scrollPosition);
         });
 
