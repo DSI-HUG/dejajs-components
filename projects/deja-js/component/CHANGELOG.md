@@ -1,3 +1,10 @@
+## [11.6.1-next.12](https://github.com/DSI-HUG/dejajs-components/compare/v11.6.1-next.11...v11.6.1-next.12) (2021-03-19)
+
+
+### Bug Fixes
+
+* **viewport:** remove console.log ([7175985](https://github.com/DSI-HUG/dejajs-components/commit/7175985dff7148ccfa4a3ed3f8356130e643a2de))
+
 ## [11.6.1-next.11](https://github.com/DSI-HUG/dejajs-components/compare/v11.6.1-next.10...v11.6.1-next.11) (2021-03-19)
 
 
