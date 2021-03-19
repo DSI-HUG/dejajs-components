@@ -49,6 +49,7 @@ import { routing } from './tree-list-demo.routes';
         MatCardModule,
         MatTabsModule,
         MatToolbarModule,
+        MatIconModule,
         MouseDragDropModule,
         TreeListModule,
         DejaMarkdownModule,

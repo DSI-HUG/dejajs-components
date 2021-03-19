@@ -12,6 +12,7 @@ import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -21,6 +22,7 @@ import { DejaMarkdownModule } from '../../../component/markdown/index';
 import { NewsCardModule } from '../../common/news-card.module';
 import { ViewPortDemoComponent } from './viewport-demo';
 import { routing } from './viewport-demo.routes';
+
 
 @NgModule({
     declarations: [ViewPortDemoComponent],
@@ -34,6 +36,7 @@ import { routing } from './viewport-demo.routes';
         MatCardModule,
         MatTabsModule,
         MatToolbarModule,
+        MatIconModule,
         ViewPortModule,
         DejaMarkdownModule,
         NewsCardModule,

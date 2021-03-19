@@ -81,6 +81,7 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
 
     public viewPort$: Observable<ViewPort<T>>;
     public listElementId: string;
+    public itemService: ItemService<T>;
 
     private _selectedItems: Item<T>[];
     private ngModelType$ = new BehaviorSubject<NgModelType>('value');
@@ -343,10 +344,13 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
     public constructor(
         public elementRef: ElementRef,
         @Self() @Optional() public control: NgControl,
-        @SkipSelf() public itemService: ItemService<T>,
+        localItemService: ItemService<T>,
+        @SkipSelf() @Optional() extendedItemService: ItemService<T>,
         public changeDetectorRef: ChangeDetectorRef
     ) {
         super();
+
+        this.itemService = extendedItemService || localItemService;
 
         this.listElementId = `listcontainer_${(1000000000 * Math.random()).toString().substr(10)}`;
 
@@ -485,7 +489,7 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
                     }
 
                     const target = event.target as HTMLElement;
-                    const itemIndex = itemService.getItemIndexFromHtmlElement(target);
+                    const itemIndex = this.itemService.getItemIndexFromHtmlElement(target);
                     if (itemIndex === undefined) {
                         return of(null);
                     }
@@ -510,7 +514,7 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
                         filter(() => !this.disabled),
                         tap(upevt => {
                             const upTarget = upevt.target as HTMLElement;
-                            const upIndex = itemService.getItemIndexFromHtmlElement(upTarget);
+                            const upIndex = this.itemService.getItemIndexFromHtmlElement(upTarget);
                             if (upIndex === undefined) {
                                 return;
                             }
