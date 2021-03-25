@@ -244,7 +244,7 @@
                 <span class="flex45p flexLayout flexColumn">
                     <tree-list #headertreelist textField="naqme" valueField="code" [models]="sortedCountries$ | async">
                         <ng-template #headerTemplate>
-                            <span id="headerTemplateContent" (click)="sortCountries$.next()">
+                            <span id="headerTemplateContent" [style.width.px]="(headertreelist.viewPort$ | async)?.element?.clientWidth" (click)="sortCountries$.next()">
                                 <span id="title">
                                     This is a header template, click to sort the list.
                                 </span>

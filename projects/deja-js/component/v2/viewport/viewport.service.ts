@@ -446,7 +446,8 @@ export class ViewPortService<T> {
                 take(1),
                 map(viewPort => {
                     const ensureParams = {} as EnsureParams;
-                    if (ensureItem ?? items?.length) {
+
+                    if (ensureItem !== undefined && ensureItem !== null && items?.length) {
                         let ensureIndex = ensureItem as number;
                         if (isNaN(ensureIndex)) {
                             ensureIndex = items.findIndex(itm => ensureItem === itm);
