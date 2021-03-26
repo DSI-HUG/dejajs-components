@@ -1,3 +1,10 @@
+## [11.6.1-next.17](https://github.com/DSI-HUG/dejajs-components/compare/v11.6.1-next.16...v11.6.1-next.17) (2021-03-26)
+
+
+### Bug Fixes
+
+* **item.service.ts:** restore selection if items array has changed ([6d4c0d2](https://github.com/DSI-HUG/dejajs-components/commit/6d4c0d2b9ddb3dcf83af46c10fcbba07cf90e5a5))
+
 ## [11.6.1-next.16](https://github.com/DSI-HUG/dejajs-components/compare/v11.6.1-next.15...v11.6.1-next.16) (2021-03-25)
 
 
