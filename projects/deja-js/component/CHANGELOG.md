@@ -1,3 +1,10 @@
+## [11.6.1-next.16](https://github.com/DSI-HUG/dejajs-components/compare/v11.6.1-next.15...v11.6.1-next.16) (2021-03-25)
+
+
+### Bug Fixes
+
+* **view-port:** fix scss height in treelist ([5e4c68a](https://github.com/DSI-HUG/dejajs-components/commit/5e4c68aba24ed6fa8449baf27722c20bd5f9dc6e))
+
 ## [11.6.1-next.15](https://github.com/DSI-HUG/dejajs-components/compare/v11.6.1-next.14...v11.6.1-next.15) (2021-03-19)
 
 
