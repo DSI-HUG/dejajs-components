@@ -11,7 +11,7 @@
 import { Injectable } from '@angular/core';
 import { Diacritics } from '@deja-js/component/core';
 import { BehaviorSubject, combineLatest, merge, Observable, of, ReplaySubject } from 'rxjs';
-import { filter, map, shareReplay, switchMap, take, tap } from 'rxjs/operators';
+import { filter, map, shareReplay, startWith, switchMap, take, tap } from 'rxjs/operators';
 
 import { Item } from './item';
 import { ItemComponent } from './item.component';
@@ -75,6 +75,30 @@ export class ItemService<T> {
         );
 
         this.itemList$ = merge(this.items$, itemsFromModels$, itemsFromOptions$).pipe(
+            switchMap(items => {
+                if (this.selectedItems$) {
+                    return this.selectedItems$.pipe(
+                        take(1),
+                        map(selectedItems => {
+                            if (selectedItems?.length) {
+                                const selectedIdSet = selectedItems.reduce((set, item) => {
+                                    if (item.id) {
+                                        set.add(item.id);
+                                    }
+                                    return set;
+                                }, new Set<string>());
+                                items.forEach(item => {
+                                    if (item.id) {
+                                        item.selected = selectedIdSet.has(item.id);
+                                    }
+                                });
+                            }
+                            return items;
+                        })
+                    );
+                }
+                return of(items);
+            }),
             shareReplay({ bufferSize: 1, refCount: false })
         );
 
@@ -280,6 +304,7 @@ export class ItemService<T> {
                     })
                 );
             }),
+            startWith([] as Item<T>[]),
             shareReplay({ bufferSize: 1, refCount: false })
         );
     }
