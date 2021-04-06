@@ -64,14 +64,12 @@ export class DejaOverlayComponent extends Destroy {
             this._isVisible = isVisible;
 
             const containerElement = this.overlayContainer.getContainerElement();
-            containerElement.classList.forEach(token => {
-                if (!token.startsWith('cdk')) {
-                    containerElement.classList.remove(token);
-                }
-            });
+            containerElement.className = Array.from(containerElement.classList)
+                .filter(token => token.startsWith('cdk'))
+                .join(' ');
 
             containerElement.classList.add('deja-overlay-container');
-            if (this.overlayContainerClass) {
+            if (this.isVisible && this.overlayContainerClass) {
                 this.overlayContainerClass.split(' ').forEach(className => {
                     containerElement.classList.add(className);
                 });
