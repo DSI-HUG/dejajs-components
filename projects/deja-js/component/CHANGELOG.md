@@ -1,3 +1,10 @@
+## [10.7.1-develop.3](https://github.com/DSI-HUG/dejajs-components/compare/v10.7.1-develop.2...v10.7.1-develop.3) (2021-04-12)
+
+
+### Bug Fixes
+
+* **DejaEditor:** Remove takeUntil on ready subscription in ngOnDestroy ([5833f97](https://github.com/DSI-HUG/dejajs-components/commit/5833f9759dd4b92847e8d2910fb981c03b72322e))
+
 ## [10.7.1-develop.2](https://github.com/DSI-HUG/dejajs-components/compare/v10.7.1-develop.1...v10.7.1-develop.2) (2021-04-06)
 
 
