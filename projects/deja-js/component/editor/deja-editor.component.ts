@@ -148,8 +148,10 @@ export class DejaEditorComponent extends Destroy implements OnChanges, AfterView
                 this.instance = null;
             } else {
                 this.ready.pipe(
-                    first(),
-                    takeUntil(this.destroyed$)
+                    first()
+                    // Do not use takeUntil here because we need to wait the ready event to clean CKEditor instance.
+                    // Here this.destroyed$ already emitted so we never subscribe and this lead to a 'object unsubscribed' error
+                    // eslint-disable-next-line rxjs-angular/prefer-takeuntil
                 ).subscribe(() => {
                     try {
                         // Workaround for a ckEditor bug
