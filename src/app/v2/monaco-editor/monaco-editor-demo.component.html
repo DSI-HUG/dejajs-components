@@ -31,7 +31,7 @@
         <mat-toolbar color="primary">Comparaison d'un fichier XML</mat-toolbar>
         <mat-card-content>
             <div class="viewer">
-                <monaco-editor [(value)]="xmlContent" [(valueToCompare)]="xmlContentToCompare" [isDiffEditor]="true" [folding]="true" language="xml" (valueToCompareChange)="onValueToCompareChange()"></monaco-editor>
+                <monaco-editor [(value)]="xmlContent" [valueToCompare]="xmlContentToCompare" [isDiffEditor]="true" [folding]="true" language="xml" (valueChange)="onValueToCompareChange()"></monaco-editor>
             </div>
         </mat-card-content>
     </mat-card>

@@ -391,13 +391,21 @@ export class DejaDateSelectorComponent extends Destroy implements OnInit, Contro
         return undefined;
     }
 
-    public changeMonth(x: number): boolean {
+    public changeMonth(x: number, event?: Event): boolean {
         this.setMonthIfPossible(this._displayedDate, x);
+        if (event) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
         return false;
     }
 
-    public changeYear(x: number): boolean {
+    public changeYear(x: number, event?: Event): boolean {
         this.setYearIfPossible(this._displayedDate, x);
+        if (event) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
         return false;
     }
 
