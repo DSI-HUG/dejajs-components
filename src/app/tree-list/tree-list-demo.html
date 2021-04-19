@@ -30,12 +30,12 @@
             <div>Just passing an array of objects</div>
             <div class="flexLayout">
                 <span class="flex45p flexLayout flexColumn">
-					<deja-tree-list [(ngModel)]="country" textField="naqme" valueField="code" [models]="countries$ | async"></deja-tree-list>
-				</span>
+                    <deja-tree-list [(ngModel)]="country" textField="naqme" valueField="code" [models]="countries$ | async"></deja-tree-list>
+                </span>
                 <span class="flex45p flexOffset5p">
-					<h4>Selected country model :</h4>
-					<pre>{{country | json}}</pre>
-				</span>
+                    <h4>Selected country model :</h4>
+                    <pre>{{country | json}}</pre>
+                </span>
             </div>
         </mat-card-content>
     </mat-card>
@@ -45,8 +45,8 @@
             <div>deja-tree-list has some keyboard navigation feature</div>
             <div class="flexLayout">
                 <span class="flex45p flexLayout flexColumn">
-					<deja-tree-list class="flex50p" [(ngModel)]="country" textField="naqme" valueField="code" [models]="countries$ | async"></deja-tree-list>
-				</span>
+                    <deja-tree-list class="flex50p" [(ngModel)]="country" textField="naqme" valueField="code" [models]="countries$ | async"></deja-tree-list>
+                </span>
                 <ul class="flexOffset5p" id="shortcut-list">
                     <li>Press
                         <span class="keyboard-key">↑</span> to select the previous item</li>
@@ -88,43 +88,43 @@
         <mat-card-content>
             <div>These treelists has a list coming from html options</div>
             <span class="flexLayout">
-				<deja-tree-list class="flex45p demo-half-width optionstl" [(ngModel)]="fruct">
-					<deja-item value="Apricots" text="My preferred fruct is Apricots"></deja-item>
-					<deja-item value="Banana" text="My preferred fruct is Banana"></deja-item>
-					<deja-item value="Cantaloupe" text="My preferred fruct is Cantaloupe"></deja-item>
-					<deja-item value="Cherries" text="My preferred fruct is Cherries"></deja-item>
-					<deja-item value="Coconut" text="My preferred fruct is Coconut"></deja-item>
-					<deja-item value="Cranberries" text="My preferred fruct is Cranberries"></deja-item>
-					<deja-item value="Durian" text="My preferred fruct is Durian"></deja-item>
-					<deja-item value="Grapes" text="My preferred fruct is Grapes"></deja-item>
-					<deja-item value="Lemon" text="My preferred fruct is Lemon"></deja-item>
-					<deja-item value="Mango" text="My preferred fruct is Mango"></deja-item>
-					<deja-item value="Pineapple" text="My preferred fruct is Pineapple"></deja-item>
-					<deja-item value="Watermelon" text="My preferred fruct is Watermelon"></deja-item>
-				</deja-tree-list>
-				<deja-tree-list class="flex45p flexOffset5p demo-half-width optionstl" multiSelect="true" [selectedModels]="['Mango', 'Apricots', 'Coconut']">
-					<deja-item value="apricots" text="Apricots"></deja-item>
-					<deja-item value="banana" text="Banana"></deja-item>
-					<deja-item value="cantaloupe" text="Cantaloupe"></deja-item>
-					<deja-item value="cherries" text="Cherries"></deja-item>
-					<deja-item value="coconut" text="Coconut"></deja-item>
-					<deja-item value="cranberries" text="Cranberries"></deja-item>
-					<deja-item value="durian" text="Durian"></deja-item>
-					<deja-item value="grapes" text="Grapes"></deja-item>
-					<deja-item value="lemon" text="Lemon"></deja-item>
-					<deja-item value="mango" text="Mango"></deja-item>
-					<deja-item value="pineapple" text="Pineapple"></deja-item>
-					<deja-item value="watermelon" text="Watermelon"></deja-item>
-				</deja-tree-list>
-			</span>
+                <deja-tree-list class="flex45p demo-half-width optionstl" [(ngModel)]="fruct">
+                    <deja-item value="Apricots" text="My preferred fruct is Apricots"></deja-item>
+                    <deja-item value="Banana" text="My preferred fruct is Banana"></deja-item>
+                    <deja-item value="Cantaloupe" text="My preferred fruct is Cantaloupe"></deja-item>
+                    <deja-item value="Cherries" text="My preferred fruct is Cherries"></deja-item>
+                    <deja-item value="Coconut" text="My preferred fruct is Coconut"></deja-item>
+                    <deja-item value="Cranberries" text="My preferred fruct is Cranberries"></deja-item>
+                    <deja-item value="Durian" text="My preferred fruct is Durian"></deja-item>
+                    <deja-item value="Grapes" text="My preferred fruct is Grapes"></deja-item>
+                    <deja-item value="Lemon" text="My preferred fruct is Lemon"></deja-item>
+                    <deja-item value="Mango" text="My preferred fruct is Mango"></deja-item>
+                    <deja-item value="Pineapple" text="My preferred fruct is Pineapple"></deja-item>
+                    <deja-item value="Watermelon" text="My preferred fruct is Watermelon"></deja-item>
+                </deja-tree-list>
+                <deja-tree-list class="flex45p flexOffset5p demo-half-width optionstl" multiSelect="true" [selectedModels]="['Mango', 'Apricots', 'Coconut']">
+                    <deja-item value="apricots" text="Apricots"></deja-item>
+                    <deja-item value="banana" text="Banana"></deja-item>
+                    <deja-item value="cantaloupe" text="Cantaloupe"></deja-item>
+                    <deja-item value="cherries" text="Cherries"></deja-item>
+                    <deja-item value="coconut" text="Coconut"></deja-item>
+                    <deja-item value="cranberries" text="Cranberries"></deja-item>
+                    <deja-item value="durian" text="Durian"></deja-item>
+                    <deja-item value="grapes" text="Grapes"></deja-item>
+                    <deja-item value="lemon" text="Lemon"></deja-item>
+                    <deja-item value="mango" text="Mango"></deja-item>
+                    <deja-item value="pineapple" text="Pineapple"></deja-item>
+                    <deja-item value="watermelon" text="Watermelon"></deja-item>
+                </deja-tree-list>
+            </span>
         </mat-card-content>
     </mat-card>
     <mat-card class="deja-treelist-demo demo-card demo-basic">
         <mat-toolbar color="primary">String Array Model</mat-toolbar>
         <mat-card-content>
             <span class="flexLayout flexAlignCenter flexJustifyStart">
-				<deja-tree-list class="demo-half-width" [(ngModel)]="fruct" [models]="fructs"></deja-tree-list>
-				<span class="flex50p flexOffset5p">Selected fruct model is: {{ fruct }}</span>
+                <deja-tree-list class="demo-half-width" [(ngModel)]="fruct" [models]="fructs"></deja-tree-list>
+                <span class="flex50p flexOffset5p">Selected fruct model is: {{ fruct }}</span>
             </span>
         </mat-card-content>
     </mat-card>
@@ -136,12 +136,12 @@
             </div>
             <div class="flexLayout">
                 <span class="flex45p flexLayout flexColumn">
-					<deja-tree-list searchArea nodataholder="No record to display" maxHeight="auto" [disabled]="disabled" selectionClearable [(ngModel)]="deepCountry" textField="l1.l2.name" valueField="l1.l2.value" [models]="deepCountries$ | async"></deja-tree-list>
-				</span>
+                    <deja-tree-list searchArea nodataholder="No record to display" maxHeight="auto" [disabled]="disabled" selectionClearable [(ngModel)]="deepCountry" textField="l1.l2.name" valueField="l1.l2.value" [models]="deepCountries$ | async"></deja-tree-list>
+                </span>
                 <span class="flex45p flexOffset5p">
-					<h4>Selected deep country model :</h4>
-					<pre>{{deepCountry | json}}</pre>
-				</span>
+                    <h4>Selected deep country model :</h4>
+                    <pre>{{deepCountry | json}}</pre>
+                </span>
             </div>
         </mat-card-content>
     </mat-card>
@@ -150,8 +150,8 @@
         <mat-card-content>
             <div class="flexLayout">
                 <span class="flex45p flexLayout flexColumn">
-					<deja-tree-list nodataholder="No record to display" maxHeight="auto" [models]="folders" textField="label" childrenField="children"></deja-tree-list>
-				</span>
+                    <deja-tree-list nodataholder="No record to display" maxHeight="auto" [models]="folders" textField="label" childrenField="children"></deja-tree-list>
+                </span>
             </div>
         </mat-card-content>
     </mat-card>
@@ -164,28 +164,28 @@
             <div>Multi selection example</div>
             <div class="flexLayout">
                 <span class="flex45p flexLayout flexColumn">
-					<deja-tree-list sortable multiSelect textField="naqme" valueField="code" [selectedItems]="multiselectModel" (itemDragStart)="onItemDragStart($event)" (selectedChange)="multiselectModelChange($any($event).items)" [items]="countriesForMultiselect">
-					</deja-tree-list>
-				</span>
+                    <deja-tree-list sortable multiSelect textField="naqme" valueField="code" [selectedItems]="multiselectModel" (itemDragStart)="onItemDragStart($event)" (selectedChange)="multiselectModelChange($any($event).items)" [items]="countriesForMultiselect">
+                    </deja-tree-list>
+                </span>
                 <span class="flexLayout flexColumn flex45p flexOffset5p">
-					<h4>Multi selection shortcuts :</h4>
-					<ul id="shortcut-list">
-						<li>Press
-							<span class="keyboard-key">Ctrl</span>
-                <span class="keyboard-key">Space</span> to add/remove the current item to the selection</li>
-                <li>Press
-                    <span class="keyboard-key">Shift</span>
-                    <span class="keyboard-key">↑</span> to select a range orf items</li>
-                <li>Press
-                    <span class="keyboard-key">Shift</span>
-                    <span class="keyboard-key">↓</span> to select a range orf items</li>
-                </ul>
-                <h4>Selected country model :</h4>
-                <ul>
-                    <li *ngFor="let item of multiselectModel">
-                        <span>{{ $any(item).naqme }}</span>
-                    </li>
-                </ul>
+                    <h4>Multi selection shortcuts :</h4>
+                    <ul id="shortcut-list">
+                        <li>Press
+                            <span class="keyboard-key">Ctrl</span>
+                            <span class="keyboard-key">Space</span> to add/remove the current item to the selection</li>
+                        <li>Press
+                            <span class="keyboard-key">Shift</span>
+                            <span class="keyboard-key">↑</span> to select a range orf items</li>
+                        <li>Press
+                            <span class="keyboard-key">Shift</span>
+                            <span class="keyboard-key">↓</span> to select a range orf items</li>
+                    </ul>
+                    <h4>Selected country model :</h4>
+                    <ul>
+                        <li *ngFor="let item of multiselectModel">
+                            <span>{{ $any(item).naqme }}</span>
+                        </li>
+                    </ul>
                 </span>
             </div>
         </mat-card-content>
@@ -194,20 +194,20 @@
             <div>Grouping example</div>
             <div class="flexLayout">
                 <span class="flex45p flexLayout flexColumn">
-					<deja-tree-list textField="naqme" valueField="code" [items]="groupedCountries" [deja-mouse-draggable]="getDragContext()">
-						<ng-template #itemTemplate let-item let-flatindex="flatindex">
-							<span [attr.ddid]="item.model.code">{{ item.model.naqme }}</span>
-                </ng-template>
-                <ng-template #parentItemTemplate let-item>
-                    <mat-icon id="placeholder-icon">public</mat-icon>&nbsp;
-                    <span>{{ item.groupName }}</span>
-                </ng-template>
-                </deja-tree-list>
+                    <deja-tree-list textField="naqme" valueField="code" [items]="groupedCountries" [deja-mouse-draggable]="getDragContext()">
+                        <ng-template #itemTemplate let-item let-flatindex="flatindex">
+                            <span [attr.ddid]="item.model.code">{{ item.model.naqme }}</span>
+                        </ng-template>
+                        <ng-template #parentItemTemplate let-item>
+                            <mat-icon id="placeholder-icon">public</mat-icon>&nbsp;
+                            <span>{{ item.groupName }}</span>
+                        </ng-template>
+                    </deja-tree-list>
                 </span>
                 <span class="flex45p flexOffset5p">
-					<div>You can drag and drop items the the area bellow (That will display a JSON representation of the dropped model) :</div>
-					<div #dropArea [deja-mouse-droppable]="getDropContext(dropArea)" [deja-droppable]="{dragovercallback: onDivDragOver, dragentercallback:onDivDragOver, dropcallback:onDivDropEvent}" style="border:1px solid red;min-height:150px;"></div>
-				</span>
+                    <div>You can drag and drop items the the area bellow (That will display a JSON representation of the dropped model) :</div>
+                    <div #dropArea [deja-mouse-droppable]="getDropContext(dropArea)" [deja-droppable]="{dragovercallback: onDivDragOver, dragentercallback:onDivDragOver, dropcallback:onDivDropEvent}" style="border:1px solid red;min-height:150px;"></div>
+                </span>
             </div>
         </mat-card-content>
         <mat-toolbar color="primary">Autocomplete</mat-toolbar>
@@ -220,8 +220,8 @@
             <div>Variable Row height example</div>
             <div class="flexLayout">
                 <span class="flex45p flexLayout flexColumn">
-					<deja-tree-list [items]="loremList" multiSelect viewportMode="variable" searchArea sortable></deja-tree-list>
-				</span>
+                    <deja-tree-list [items]="loremList" multiSelect viewportMode="variable" searchArea sortable></deja-tree-list>
+                </span>
             </div>
         </mat-card-content>
     </mat-card>
@@ -242,38 +242,38 @@
             <div>Treelist with an header template</div>
             <div class="flexLayout">
                 <span class="flex45p flexLayout flexColumn">
-					<deja-tree-list #headertreelist textField="naqme" valueField="code" [models]="countries$ | async">
-						<ng-template #headerTemplate>
-							<span id="headerTemplateContent" (click)="headertreelist.sort()">
-								<span id="title">
-									This is a header template, click to sort the list.
-								</span>
-                <deja-sort-indicator [sort-infos]="headertreelist.sortInfos"></deja-sort-indicator>
-                </span>
-                </ng-template>
-                </deja-tree-list>
+                    <deja-tree-list #headertreelist textField="naqme" valueField="code" [models]="countries$ | async">
+                        <ng-template #headerTemplate>
+                            <span id="headerTemplateContent" (click)="headertreelist.sort()">
+                                <span id="title">
+                                    This is a header template, click to sort the list.
+                                </span>
+                                <deja-sort-indicator [sort-infos]="headertreelist.sortInfos"></deja-sort-indicator>
+                            </span>
+                        </ng-template>
+                    </deja-tree-list>
                 </span>
                 <span class="flex45p flexLayout flexColumn flexOffset5p">
-					<deja-tree-list textField="naqme" [items]="groupedCountries">
-						<ng-template #parentItemTemplate let-item>
-							<mat-icon id="placeholder-icon">public</mat-icon>&nbsp;
-							<span>{{ item.groupName }}</span>
-                </ng-template>
-                </deja-tree-list>
+                    <deja-tree-list textField="naqme" [items]="groupedCountries">
+                        <ng-template #parentItemTemplate let-item>
+                            <mat-icon id="placeholder-icon">public</mat-icon>&nbsp;
+                            <span>{{ item.groupName }}</span>
+                        </ng-template>
+                    </deja-tree-list>
                 </span>
             </div>
             <h1>Search Prefix and Suffix Templates</h1>
             <div class="flexLayout">
                 <span class="flex45p flexLayout flexColumn">
-					<deja-tree-list searchArea textField="naqme" valueField="code" [items]="countries$ | async">
-						<ng-template #searchPrefixTemplate>
-							<mat-icon (click)="onFilterTemplateClicked('Prefix')">public</mat-icon>
-						</ng-template>
-						<ng-template #searchSuffixTemplate>
-							<mat-icon (click)="onFilterTemplateClicked('Suffix')">more_vert</mat-icon>
-						</ng-template>
-					</deja-tree-list>
-				</span>
+                    <deja-tree-list searchArea textField="naqme" valueField="code" [items]="countries$ | async">
+                        <ng-template #searchPrefixTemplate>
+                            <mat-icon (click)="onFilterTemplateClicked('Prefix')">public</mat-icon>
+                        </ng-template>
+                        <ng-template #searchSuffixTemplate>
+                            <mat-icon (click)="onFilterTemplateClicked('Suffix')">more_vert</mat-icon>
+                        </ng-template>
+                    </deja-tree-list>
+                </span>
             </div>
         </mat-card-content>
     </mat-card>
@@ -338,8 +338,8 @@
                 <span class="flexExtendCollapseAuto">An exemple with 10000 auto sized templatized items</span>
                 <mat-form-field class="flexFixedAuto">
                     <input matInput type="number" [(ngModel)]="ensureIndex" autocomplete="off">
-				</mat-form-field>
-                    <button class="flexFixedAuto" mat-button (click)="news.ensureItemVisible(ensureIndex)">Ensure index</button>
+                </mat-form-field>
+                <button class="flexFixedAuto" mat-button (click)="news.ensureItemVisible(ensureIndex)">Ensure index</button>
             </div>
             <deja-tree-list #news class="news" viewportMode="auto" textField="title" searchField="description" [models]="bigNews$">
                 <ng-template #itemTemplate let-item let-flatindex="flatindex">
@@ -350,17 +350,17 @@
             <h1>Fixed size rows 100K items</h1>
             <div>An exemple with 100000 fixed size items</div>
             <span class="flexLayout">
-				<deja-tree-list #bigCountries id="bigCountries" class="flex45p" [items]="bigCountries$" textField="naqme" valueField="code"></deja-tree-list>
-				<span class="flex45p flexOffset5p">
-					<h4 id="vptitle">Viewport Infos:</h4>
-					<div *ngFor="let info of viewPortInfos">
-						<span class="vpinfoname">{{info.name}}</span>
-            <span>{{info.value}}</span>
-</div>
-</span>
-</span>
-</mat-card-content>
-</mat-card>
+                <deja-tree-list #bigCountries id="bigCountries" class="flex45p" [items]="bigCountries$" textField="naqme" valueField="code"></deja-tree-list>
+                <span class="flex45p flexOffset5p">
+                    <h4 id="vptitle">Viewport Infos:</h4>
+                    <div *ngFor="let info of viewPortInfos">
+                        <span class="vpinfoname">{{info.name}}</span>
+                        <span>{{info.value}}</span>
+                    </div>
+                </span>
+            </span>
+        </mat-card-content>
+    </mat-card>
 </div>
 
 <div *ngIf="tabIndex === 7">
@@ -370,8 +370,8 @@
             <form novalidate [formGroup]="fruitForm">
                 <div class="flexLayout">
                     <span class="flex45p flexLayout flexColumn">
-					    <deja-tree-list [models]="fruits$" formControlName="fruitName"></deja-tree-list>
-				    </span>
+                        <deja-tree-list [models]="fruits$" formControlName="fruitName"></deja-tree-list>
+                    </span>
                     <span class="flex45p flexOffset5p">
                         <h4>Your selection :</h4>
                         <span>{{fruitForm.get('fruitName').value}}</span>
@@ -387,8 +387,8 @@
             <form novalidate [formGroup]="fruitFormModels">
                 <div class="flexLayout">
                     <span class="flex45p flexLayout flexColumn">
-					    <deja-tree-list multiSelect [models]="fruits$" formControlName="fruitName"></deja-tree-list>
-				    </span>
+                        <deja-tree-list multiSelect [models]="fruits$" formControlName="fruitName"></deja-tree-list>
+                    </span>
                     <span class="flex45p flexOffset5p">
                         <h4>Your selection :</h4>
                         <span>{{fruitFormModels.get('fruitName').value}}</span>

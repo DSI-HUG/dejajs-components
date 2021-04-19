@@ -96,7 +96,7 @@ describe('DejaColorSelector', () => {
         });
     });
 
-    it('should be able to highligth the right color', done => {
+    it('should be able to highligth the correct color', done => {
         component.colors = new MaterialColors().colors;
 
         const sendMouseEvent = (element: EventTarget, type: string, x: number, y: number, buttons = 0) => {
@@ -138,7 +138,7 @@ describe('DejaColorSelector', () => {
         });
     });
 
-    it('should be able to select the right color', done => {
+    it('should be able to select the correct color', done => {
         component.colors = new MaterialColors().colors;
 
         fixture.detectChanges();

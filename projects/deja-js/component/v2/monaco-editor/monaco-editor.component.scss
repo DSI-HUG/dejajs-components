@@ -1,0 +1,9 @@
+monaco-editor {
+    width: 100%;
+    display: flex;
+    flex: 1 1 auto;
+
+    monaco-editor-control {
+        flex: 1 1 auto;
+    }
+}

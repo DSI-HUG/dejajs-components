@@ -40,6 +40,5 @@ export class FoldersService {
         this.addLevel(level + 1, child.children);
 
         children.push(child);
-
     }
 }

@@ -57,7 +57,7 @@ class DejaSelectContainerComponent {
 
         groupingService.group$(itemList, [{ groupByField: 'size' }]).pipe(
             take(1)
-        // eslint-disable-next-line rxjs-angular/prefer-takeuntil
+            // eslint-disable-next-line rxjs-angular/prefer-takeuntil
         ).subscribe(groupedResult => {
             this.itemList = groupedResult;
         });
@@ -154,10 +154,9 @@ describe('DejaSelectComponent', () => {
         const viewPortService = selectDebugElement.injector.get(ViewPortService);
         const selectInstance = selectDebugElement.componentInstance as DejaSelectComponent;
 
-        from(selectInstance.dropDownVisibleChange)
-            .subscribe(() => fixture.detectChanges());
+        from(selectInstance.dropDownVisibleChange).subscribe(() => fixture.detectChanges());
 
-        return from(viewPortService.viewPortResult$).pipe(
+        return viewPortService.viewPortResult$.pipe(
             filter(result => result.viewPortSize > 0));
     };
 
@@ -286,53 +285,52 @@ describe('DejaSelectComponent', () => {
 
         fixture.detectChanges();
 
-        from(fixture.whenStable())
-            .subscribe(() => {
-                from(selectInstance.dropDownVisibleChange).pipe(
-                    tap(state => {
-                        fixture.detectChanges();
-                        switch (++pass) {
-                            case 1:
-                                void expect(state).toBeTruthy();
-                                break;
-                            case 2:
-                                void expect(state).toBeFalsy();
-                                break;
-                            case 3:
-                                void expect(state).toBeTruthy();
-                                break;
-                            default:
-                                void expect(state).toBeFalsy();
-                        }
-                    }),
-                    delay(100)
-                    // eslint-disable-next-line rxjs/no-nested-subscribe
-                ).subscribe(() => {
-                    switch (pass) {
+        from(fixture.whenStable()).subscribe(() => {
+            from(selectInstance.dropDownVisibleChange).pipe(
+                tap(state => {
+                    fixture.detectChanges();
+                    switch (++pass) {
+                        case 1:
+                            void expect(state).toBeTruthy();
+                            break;
                         case 2:
+                            void expect(state).toBeFalsy();
+                            break;
                         case 3:
-                            sl.toggleDropDown();
+                            void expect(state).toBeTruthy();
                             break;
                         default:
+                            void expect(state).toBeFalsy();
                     }
-                });
-
-                from(viewPortService.viewPortResult$).pipe(
-                    debounceTime(100),
-                    take(1)
-                    // eslint-disable-next-line rxjs/no-nested-subscribe
-                ).subscribe(vp => {
-                    // Bind view port
-                    fixture.detectChanges();
-                    void expect(vp.items.length).toBeGreaterThan(0);
-                    void expect(vp.visibleItems.length).toBeGreaterThan(0);
-                    done();
-                });
-
-                sl.showDropDown();
-
-                fixture.detectChanges();
+                }),
+                delay(100)
+                // eslint-disable-next-line rxjs/no-nested-subscribe
+            ).subscribe(() => {
+                switch (pass) {
+                    case 2:
+                    case 3:
+                        sl.toggleDropDown();
+                        break;
+                    default:
+                }
             });
+
+            viewPortService.viewPortResult$.pipe(
+                debounceTime(100),
+                take(1)
+                // eslint-disable-next-line rxjs/no-nested-subscribe
+            ).subscribe(vp => {
+                // Bind view port
+                fixture.detectChanges();
+                void expect(vp.items.length).toBeGreaterThan(0);
+                void expect(vp.visibleItems.length).toBeGreaterThan(0);
+                done();
+            });
+
+            sl.showDropDown();
+
+            fixture.detectChanges();
+        });
     });
 
     it('should toggle and collapse parent items', done => {
@@ -345,69 +343,68 @@ describe('DejaSelectComponent', () => {
 
         fixture.detectChanges();
 
-        from(fixture.whenStable())
-            .subscribe(() => {
-                observeViewPort$(fixture).pipe(
-                    debounceTime(20)
-                    // eslint-disable-next-line rxjs/no-nested-subscribe
-                ).subscribe(vp => {
-                    fixture.detectChanges(); // Bind view port
-                    const collapsed = fixture.debugElement.queryAll(By.css('.deja-overlay-container .cdk-overlay-pane > .deja-listcontainer > .listitem.parent.collapsed'));
-                    const collapsedItems = vp.items.filter((item: IItemTree<unknown>) => item.collapsed);
-                    const parentItems = vp.items.filter((item: IItemTree<unknown>) => item.depth === 0);
+        from(fixture.whenStable()).subscribe(() => {
+            observeViewPort$(fixture).pipe(
+                debounceTime(20)
+                // eslint-disable-next-line rxjs/no-nested-subscribe
+            ).subscribe(vp => {
+                fixture.detectChanges(); // Bind view port
+                const collapsed = fixture.debugElement.queryAll(By.css('.deja-overlay-container .cdk-overlay-pane > .deja-listcontainer > .listitem.parent.collapsed'));
+                const collapsedItems = vp.items.filter((item: IItemTree<unknown>) => item.collapsed);
+                const parentItems = vp.items.filter((item: IItemTree<unknown>) => item.depth === 0);
 
-                    switch (++pass) {
-                        case 1:
-                            void expect(collapsed.length).toBe(0);
-                            void expect(collapsedItems.length).toBe(0);
-                            // Toggle all items
-                            selectInstance.toggleAll();
-                            selectInstance.refreshViewPort();
-                            fixture.detectChanges();
-                            break;
+                switch (++pass) {
+                    case 1:
+                        void expect(collapsed.length).toBe(0);
+                        void expect(collapsedItems.length).toBe(0);
+                        // Toggle all items
+                        selectInstance.toggleAll();
+                        selectInstance.refreshViewPort();
+                        fixture.detectChanges();
+                        break;
 
-                        case 2:
-                            // Check collapsed items
-                            void expect(collapsedItems.length).toBe(parentItems.length);
-                            void expect(collapsed.length).toBeGreaterThan(0);
-                            // Toggle all items
-                            selectInstance.toggleAll();
-                            selectInstance.refreshViewPort();
-                            fixture.detectChanges();
-                            break;
+                    case 2:
+                        // Check collapsed items
+                        void expect(collapsedItems.length).toBe(parentItems.length);
+                        void expect(collapsed.length).toBeGreaterThan(0);
+                        // Toggle all items
+                        selectInstance.toggleAll();
+                        selectInstance.refreshViewPort();
+                        fixture.detectChanges();
+                        break;
 
-                        case 3:
-                            // Check collapsed items
-                            void expect(collapsedItems.length).toBe(0);
-                            void expect(collapsed.length).toBe(0);
-                            // Toogle only first
-                            selectInstance.toggleCollapse(0, true);
-                            selectInstance.refreshViewPort();
-                            fixture.detectChanges();
-                            break;
+                    case 3:
+                        // Check collapsed items
+                        void expect(collapsedItems.length).toBe(0);
+                        void expect(collapsed.length).toBe(0);
+                        // Toogle only first
+                        selectInstance.toggleCollapse(0, true);
+                        selectInstance.refreshViewPort();
+                        fixture.detectChanges();
+                        break;
 
-                        case 4:
-                            // Check collapsed items
-                            void expect(collapsedItems.length).toBe(1);
-                            void expect(collapsed.length).toBe(1);
-                            // Clear toogle
-                            selectInstance.toggleAll(false);
-                            selectInstance.refreshViewPort();
-                            fixture.detectChanges();
-                            break;
+                    case 4:
+                        // Check collapsed items
+                        void expect(collapsedItems.length).toBe(1);
+                        void expect(collapsed.length).toBe(1);
+                        // Clear toogle
+                        selectInstance.toggleAll(false);
+                        selectInstance.refreshViewPort();
+                        fixture.detectChanges();
+                        break;
 
-                        default:
-                            // Check no collapsed
-                            void expect(collapsedItems.length).toBe(0);
-                            void expect(collapsed.length).toBe(0);
-                            done();
-                    }
-                });
-
-                sl.showDropDown();
-
-                fixture.detectChanges();
+                    default:
+                        // Check no collapsed
+                        void expect(collapsedItems.length).toBe(0);
+                        void expect(collapsed.length).toBe(0);
+                        done();
+                }
             });
+
+            sl.showDropDown();
+
+            fixture.detectChanges();
+        });
     });
 
     it('should not load items if minSearchlength is defined', done => {
@@ -421,51 +418,49 @@ describe('DejaSelectComponent', () => {
 
         fixture.detectChanges();
 
-        from(fixture.whenStable())
-            .subscribe(() => {
-                from(selectInstance.dropDownVisibleChange)
-                    // eslint-disable-next-line rxjs/no-nested-subscribe
-                    .subscribe(() => fixture.detectChanges());
+        from(fixture.whenStable()).subscribe(() => {
+            // eslint-disable-next-line rxjs/no-nested-subscribe
+            from(selectInstance.dropDownVisibleChange).subscribe(() => fixture.detectChanges());
 
-                from(viewPortService.viewPortResult$).pipe(
-                    debounceTime(10)
-                    // eslint-disable-next-line rxjs/no-nested-subscribe
-                ).subscribe(vp => {
-                    // Bind view port
-                    fixture.detectChanges();
-                    const listItems = fixture.debugElement.queryAll(By.css('.deja-overlay-container .cdk-overlay-pane > .deja-listcontainer > .listitem'));
-                    const items = vp.items;
-
-                    switch (++pass) {
-                        case 1:
-                            void expect(listItems.length).toBe(0);
-                            sl.queryChanged('33');
-                            sl.filterListComplete$.next();
-                            selectInstance.refreshViewPort();
-                            fixture.detectChanges();
-                            break;
-
-                        case 2:
-                            void expect(listItems.length).toBeGreaterThan(0);
-                            sl.queryChanged('44');
-                            sl.filterListComplete$.next();
-                            selectInstance.refreshViewPort();
-                            fixture.detectChanges();
-                            break;
-
-                        default:
-                            void expect(listItems.length).toBeGreaterThan(0);
-                            void expect(items.length).toBeGreaterThan(0);
-                            done();
-                    }
-                });
-
-                selectInstance.minSearchlength = 2;
-                selectInstance.type = 'autocomplete';
-                sl.showDropDown();
-
+            viewPortService.viewPortResult$.pipe(
+                debounceTime(10)
+                // eslint-disable-next-line rxjs/no-nested-subscribe
+            ).subscribe(vp => {
+                // Bind view port
                 fixture.detectChanges();
+                const listItems = fixture.debugElement.queryAll(By.css('.deja-overlay-container .cdk-overlay-pane > .deja-listcontainer > .listitem'));
+                const items = vp.items;
+
+                switch (++pass) {
+                    case 1:
+                        void expect(listItems.length).toBe(0);
+                        sl.queryChanged('33');
+                        sl.filterListComplete$.next();
+                        selectInstance.refreshViewPort();
+                        fixture.detectChanges();
+                        break;
+
+                    case 2:
+                        void expect(listItems.length).toBeGreaterThan(0);
+                        sl.queryChanged('44');
+                        sl.filterListComplete$.next();
+                        selectInstance.refreshViewPort();
+                        fixture.detectChanges();
+                        break;
+
+                    default:
+                        void expect(listItems.length).toBeGreaterThan(0);
+                        void expect(items.length).toBeGreaterThan(0);
+                        done();
+                }
             });
+
+            selectInstance.minSearchlength = 2;
+            selectInstance.type = 'autocomplete';
+            sl.showDropDown();
+
+            fixture.detectChanges();
+        });
     });
 });
 
@@ -595,10 +590,9 @@ describe('DejaSelectByOptionsContainerComponent', () => {
 
         const selectInstance = selectDebugElement.componentInstance as DejaSelectComponent;
 
-        from(selectInstance.dropDownVisibleChange)
-            .subscribe(() => fixture.detectChanges());
+        from(selectInstance.dropDownVisibleChange).subscribe(() => fixture.detectChanges());
 
-        return from(viewPortService.viewPortResult$).pipe(
+        return viewPortService.viewPortResult$.pipe(
             filter(result => result.viewPortSize > 0));
     };
 
@@ -613,19 +607,18 @@ describe('DejaSelectByOptionsContainerComponent', () => {
         fixture.detectChanges();
 
         return fixture.whenStable().then(() => {
-            from(selectInstance.dropDownVisibleChange)
-                .subscribe(() => fixture.detectChanges());
+            from(selectInstance.dropDownVisibleChange).subscribe(() => fixture.detectChanges());
 
-            from(viewPortService.viewPortResult$).pipe(
+            viewPortService.viewPortResult$.pipe(
                 debounceTime(100),
-                take(1))
-                .subscribe(vp => {
-                    // Bind view port
-                    fixture.detectChanges();
-                    void expect(vp.items.length).toBeGreaterThan(0);
-                    void expect(vp.visibleItems.length).toBeGreaterThan(0);
-                    done();
-                });
+                take(1)
+            ).subscribe(vp => {
+                // Bind view port
+                fixture.detectChanges();
+                void expect(vp.items.length).toBeGreaterThan(0);
+                void expect(vp.visibleItems.length).toBeGreaterThan(0);
+                done();
+            });
 
             sl.isMobile = false;
             sl.showDropDown();
@@ -645,14 +638,14 @@ describe('DejaSelectByOptionsContainerComponent', () => {
         return fixture.whenStable().then(() => {
             observeOptionsViewPort$(fixture).pipe(
                 debounceTime(100),
-                take(1))
-                .subscribe(() => {
-                    fixture.detectChanges();
+                take(1)
+            ).subscribe(() => {
+                fixture.detectChanges();
 
-                    const items = fixture.debugElement.queryAll(By.css('.deja-overlay-container .cdk-overlay-pane > .deja-listcontainer > .listitem'));
-                    void expect(items.length).toBe(13);
-                    done();
-                });
+                const items = fixture.debugElement.queryAll(By.css('.deja-overlay-container .cdk-overlay-pane > .deja-listcontainer > .listitem'));
+                void expect(items.length).toBe(13);
+                done();
+            });
 
             fixture.detectChanges();
             void expect(selectInstance).toBeTruthy();
@@ -687,123 +680,123 @@ describe('DejaSelectByOptionsContainerComponent', () => {
 
         return fixture.whenStable().then(() => {
             observeOptionsViewPort$(fixture).pipe(
-                debounceTime(100))
-                .subscribe(vp => {
-                    fixture.detectChanges();
-                    const selectedChips = fixture.debugElement.queryAll(By.css('deja-select > deja-chips > span.chips-item'));
-                    const selectedElements = fixture.debugElement.queryAll(By.css('.deja-overlay-container .cdk-overlay-pane > .deja-listcontainer > .listitem.selected'));
-                    const currentElement = fixture.debugElement.query(By.css('.deja-overlay-container .cdk-overlay-pane > .deja-listcontainer > .listitem[current="true"]'));
-                    const selectedItems = vp.items.filter((item: IItemBase<unknown>) => item.selected);
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    const selItem = selectedItems[0] as any;
+                debounceTime(100)
+            ).subscribe(vp => {
+                fixture.detectChanges();
+                const selectedChips = fixture.debugElement.queryAll(By.css('deja-select > deja-chips > span.chips-item'));
+                const selectedElements = fixture.debugElement.queryAll(By.css('.deja-overlay-container .cdk-overlay-pane > .deja-listcontainer > .listitem.selected'));
+                const currentElement = fixture.debugElement.query(By.css('.deja-overlay-container .cdk-overlay-pane > .deja-listcontainer > .listitem[current="true"]'));
+                const selectedItems = vp.items.filter((item: IItemBase<unknown>) => item.selected);
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                const selItem = selectedItems[0] as any;
 
-                    switch (++pass) {
-                        case 1:
-                            // Check no selected
-                            void expect(selectedElements.length).toBe(0, 'Check no selected 1-1');
-                            void expect(selectedItems.length).toBe(0, 'Check no selected 1-2');
-                            void expect(selectedChips.length).toBe(0, 'Check no selected 1-3');
-                            // Current on first line by keydown
-                            sendKeyDown(KeyCodes.DownArrow);
-                            break;
+                switch (++pass) {
+                    case 1:
+                        // Check no selected
+                        void expect(selectedElements.length).toBe(0, 'Check no selected 1-1');
+                        void expect(selectedItems.length).toBe(0, 'Check no selected 1-2');
+                        void expect(selectedChips.length).toBe(0, 'Check no selected 1-3');
+                        // Current on first line by keydown
+                        sendKeyDown(KeyCodes.DownArrow);
+                        break;
 
-                        case 2:
-                            // Check selection
-                            void expect(selectedElements.length).toBe(0, 'Check selection 2-1');
-                            void expect(selectedItems.length).toBe(0, 'Check selection 2-2');
-                            void expect(currentElement?.attributes.flat).toBe('0', 'Check selection 2-3');
-                            void expect(selectedChips.length).toBe(0, 'Check selection 2-4');
-                            // Current on second line by keydown
-                            sendKeyDown(KeyCodes.DownArrow);
-                            break;
+                    case 2:
+                        // Check selection
+                        void expect(selectedElements.length).toBe(0, 'Check selection 2-1');
+                        void expect(selectedItems.length).toBe(0, 'Check selection 2-2');
+                        void expect(currentElement?.attributes.flat).toBe('0', 'Check selection 2-3');
+                        void expect(selectedChips.length).toBe(0, 'Check selection 2-4');
+                        // Current on second line by keydown
+                        sendKeyDown(KeyCodes.DownArrow);
+                        break;
 
-                        case 3:
-                            // Check selection
-                            void expect(selectedElements.length).toBe(0, 'Check selection 3-1');
-                            void expect(selectedItems.length).toBe(0, 'Check selection 3-2');
-                            void expect(currentElement?.attributes.flat).toBe('1', 'Check selection 3-3');
-                            void expect(selectedChips.length).toBe(0, 'Check selection 3-4');
-                            // Current on first line by keyup
-                            sendKeyDown(KeyCodes.UpArrow);
-                            break;
+                    case 3:
+                        // Check selection
+                        void expect(selectedElements.length).toBe(0, 'Check selection 3-1');
+                        void expect(selectedItems.length).toBe(0, 'Check selection 3-2');
+                        void expect(currentElement?.attributes.flat).toBe('1', 'Check selection 3-3');
+                        void expect(selectedChips.length).toBe(0, 'Check selection 3-4');
+                        // Current on first line by keyup
+                        sendKeyDown(KeyCodes.UpArrow);
+                        break;
 
-                        case 4:
-                            // Check selection
-                            void expect(selectedElements.length).toBe(0, 'Check selection 4-1');
-                            void expect(selectedItems.length).toBe(0, 'Check selection 4-2');
-                            void expect(currentElement?.attributes.flat).toBe('0', 'Check selection 4-3');
-                            void expect(selectedChips.length).toBe(0, 'Check selection 4-4');
-                            // Current on last line
-                            sendKeyDown('End');
-                            break;
+                    case 4:
+                        // Check selection
+                        void expect(selectedElements.length).toBe(0, 'Check selection 4-1');
+                        void expect(selectedItems.length).toBe(0, 'Check selection 4-2');
+                        void expect(currentElement?.attributes.flat).toBe('0', 'Check selection 4-3');
+                        void expect(selectedChips.length).toBe(0, 'Check selection 4-4');
+                        // Current on last line
+                        sendKeyDown('End');
+                        break;
 
-                        case 5:
-                            // Check selection
-                            void expect(selectedElements.length).toBe(0, 'Check selection 5-1');
-                            void expect(selectedItems.length).toBe(0, 'Check selection 5-2');
-                            void expect(currentElement?.attributes.flat).toBe('12', 'Check selection 5-3');
-                            void expect(selectedChips.length).toBe(0, 'Check selection 5-4');
-                            // Current on line 6 by pageUp
-                            sendKeyDown('PageUp');
-                            break;
+                    case 5:
+                        // Check selection
+                        void expect(selectedElements.length).toBe(0, 'Check selection 5-1');
+                        void expect(selectedItems.length).toBe(0, 'Check selection 5-2');
+                        void expect(currentElement?.attributes.flat).toBe('12', 'Check selection 5-3');
+                        void expect(selectedChips.length).toBe(0, 'Check selection 5-4');
+                        // Current on line 6 by pageUp
+                        sendKeyDown('PageUp');
+                        break;
 
-                        case 6:
-                            // Check selection
-                            void expect(selectedElements.length).toBe(0, 'Check selection 6-1');
-                            void expect(selectedItems.length).toBe(0, 'Check selection 6-2');
-                            void expect(currentElement?.attributes.flat).toBe('7', 'Check selection 6-3');
-                            void expect(selectedChips.length).toBe(0, 'Check selection 6-4');
-                            // Current on firstLine by Home
-                            sendKeyDown('Home');
-                            break;
+                    case 6:
+                        // Check selection
+                        void expect(selectedElements.length).toBe(0, 'Check selection 6-1');
+                        void expect(selectedItems.length).toBe(0, 'Check selection 6-2');
+                        void expect(currentElement?.attributes.flat).toBe('7', 'Check selection 6-3');
+                        void expect(selectedChips.length).toBe(0, 'Check selection 6-4');
+                        // Current on firstLine by Home
+                        sendKeyDown('Home');
+                        break;
 
-                        case 7:
-                            // Check selection
-                            void expect(selectedElements.length).toBe(0, 'Check selection 7-1');
-                            void expect(selectedItems.length).toBe(0, 'Check selection 7-2');
-                            void expect(currentElement?.attributes.flat).toBe('0', 'Check selection 7-3');
-                            void expect(selectedChips.length).toBe(0, 'Check selection 7-4');
-                            // Current on Line 5 by pageDown
-                            sendKeyDown('PageDown');
-                            break;
+                    case 7:
+                        // Check selection
+                        void expect(selectedElements.length).toBe(0, 'Check selection 7-1');
+                        void expect(selectedItems.length).toBe(0, 'Check selection 7-2');
+                        void expect(currentElement?.attributes.flat).toBe('0', 'Check selection 7-3');
+                        void expect(selectedChips.length).toBe(0, 'Check selection 7-4');
+                        // Current on Line 5 by pageDown
+                        sendKeyDown('PageDown');
+                        break;
 
-                        case 8:
-                            // Check selection
-                            void expect(selectedElements.length).toBe(0, 'Check selection 8-1');
-                            void expect(selectedItems.length).toBe(0, 'Check selection 8-2');
-                            void expect(currentElement?.attributes.flat).toBe('5', 'Check selection 8-3');
-                            void expect(selectedChips.length).toBe(0, 'Check selection 8-4');
+                    case 8:
+                        // Check selection
+                        void expect(selectedElements.length).toBe(0, 'Check selection 8-1');
+                        void expect(selectedItems.length).toBe(0, 'Check selection 8-2');
+                        void expect(currentElement?.attributes.flat).toBe('5', 'Check selection 8-3');
+                        void expect(selectedChips.length).toBe(0, 'Check selection 8-4');
 
-                            // Select the lines with Enter
-                            sendKeyDown('Enter');
+                        // Select the lines with Enter
+                        sendKeyDown('Enter');
 
-                            from(selectInstance.dropDownVisibleChange).pipe(
-                                take(1),
-                                delay(1000)
-                                // eslint-disable-next-line rxjs/no-nested-subscribe
-                            ).subscribe(() => {
-                                sl.htmlInputElement.click();
-                            });
+                        from(selectInstance.dropDownVisibleChange).pipe(
+                            take(1),
+                            delay(1000)
+                            // eslint-disable-next-line rxjs/no-nested-subscribe
+                        ).subscribe(() => {
+                            sl.htmlInputElement.click();
+                        });
 
-                            break;
+                        break;
 
-                        case 9:
-                            void expect(selectedElements.length).toBeGreaterThan(0, 'Check selection 9-1');
-                            void expect(selectedItems.length).toBe(1, 'Check selection 9-2');
-                            void expect(currentElement?.attributes.flat).toBe('5', 'Check selection 9-3');
-                            void expect(selectedChips.length).toBe(1, 'Check selection 9-4');
+                    case 9:
+                        void expect(selectedElements.length).toBeGreaterThan(0, 'Check selection 9-1');
+                        void expect(selectedItems.length).toBe(1, 'Check selection 9-2');
+                        void expect(currentElement?.attributes.flat).toBe('5', 'Check selection 9-3');
+                        void expect(selectedChips.length).toBe(1, 'Check selection 9-4');
 
-                            // Select first line with enter in single select
-                            selectInstance.type = 'select';
-                            sendKeyDown(KeyCodes.DownArrow);
-                            break;
+                        // Select first line with enter in single select
+                        selectInstance.type = 'select';
+                        sendKeyDown(KeyCodes.DownArrow);
+                        break;
 
-                        default:
-                            void expect(selectedItems.length).toBe(1, 'Check selection 10-1');
-                            void expect(selItem.model.value).toEqual('Cranberries', 'Check selection 10-2');
-                            done();
-                    }
-                });
+                    default:
+                        void expect(selectedItems.length).toBe(1, 'Check selection 10-1');
+                        void expect(selItem.model.value).toEqual('Cranberries', 'Check selection 10-2');
+                        done();
+                }
+            });
 
             sl.showDropDown();
 
@@ -840,13 +833,13 @@ describe('DejaSelectByOptionsContainerComponent', () => {
             element.nativeElement.dispatchEvent(event);
             fixture.detectChanges();
             timer(100).pipe(
-                take(1))
-                .subscribe(() => {
-                    const upEvent = new MouseEvent('mouseup', eventInit());
-                    (upElement || element).nativeElement.dispatchEvent(upEvent);
-                    selectInstance.refreshViewPort();
-                    fixture.detectChanges();
-                });
+                take(1)
+            ).subscribe(() => {
+                const upEvent = new MouseEvent('mouseup', eventInit());
+                (upElement || element).nativeElement.dispatchEvent(upEvent);
+                selectInstance.refreshViewPort();
+                fixture.detectChanges();
+            });
         };
 
         fixture.detectChanges();
@@ -854,32 +847,32 @@ describe('DejaSelectByOptionsContainerComponent', () => {
         return fixture.whenStable().then(() => {
             observeOptionsViewPort$(fixture).pipe(
                 debounceTime(10),
-                take(1))
-                .subscribe(vp => {
-                    fixture.detectChanges();
-                    const displayedElements = fixture.debugElement.queryAll(By.css('.deja-overlay-container .cdk-overlay-pane > .deja-listcontainer > .listitem'));
-                    const selectedElements = fixture.debugElement.queryAll(By.css('.deja-overlay-container .cdk-overlay-pane > .deja-listcontainer > .listitem.selected'));
-                    const selectedItems = vp.items.filter((item: IItemBase<unknown>) => item.selected);
+                take(1)
+            ).subscribe(vp => {
+                fixture.detectChanges();
+                const displayedElements = fixture.debugElement.queryAll(By.css('.deja-overlay-container .cdk-overlay-pane > .deja-listcontainer > .listitem'));
+                const selectedElements = fixture.debugElement.queryAll(By.css('.deja-overlay-container .cdk-overlay-pane > .deja-listcontainer > .listitem.selected'));
+                const selectedItems = vp.items.filter((item: IItemBase<unknown>) => item.selected);
 
-                    // Check selected and current
-                    void expect(selectedElements.length).toBe(0);
-                    void expect(selectedItems.length).toBe(0);
-                    // Check flags
-                    void expect(selectInstance.isMultiSelect).toBe(true);
-                    // Simulate click on first element on disabled
-                    selectInstance.disabled = true;
-                    fixture.detectChanges();
+                // Check selected and current
+                void expect(selectedElements.length).toBe(0);
+                void expect(selectedItems.length).toBe(0);
+                // Check flags
+                void expect(selectInstance.isMultiSelect).toBe(true);
+                // Simulate click on first element on disabled
+                selectInstance.disabled = true;
+                fixture.detectChanges();
 
-                    from(selectInstance.selectedChange).pipe(
-                        take(1)
-                        // eslint-disable-next-line rxjs/no-nested-subscribe
-                    ).subscribe(() => {
-                        void expect(selectInstance.selectedItems?.length).toBe(1);
-                        done();
-                    });
-
-                    sendMouseClick(displayedElements[1]);
+                from(selectInstance.selectedChange).pipe(
+                    take(1)
+                    // eslint-disable-next-line rxjs/no-nested-subscribe
+                ).subscribe(() => {
+                    void expect(selectInstance.selectedItems?.length).toBe(1);
+                    done();
                 });
+
+                sendMouseClick(displayedElements[1]);
+            });
 
             sl.showDropDown();
 

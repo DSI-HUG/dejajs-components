@@ -1,0 +1,34 @@
+<div id="header" *ngIf="searchArea || (this.itemService.minSearchLength$ | async)">
+    <mat-form-field deja-child-validator id="input">
+        <input #inputelement type="text" matInput tabindex="0" [ngModel]="query" [placeholder]="placeholder" [disabled]="disabled" (input)="itemService.query$.next(model && model.value)" #model="ngModel">
+        <span *ngIf="searchPrefixTemplate" matPrefix>
+            <ng-template [ngTemplateOutlet]="searchPrefixTemplate"></ng-template>
+        </span>
+        <span *ngIf="searchSuffixTemplate" matSuffix>
+            <ng-template [ngTemplateOutlet]="searchSuffixTemplate"></ng-template>
+        </span>
+    </mat-form-field>
+</div>
+<div id="listheader" *ngIf="headerTemplate">
+    <ng-template [ngTemplateOutlet]="headerTemplate"></ng-template>
+</div>
+<div [id]="listElementId" #listElement class="listcontainer" [style.max-height.px]="maxHeight || null" tabindex="1" [class.hasheader]="headerTemplate">
+    <div id="error-hint" *ngIf="hintLabel">{{ hintLabel }}</div>
+    <ng-container *ngIf="itemService.visibleItemList$ | async as itemList">
+        <div id="nodata-holder" *ngIf="!itemList.length">{{ nodataholder }}</div>
+        <viewport *ngIf="itemList.length" [items]="itemList" [itemSize]="viewPortRowHeight" [viewPortMode]="viewPortMode" [debugMode]="debugMode">
+            <ng-template #viewPortItemTemplate let-item let-size="size" let-index="index">
+                <span expandbtn>
+                    <mat-icon *ngIf="item.items?.length">arrow_drop_down</mat-icon>
+                </span>
+                <ng-container *ngIf="(!item.items || !parentItemTemplate) && (item.items || !itemTemplate)">{{ item.label }}</ng-container>
+                <ng-container class="item-content" *ngIf="item.items && parentItemTemplate">
+                    <ng-template [ngTemplateOutlet]="parentItemTemplate" [ngTemplateOutletContext]="{ $implicit: item, query: query, flatindex: index }"></ng-template>
+                </ng-container>
+                <ng-container class="item-content" *ngIf="!item.items && itemTemplate">
+                    <ng-template [ngTemplateOutlet]="itemTemplate" [ngTemplateOutletContext]="{ $implicit: item, query: query, flatindex: index }"></ng-template>
+                </ng-container>
+            </ng-template>
+        </viewport>
+    </ng-container>
+</div>

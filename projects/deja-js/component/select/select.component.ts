@@ -51,12 +51,11 @@ import { IViewListResult } from '@deja-js/component/core';
 import { IViewPort } from '@deja-js/component/core';
 import { KeyCodes } from '@deja-js/component/core';
 import { MediaService } from '@deja-js/component/core';
-import { ViewportMode } from '@deja-js/component/core';
 import { GroupingService } from '@deja-js/component/core';
 import { SortingService } from '@deja-js/component/core';
 import { ViewPortService } from '@deja-js/component/core';
 import { DejaOverlayComponent } from '@deja-js/component/overlay';
-import { BehaviorSubject, combineLatest, from, fromEvent, merge, Observable, of, Subject, Subscription, timer } from 'rxjs';
+import { BehaviorSubject, combineLatest, fromEvent, merge, Observable, of, Subject, Subscription, timer } from 'rxjs';
 import { debounce, debounceTime, delay, delayWhen, filter, map, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 
 export type SelectType = 'autocomplete' | 'multiselect' | 'select';
@@ -315,7 +314,7 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
             });
         }
 
-        from(this.clearFilterExpression$).pipe(
+        this.clearFilterExpression$.pipe(
             debounceTime(750),
             takeUntil(this.destroyed$)
         ).subscribe(() => this.filterExpression = '');
@@ -328,14 +327,14 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
             this.reshowDropDown();
         });
 
-        from(this.storeScrollPosition$).pipe(
+        this.storeScrollPosition$.pipe(
             takeUntil(this.destroyed$)
         ).subscribe(scrollPos => {
             this.viewPort.scrollPosition$.next(scrollPos);
             this.lastScrollPosition = scrollPos;
         });
 
-        from(this.hideDropDown$).pipe(
+        this.hideDropDown$.pipe(
             filter(() => this.dropdownVisible),
             delayWhen(time => timer(time || 0)),
             takeUntil(this.destroyed$)
@@ -346,7 +345,7 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
             this.changeDetectorRef.markForCheck();
         });
 
-        from(this.showDropDown$).pipe(
+        this.showDropDown$.pipe(
             debounceTime(50),
             filter(() => (this.query || '').length >= this.minSearchlength && !this._readonly),
             tap(() => {
@@ -403,7 +402,7 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
             this.overlay.updatePosition();
         });
 
-        from(this.keyboardNavigation$).pipe(
+        this.keyboardNavigation$.pipe(
             tap(() => this._keyboardNavigation = true),
             debounceTime(1000),
             takeUntil(this.destroyed$)
@@ -412,7 +411,7 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
             this.changeDetectorRef.markForCheck();
         });
 
-        from(this.query$).pipe(
+        this.query$.pipe(
             tap(query => this._query = query),
             filter(() => !!this.input),
             delay(1),
@@ -580,7 +579,7 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
      * est suceptible de contenir beaucoup d'éléments.
      */
     @Input()
-    public set viewportMode(mode: ViewportMode) {
+    public set viewportMode(mode: string) {
         this.setViewportMode(mode);
     }
 

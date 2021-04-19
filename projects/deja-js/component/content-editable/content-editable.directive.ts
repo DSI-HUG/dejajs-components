@@ -7,18 +7,10 @@
  */
 
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
-import { Directive } from '@angular/core';
-import { ElementRef } from '@angular/core';
-import { HostBinding } from '@angular/core';
-import { Input } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { Optional } from '@angular/core';
-import { Self } from '@angular/core';
-import { ControlValueAccessor } from '@angular/forms';
-import { NgControl } from '@angular/forms';
-import { Destroy } from '@deja-js/component/core';
-import { KeyCodes } from '@deja-js/component/core';
-import { BehaviorSubject, from, fromEvent, Observable, timer } from 'rxjs';
+import { Directive, ElementRef, HostBinding, Input, OnInit, Optional, Self } from '@angular/core';
+import { ControlValueAccessor, NgControl } from '@angular/forms';
+import { Destroy, KeyCodes } from '@deja-js/component/core';
+import { BehaviorSubject, fromEvent, Observable, timer } from 'rxjs';
 import { distinctUntilChanged, filter, map, switchMap, take, takeUntil } from 'rxjs/operators';
 
 @Directive({
@@ -59,7 +51,7 @@ export class DejaEditableDirective extends Destroy implements ControlValueAccess
             return undefined;
         });
 
-        const inEdition$ = from(this.edit$).pipe(
+        const inEdition$ = this.edit$.pipe(
             distinctUntilChanged(),
             map(([value, selectOnFocus]) => {
                 if (selectOnFocus !== false) {

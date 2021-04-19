@@ -9,11 +9,11 @@ import { Component } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { from } from 'rxjs';
 import { take } from 'rxjs/operators';
 
 import { DejaDatePickerComponent } from './date-picker.component';
 import { DejaDatePickerModule } from './index';
+
 
 class DatePickerTestingUtils {
     public testDone(): boolean {
@@ -74,7 +74,7 @@ describe('DejaDatePickerContainerComponent', () => {
     it('should display date and time', waitForAsync(() => {
         component.format = null;
         component.layout = 'datetime';
-        from(component.formatChanged$).pipe(
+        component.formatChanged$.pipe(
             take(1)
         ).subscribe(format => {
             void expect(format).toEqual('yyyy/MM/dd HH:mm');
@@ -93,12 +93,12 @@ describe('DejaDatePickerContainerComponent', () => {
     it('should display time', waitForAsync(() => {
         component.format = null;
         component.layout = 'timeonly';
-        from(component.formatChanged$).pipe(
-            take(1))
-            .subscribe(format => {
-                void expect(format).toEqual('HH:mm');
-                datePickerTestingUtils.testDone();
-            });
+        component.formatChanged$.pipe(
+            take(1)
+        ).subscribe(format => {
+            void expect(format).toEqual('HH:mm');
+            datePickerTestingUtils.testDone();
+        });
 
         spyOn(datePickerTestingUtils, 'testDone');
         fixture.detectChanges();

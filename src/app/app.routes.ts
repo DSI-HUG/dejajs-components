@@ -39,6 +39,9 @@ const routes: Routes = [
     { path: 'tiles', loadChildren: () => import('./tiles/tiles-demo.module').then(m => m.DejaTilesDemoModule), data: { title: 'Tiles' } },
     { path: 'tree-list', loadChildren: () => import('./tree-list/tree-list-demo.module').then(m => m.DejaTreeListDemoModule), data: { title: 'Tree List' } },
     { path: 'viewport', loadChildren: () => import('./viewport/viewport-demo.module').then(m => m.DejaViewPortDemoModule), data: { title: 'Viewport' } },
+    { path: 'monaco-editor-v2', loadChildren: () => import('./v2/monaco-editor/monaco-editor-demo.module').then(m => m.MonacoEditorDemoModule), data: { title: 'Monaco Editor V2' } },
+    { path: 'tree-list-v2', loadChildren: () => import('./v2/tree-list/tree-list-demo.module').then(m => m.TreeListDemoModule), data: { title: 'Tree List V2' } },
+    { path: 'viewport-v2', loadChildren: () => import('./v2/viewport/viewport-demo.module').then(m => m.ViewPortDemoModule), data: { title: 'Viewport V2' } },
     { path: '**', redirectTo: 'home', pathMatch: 'prefix' }
 ];
 

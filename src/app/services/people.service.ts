@@ -8,13 +8,11 @@
 
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Color } from '@deja-js/component/core';
-import { MaterialColors } from '@deja-js/component/core';
-import { UUID } from '@deja-js/component/core';
+import { Color, MaterialColors, UUID } from '@deja-js/component/core';
 import { JsonProperty, ObjectMapper } from 'json-object-mapper';
 import { cloneDeep } from 'lodash-es';
 import { Observable } from 'rxjs';
-import { map, publishLast, refCount } from 'rxjs/operators';
+import { map, shareReplay } from 'rxjs/operators';
 
 export class Friend {
     public id: number = void 0;
@@ -78,9 +76,8 @@ export class PeopleService {
                 });
                 return people;
             }),
-            publishLast(),
-            refCount(),
-            map((people: Person[]) => {
+            shareReplay({ bufferSize: 1, refCount: false }),
+            map(people => {
                 if (query) {
                     const sr = new RegExp(`^${query}`, 'i');
                     const sc = new RegExp(`^(?!${query}).*(${query})`, 'i');

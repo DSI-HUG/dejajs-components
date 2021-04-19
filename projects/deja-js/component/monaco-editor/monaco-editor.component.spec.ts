@@ -7,13 +7,11 @@
  */
 
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
-import { from } from 'rxjs';
-import { delay } from 'rxjs/operators';
 
 import { DejaMonacoEditorModule } from '.';
 import { DejaMonacoEditorComponent } from './monaco-editor.component';
 import { MonacoEditorService } from './monaco-editor.service';
+
 
 describe('DejaMonacoEditorComponent', () => {
     let component: DejaMonacoEditorComponent;
@@ -39,20 +37,5 @@ describe('DejaMonacoEditorComponent', () => {
     it('should create the component', waitForAsync(() => {
         void expect(component).toBeTruthy();
     }));
-
-    it('should load monaco editor', done => {
-        fixture.detectChanges();
-        from(fixture.whenStable()).pipe(
-            delay(5000))
-            .subscribe(() => {
-                fixture.detectChanges();
-                // eslint-disable-next-line no-prototype-builtins
-                void expect(window.hasOwnProperty('monaco')).toBeTruthy();
-                component.value = '<p class="pTest"><a href="www.google.ch">site google</a></p>';
-                fixture.detectChanges();
-                const element = fixture.debugElement.query(By.css('.monaco-editor'));
-                void expect(element).not.toBeNull();
-                done();
-            });
-    }, 10000);
 });
+/*  */

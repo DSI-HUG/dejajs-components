@@ -20,10 +20,8 @@ import { Destroy } from '@deja-js/component/core';
 import { IViewPort } from '@deja-js/component/core';
 import { IViewPortItem } from '@deja-js/component/core';
 import { IViewPortRefreshParams } from '@deja-js/component/core';
-import { ViewportDirection } from '@deja-js/component/core';
-import { ViewportMode } from '@deja-js/component/core';
 import { ViewPortService } from '@deja-js/component/core';
-import { BehaviorSubject, from, fromEvent, interval, merge, Observable, of, Subject, timer } from 'rxjs';
+import { BehaviorSubject, fromEvent, interval, merge, Observable, of, Subject, timer } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
 
 export type DejaViewPortScrollStyleType = 'scrollbar' | 'buttons';
@@ -119,7 +117,7 @@ export class DejaViewPortComponent extends Destroy {
      * horizontal: The item are displayed horizontally
      */
     @Input()
-    public set direction(value: ViewportDirection) {
+    public set direction(value: string) {
         this.viewPort.direction$.next(value);
         this._isHorizontal = value === 'horizontal';
         this.changeDetectorRef.markForCheck();
@@ -181,16 +179,18 @@ export class DejaViewPortComponent extends Destroy {
      * auto: Seul les éléments visibles sont rendus. La taille des éléments est calculée automatiquement (performances --)
      */
     @Input()
-    public set viewportMode(mode: ViewportMode) {
+    public set viewportMode(mode: string) {
         this.viewPort.mode$.next(mode);
     }
 
-    public get viewportMode(): ViewportMode {
+    public get viewportMode(): string {
         return this.viewPort.mode;
     }
 
     public constructor(private changeDetectorRef: ChangeDetectorRef, private viewPort: ViewPortService) {
         super();
+
+        console.warn('@deja-js/component/viewport is deprecated, and will be removed in a further version. Please use @deja-js/component/v2/viewport instead.');
 
         fromEvent(window, 'resize').pipe(
             debounceTime(5),
@@ -279,11 +279,11 @@ export class DejaViewPortComponent extends Destroy {
             );
         };
 
-        const downButton$ = from(this.downButton$).pipe(
+        const downButton$ = this.downButton$.pipe(
             distinctUntilChanged()
         );
 
-        const upButton$ = from(this.upButton$).pipe(
+        const upButton$ = this.upButton$.pipe(
             distinctUntilChanged()
         );
 

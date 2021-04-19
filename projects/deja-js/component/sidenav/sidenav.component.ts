@@ -18,7 +18,6 @@ import { NavigationEnd } from '@angular/router';
 import { Router } from '@angular/router';
 import { Destroy } from '@deja-js/component/core';
 import { MediaService } from '@deja-js/component/core';
-import { from } from 'rxjs';
 import { filter, map, mergeMap, takeUntil } from 'rxjs/operators';
 
 import { DejaSidenavService } from './sidenav.service';
@@ -54,7 +53,7 @@ export class DejaSidenavComponent extends Destroy implements OnInit {
     ) {
         super();
 
-        from(this.mediaService.mediaChanged$).pipe(
+        this.mediaService.mediaChanged$.pipe(
             takeUntil(this.destroyed$)
         ).subscribe(alias => {
             this.sidenavService.hidden = alias === 'xs';

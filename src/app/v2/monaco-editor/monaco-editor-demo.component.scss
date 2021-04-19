@@ -1,0 +1,16 @@
+:host {
+    .viewer {
+        height: 500px;
+        display: flex;
+        flex: 1 1 100%;
+
+        monaco-editor {
+            display: flex;
+            flex: 1 1 100%;
+        }
+    }
+
+    span[flex] {
+        flex: 1 1 auto;
+    }
+}

@@ -33,10 +33,9 @@ import { IViewPort } from '@deja-js/component/core';
 import { KeyCodes } from '@deja-js/component/core';
 import { SortingService } from '@deja-js/component/core';
 import { ViewPortService } from '@deja-js/component/core';
-import { ViewportMode } from '@deja-js/component/core';
 import { IDejaDragEvent } from '@deja-js/component/dragdrop';
 import { DejaTreeListComponent, DejaTreeListScrollEvent } from '@deja-js/component/tree-list';
-import { combineLatest, from, fromEvent, Observable, ReplaySubject, Subject, timer } from 'rxjs';
+import { combineLatest, fromEvent, Observable, ReplaySubject, Subject, timer } from 'rxjs';
 import { debounceTime, filter, map, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 
 import { IDejaGridColumn, IDejaGridColumnEvent, IDejaGridColumnLayoutEvent, IDejaGridColumnSizeEvent } from './data-grid-column/data-grid-column';
@@ -71,7 +70,7 @@ export class DejaGridComponent extends Destroy {
      * Attention, une désactivation du viewport dégrade considérablement les performances de la liste et ne doit pas être activée si la liste
      * est suceptible de contenir beaucoup d'éléments.
      */
-    @Input() public viewportMode: ViewportMode = 'fixed';
+    @Input() public viewportMode = 'fixed';
     /** Champ utilisé pour la liste des enfants d'un parent */
     @Input() public childrenField: string;
     /** Définit le champ à utiliser comme valeur d'affichage. */
@@ -525,13 +524,13 @@ export class DejaGridComponent extends Destroy {
             this.changeDetectorRef.markForCheck();
         });
 
-        from(this.columns$).pipe(
+        this.columns$.pipe(
             tap(columns => this._columns = columns),
             debounceTime(1),
             takeUntil(this.destroyed$)
         ).subscribe(() => this.calcColumnsLayout());
 
-        from(this.printColumnLayout$).pipe(
+        this.printColumnLayout$.pipe(
             debounceTime(1000),
             takeUntil(this.destroyed$)
         ).subscribe(() => {
@@ -541,7 +540,7 @@ export class DejaGridComponent extends Destroy {
             console.log('');
         });
 
-        from(this.disableUserSelection$).pipe(
+        this.disableUserSelection$.pipe(
             tap(() => element.setAttribute('disableselection', '')),
             debounceTime(1000),
             takeUntil(this.destroyed$)

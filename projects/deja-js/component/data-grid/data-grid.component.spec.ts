@@ -460,7 +460,7 @@ describe('DejaGridComponent', () => {
         gridContainerInstance = fixture.componentInstance;
     }));
 
-    const observeViewPort$ = () => from(gridInstance.viewPort.viewPortResult$).pipe(
+    const observeViewPort$ = () => gridInstance.viewPort.viewPortResult$.pipe(
         filter((result: IViewPort) => result.viewPortSize > 0));
 
     it('should create the component', waitForAsync(() => {
@@ -570,37 +570,37 @@ describe('DejaGridComponent', () => {
         let pass = 0;
 
         observeViewPort$().pipe(
-            debounceTime(100)) // Debounce here, because ensureVisible move the scroll and more than one viewPort can be raised
-            .subscribe(vp => {
-                // Bind view port
-                fixture.detectChanges();
-                const listContainer = fixture.debugElement.query(By.css('deja-grid > deja-tree-list > .deja-listcontainer'));
-                const listElement = listContainer.nativeElement as HTMLElement;
-                const currentCells = fixture.debugElement.queryAll(By.css('deja-grid > deja-tree-list > .deja-listcontainer .cell-wrapper[current="true"]'));
-                const currentRow = fixture.debugElement.queryAll(By.css('deja-grid > deja-tree-list > .deja-listcontainer > .listitem[current="true"]'));
+            debounceTime(100) // Debounce here, because ensureVisible move the scroll and more than one viewPort can be raised
+        ).subscribe(vp => {
+            // Bind view port
+            fixture.detectChanges();
+            const listContainer = fixture.debugElement.query(By.css('deja-grid > deja-tree-list > .deja-listcontainer'));
+            const listElement = listContainer.nativeElement as HTMLElement;
+            const currentCells = fixture.debugElement.queryAll(By.css('deja-grid > deja-tree-list > .deja-listcontainer .cell-wrapper[current="true"]'));
+            const currentRow = fixture.debugElement.queryAll(By.css('deja-grid > deja-tree-list > .deja-listcontainer > .listitem[current="true"]'));
 
-                switch (++pass) {
-                    case 1:
-                        void expect(gridInstance.currentColumn).toBeUndefined();
-                        // Set current column
-                        gridInstance.currentColumn = gridContainerInstance.columns[4];
-                        gridInstance.currentRow = gridContainerInstance.fructs[4];
-                        gridInstance.refresh();
-                        fixture.detectChanges();
-                        break;
+            switch (++pass) {
+                case 1:
+                    void expect(gridInstance.currentColumn).toBeUndefined();
+                    // Set current column
+                    gridInstance.currentColumn = gridContainerInstance.columns[4];
+                    gridInstance.currentRow = gridContainerInstance.fructs[4];
+                    gridInstance.refresh();
+                    fixture.detectChanges();
+                    break;
 
-                    default:
-                        // Check current column
-                        void expect(vp.items.length).toBe(12);
-                        void expect(gridInstance.currentColumn).toBeDefined();
-                        void expect(gridInstance.currentColumn.name).toEqual('VitaminB2');
-                        void expect(listElement.scrollLeft).toBeGreaterThanOrEqual(250);
-                        void expect(currentCells.length).toBe(12);
-                        void expect(currentRow.length).toBe(1);
-                        done();
-                        break;
-                }
-            });
+                default:
+                    // Check current column
+                    void expect(vp.items.length).toBe(12);
+                    void expect(gridInstance.currentColumn).toBeDefined();
+                    void expect(gridInstance.currentColumn.name).toEqual('VitaminB2');
+                    void expect(listElement.scrollLeft).toBeGreaterThanOrEqual(250);
+                    void expect(currentCells.length).toBe(12);
+                    void expect(currentRow.length).toBe(1);
+                    done();
+                    break;
+            }
+        });
 
         fixture.detectChanges();
     });
@@ -616,38 +616,38 @@ describe('DejaGridComponent', () => {
         };
 
         observeViewPort$().pipe(
-            debounceTime(10))
-            .subscribe(vp => {
-                // Bind view port
-                fixture.detectChanges();
-                const groupChips = fixture.debugElement.queryAll(By.css('deja-grid > deja-grid-grouparea > #deja-grid-grouparea > deja-chips #close-button'));
+            debounceTime(10)
+        ).subscribe(vp => {
+            // Bind view port
+            fixture.detectChanges();
+            const groupChips = fixture.debugElement.queryAll(By.css('deja-grid > deja-grid-grouparea > #deja-grid-grouparea > deja-chips #close-button'));
 
-                switch (++pass) {
-                    case 1:
-                        void expect(vp.items.length).toBe(12);
-                        void expect(groupChips.length).toBe(0);
-                        gridInstance.columnGroups = [{ name: 'name' }];
+            switch (++pass) {
+                case 1:
+                    void expect(vp.items.length).toBe(12);
+                    void expect(groupChips.length).toBe(0);
+                    gridInstance.columnGroups = [{ name: 'name' }];
+                    gridInstance.refresh();
+                    fixture.detectChanges();
+                    break;
+
+                case 2:
+                    void expect(vp.items.length).toBe(24);
+                    void expect(groupChips.length).toBe(1);
+                    if (groupChips.length) {
+                        groupChips[0].nativeElement.click();
                         gridInstance.refresh();
                         fixture.detectChanges();
-                        break;
+                    }
+                    break;
 
-                    case 2:
-                        void expect(vp.items.length).toBe(24);
-                        void expect(groupChips.length).toBe(1);
-                        if (groupChips.length) {
-                            groupChips[0].nativeElement.click();
-                            gridInstance.refresh();
-                            fixture.detectChanges();
-                        }
-                        break;
-
-                    default:
-                        void expect(groupChips.length).toBe(0);
-                        void expect(vp.items.length).toBe(12);
-                        testIfDone();
-                        break;
-                }
-            });
+                default:
+                    void expect(groupChips.length).toBe(0);
+                    void expect(vp.items.length).toBe(12);
+                    testIfDone();
+                    break;
+            }
+        });
 
         gridInstance.groupChanged.pipe(take(1)).subscribe(groupInfos => {
             void expect(groupInfos.length).toBe(1);
@@ -692,40 +692,40 @@ describe('DejaGridComponent', () => {
             element.nativeElement.dispatchEvent(event);
             fixture.detectChanges();
             timer(100).pipe(
-                take(1))
-                .subscribe(() => {
-                    const upEvent = new MouseEvent('mouseup', eventInit());
-                    element.nativeElement.dispatchEvent(upEvent);
-                    gridInstance.refreshViewPort();
-                    fixture.detectChanges();
-                });
+                take(1)
+            ).subscribe(() => {
+                const upEvent = new MouseEvent('mouseup', eventInit());
+                element.nativeElement.dispatchEvent(upEvent);
+                gridInstance.refreshViewPort();
+                fixture.detectChanges();
+            });
         };
 
         observeViewPort$().pipe(
-            debounceTime(10))
-            .subscribe(vp => {
-                // Bind view port
-                fixture.detectChanges();
-                const columnHeaders = fixture.debugElement.queryAll(By.css('deja-grid > deja-tree-list > #listheader > deja-grid-header .column-header'));
+            debounceTime(10)
+        ).subscribe(vp => {
+            // Bind view port
+            fixture.detectChanges();
+            const columnHeaders = fixture.debugElement.queryAll(By.css('deja-grid > deja-tree-list > #listheader > deja-grid-header .column-header'));
 
-                switch (++pass) {
-                    case 1:
-                        void expect(vp.items.length).toBe(12);
-                        void expect(columnHeaders.length).toBeGreaterThan(0);
-                        if (columnHeaders.length) {
-                            sendMouseClick(columnHeaders[1]);
-                        }
-                        break;
+            switch (++pass) {
+                case 1:
+                    void expect(vp.items.length).toBe(12);
+                    void expect(columnHeaders.length).toBeGreaterThan(0);
+                    if (columnHeaders.length) {
+                        sendMouseClick(columnHeaders[1]);
+                    }
+                    break;
 
-                    default:
-                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                        void expect((<any>vp.items[0]).name).toEqual('Banana');
-                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                        void expect((<any>vp.items[8]).name).toEqual('Mango');
-                        testIfDone();
-                        break;
-                }
-            });
+                default:
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    void expect((<any>vp.items[0]).name).toEqual('Banana');
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    void expect((<any>vp.items[8]).name).toEqual('Mango');
+                    testIfDone();
+                    break;
+            }
+        });
 
         gridInstance.sortChanged.pipe(take(1)).subscribe(sortInfos => {
             void expect(sortInfos.name).toEqual('name');
@@ -769,47 +769,47 @@ describe('DejaGridComponent', () => {
                     element.nativeElement.dispatchEvent(moveEvent);
                     fixture.detectChanges();
                 }),
-                delay(100))
-                .subscribe(() => {
-                    const ei = eventInit();
-                    ei.screenX = 100;
-                    const upEvent = new MouseEvent('mouseup', ei);
-                    element.nativeElement.dispatchEvent(upEvent);
-                    gridInstance.refreshViewPort();
-                    fixture.detectChanges();
-                });
+                delay(100)
+            ).subscribe(() => {
+                const ei = eventInit();
+                ei.screenX = 100;
+                const upEvent = new MouseEvent('mouseup', ei);
+                element.nativeElement.dispatchEvent(upEvent);
+                gridInstance.refreshViewPort();
+                fixture.detectChanges();
+            });
         };
 
         observeViewPort$().pipe(
-            debounceTime(10))
-            .subscribe(vp => {
-                // Bind view port
-                fixture.detectChanges();
-                const columnSeparators = fixture.debugElement.queryAll(By.css('deja-grid > deja-tree-list > #listheader > deja-grid-header [separator]'));
-                const cells = fixture.debugElement.queryAll(By.css('deja-grid > deja-tree-list > .deja-listcontainer .cell-wrapper'));
+            debounceTime(10)
+        ).subscribe(vp => {
+            // Bind view port
+            fixture.detectChanges();
+            const columnSeparators = fixture.debugElement.queryAll(By.css('deja-grid > deja-tree-list > #listheader > deja-grid-header [separator]'));
+            const cells = fixture.debugElement.queryAll(By.css('deja-grid > deja-tree-list > .deja-listcontainer .cell-wrapper'));
 
-                switch (++pass) {
-                    case 1:
-                        void expect(vp.items.length).toBe(12);
-                        void expect(columnSeparators.length).toBeGreaterThan(0);
-                        if (columnSeparators.length) {
-                            sendMouseMove(columnSeparators[1]);
-                        }
-                        break;
+            switch (++pass) {
+                case 1:
+                    void expect(vp.items.length).toBe(12);
+                    void expect(columnSeparators.length).toBeGreaterThan(0);
+                    if (columnSeparators.length) {
+                        sendMouseMove(columnSeparators[1]);
+                    }
+                    break;
 
-                    case 2:
-                        void expect(cells[1].nativeElement.clientWidth).toBe(350);
-                        gridContainerInstance.columns = gridContainerInstance.percentColumns;
-                        fixture.detectChanges();
-                        sendMouseMove(columnSeparators[2]);
-                        break;
+                case 2:
+                    void expect(cells[1].nativeElement.clientWidth).toBe(350);
+                    gridContainerInstance.columns = gridContainerInstance.percentColumns;
+                    fixture.detectChanges();
+                    sendMouseMove(columnSeparators[2]);
+                    break;
 
-                    default:
-                        void expect(cells[2].nativeElement.clientWidth).toBeGreaterThan(10);
-                        done();
-                        break;
-                }
-            });
+                default:
+                    void expect(cells[2].nativeElement.clientWidth).toBeGreaterThan(10);
+                    done();
+                    break;
+            }
+        });
 
         fixture.detectChanges();
     });
@@ -818,29 +818,29 @@ describe('DejaGridComponent', () => {
         let pass = 0;
 
         observeViewPort$().pipe(
-            debounceTime(100))
-            .subscribe(_vp => {
-                // Bind view port
-                fixture.detectChanges();
-                const cells = fixture.debugElement.queryAll(By.css('deja-grid > deja-tree-list > .deja-listcontainer .cell-wrapper'));
+            debounceTime(100)
+        ).subscribe(_vp => {
+            // Bind view port
+            fixture.detectChanges();
+            const cells = fixture.debugElement.queryAll(By.css('deja-grid > deja-tree-list > .deja-listcontainer .cell-wrapper'));
 
-                switch (++pass) {
-                    case 1:
-                        window.dispatchEvent(new Event('resize', {}));
-                        break;
+            switch (++pass) {
+                case 1:
+                    window.dispatchEvent(new Event('resize', {}));
+                    break;
 
-                    case 2:
-                        gridInstance.clearViewPort();
-                        gridInstance.clearRowsHeight();
-                        gridInstance.refreshViewPort();
-                        fixture.detectChanges();
-                        break;
+                case 2:
+                    gridInstance.clearViewPort();
+                    gridInstance.clearRowsHeight();
+                    gridInstance.refreshViewPort();
+                    fixture.detectChanges();
+                    break;
 
-                    default:
-                        void expect(cells.length).toBeGreaterThan(0);
-                        done();
-                }
-            });
+                default:
+                    void expect(cells.length).toBeGreaterThan(0);
+                    done();
+            }
+        });
 
         gridContainerInstance.columns = gridContainerInstance.percentColumns;
 
@@ -863,35 +863,35 @@ describe('DejaGridComponent', () => {
         };
 
         observeViewPort$().pipe(
-            debounceTime(10))
-            .subscribe(_vp => {
-                fixture.detectChanges();
-                const currentCells = fixture.debugElement.queryAll(By.css('deja-grid > deja-tree-list > .deja-listcontainer .cell-wrapper[current="true"]'));
+            debounceTime(10)
+        ).subscribe(_vp => {
+            fixture.detectChanges();
+            const currentCells = fixture.debugElement.queryAll(By.css('deja-grid > deja-tree-list > .deja-listcontainer .cell-wrapper[current="true"]'));
 
-                switch (++pass) {
-                    case 1:
-                        void expect(currentCells.length).toBe(0);
-                        sendKeyDown(KeyCodes.RightArrow);
-                        break;
+            switch (++pass) {
+                case 1:
+                    void expect(currentCells.length).toBe(0);
+                    sendKeyDown(KeyCodes.RightArrow);
+                    break;
 
-                    case 2:
-                        void expect(currentCells.length).toBeGreaterThan(0);
-                        void expect(currentCells[0]?.attributes.colindex).toBe('0');
-                        sendKeyDown(KeyCodes.RightArrow);
-                        break;
+                case 2:
+                    void expect(currentCells.length).toBeGreaterThan(0);
+                    void expect(currentCells[0]?.attributes.colindex).toBe('0');
+                    sendKeyDown(KeyCodes.RightArrow);
+                    break;
 
-                    case 3:
-                        void expect(currentCells.length).toBeGreaterThan(0);
-                        void expect(currentCells[0]?.attributes.colindex).toBe('1');
-                        sendKeyDown(KeyCodes.LeftArrow);
-                        break;
+                case 3:
+                    void expect(currentCells.length).toBeGreaterThan(0);
+                    void expect(currentCells[0]?.attributes.colindex).toBe('1');
+                    sendKeyDown(KeyCodes.LeftArrow);
+                    break;
 
-                    default:
-                        void expect(currentCells.length).toBeGreaterThan(0);
-                        void expect(currentCells[0]?.attributes.colindex).toBe('0');
-                        done();
-                }
-            });
+                default:
+                    void expect(currentCells.length).toBeGreaterThan(0);
+                    void expect(currentCells[0]?.attributes.colindex).toBe('0');
+                    done();
+            }
+        });
 
         fixture.detectChanges();
     });
@@ -918,84 +918,24 @@ describe('DejaGridComponent', () => {
             dataTransfer: new DataTransfer()
         } as MouseEventInit);
 
-        from(gridInstance.columnLayoutChanged)
-            .subscribe((layout: IDejaGridColumnLayoutEvent) => {
-                // Bind view port
-                const columnHeaders = fixture.debugElement.queryAll(By.css('deja-grid > deja-tree-list > #listheader > deja-grid-header .column-header-wrapper'));
-                fixture.detectChanges();
-                let dropEventInit: MouseEventInit;
-                let dropTarget: HTMLElement;
-                let dropTargetBounds: DOMRect;
+        from(gridInstance.columnLayoutChanged).subscribe((layout: IDejaGridColumnLayoutEvent) => {
+            // Bind view port
+            const columnHeaders = fixture.debugElement.queryAll(By.css('deja-grid > deja-tree-list > #listheader > deja-grid-header .column-header-wrapper'));
+            fixture.detectChanges();
+            let dropEventInit: MouseEventInit;
+            let dropTarget: HTMLElement;
+            let dropTargetBounds: DOMRect;
 
-                switch (++pass) {
-                    case 1:
-                        void expect(layout.column.name).toEqual('name');
-                        void expect(layout.target.name).toEqual('VitaminA');
+            switch (++pass) {
+                case 1:
+                    void expect(layout.column.name).toEqual('name');
+                    void expect(layout.target.name).toEqual('VitaminA');
 
-                        timer(10).pipe(
-                            take(1),
-                            tap(() => {
-                                const enterEventInit = eventInit();
-                                const enterTarget = columnHeaders[3].nativeElement as HTMLElement;
-                                const enterTargetBounds = enterTarget.getBoundingClientRect();
-                                enterEventInit.clientY = enterTargetBounds.top + 1;
-                                enterEventInit.clientX = enterTargetBounds.left + 1;
-                                enterTarget.dispatchEvent(new DragEvent('dragenter', enterEventInit as never));
-                                fixture.detectChanges();
-                            }),
-                            delay(100)
-                            // eslint-disable-next-line rxjs/no-nested-subscribe
-                        ).subscribe(() => {
-                            const overEventInit = eventInit();
-                            const overTarget = columnHeaders[3].nativeElement as HTMLElement;
-                            const overTargetBounds = overTarget.getBoundingClientRect();
-                            overEventInit.clientY = overTargetBounds.top + 5;
-                            overEventInit.clientX = overTargetBounds.right - 2;
-                            overTarget.dispatchEvent(new DragEvent('dragover', overEventInit as never));
-                            fixture.detectChanges();
-                        });
-                        break;
-
-                    case 2:
-                        void expect(layout.column.name).toEqual('name');
-                        void expect(layout.target.name).toEqual('VitaminB1');
-                        dropEventInit = eventInit();
-                        dropTarget = columnHeaders[4].nativeElement;
-                        dropTargetBounds = dropTarget.getBoundingClientRect();
-                        dropEventInit.clientY = dropTargetBounds.top + 5;
-                        dropEventInit.clientX = dropTargetBounds.right - 2;
-                        dropTarget.dispatchEvent(new DragEvent('drop', dropEventInit as never));
-                        fixture.detectChanges();
-                        break;
-
-                    default:
-                        void expect(layout.column.name).toEqual('name');
-                        void expect(layout.target.name).toEqual('VitaminB2');
-
-                }
-            });
-
-        observeViewPort$().pipe(
-            debounceTime(10))
-            .subscribe(vp => {
-                fixture.detectChanges();
-                const columnHeaders = fixture.debugElement.queryAll(By.css('deja-grid > deja-tree-list > #listheader > deja-grid-header .column-header-wrapper'));
-                gridHeader = fixture.debugElement.query(By.css('deja-grid > deja-tree-list > #listheader > deja-grid-header > #deja-grid-header'));
-
-                void expect(vp.items.length).toBe(12);
-                void expect(columnHeaders.length).toBeGreaterThan(0);
-                if (columnHeaders.length) {
                     timer(10).pipe(
                         take(1),
                         tap(() => {
-                            const event = new DragEvent('dragstart', eventInit() as never);
-                            columnHeaders[1].nativeElement.dispatchEvent(event);
-                            fixture.detectChanges();
-                        }),
-                        delay(100),
-                        tap(() => {
                             const enterEventInit = eventInit();
-                            const enterTarget = columnHeaders[2].nativeElement as HTMLElement;
+                            const enterTarget = columnHeaders[3].nativeElement as HTMLElement;
                             const enterTargetBounds = enterTarget.getBoundingClientRect();
                             enterEventInit.clientY = enterTargetBounds.top + 1;
                             enterEventInit.clientX = enterTargetBounds.left + 1;
@@ -1006,16 +946,75 @@ describe('DejaGridComponent', () => {
                         // eslint-disable-next-line rxjs/no-nested-subscribe
                     ).subscribe(() => {
                         const overEventInit = eventInit();
-                        const overTarget = columnHeaders[2].nativeElement as HTMLElement;
+                        const overTarget = columnHeaders[3].nativeElement as HTMLElement;
                         const overTargetBounds = overTarget.getBoundingClientRect();
                         overEventInit.clientY = overTargetBounds.top + 5;
                         overEventInit.clientX = overTargetBounds.right - 2;
                         overTarget.dispatchEvent(new DragEvent('dragover', overEventInit as never));
                         fixture.detectChanges();
-                        done();
                     });
-                }
-            });
+                    break;
+
+                case 2:
+                    void expect(layout.column.name).toEqual('name');
+                    void expect(layout.target.name).toEqual('VitaminB1');
+                    dropEventInit = eventInit();
+                    dropTarget = columnHeaders[4].nativeElement;
+                    dropTargetBounds = dropTarget.getBoundingClientRect();
+                    dropEventInit.clientY = dropTargetBounds.top + 5;
+                    dropEventInit.clientX = dropTargetBounds.right - 2;
+                    dropTarget.dispatchEvent(new DragEvent('drop', dropEventInit as never));
+                    fixture.detectChanges();
+                    break;
+
+                default:
+                    void expect(layout.column.name).toEqual('name');
+                    void expect(layout.target.name).toEqual('VitaminB2');
+
+            }
+        });
+
+        observeViewPort$().pipe(
+            debounceTime(10)
+        ).subscribe(vp => {
+            fixture.detectChanges();
+            const columnHeaders = fixture.debugElement.queryAll(By.css('deja-grid > deja-tree-list > #listheader > deja-grid-header .column-header-wrapper'));
+            gridHeader = fixture.debugElement.query(By.css('deja-grid > deja-tree-list > #listheader > deja-grid-header > #deja-grid-header'));
+
+            void expect(vp.items.length).toBe(12);
+            void expect(columnHeaders.length).toBeGreaterThan(0);
+            if (columnHeaders.length) {
+                timer(10).pipe(
+                    take(1),
+                    tap(() => {
+                        const event = new DragEvent('dragstart', eventInit() as never);
+                        columnHeaders[1].nativeElement.dispatchEvent(event);
+                        fixture.detectChanges();
+                    }),
+                    delay(100),
+                    tap(() => {
+                        const enterEventInit = eventInit();
+                        const enterTarget = columnHeaders[2].nativeElement as HTMLElement;
+                        const enterTargetBounds = enterTarget.getBoundingClientRect();
+                        enterEventInit.clientY = enterTargetBounds.top + 1;
+                        enterEventInit.clientX = enterTargetBounds.left + 1;
+                        enterTarget.dispatchEvent(new DragEvent('dragenter', enterEventInit as never));
+                        fixture.detectChanges();
+                    }),
+                    delay(100)
+                    // eslint-disable-next-line rxjs/no-nested-subscribe
+                ).subscribe(() => {
+                    const overEventInit = eventInit();
+                    const overTarget = columnHeaders[2].nativeElement as HTMLElement;
+                    const overTargetBounds = overTarget.getBoundingClientRect();
+                    overEventInit.clientY = overTargetBounds.top + 5;
+                    overEventInit.clientX = overTargetBounds.right - 2;
+                    overTarget.dispatchEvent(new DragEvent('dragover', overEventInit as never));
+                    fixture.detectChanges();
+                    done();
+                });
+            }
+        });
 
         fixture.detectChanges();
     });
@@ -1042,74 +1041,73 @@ describe('DejaGridComponent', () => {
             dataTransfer: new DataTransfer()
         } as MouseEventInit);
 
-        from(gridInstance.columnLayoutChanged)
-            .subscribe((layout: IDejaGridColumnLayoutEvent) => {
-                fixture.detectChanges();
-                const columnHeaders = fixture.debugElement.queryAll(By.css('deja-grid > deja-tree-list > #listheader > deja-grid-header .column-header-wrapper'));
+        from(gridInstance.columnLayoutChanged).subscribe((layout: IDejaGridColumnLayoutEvent) => {
+            fixture.detectChanges();
+            const columnHeaders = fixture.debugElement.queryAll(By.css('deja-grid > deja-tree-list > #listheader > deja-grid-header .column-header-wrapper'));
 
-                void expect(layout.column.name).toEqual('name');
-                void expect(layout.target.name).toEqual('VitaminA');
+            void expect(layout.column.name).toEqual('name');
+            void expect(layout.target.name).toEqual('VitaminA');
+            timer(10).pipe(
+                take(1),
+                tap(() => {
+                    const leaveEventInit = eventInit();
+                    const leaveTarget = columnHeaders[2].nativeElement as HTMLElement;
+                    const leaveTargetBounds = leaveTarget.getBoundingClientRect();
+                    leaveEventInit.clientY = leaveTargetBounds.top - 5;
+                    leaveEventInit.clientX = leaveTargetBounds.right - 2;
+                    leaveTarget.dispatchEvent(new DragEvent('dragleave', leaveEventInit as never));
+                    fixture.detectChanges();
+                }),
+                delay(100)
+                // eslint-disable-next-line rxjs/no-nested-subscribe
+            ).subscribe(() => {
+                dragHeaderElement.dispatchEvent(new DragEvent('dragend', { dataTransfer: new DataTransfer() }));
+                fixture.detectChanges();
+            });
+        });
+
+        observeViewPort$().pipe(
+            debounceTime(10)
+        ).subscribe(vp => {
+        // Bind view port
+            fixture.detectChanges();
+            const columnHeaders = fixture.debugElement.queryAll(By.css('deja-grid > deja-tree-list > #listheader > deja-grid-header .column-header-wrapper'));
+            gridHeader = fixture.debugElement.query(By.css('deja-grid > deja-tree-list > #listheader > deja-grid-header > #deja-grid-header'));
+
+            void expect(vp.items.length).toBe(12);
+            void expect(columnHeaders.length).toBeGreaterThan(0);
+            if (columnHeaders.length) {
                 timer(10).pipe(
                     take(1),
                     tap(() => {
-                        const leaveEventInit = eventInit();
-                        const leaveTarget = columnHeaders[2].nativeElement as HTMLElement;
-                        const leaveTargetBounds = leaveTarget.getBoundingClientRect();
-                        leaveEventInit.clientY = leaveTargetBounds.top - 5;
-                        leaveEventInit.clientX = leaveTargetBounds.right - 2;
-                        leaveTarget.dispatchEvent(new DragEvent('dragleave', leaveEventInit as never));
+                        dragHeaderElement = columnHeaders[1].nativeElement;
+                        dragHeaderElement.dispatchEvent(new DragEvent('dragstart', eventInit() as never));
+                        fixture.detectChanges();
+                    }),
+                    delay(100),
+                    tap(() => {
+                        const enterEventInit = eventInit();
+                        const enterTarget = columnHeaders[2].nativeElement as HTMLElement;
+                        const enterTargetBounds = enterTarget.getBoundingClientRect();
+                        enterEventInit.clientY = enterTargetBounds.top + 1;
+                        enterEventInit.clientX = enterTargetBounds.left + 1;
+                        enterTarget.dispatchEvent(new DragEvent('dragenter', enterEventInit as never));
                         fixture.detectChanges();
                     }),
                     delay(100)
-                    // eslint-disable-next-line rxjs/no-nested-subscribe
+                // eslint-disable-next-line rxjs/no-nested-subscribe
                 ).subscribe(() => {
-                    dragHeaderElement.dispatchEvent(new DragEvent('dragend', { dataTransfer: new DataTransfer() }));
+                    const overEventInit = eventInit();
+                    const overTarget = columnHeaders[2].nativeElement as HTMLElement;
+                    const overTargetBounds = overTarget.getBoundingClientRect();
+                    overEventInit.clientY = overTargetBounds.top + 5;
+                    overEventInit.clientX = overTargetBounds.right - 2;
+                    overTarget.dispatchEvent(new DragEvent('dragover', overEventInit as never));
                     fixture.detectChanges();
+                    done();
                 });
-            });
-
-        observeViewPort$().pipe(
-            debounceTime(10))
-            .subscribe(vp => {
-                // Bind view port
-                fixture.detectChanges();
-                const columnHeaders = fixture.debugElement.queryAll(By.css('deja-grid > deja-tree-list > #listheader > deja-grid-header .column-header-wrapper'));
-                gridHeader = fixture.debugElement.query(By.css('deja-grid > deja-tree-list > #listheader > deja-grid-header > #deja-grid-header'));
-
-                void expect(vp.items.length).toBe(12);
-                void expect(columnHeaders.length).toBeGreaterThan(0);
-                if (columnHeaders.length) {
-                    timer(10).pipe(
-                        take(1),
-                        tap(() => {
-                            dragHeaderElement = columnHeaders[1].nativeElement;
-                            dragHeaderElement.dispatchEvent(new DragEvent('dragstart', eventInit() as never));
-                            fixture.detectChanges();
-                        }),
-                        delay(100),
-                        tap(() => {
-                            const enterEventInit = eventInit();
-                            const enterTarget = columnHeaders[2].nativeElement as HTMLElement;
-                            const enterTargetBounds = enterTarget.getBoundingClientRect();
-                            enterEventInit.clientY = enterTargetBounds.top + 1;
-                            enterEventInit.clientX = enterTargetBounds.left + 1;
-                            enterTarget.dispatchEvent(new DragEvent('dragenter', enterEventInit as never));
-                            fixture.detectChanges();
-                        }),
-                        delay(100)
-                        // eslint-disable-next-line rxjs/no-nested-subscribe
-                    ).subscribe(() => {
-                        const overEventInit = eventInit();
-                        const overTarget = columnHeaders[2].nativeElement as HTMLElement;
-                        const overTargetBounds = overTarget.getBoundingClientRect();
-                        overEventInit.clientY = overTargetBounds.top + 5;
-                        overEventInit.clientX = overTargetBounds.right - 2;
-                        overTarget.dispatchEvent(new DragEvent('dragover', overEventInit as never));
-                        fixture.detectChanges();
-                        done();
-                    });
-                }
-            });
+            }
+        });
 
         fixture.detectChanges();
     });
@@ -1139,103 +1137,65 @@ describe('DejaGridComponent', () => {
         } as MouseEventInit);
 
         observeViewPort$().pipe(
-            debounceTime(20))
-            .subscribe(vp => {
-                // Bind view port
-                fixture.detectChanges();
-                const columnHeaders = fixture.debugElement.queryAll(By.css('deja-grid > deja-tree-list > #listheader > deja-grid-header .column-header-wrapper'));
-                gridHeader = fixture.debugElement.query(By.css('deja-grid > deja-tree-list > #listheader > deja-grid-header > #deja-grid-header'));
-                gridGroupArea = fixture.debugElement.query(By.css('deja-grid > deja-grid-grouparea > #deja-grid-grouparea'));
-                const chipsDraggable = fixture.debugElement.queryAll(By.css('deja-grid > deja-grid-grouparea > #deja-grid-grouparea > deja-chips span[draggable]'));
+            debounceTime(20)
+        ).subscribe(vp => {
+        // Bind view port
+            fixture.detectChanges();
+            const columnHeaders = fixture.debugElement.queryAll(By.css('deja-grid > deja-tree-list > #listheader > deja-grid-header .column-header-wrapper'));
+            gridHeader = fixture.debugElement.query(By.css('deja-grid > deja-tree-list > #listheader > deja-grid-header > #deja-grid-header'));
+            gridGroupArea = fixture.debugElement.query(By.css('deja-grid > deja-grid-grouparea > #deja-grid-grouparea'));
+            const chipsDraggable = fixture.debugElement.queryAll(By.css('deja-grid > deja-grid-grouparea > #deja-grid-grouparea > deja-chips span[draggable]'));
 
-                const invertGroups = () => {
-                    timer(10).pipe(
-                        take(1),
-                        tap(() => {
-                            const dragGroupElement = chipsDraggable[0].nativeElement as HTMLElement;
-                            const dragEventInit = eventInit(chipsDraggable[0]);
-                            const dragTargetBounds = dragGroupElement.getBoundingClientRect();
-                            dragEventInit.clientY = dragTargetBounds.top + 5;
-                            dragEventInit.clientX = dragTargetBounds.left + 5;
-                            dragGroupElement.dispatchEvent(new DragEvent('dragstart', eventInit(chipsDraggable[0]) as never));
-                            fixture.detectChanges();
-                        }),
-                        delay(10),
-                        tap(() => {
-                            const enterEventInit = eventInit(gridGroupArea);
-                            const enterTarget = gridGroupArea.nativeElement as HTMLElement;
-                            const enterTargetBounds = enterTarget.getBoundingClientRect();
-                            enterEventInit.clientY = enterTargetBounds.top + 5;
-                            enterEventInit.clientX = enterTargetBounds.left + 5;
-                            enterTarget.dispatchEvent(new DragEvent('dragenter', enterEventInit as never));
-                            fixture.detectChanges();
-                        }),
-                        delay(10),
-                        tap(() => {
-                            const overEventInit = eventInit(gridGroupArea);
-                            const overTarget = chipsDraggable[1].nativeElement as HTMLElement;
-                            overTarget.dispatchEvent(new DragEvent('dragover', overEventInit as never));
-                            fixture.detectChanges();
-                        }),
-                        delay(10)
-                        // eslint-disable-next-line rxjs/no-nested-subscribe
-                    ).subscribe(() => {
-                        const dropEventInit = eventInit(gridGroupArea);
-                        const dropTarget = chipsDraggable[1].nativeElement as HTMLElement;
-                        dropTarget.dispatchEvent(new DragEvent('drop', dropEventInit as never));
+            const invertGroups = () => {
+                timer(10).pipe(
+                    take(1),
+                    tap(() => {
+                        const dragGroupElement = chipsDraggable[0].nativeElement as HTMLElement;
+                        const dragEventInit = eventInit(chipsDraggable[0]);
+                        const dragTargetBounds = dragGroupElement.getBoundingClientRect();
+                        dragEventInit.clientY = dragTargetBounds.top + 5;
+                        dragEventInit.clientX = dragTargetBounds.left + 5;
+                        dragGroupElement.dispatchEvent(new DragEvent('dragstart', eventInit(chipsDraggable[0]) as never));
                         fixture.detectChanges();
-                    });
-                };
+                    }),
+                    delay(10),
+                    tap(() => {
+                        const enterEventInit = eventInit(gridGroupArea);
+                        const enterTarget = gridGroupArea.nativeElement as HTMLElement;
+                        const enterTargetBounds = enterTarget.getBoundingClientRect();
+                        enterEventInit.clientY = enterTargetBounds.top + 5;
+                        enterEventInit.clientX = enterTargetBounds.left + 5;
+                        enterTarget.dispatchEvent(new DragEvent('dragenter', enterEventInit as never));
+                        fixture.detectChanges();
+                    }),
+                    delay(10),
+                    tap(() => {
+                        const overEventInit = eventInit(gridGroupArea);
+                        const overTarget = chipsDraggable[1].nativeElement as HTMLElement;
+                        overTarget.dispatchEvent(new DragEvent('dragover', overEventInit as never));
+                        fixture.detectChanges();
+                    }),
+                    delay(10)
+                // eslint-disable-next-line rxjs/no-nested-subscribe
+                ).subscribe(() => {
+                    const dropEventInit = eventInit(gridGroupArea);
+                    const dropTarget = chipsDraggable[1].nativeElement as HTMLElement;
+                    dropTarget.dispatchEvent(new DragEvent('drop', dropEventInit as never));
+                    fixture.detectChanges();
+                });
+            };
 
-                let chipsCloseButtons: DebugElement[];
-                switch (++pass) {
-                    case 1:
-                        // Drag a column to the group area
-                        void expect(vp.items.length).toBe(12);
-                        void expect(columnHeaders.length).toBeGreaterThan(0);
-                        if (columnHeaders.length) {
-                            timer(10).pipe(
-                                take(1),
-                                tap(() => {
-                                    dragHeaderElement = columnHeaders[1].nativeElement;
-                                    dragHeaderElement.dispatchEvent(new DragEvent('dragstart', eventInit(gridHeader) as never));
-                                    fixture.detectChanges();
-                                }),
-                                delay(10),
-                                tap(() => {
-                                    const enterEventInit = eventInit(gridGroupArea);
-                                    const enterTarget = gridGroupArea.nativeElement as HTMLElement;
-                                    const enterTargetBounds = enterTarget.getBoundingClientRect();
-                                    enterEventInit.clientY = enterTargetBounds.top + 1;
-                                    enterEventInit.clientX = enterTargetBounds.left + 1;
-                                    enterTarget.dispatchEvent(new DragEvent('dragenter', enterEventInit as never));
-                                    fixture.detectChanges();
-                                }),
-                                delay(10)
-                                // eslint-disable-next-line rxjs/no-nested-subscribe
-                            ).subscribe(() => {
-                                const overEventInit = eventInit(gridGroupArea);
-                                const overTarget = gridGroupArea.nativeElement as HTMLElement;
-                                const overTargetBounds = overTarget.getBoundingClientRect();
-                                overEventInit.clientY = overTargetBounds.top + 5;
-                                overEventInit.clientX = overTargetBounds.right - 2;
-                                overTarget.dispatchEvent(new DragEvent('drop', overEventInit as never));
-                                fixture.detectChanges();
-                            });
-                        }
-                        break;
-
-                    case 2:
-                        void expect(vp.items.length).toBe(24);
-                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                        void expect((<any>vp.items[0]).$text).toEqual('Peach');
-                        void expect(chipsDraggable.length).toBe(1);
-                        void expect(chipsDraggable[0].nativeElement.innerText).toEqual('Name');
-                        // Drag a second column to the group area
+            let chipsCloseButtons: DebugElement[];
+            switch (++pass) {
+                case 1:
+                // Drag a column to the group area
+                    void expect(vp.items.length).toBe(12);
+                    void expect(columnHeaders.length).toBeGreaterThan(0);
+                    if (columnHeaders.length) {
                         timer(10).pipe(
                             take(1),
                             tap(() => {
-                                dragHeaderElement = columnHeaders[0].nativeElement;
+                                dragHeaderElement = columnHeaders[1].nativeElement;
                                 dragHeaderElement.dispatchEvent(new DragEvent('dragstart', eventInit(gridHeader) as never));
                                 fixture.detectChanges();
                             }),
@@ -1250,64 +1210,102 @@ describe('DejaGridComponent', () => {
                                 fixture.detectChanges();
                             }),
                             delay(10)
-                            // eslint-disable-next-line rxjs/no-nested-subscribe
+                        // eslint-disable-next-line rxjs/no-nested-subscribe
                         ).subscribe(() => {
                             const overEventInit = eventInit(gridGroupArea);
                             const overTarget = gridGroupArea.nativeElement as HTMLElement;
                             const overTargetBounds = overTarget.getBoundingClientRect();
                             overEventInit.clientY = overTargetBounds.top + 5;
-                            overEventInit.clientX = overTargetBounds.right - 5;
+                            overEventInit.clientX = overTargetBounds.right - 2;
                             overTarget.dispatchEvent(new DragEvent('drop', overEventInit as never));
                             fixture.detectChanges();
                         });
-                        break;
+                    }
+                    break;
 
-                    case 3:
-                        void expect(vp.items.length).toBe(36);
-                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                        void expect((<any>vp.items[0]).$text).toEqual('Peach');
-                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                        void expect((<any>vp.items[1]).$text).toEqual('#FF6F00');
-                        void expect(chipsDraggable.length).toBe(2);
-                        void expect(chipsDraggable[0].nativeElement.innerText).toEqual('Name');
+                case 2:
+                    void expect(vp.items.length).toBe(24);
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    void expect((<any>vp.items[0]).$text).toEqual('Peach');
+                    void expect(chipsDraggable.length).toBe(1);
+                    void expect(chipsDraggable[0].nativeElement.innerText).toEqual('Name');
+                    // Drag a second column to the group area
+                    timer(10).pipe(
+                        take(1),
+                        tap(() => {
+                            dragHeaderElement = columnHeaders[0].nativeElement;
+                            dragHeaderElement.dispatchEvent(new DragEvent('dragstart', eventInit(gridHeader) as never));
+                            fixture.detectChanges();
+                        }),
+                        delay(10),
+                        tap(() => {
+                            const enterEventInit = eventInit(gridGroupArea);
+                            const enterTarget = gridGroupArea.nativeElement as HTMLElement;
+                            const enterTargetBounds = enterTarget.getBoundingClientRect();
+                            enterEventInit.clientY = enterTargetBounds.top + 1;
+                            enterEventInit.clientX = enterTargetBounds.left + 1;
+                            enterTarget.dispatchEvent(new DragEvent('dragenter', enterEventInit as never));
+                            fixture.detectChanges();
+                        }),
+                        delay(10)
+                    // eslint-disable-next-line rxjs/no-nested-subscribe
+                    ).subscribe(() => {
+                        const overEventInit = eventInit(gridGroupArea);
+                        const overTarget = gridGroupArea.nativeElement as HTMLElement;
+                        const overTargetBounds = overTarget.getBoundingClientRect();
+                        overEventInit.clientY = overTargetBounds.top + 5;
+                        overEventInit.clientX = overTargetBounds.right - 5;
+                        overTarget.dispatchEvent(new DragEvent('drop', overEventInit as never));
+                        fixture.detectChanges();
+                    });
+                    break;
 
-                        // Invert group in grouping area
-                        invertGroups();
-                        break;
+                case 3:
+                    void expect(vp.items.length).toBe(36);
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    void expect((<any>vp.items[0]).$text).toEqual('Peach');
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    void expect((<any>vp.items[1]).$text).toEqual('#FF6F00');
+                    void expect(chipsDraggable.length).toBe(2);
+                    void expect(chipsDraggable[0].nativeElement.innerText).toEqual('Name');
 
-                    case 4:
-                        void expect(vp.items.length).toBe(36);
-                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                        void expect((<any>vp.items[1]).$text).toEqual('Peach');
-                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                        void expect((<any>vp.items[0]).$text).toEqual('#FF6F00');
-                        void expect(chipsDraggable.length).toBe(2);
+                    // Invert group in grouping area
+                    invertGroups();
+                    break;
 
-                        // Re-invert group in grouping area
-                        invertGroups();
-                        break;
+                case 4:
+                    void expect(vp.items.length).toBe(36);
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    void expect((<any>vp.items[1]).$text).toEqual('Peach');
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    void expect((<any>vp.items[0]).$text).toEqual('#FF6F00');
+                    void expect(chipsDraggable.length).toBe(2);
 
-                    case 5:
-                        void expect(vp.items.length).toBe(36);
-                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                        void expect((<any>vp.items[0]).$text).toEqual('Peach');
-                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                        void expect((<any>vp.items[1]).$text).toEqual('#FF6F00');
-                        void expect(chipsDraggable.length).toBe(2);
+                    // Re-invert group in grouping area
+                    invertGroups();
+                    break;
 
-                        // Close name group
-                        chipsCloseButtons = fixture.debugElement.queryAll(By.css('deja-grid > deja-grid-grouparea > #deja-grid-grouparea > deja-chips #close-button'));
-                        chipsCloseButtons[0].nativeElement.click();
-                        break;
+                case 5:
+                    void expect(vp.items.length).toBe(36);
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    void expect((<any>vp.items[0]).$text).toEqual('Peach');
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    void expect((<any>vp.items[1]).$text).toEqual('#FF6F00');
+                    void expect(chipsDraggable.length).toBe(2);
 
-                    default:
-                        void expect(vp.items.length).toBe(24);
-                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                        void expect((<any>vp.items[0]).$text).toEqual('#FF6F00');
-                        void expect(chipsDraggable.length).toBe(1);
-                        done();
-                }
-            });
+                    // Close name group
+                    chipsCloseButtons = fixture.debugElement.queryAll(By.css('deja-grid > deja-grid-grouparea > #deja-grid-grouparea > deja-chips #close-button'));
+                    chipsCloseButtons[0].nativeElement.click();
+                    break;
+
+                default:
+                    void expect(vp.items.length).toBe(24);
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    void expect((<any>vp.items[0]).$text).toEqual('#FF6F00');
+                    void expect(chipsDraggable.length).toBe(1);
+                    done();
+            }
+        });
 
         fixture.detectChanges();
     });

@@ -16,7 +16,7 @@ import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Output } from '@angular/core';
 import { Destroy } from '@deja-js/component/core';
-import { from, Subject, Subscription, timer } from 'rxjs';
+import { Subject, Subscription, timer } from 'rxjs';
 import { debounce, delay, take, takeUntil, tap } from 'rxjs/operators';
 
 interface IAnimation {
@@ -164,7 +164,7 @@ export class DejaSnackbarComponent extends Destroy implements OnInit, AfterViewI
                 });
         };
 
-        this.animate$sub = from(this.animate$).pipe(
+        this.animate$sub = this.animate$.pipe(
             tap(animation => applyParams(animation.before)),
             delay(1),
             tap(animation => {

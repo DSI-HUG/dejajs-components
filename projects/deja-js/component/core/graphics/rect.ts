@@ -17,13 +17,11 @@ interface IRect {
     height: number;
 }
 
-export type RectOverlapDirection = 'horizontal' | 'vertical';
-
 export interface IRectOverlapInfos {
     area: number;
     width: number;
     height: number;
-    direction: RectOverlapDirection;
+    direction: 'horizontal' | 'vertical';
 }
 
 export class Rect {

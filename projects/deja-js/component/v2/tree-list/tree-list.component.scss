@@ -1,0 +1,125 @@
+@mixin depth-padding($depth) {
+    padding-left: 0rem + $depth;
+}
+
+tree-list {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    align-content: stretch;
+    overflow: hidden;
+
+    &.ng-invalid {
+        #input {
+            .mat-form-field-wrapper {
+                .mat-form-field-underline {
+                    .mat-form-field-ripple {
+                        opacity: 1;
+                        -webkit-transform: scaleY(1);
+                        transform: scaleY(1);
+                    }
+                }
+            }
+        }
+    }
+
+    #input {
+        outline: none;
+    }
+
+    #header {
+        flex: 0 0 auto;
+        align-items: center;
+        display: flex;
+
+        #input {
+            flex: 1 1 auto;
+        }
+
+        button {
+            flex: 0 0 auto;
+            margin: 16px 0.5rem 16px 0;
+        }
+    }
+
+    #listheader {
+        flex: 0 0 auto;
+        overflow: hidden;
+        box-sizing: border-box;
+    }
+
+    .listcontainer {
+        flex: 1 1 auto;
+        outline: none;
+        overflow: auto;
+        display: flex;
+        flex-direction: column;
+        padding: 0;
+        margin: 0;
+        position: relative;
+
+        &.hasheader {
+            border-top: 0;
+        }
+
+        &[valign="bottom"] {
+            border-top: none;
+        }
+
+        #nodata-holder {
+            margin: 0.5rem;
+        }
+
+        #error-hint {
+            margin: 0.5rem;
+            flex: 0 0 auto;
+        }
+
+        viewport {
+            flex: 1 1 100%;
+
+            div.viewport-wrapper {
+                @for $i from 0 through 50 {
+                    div.listitem.depth#{$i} {
+                        @include depth-padding($i);
+                    }
+                }
+            }
+
+            div.listitem {
+                opacity: 1;
+                margin: 0;
+                transition-timing-function: linear;
+                transition-duration: .3s;
+                transition-property: max-height, opacity;
+                display: flex;
+                align-items: center;
+
+                &.hide {
+                    opacity: 0 !important;
+                    max-height: 0 !important;
+                    transition-timing-function: ease-out;
+                }
+
+                [expandbtn] {
+                    width: 24px;
+                    cursor: pointer;
+                    opacity: 0.6;
+                    padding-top: 2px;
+                }
+
+                &.parent {
+                    &.collapsed {
+                        [expandbtn] {
+                            >.mat-icon {
+                                -ms-transform: rotate(-90deg);
+                                -webkit-transform: rotate(-90deg);
+                                transform: rotate(-90deg);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
