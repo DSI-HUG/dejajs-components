@@ -1,3 +1,10 @@
+## [11.7.1-next.1](https://github.com/DSI-HUG/dejajs-components/compare/v11.7.0...v11.7.1-next.1) (2021-04-20)
+
+
+### Bug Fixes
+
+* **date-selector.component.ts:** datePicker ferme sur les boutons mois années sur ng11, DEJS-973 ([a6e1e34](https://github.com/DSI-HUG/dejajs-components/commit/a6e1e34d389637c101b31a9c74a31c0424d4edd4))
+
 # [11.7.0](https://github.com/DSI-HUG/dejajs-components/compare/v11.6.0...v11.7.0) (2021-04-19)
 
 
