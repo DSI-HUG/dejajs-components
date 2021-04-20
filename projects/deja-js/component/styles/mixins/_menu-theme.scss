@@ -1,32 +1,36 @@
-@import '~@angular/material/theming';
+@import '~@angular/material/core/theming/theming';
 
 @mixin menu-theme($theme) {
-	$primary: map-get($theme, primary);
+    $primary: map-get($theme, primary);
 
-	.deja-overlay-container {
+    .deja-overlay-container {
         .deja-menu-content {
-			background-color: #FFF;
-			border-color: rgba(0, 0, 0, 0.3);            
+            background-color: #FFF;
+            border-color: rgba(0, 0, 0, 0.3);
+
             >ul,
             &ul {
-				li {
-					background-color: #FFF;
-					color: mat-color($primary);
-					&:hover {
-						background-color: mat-color($primary);
-						color: #FFF;
-					}
-				}
-			}
-			>button,
-			>a {
-				background-color: #FFF;
-				color: mat-color($primary);
-				&:hover {
-					background-color: mat-color($primary);
-					color: #FFF;
-				}
-			}
-		}
-	}
+                li {
+                    background-color: #FFF;
+                    color: mat-color($primary);
+
+                    &:hover {
+                        background-color: mat-color($primary);
+                        color: #FFF;
+                    }
+                }
+            }
+
+            >button,
+            >a {
+                background-color: #FFF;
+                color: mat-color($primary);
+
+                &:hover {
+                    background-color: mat-color($primary);
+                    color: #FFF;
+                }
+            }
+        }
+    }
 }

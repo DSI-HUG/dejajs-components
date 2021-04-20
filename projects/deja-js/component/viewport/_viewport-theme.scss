@@ -1,16 +1,16 @@
-@import '~@angular/material/theming';
+@import '~@angular/material/core/theming/theming';
 
 @mixin viewport-theme($theme) {
-	$primary: map-get($theme, primary);
+    $primary: map-get($theme, primary);
 
-	deja-viewport {
+    deja-viewport {
 
-		#up,
-		#down {
-			&:hover {
-				background-color: mat-color($primary);
-				color: mat-color($primary, default-contrast);
-			}
-		}
-	}
+        #up,
+        #down {
+            &:hover {
+                background-color: mat-color($primary);
+                color: mat-color($primary, default-contrast);
+            }
+        }
+    }
 }

@@ -1,15 +1,15 @@
-@import '~@angular/material/theming';
+@import '~@angular/material/core/theming/theming';
 @import '~prismjs/themes/prism.css';
 @import '~prismjs/themes/prism-coy.css';
 
 @mixin markdown-theme($theme) {
     $primary: map-get($theme, primary);
-	$background: map-get($theme, background);
-	$foreground: map-get($theme, foreground);
+    $background: map-get($theme, background);
+    $foreground: map-get($theme, foreground);
 
     .markdown-content {
         table {
-            thead tr th{
+            thead tr th {
                 background: mat-color($primary);
                 color: mat-color($primary, default-contrast);
             }
@@ -19,7 +19,8 @@
                     background-color: mat-color($background, focused-button);
                 }
 
-                th, td {
+                th,
+                td {
                     border-color: mat-color($foreground, divider);
                 }
             }

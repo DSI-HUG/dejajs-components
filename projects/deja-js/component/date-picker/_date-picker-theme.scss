@@ -1,28 +1,29 @@
-@import '~@angular/material/theming';
+@import '~@angular/material/core/theming/theming';
 
 @mixin date-picker-theme($theme) {
-	$warn: map-get($theme, warn);
+    $warn: map-get($theme, warn);
 
-	deja-date-picker {
-		&.ng-invalid {
-			.mat-form-field-wrapper {
-				.mat-form-field-underline {
-					.mat-form-field-ripple {
-						background-color: mat-color($warn);
-					}
-				}
-				.mat-form-field-flex {
-					.mat-form-field-infix {
-						.mat-form-field-label {
-							color: mat-color($warn);
-						}
-					}
-				}
-			}
-		}
-	}
+    deja-date-picker {
+        &.ng-invalid {
+            .mat-form-field-wrapper {
+                .mat-form-field-underline {
+                    .mat-form-field-ripple {
+                        background-color: mat-color($warn);
+                    }
+                }
 
-	.deja-datepicker-overlay-container {
-		box-shadow: rgba(0, 0, 0, 0.247059) 0px 14px 45px, rgba(0, 0, 0, 0.219608) 0px 10px 18px;
-	}
+                .mat-form-field-flex {
+                    .mat-form-field-infix {
+                        .mat-form-field-label {
+                            color: mat-color($warn);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .deja-datepicker-overlay-container {
+        box-shadow: rgba(0, 0, 0, 0.247059) 0px 14px 45px, rgba(0, 0, 0, 0.219608) 0px 10px 18px;
+    }
 }

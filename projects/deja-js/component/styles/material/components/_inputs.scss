@@ -1,26 +1,27 @@
-@import '~@angular/material/theming';
+@import '~@angular/material/core/theming/theming';
 
 @mixin inputs-theme($theme) {
     $primary: map-get($theme, primary);
     $warn: map-get($theme, warn);
 
     // Fix allow to add an ICO into the placeholder
-	mat-form-field-container {
-	    .mat-form-field-label-wrapper {
+    mat-form-field-container {
+        .mat-form-field-label-wrapper {
             overflow: visible !important;
         }
 
-	    .mat-form-field-wrapper {
+        .mat-form-field-wrapper {
             .mat-form-field-flex {
                 .mat-form-field-label {
+
                     &.mat-float:not(.mat-empty),
                     &.mat-float.mat-focused {
                         transform: translateY(-65%) scale(.75) !important;
                     }
                 }
             }
-	    }
-	
+        }
+
         ~.mat-form-field-message {
             font-size: 0.8rem;
             text-align: left;
