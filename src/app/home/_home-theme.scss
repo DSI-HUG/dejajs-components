@@ -1,4 +1,5 @@
-@import '~@angular/material/theming';
+@import '~@angular/material/core/theming/theming';
+
 @mixin home-demo-theme($theme) {
     $primary: map-get($theme, primary);
 

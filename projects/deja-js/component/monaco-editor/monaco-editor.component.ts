@@ -460,7 +460,7 @@ export class DejaMonacoEditorComponent implements OnDestroy, AfterViewInit, OnCh
         private monacoEditorService: MonacoEditorService,
         @Self() @Optional() public control: NgControl
     ) {
-        console.warn('@deja-js/component/deja-monaco-editor is deprecated, and will be removed in a further version. Please use @deja-js/component/v2/monaco-editor instead.');
+        console.log('@deja-js/component/deja-monaco-editor is deprecated, and will be removed in a further version. Please use @deja-js/component/v2/monaco-editor instead.');
 
         if (this.control) {
             this.control.valueAccessor = this;

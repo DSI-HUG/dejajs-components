@@ -32,7 +32,7 @@ export class DejaMouseDragDropService extends Destroy {
     public constructor() {
         super();
 
-        console.warn('@deja-js/component/mouse-dragdrop is deprecated, and will be removed in a further version. Please use @deja-js/component/v2/mouse-dragdrop.');
+        console.log('@deja-js/component/mouse-dragdrop is deprecated, and will be removed in a further version. Please use @deja-js/component/v2/mouse-dragdrop.');
 
         this.dragging$.pipe(
             tap(value => this._isDragging = value),

@@ -2,11 +2,11 @@
     <div id="date-selector" *ngIf="layoutId < 3">
         <div id="date-header">
             <div class="year">
-                <button mat-mini-fab type="button" (mousedown)="changeYear(-1, $event)" [disabled]="disabled">
+                <button mat-mini-fab type="button" (click)="changeYear(-1)" [disabled]="disabled">
                     <mat-icon>keyboard_arrow_left</mat-icon>
                 </button>
                 <div>{{displayedDate.getFullYear()}}</div>
-                <button mat-mini-fab type="button" (mousedown)="changeYear(1, $event)" [disabled]="disabled">
+                <button mat-mini-fab type="button" (click)="changeYear(1)" [disabled]="disabled">
                     <mat-icon>keyboard_arrow_right</mat-icon>
                 </button>
             </div>
@@ -17,13 +17,13 @@
         <div id="sub-header">
             <div class="month">
                 <div class="previous">
-                    <button mat-mini-fab type="button" (mousedown)="changeMonth(-1, $event)" [disabled]="disabled">
+                    <button mat-mini-fab type="button" (click)="changeMonth(-1)" [disabled]="disabled">
                         <mat-icon>keyboard_arrow_left</mat-icon>
                     </button>
                 </div>
                 <span>{{displayedDate.toLocaleString(local, { month: 'long' })}} {{displayedDate.getFullYear()}}</span>
                 <div class="next">
-                    <button mat-mini-fab type="button" (mousedown)="changeMonth(1, $event)" [disabled]="disabled">
+                    <button mat-mini-fab type="button" (click)="changeMonth(1)" [disabled]="disabled">
                         <mat-icon>keyboard_arrow_right</mat-icon>
                     </button>
                 </div>

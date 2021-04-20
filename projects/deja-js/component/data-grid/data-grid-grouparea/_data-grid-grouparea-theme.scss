@@ -1,12 +1,12 @@
-@import '~@angular/material/theming';
+@import '~@angular/material/core/theming/theming';
 
 @mixin data-grid-grouparea-theme($theme) {
     $primary: map-get($theme, primary);
-	$foreground: map-get($theme, foreground);
+    $foreground: map-get($theme, foreground);
 
     #deja-grid-grouparea {
         border: 1px solid mat-color($foreground, hint-text);
-        
+
         #placeholder {
             color: mat-color($foreground, hint-text);
         }
