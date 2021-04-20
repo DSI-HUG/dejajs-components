@@ -200,7 +200,7 @@ export class ViewPortComponent<T> extends Destroy {
         ).subscribe(([viewPortElementSize, direction, element]) => {
             const newElementSize = direction === 'horizontal' ? element.clientWidth : element.clientHeight;
             if (viewPortElementSize.size > 0 && newElementSize > viewPortElementSize.size) {
-                console.warn('ViewPort element size to small, refresh view port');
+                console.log('ViewPort element size to small, refresh view port');
                 this.viewPortService.refresh();
             }
             viewPortElementSize.size = newElementSize;
