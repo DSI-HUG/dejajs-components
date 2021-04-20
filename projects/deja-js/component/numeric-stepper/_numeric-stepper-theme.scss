@@ -1,4 +1,4 @@
-@import '~@angular/material/theming';
+@import '~@angular/material/core/theming/theming';
 
 @mixin numeric-stepper-theme($theme) {
     $warn: map-get($theme, warn);
@@ -7,5 +7,5 @@
         .off-limits {
             color: mat-color($warn);
         }
-    } 
+    }
 }

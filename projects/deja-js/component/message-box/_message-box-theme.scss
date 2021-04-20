@@ -1,4 +1,4 @@
-@import '~@angular/material/theming';
+@import '~@angular/material/core/theming/theming';
 
 @mixin message-box-theme($theme) {
     $primary: map-get($theme, primary);
@@ -14,6 +14,7 @@
 
         &:not([horizontal]) {
             #msgbox {
+
                 &.info,
                 &.primary {
                     .mat-card-actions {
@@ -58,22 +59,22 @@
             &.info,
             &.primary {
                 background-color: mat-color($primary);
-                box-shadow: 0 4px 20px 0 rgba(0,0,0,.14), 0 7px 10px -5px rgba(mat-color($primary), .4);
+                box-shadow: 0 4px 20px 0 rgba(0, 0, 0, .14), 0 7px 10px -5px rgba(mat-color($primary), .4);
             }
 
             &.danger {
                 background-color: mat-color($warn);
-                box-shadow: 0 4px 20px 0 rgba(0,0,0,.14), 0 7px 10px -5px rgba(mat-color($warn), .4);
+                box-shadow: 0 4px 20px 0 rgba(0, 0, 0, .14), 0 7px 10px -5px rgba(mat-color($warn), .4);
             }
 
             &.warn {
                 background-color: mat-color($warning);
-                box-shadow: 0 4px 20px 0 rgba(0,0,0,.14), 0 7px 10px -5px rgba(mat-color($warning), .4);
+                box-shadow: 0 4px 20px 0 rgba(0, 0, 0, .14), 0 7px 10px -5px rgba(mat-color($warning), .4);
             }
 
             &.success {
                 background-color: mat-color($success);
-                box-shadow: 0 4px 20px 0 rgba(0,0,0,.14), 0 7px 10px -5px rgba(mat-color($success), .4);
+                box-shadow: 0 4px 20px 0 rgba(0, 0, 0, .14), 0 7px 10px -5px rgba(mat-color($success), .4);
             }
 
             >.mat-card-actions {
