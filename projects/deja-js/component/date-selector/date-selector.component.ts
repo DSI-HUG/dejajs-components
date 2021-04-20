@@ -174,6 +174,14 @@ export class DejaDateSelectorComponent extends Destroy implements OnInit, Contro
             this._control.valueAccessor = this;
         }
 
+        fromEvent(element, 'mousedown').pipe(
+            takeUntil(this.destroyed$)
+        ).subscribe(event => {
+            event.stopPropagation();
+            event.preventDefault();
+            return false;
+        });
+
         fromEvent(element, 'click').pipe(
             takeUntil(this.destroyed$)
         ).subscribe(event => {
@@ -391,21 +399,13 @@ export class DejaDateSelectorComponent extends Destroy implements OnInit, Contro
         return undefined;
     }
 
-    public changeMonth(x: number, event?: Event): boolean {
+    public changeMonth(x: number): boolean {
         this.setMonthIfPossible(this._displayedDate, x);
-        if (event) {
-            event.preventDefault();
-            event.stopPropagation();
-        }
         return false;
     }
 
-    public changeYear(x: number, event?: Event): boolean {
+    public changeYear(x: number): boolean {
         this.setYearIfPossible(this._displayedDate, x);
-        if (event) {
-            event.preventDefault();
-            event.stopPropagation();
-        }
         return false;
     }
 

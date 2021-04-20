@@ -147,7 +147,7 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
     public constructor(changeDetectorRef: ChangeDetectorRef, public viewPort: ViewPortService, public elementRef: ElementRef, @Self() @Optional() public control: NgControl, @Optional() private clipboardService: DejaClipboardService) {
         super(changeDetectorRef, viewPort);
 
-        console.warn('@deja-js/component/deja-tree-list is deprecated, and will be removed in a further version. Please use @deja-js/component/v2/tree-list instead.');
+        console.log('@deja-js/component/deja-tree-list is deprecated, and will be removed in a further version. Please use @deja-js/component/v2/tree-list instead.');
 
         if (this.control) {
             this.control.valueAccessor = this;
