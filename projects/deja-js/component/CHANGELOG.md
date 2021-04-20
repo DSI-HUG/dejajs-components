@@ -1,3 +1,10 @@
+## [11.7.1-next.2](https://github.com/DSI-HUG/dejajs-components/compare/v11.7.1-next.1...v11.7.1-next.2) (2021-04-20)
+
+
+### Bug Fixes
+
+* **theming:** reduce theming file size ([f9ea221](https://github.com/DSI-HUG/dejajs-components/commit/f9ea221a64f5d1c840ea31ecc7474fa14a4b3c67))
+
 ## [11.7.1-next.1](https://github.com/DSI-HUG/dejajs-components/compare/v11.7.0...v11.7.1-next.1) (2021-04-20)
 
 
