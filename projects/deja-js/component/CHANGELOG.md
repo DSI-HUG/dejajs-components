@@ -1,3 +1,27 @@
+# [11.7.0](https://github.com/DSI-HUG/dejajs-components/compare/v11.6.0...v11.7.0) (2021-04-19)
+
+
+### Bug Fixes
+
+* **date-selector.component.ts:** datePicker ferme sur les boutons mois années sur ng11, DEJS-973 ([44baee3](https://github.com/DSI-HUG/dejajs-components/commit/44baee3a5ad76ce7c2d73a3c821ff65de83a655e))
+* **item.service.ts:** restore selection if items array has changed ([6d4c0d2](https://github.com/DSI-HUG/dejajs-components/commit/6d4c0d2b9ddb3dcf83af46c10fcbba07cf90e5a5))
+* **monaco-editor:** fix options generation after review ([eec86f9](https://github.com/DSI-HUG/dejajs-components/commit/eec86f9123c24da921c99c4c6f3d53af58f47c67))
+* **tree-list:** add bidirectional query param ([3e09599](https://github.com/DSI-HUG/dejajs-components/commit/3e0959932dafb36a7178d22c3c83be700302d628))
+* **tree-list:** expand collapse preevents inverted ([deaab65](https://github.com/DSI-HUG/dejajs-components/commit/deaab65d16d6299206514c02f7960e66e0026012))
+* **tree-list:** fix set query feature ([e6db889](https://github.com/DSI-HUG/dejajs-components/commit/e6db889bd84921f502030a5bf6e6c8148e90a89d))
+* **treelist:** add refresh for FilterItemList$ ([962a389](https://github.com/DSI-HUG/dejajs-components/commit/962a38993563b667ec49c4017d0557ab35de5838))
+* **treelist:** fix default search field ([b4412f5](https://github.com/DSI-HUG/dejajs-components/commit/b4412f5b9408a18f77bb5f3f4a1db6afe9cdf27b))
+* **treelist:** fix flatlist cache on query change ([ba6fc09](https://github.com/DSI-HUG/dejajs-components/commit/ba6fc0923a7c655a40b05ca978ba3bb2efd17335))
+* **treelist:** optional overriding for ItemService ([453515a](https://github.com/DSI-HUG/dejajs-components/commit/453515af087a72287013e77c59076c481d86eef6))
+* **treelist:** try overriding ItemService ([ce4e805](https://github.com/DSI-HUG/dejajs-components/commit/ce4e80523d3bbe326cf576070ea781c8e9762422))
+* **view-port:** fix reload viewport function (must keep items size) ([03e4b63](https://github.com/DSI-HUG/dejajs-components/commit/03e4b631577db85001590a18f1ea9a2bbba4eccc))
+* **view-port:** fix scss height in treelist ([5e4c68a](https://github.com/DSI-HUG/dejajs-components/commit/5e4c68aba24ed6fa8449baf27722c20bd5f9dc6e))
+* **viewport:** fix refresh with existing measured size ([d7835c3](https://github.com/DSI-HUG/dejajs-components/commit/d7835c30c52e8a894c9c4cca50f035f379baf362))
+* **viewport:** remove console.log ([7175985](https://github.com/DSI-HUG/dejajs-components/commit/7175985dff7148ccfa4a3ed3f8356130e643a2de))
+* **vuewport:** add debug options and some optionals logs ([71756bc](https://github.com/DSI-HUG/dejajs-components/commit/71756bc9dd4e44aac9174f2774be99aec6af561f))
+* **vuewport:** add some optionals logs ([8b6f446](https://github.com/DSI-HUG/dejajs-components/commit/8b6f44641b2ae4e586ef8ddad0c47fbf2c0fdd53))
+* fix compile issue with same types ([bdcaf04](https://github.com/DSI-HUG/dejajs-components/commit/bdcaf04c2fe3215d54c64ec8f4ecdee6d10ab535))
+
 ## [11.6.1-next.18](https://github.com/DSI-HUG/dejajs-components/compare/v11.6.1-next.17...v11.6.1-next.18) (2021-04-16)
 
 
