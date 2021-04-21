@@ -14,7 +14,7 @@ import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { IViewPortItem } from '@deja-js/component/core';
 import { ViewPortService } from '@deja-js/component/core';
-import { filter } from 'rxjs/operators';
+import { delay, filter } from 'rxjs/operators';
 import { tap } from 'rxjs/operators';
 import { debounceTime } from 'rxjs/operators';
 
@@ -73,9 +73,11 @@ describe('DejaViewPortComponent', () => {
         const viewPortService = viewPortDebugElement.injector.get(ViewPortService);
 
         return viewPortService.viewPortResult$.pipe(
-            debounceTime(10),
+            delay(1),
             tap(() => fixture.detectChanges()),
+            delay(1),
             filter(result => result.viewPortSize > 0),
+            debounceTime(100),
             tap(result => {
                 const listitems = fixture.debugElement.queryAll(By.css('deja-viewport > #viewport-wrapper > .listitem'));
                 void expect(listitems.length).toEqual(elementCount);

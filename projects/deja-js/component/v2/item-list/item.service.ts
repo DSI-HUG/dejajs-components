@@ -104,11 +104,15 @@ export class ItemService<T> {
 
         this.flatItemList$ = combineLatest([this.itemList$, this.refreshFlatItemList$]).pipe(
             map(([items]) => {
-                const addItems = (itms: Item<T>[], depth: number): Array<Item<T>> => itms?.flatMap(item => {
+                const addItems = (itms: Item<T>[], depth: number): Array<Item<T>> => itms.reduce((a, item) => {
                     item.depth = depth;
-                    return [item, ...addItems(item.items, depth + 1)];
-                }) || [];
-                return addItems(items, 0);
+                    a.push(item);
+                    if (item.items?.length) {
+                        return [...a, ...addItems(item.items, depth + 1)];
+                    }
+                    return a;
+                }, []);
+                return (items && addItems(items, 0)) || [];
             }),
             tap(() => {
                 this.previousQuery = undefined;
@@ -125,6 +129,7 @@ export class ItemService<T> {
         this.filteredItemList$ = combineLatest([this.flatItemList$, this.query$, this.minSearchLength$, this.searchField$, refreshFilterItemList$]).pipe(
             switchMap(([flatItemList, query, minSearchLength, searchField]) => {
                 if (minSearchLength > 0 && (!query || typeof query === 'string' && query.length < minSearchLength)) {
+                    this.previousQuery = null;
                     return of([]);
                 }
 

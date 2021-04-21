@@ -101,10 +101,8 @@ describe('ViewPortComponent', () => {
         const fixture = TestBed.createComponent(ViewportContainerComponent);
         const viewPortDebugElement = fixture.debugElement.query(By.directive(ViewPortComponent));
         const viewPortInstance = viewPortDebugElement.componentInstance as ViewPortComponent<unknown>;
-        const viewPortElement = fixture.debugElement.query(By.css('.viewport-wrapper')).nativeElement as HTMLElement;
 
         observeViewPort$(fixture, 26, 0, 1480, 520, 0, 25).subscribe(() => {
-            void expect(viewPortElement.clientWidth).toEqual(500);
             done();
         });
 
