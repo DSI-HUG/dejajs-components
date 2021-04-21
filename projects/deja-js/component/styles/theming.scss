@@ -1,9 +1,16 @@
+@import '~@angular/material/core/theming/theming';
+
 /** global mixins */
 @import './mixins/backdrop';
 @import './mixins/loader';
 @import './mixins/menu';
 @import './mixins/popup';
 @import './mixins/tree-list-borders';
+
+/* specials themes */
+@import './material/material';
+@import './mixins/menu-theme';
+@import './mixins/item-list-theme';
 
 /** Font icons */
 @import '~material-icons-font/sass/variables'; // mandatory and at first place
@@ -35,13 +42,6 @@ $MaterialIcons_FontPath: "~material-icons-font/fonts"; // for CLI project we cha
 @import '../v2/mouse-dragdrop/mouse-dragdrop-theme';
 @import '../v2/tree-list/tree-list-theme';
 @import '../v2/viewport/viewport-theme';
-/* specials themes */
-@import './material/material';
-@import './mixins/menu-theme';
-@import './mixins/popup';
-@import './mixins/loader';
-@import './mixins/item-list-theme';
-@import './mixins/tree-list-borders';
 
 @mixin deja-theme($custom-theme) {
     @include chips-theme($custom-theme);

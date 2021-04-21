@@ -134,8 +134,9 @@ describe('TreeListComponent', () => {
         return treeListInstance.viewPort$.pipe(
             delay(1),
             tap(() => fixture.detectChanges(true)),
-            debounceTime(10),
-            filter(result => result.viewPortSize > 0)
+            delay(1),
+            filter(result => result.viewPortSize > 0),
+            debounceTime(100)
         );
     };
 
@@ -334,8 +335,9 @@ describe('TreeListByModelContainerComponent', () => {
         return treeListInstance.viewPort$.pipe(
             delay(1),
             tap(() => fixture.detectChanges(true)),
-            debounceTime(10),
-            filter(result => result.viewPortSize > 0)
+            delay(1),
+            filter(result => result.viewPortSize > 0),
+            debounceTime(100)
         );
     };
 
@@ -743,8 +745,9 @@ describe('TreeListByOptionsContainerComponent', () => {
         return treeListInstance.viewPort$.pipe(
             delay(1),
             tap(() => fixture.detectChanges(true)),
-            debounceTime(10),
-            filter(result => result.viewPortSize > 0)
+            delay(1),
+            filter(result => result.viewPortSize > 0),
+            debounceTime(100)
         );
     };
 
