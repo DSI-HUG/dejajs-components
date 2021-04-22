@@ -23,9 +23,9 @@ branches:
   - next/11.x.x
   - release/11.x.x
 before_install:
-- if [[ $TRAVIS_COMMIT_MESSAGE =~ ("from DSI-HUG/master"|"from DSI-HUG/release/11.x.x") ]]; then 
+- if [[ $TRAVIS_COMMIT_MESSAGE =~ ("from DSI-HUG/master"|"from DSI-HUG/release/11.x.x") ]]; then
     echo "merge from RELEASE branch, skipping";
-    exit 0; 
+    exit 0;
   fi
 - npm install -g yarn
 - rm -rf node_modules
@@ -37,8 +37,8 @@ before_script:
 script:
 - npm run build:lib
 - if [ $TRAVIS_PULL_REQUEST != "false" ]; then
-    npm run license-check;
-    npm run test:lib;
+    npm run license-check &&
+    npm run test:lib &&
     npm run lint;
   fi
 env:
