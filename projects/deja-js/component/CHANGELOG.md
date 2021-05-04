@@ -1,3 +1,5 @@
+## [11.9.1-next.1](https://github.com/DSI-HUG/dejajs-components/compare/v11.9.0...v11.9.1-next.1) (2021-05-04)
+
 # [11.9.0](https://github.com/DSI-HUG/dejajs-components/compare/v11.8.0...v11.9.0) (2021-04-22)
 
 
