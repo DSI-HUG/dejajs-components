@@ -21,6 +21,7 @@
 @import '../../component/select/select-theme';
 @import '../../component/sidenav/sidenav-theme';
 @import '../../component/splitter/splitter-theme';
+@import '../../component/time-picker/time-picker-theme';
 @import '../../component/tooltip/tooltip-theme';
 @import '../../component/tree-list/tree-list-theme';
 @import '../../component/viewport/viewport-theme';
@@ -28,6 +29,7 @@
 @import './menu-theme';
 @import './popup';
 @import '../components/loader';
+
 // Create a theme.
 @mixin deja-theme($custom-theme) {
     @include loader-theme($custom-theme);
@@ -51,6 +53,7 @@
     @include select-theme($custom-theme);
     @include sidenav-theme($custom-theme);
     @include splitter-theme($custom-theme);
+    @include time-picker-theme($custom-theme);
     @include tooltip-theme($custom-theme);
     @include tree-list-theme($custom-theme);
     @include viewport-theme($custom-theme);

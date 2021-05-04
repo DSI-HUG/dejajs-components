@@ -1,0 +1,7 @@
+<div class="time-picker" #picker>
+    <mat-icon class="arrows">keyboard_arrow_up</mat-icon>
+    <div class="value-container">
+        <input type="text" maxlength="2" class="value" [value]="hours ? (value === 24 ? 00 : value) : value" (keydown)="onInputKeyDown$.next($event)" [disabled]="disabled" />
+    </div>
+        <mat-icon class="arrows">keyboard_arrow_down</mat-icon>
+    </div>

@@ -1,0 +1,13 @@
+@import '~@angular/material/theming';
+
+@mixin time-picker-theme($theme) {
+    $primary: map-get($theme, primary);
+    $background: map-get($theme, background);
+    $foreground: map-get($theme, foreground);
+
+    .time-picker {
+        mat-icon {
+            color: mat-color($primary);
+        }
+    }
+}

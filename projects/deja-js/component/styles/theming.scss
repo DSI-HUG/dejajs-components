@@ -29,6 +29,7 @@ $MaterialIcons_FontPath: "~material-icons-font/fonts"; // for CLI project we cha
 @import '../select/select-theme';
 @import '../sidenav/sidenav-theme';
 @import '../splitter/splitter-theme';
+@import '../time-picker/time-picker-theme';
 @import '../tooltip/tooltip-theme';
 @import '../tree-list/tree-list-theme';
 @import '../viewport/viewport-theme';
@@ -62,6 +63,7 @@ $MaterialIcons_FontPath: "~material-icons-font/fonts"; // for CLI project we cha
     @include select-theme($custom-theme);
     @include sidenav-theme($custom-theme);
     @include splitter-theme($custom-theme);
+    @include time-picker-theme($custom-theme);
     @include tooltip-theme($custom-theme);
     @include tree-list-theme($custom-theme);
     @include viewport-theme($custom-theme);
