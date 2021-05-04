@@ -1,4 +1,4 @@
-<div id="header" *ngIf="searchArea || (this.itemService.minSearchLength$ | async)">
+<div id="header" *ngIf="searchArea || (itemService.minSearchLength$ | async)">
     <mat-form-field deja-child-validator id="input">
         <input #inputelement type="text" matInput tabindex="0" [ngModel]="query" [placeholder]="placeholder" [disabled]="disabled" (input)="itemService.query$.next(model && model.value)" #model="ngModel">
         <span *ngIf="searchPrefixTemplate" matPrefix>

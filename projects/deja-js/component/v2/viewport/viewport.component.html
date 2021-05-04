@@ -1,4 +1,4 @@
-<div #button id="up" *ngIf="hasButtons" [attr.hidden]="!this.hasUpButton || null">
+<div #button id="up" *ngIf="hasButtons" [attr.hidden]="!hasUpButton || null">
     <mat-icon>keyboard_arrow_up</mat-icon>
 </div>
 <div #wrapper class="viewport-wrapper">
@@ -19,6 +19,6 @@
         </ng-template>
     </ng-container>
 </div>
-<div #button id="down" *ngIf="hasButtons" [attr.hidden]="!this.hasDownButton || null">
+<div #button id="down" *ngIf="hasButtons" [attr.hidden]="!hasDownButton || null">
     <mat-icon>keyboard_arrow_down</mat-icon>
 </div>
