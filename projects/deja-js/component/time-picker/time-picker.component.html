@@ -1,7 +1,7 @@
 <div class="time-picker" #picker>
-    <mat-icon class="arrows">keyboard_arrow_up</mat-icon>
+    <mat-icon class="arrows" (click)="value = value + step">keyboard_arrow_up</mat-icon>
     <div class="value-container">
-        <input type="text" maxlength="2" class="value" [value]="hours ? (value === 24 ? 00 : value) : value" (keydown)="onInputKeyDown$.next($event)" [disabled]="disabled" />
+        <input type="text" maxlength="2" class="value" [value]="hours && value === 24 ? '00' : ('0' + value).slice(-2)" (change)="onInputChange$.next($event)" [disabled]="disabled" />
     </div>
-        <mat-icon class="arrows">keyboard_arrow_down</mat-icon>
+        <mat-icon class="arrows" (click)="value = value - step">keyboard_arrow_down</mat-icon>
     </div>

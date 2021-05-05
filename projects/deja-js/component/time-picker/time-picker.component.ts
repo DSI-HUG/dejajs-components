@@ -7,7 +7,7 @@
  */
 
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Input, OnInit, Optional, Self } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Input, Optional, Self } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { Destroy } from '@deja-js/component/core';
 import { Subject } from 'rxjs';
@@ -22,7 +22,10 @@ import { debounceTime, distinctUntilChanged, map, takeUntil } from 'rxjs/operato
     styleUrls: ['./time-picker.component.scss'],
     templateUrl: './time-picker.component.html'
 })
-export class DejaTimePickerComponent extends Destroy implements OnInit, ControlValueAccessor {
+export class DejaTimePickerComponent extends Destroy implements ControlValueAccessor {
+
+    /** Step of the arrows */
+    @Input() public step = 1;
 
     /** disabled property setter. Can be string or empty so you can use it like : <time-picker disabled></time-picker> */
     @Input()
@@ -37,7 +40,7 @@ export class DejaTimePickerComponent extends Destroy implements OnInit, ControlV
     }
 
     public hours: boolean;
-    public onInputKeyDown$ = new Subject<Event>();
+    public onInputChange$ = new Subject<Event>();
     private _disabled = false;
     private _value: number;
 
@@ -55,25 +58,17 @@ export class DejaTimePickerComponent extends Destroy implements OnInit, ControlV
             this.control.valueAccessor = this;
         }
 
-        this.onInputKeyDown$.pipe(
+        this.onInputChange$.pipe(
             debounceTime(1),
             distinctUntilChanged(),
-            map(event => (event.target as HTMLInputElement).value),
+            map(event => parseInt((event.target as HTMLInputElement).value, 10)),
             takeUntil(this.destroyed$)
-        ).subscribe(v => this.value = parseInt(v, 10));
-    }
-
-    /**
-     * Init time-picker configuration
-     */
-    public ngOnInit(): void {
-        console.log('onInit');
+        ).subscribe(v => this.value = v);
     }
 
     // ************* ControlValueAccessor Implementation **************
     /** set accessor including call the onchange callback */
     public set value(v: number) {
-        console.log('value = ', v);
         if (v !== this._value && !isNaN(v)) {
             this.writeValue(v);
             this.onChangeCallback(v);
