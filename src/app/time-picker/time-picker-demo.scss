@@ -1,0 +1,23 @@
+:host {
+    .flex-layout {
+        display: flex;
+        flex-direction: row;
+
+        >div {
+            flex: 1 1 auto;
+        }
+    }
+
+    .flex-layout-center {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .time-separator {
+        width: 4px;
+        font-size: 14.5px;
+        line-height: 17px;
+        margin: 0 8px;
+    }
+}

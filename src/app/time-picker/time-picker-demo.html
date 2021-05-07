@@ -1,0 +1,43 @@
+<mat-tab-group [selectedIndex]="tabIndex" (selectedTabChange)="tabIndex = $event.index">
+    <mat-tab label="API REFERENCE"></mat-tab>
+    <mat-tab label="EXAMPLES"></mat-tab>
+</mat-tab-group>
+
+<mat-card class="demo-card demo-basic" *ngIf="tabIndex === 0">
+    <deja-markdown [url]="'https://raw.githubusercontent.com/DSI-HUG/dejajs-components/develop/projects/deja-js/component/time-picker/readme.md'"></deja-markdown>
+</mat-card>
+
+<div *ngIf="tabIndex === 1">
+    <mat-card class="demo-card">
+        <mat-toolbar color="primary">Basic Time Picker with ngModel and ngModelChange event</mat-toolbar>
+        <mat-card-content id="complex-wrapper" class="listContainer">
+            <div class="flex-layout">
+                <div>
+                    <h3>With initial hours and minutes (09:05)</h3>
+                    <div class="flex-layout-center">
+                        <deja-time-picker [ngModel]="date1.getHours()" (ngModelChange)="hours1Changed($event)" id="hours1"></deja-time-picker>
+                        <span class="time-separator">:</span>
+                        <deja-time-picker [ngModel]="date1.getMinutes()" id="minutes1" (ngModelChange)="minutes1Changed($event)"></deja-time-picker>
+                    </div>
+                    <p>Selected : {{ hours1 }} : {{ minutes1 }}</p>
+                </div>
+            </div>
+        </mat-card-content>
+    </mat-card>
+    <mat-card class="demo-card">
+        <mat-toolbar color="primary">Time Picker with custom steps</mat-toolbar>
+        <mat-card-content id="complex-wrapper" class="listContainer">
+            <div class="flex-layout">
+                <div>
+                    <h3>Hours disabled and minutes with a step of 5</h3>
+                    <div class="flex-layout-center">
+                        <deja-time-picker class="hours" [ngModel]="date2.getHours()" (ngModelChange)="hours2Changed($event)" id="hours2" disabled></deja-time-picker>
+                        <span class="time-separator">:</span>
+                        <deja-time-picker class="minutes" [ngModel]="date2.getMinutes()" id="minutes2" (ngModelChange)="minutes2Changed($event)" [step]="5"></deja-time-picker>
+                    </div>
+                    <p>Selected : {{ hours2 }} : {{ minutes2 }}</p>
+                </div>
+            </div>
+        </mat-card-content>
+    </mat-card>
+</div>
