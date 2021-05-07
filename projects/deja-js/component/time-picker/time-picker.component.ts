@@ -7,7 +7,7 @@
  */
 
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Input, Optional, Self } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, Optional, Self } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { Destroy } from '@deja-js/component/core';
 import { Subject } from 'rxjs';
@@ -27,7 +27,19 @@ export class DejaTimePickerComponent extends Destroy implements ControlValueAcce
     /** Step of the arrows */
     @Input() public step = 1;
 
-    /** disabled property setter. Can be string or empty so you can use it like : <time-picker disabled></time-picker> */
+    /** Is hours */
+    @Input()
+    public set hours(value: BooleanInput) {
+        this._hours = coerceBooleanProperty(value);
+        this.changeDetectorRef.markForCheck();
+    }
+
+    /** To get hours attribute. */
+    public get hours(): BooleanInput {
+        return this._hours;
+    }
+
+    /** Disabled property setter. Can be string or empty so you can use it like : <time-picker disabled></time-picker> */
     @Input()
     public set disabled(value: BooleanInput) {
         this._disabled = coerceBooleanProperty(value);
@@ -39,8 +51,8 @@ export class DejaTimePickerComponent extends Destroy implements ControlValueAcce
         return this._disabled;
     }
 
-    public hours: boolean;
     public onInputChange$ = new Subject<Event>();
+    private _hours = false;
     private _disabled = false;
     private _value: number;
 
@@ -48,11 +60,8 @@ export class DejaTimePickerComponent extends Destroy implements ControlValueAcce
      * Constructor.
      * Create onkeydown Observable needed inside this control.
      */
-    public constructor(elementRef: ElementRef, private changeDetectorRef: ChangeDetectorRef, @Self() @Optional() public control: NgControl) {
+    public constructor(private changeDetectorRef: ChangeDetectorRef, @Self() @Optional() public control: NgControl) {
         super();
-
-        const host = elementRef.nativeElement as HTMLElement;
-        this.hours = host.classList.contains('hours');
 
         if (this.control) {
             this.control.valueAccessor = this;
