@@ -8,23 +8,13 @@
 
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { timer } from 'rxjs';
-import { delay, take, tap } from 'rxjs/operators';
 
 import { DejaTimePickerModule } from '.';
-import { DejaTimePickerComponent, ICircularRange } from './time-picker.component';
+import { DejaTimePickerComponent } from './time-picker.component';
 
 describe('DejaTimePickerComponent', () => {
     let component: DejaTimePickerComponent;
     let fixture: ComponentFixture<DejaTimePickerComponent>;
-
-    const ranges = [
-        { min: 1, max: 20 }
-    ] as ICircularRange[];
-
-    const rangesWithInterval = [
-        { min: 1, max: 20, labelInterval: 2 }
-    ] as ICircularRange[];
 
     beforeEach(waitForAsync(() => {
         void TestBed.configureTestingModule({
@@ -35,98 +25,46 @@ describe('DejaTimePickerComponent', () => {
 
         fixture = TestBed.createComponent(DejaTimePickerComponent);
         component = fixture.componentInstance;
+        component.value = 30;
+        component.step = 10;
+        fixture.detectChanges();
     }));
 
     it('should create the component', () => {
         void expect(component).toBeTruthy();
     });
 
-    it('should display as many values as asked', () => {
-        component.ranges = ranges;
+    it('should change the value in input', () => {
+        const inputElement = fixture.debugElement.query(By.css('.time-picker > .value-container > input.value')).nativeElement as HTMLInputElement;
+        component.value = 15;
         fixture.detectChanges();
-
-        const values = fixture.debugElement.queryAll(By.css('.circular-picker > .value'));
-        void expect(values.length).toEqual(20);
+        void expect(inputElement.value).toEqual('15');
     });
 
-    it('should display as many values as asked with interval', () => {
-        component.ranges = rangesWithInterval;
+
+    it('should increment by 10', () => {
+        const inputElement = fixture.debugElement.query(By.css('.time-picker > .value-container > input.value')).nativeElement as HTMLInputElement;
+        const incrementElement = fixture.debugElement.query(By.css('.time-picker > .increment')).nativeElement as HTMLElement;
+
+        void expect(getComputedStyle(incrementElement).visibility).toEqual('hidden');
+        void expect(inputElement.value).toEqual('30');
+
+        incrementElement.click();
         fixture.detectChanges();
 
-        const values = fixture.debugElement.queryAll(By.css('.circular-picker > .value'));
-        void expect(values.length).toEqual(10);
+        void expect(inputElement.value).toEqual('40');
     });
 
-    it('should update the cursor position programmatically', () => {
-        component.ranges = ranges;
-        component.value = 3;
+    it('should decrement by 10', () => {
+        const inputElement = fixture.debugElement.query(By.css('.time-picker > .value-container > input.value')).nativeElement as HTMLInputElement;
+        const decrementElement = fixture.debugElement.query(By.css('.time-picker > .decrement')).nativeElement as HTMLElement;
+
+        void expect(getComputedStyle(decrementElement).visibility).toEqual('hidden');
+        void expect(inputElement.value).toEqual('30');
+
+        decrementElement.click();
         fixture.detectChanges();
 
-        const values = fixture.debugElement.query(By.css('.circular-picker > .cursor-container > .cursor > span'));
-        void expect(values.nativeElement.innerHTML).toEqual('3');
-    });
-
-    it('should update the cursor position on mouse event', done => {
-        component.ranges = ranges;
-        component.value = 3;
-        fixture.detectChanges();
-
-        return fixture.whenStable().then(() => {
-            const htmlElement = fixture.debugElement.nativeElement as HTMLElement;
-            const cursorElement = fixture.debugElement.query(By.css('.circular-picker > .cursor-container > .cursor > span')).nativeElement as HTMLSpanElement;
-            const valueElement = fixture.debugElement.query(By.css('.circular-picker > [value="9"]')).nativeElement as HTMLSpanElement;
-
-            const sendMouseEvent = (element: EventTarget, type: string, x: number, y: number, buttons = 0) => {
-                const eventInit = () => ({
-                    bubbles: true,
-                    cancelable: (type !== 'mousemove'),
-                    view: document.defaultView,
-                    altKey: false,
-                    ctrlKey: false,
-                    metaKey: false,
-                    shiftKey: false,
-                    button: 0,
-                    buttons: buttons,
-                    clientX: x,
-                    clientY: y,
-                    relatedTarget: element
-                } as MouseEventInit);
-                const event = new MouseEvent(type, eventInit());
-                element.dispatchEvent(event);
-                fixture.detectChanges();
-            };
-
-            const valueBounds = valueElement.getBoundingClientRect();
-            const cursorBounds = cursorElement.getBoundingClientRect();
-            sendMouseEvent(htmlElement, 'mousemove', 0, 0, 0);
-            sendMouseEvent(cursorElement, 'mousemove', 0, 0, 0);
-            sendMouseEvent(cursorElement, 'mousedown', 0, 0, 1);
-            sendMouseEvent(htmlElement.ownerDocument, 'mousemove', cursorBounds.left + 1, cursorBounds.top + 1, 1);
-
-            timer(150).pipe(
-                take(1),
-                tap(() => {
-                    sendMouseEvent(htmlElement.ownerDocument, 'mousemove', cursorBounds.left + 50, cursorBounds.top + 67, 1);
-                }),
-                delay(150),
-                tap(() => {
-                    sendMouseEvent(htmlElement.ownerDocument, 'mouseup', cursorBounds.left + 50, cursorBounds.top + 67, 0);
-                    void expect(component.value).toEqual(5);
-                }),
-                delay(150),
-                tap(() => {
-                    // Move and click on value element
-                    sendMouseEvent(valueElement, 'mousemove', 0, 0, 0);
-                    sendMouseEvent(valueElement, 'mousedown', 0, 0, 1);
-                }),
-                delay(150),
-                tap(() => {
-                    sendMouseEvent(htmlElement.ownerDocument, 'mousemove', valueBounds.left + 1, valueBounds.top + 1, 0);
-                    void expect(component.value).toEqual(9);
-                }))
-                .subscribe(() => {
-                    done();
-                });
-        });
+        void expect(inputElement.value).toEqual('20');
     });
 });
