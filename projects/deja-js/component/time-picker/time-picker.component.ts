@@ -91,7 +91,6 @@ export class DejaTimePickerComponent extends Destroy implements ControlValueAcce
 
     /** From ControlValueAccessor interface */
     public writeValue(value: number): void {
-        console.log('value = ', value);
         if (value !== this._value) {
             this._value = value;
             this.changeDetectorRef.markForCheck();
