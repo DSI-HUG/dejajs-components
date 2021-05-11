@@ -22,10 +22,10 @@
                     <mat-icon *ngIf="item.items?.length">arrow_drop_down</mat-icon>
                 </span>
                 <ng-container *ngIf="(!item.items || !parentItemTemplate) && (item.items || !itemTemplate)">{{ item.label }}</ng-container>
-                <ng-container class="item-content" *ngIf="item.items && parentItemTemplate">
+                <ng-container *ngIf="item.items && parentItemTemplate">
                     <ng-template [ngTemplateOutlet]="parentItemTemplate" [ngTemplateOutletContext]="{ $implicit: item, query: query, flatindex: index }"></ng-template>
                 </ng-container>
-                <ng-container class="item-content" *ngIf="!item.items && itemTemplate">
+                <ng-container *ngIf="!item.items && itemTemplate">
                     <ng-template [ngTemplateOutlet]="itemTemplate" [ngTemplateOutletContext]="{ $implicit: item, query: query, flatindex: index }"></ng-template>
                 </ng-container>
             </ng-template>
