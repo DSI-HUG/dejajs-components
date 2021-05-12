@@ -32,6 +32,7 @@ $MaterialIcons_FontPath: "~material-icons-font/fonts"; // for CLI project we cha
 @import '../time-picker/time-picker-theme';
 @import '../tooltip/tooltip-theme';
 @import '../tree-list/tree-list-theme';
+@import '../v2/numeric-stepper/numeric-stepper-theme';
 @import '../viewport/viewport-theme';
 /* specials themes */
 @import './material/material';
@@ -66,5 +67,6 @@ $MaterialIcons_FontPath: "~material-icons-font/fonts"; // for CLI project we cha
     @include time-picker-theme($custom-theme);
     @include tooltip-theme($custom-theme);
     @include tree-list-theme($custom-theme);
+    @include v2-numeric-stepper-theme($custom-theme);
     @include viewport-theme($custom-theme);
 }

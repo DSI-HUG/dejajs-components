@@ -26,6 +26,7 @@
 @import '../../component/tree-list/tree-list-theme';
 @import '../../component/viewport/viewport-theme';
 @import '../../component/numeric-stepper/numeric-stepper-theme';
+@import '../../component/v2/numeric-stepper/numeric-stepper-theme';
 @import './menu-theme';
 @import './popup';
 @import '../components/loader';
@@ -56,6 +57,7 @@
     @include time-picker-theme($custom-theme);
     @include tooltip-theme($custom-theme);
     @include tree-list-theme($custom-theme);
+    @include v2-numeric-stepper-theme($custom-theme);
     @include viewport-theme($custom-theme);
     @include deja-popup();
 }
