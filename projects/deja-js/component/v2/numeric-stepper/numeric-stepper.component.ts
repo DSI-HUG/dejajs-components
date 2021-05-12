@@ -7,9 +7,9 @@
  */
 
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, Optional, Self } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, Optional, Self, ViewChild } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
-import { Destroy, KeyCodes } from '@deja-js/component/core';
+import { DejaChildValidatorDirective, Destroy, KeyCodes } from '@deja-js/component/core';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, map, takeUntil } from 'rxjs/operators';
 
@@ -95,6 +95,13 @@ export class DejaNumericStepperComponent extends Destroy implements ControlValue
     /** Increment the value by the step */
     public increment(): void {
         this.value = this.value + this.step;
+    }
+
+    @ViewChild(DejaChildValidatorDirective)
+    protected set inputValidatorDirective(value: DejaChildValidatorDirective) {
+        if (value) {
+            value.parentControl = this.control;
+        }
     }
 
     // ************* ControlValueAccessor Implementation **************

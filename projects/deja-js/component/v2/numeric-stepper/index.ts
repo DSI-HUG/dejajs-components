@@ -10,6 +10,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
+import { DejaChildValidatorModule } from '@deja-js/component/core';
 
 import { DejaNumericStepperComponent } from './numeric-stepper.component';
 
@@ -18,6 +19,7 @@ import { DejaNumericStepperComponent } from './numeric-stepper.component';
     exports: [DejaNumericStepperComponent],
     imports: [
         CommonModule,
+        DejaChildValidatorModule,
         FormsModule,
         MatIconModule
     ]

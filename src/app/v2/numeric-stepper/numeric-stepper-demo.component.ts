@@ -7,6 +7,9 @@
  */
 
 import { Component } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
+
+import { numberValidator } from './validators';
 
 @Component({
     selector: 'deja-numeric-stepper-demo',
@@ -20,4 +23,12 @@ export class DejaNumericStepperDemoComponent {
     public value2 = 9.5;
     public value3 = 5;
     public value4 = 1;
+
+    public numberForm: FormGroup;
+
+    public constructor(private fb: FormBuilder) {
+        this.numberForm = this.fb.group({
+            numberValue: [this.value4, numberValidator]
+        });
+    }
 }

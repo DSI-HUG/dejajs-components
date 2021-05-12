@@ -1,7 +1,7 @@
 <div class="numeric-stepper" #stepper [class.disabled]="disabled">
     <mat-icon class="arrows increment" (click)="increment()">keyboard_arrow_up</mat-icon>
     <div class="value-container">
-        <input type="text" [attr.maxlength]="maxlength" class="value" [value]="numberFormat ? (value | number:numberFormat) : value" (change)="onInputChange$.next($event)" (keydown)="onInputKeydown$.next($event)" [disabled]="disabled" />
+        <input type="text" deja-child-validator [attr.maxlength]="maxlength" class="value" [value]="numberFormat ? (value | number:numberFormat) : value" (change)="onInputChange$.next($event)" (keydown)="onInputKeydown$.next($event)" [disabled]="disabled" />
     </div>
     <mat-icon class="arrows decrement" (click)="decrement()">keyboard_arrow_down</mat-icon>
 </div>

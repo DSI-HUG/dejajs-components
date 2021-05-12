@@ -31,6 +31,12 @@ Ensuite utiliser le composant comme ceci dans votre template :
             <td>Pour désactiver le numeric stepper</td>
         </tr>
         <tr>
+            <td>formControlName</td>
+            <td>string</td>
+            <td></td>
+            <td>N'est pas une propriété de deja-select mais une directive d'@angular/form. Permets de binder une FormControl au select. **Le type de la valeur passé comme input détermine le type rendu en output: si en première instance on passe null, deja-select retourne un objet générique.**</td>
+        </tr>
+        <tr>
             <td>maxlength</td>
             <td>number</td>
             <td>null</td>
