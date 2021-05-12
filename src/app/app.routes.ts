@@ -39,6 +39,7 @@ const routes: Routes = [
     { path: 'tiles', loadChildren: () => import('./tiles/tiles-demo.module').then(m => m.DejaTilesDemoModule), data: { title: 'Tiles' } },
     { path: 'time-picker', loadChildren: () => import('./time-picker/time-picker-demo.module').then(m => m.DejaTimePickerDemoModule), data: { title: 'Time Picker' } },
     { path: 'tree-list', loadChildren: () => import('./tree-list/tree-list-demo.module').then(m => m.DejaTreeListDemoModule), data: { title: 'Tree List' } },
+    { path: 'v2-numeric-stepper', loadChildren: () => import('./v2/numeric-stepper/numeric-stepper-demo.module').then(m => m.DejaNumericStepperDemoModule), data: { title: 'Numeric Stepper V2' } },
     { path: 'viewport', loadChildren: () => import('./viewport/viewport-demo.module').then(m => m.DejaViewPortDemoModule), data: { title: 'Viewport' } },
     { path: '**', redirectTo: 'home', pathMatch: 'prefix' }
 ];

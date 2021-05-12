@@ -1,0 +1,12 @@
+:host mat-card mat-card-content {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-around;
+
+    >div {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+}

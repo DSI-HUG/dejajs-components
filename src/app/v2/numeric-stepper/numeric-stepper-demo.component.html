@@ -1,0 +1,32 @@
+<mat-tab-group [selectedIndex]="tabIndex" (selectedTabChange)="tabIndex = $event.index">
+    <mat-tab label="API REFERENCE"></mat-tab>
+    <mat-tab label="EXAMPLES"></mat-tab>
+</mat-tab-group>
+
+<mat-card class="demo-card demo-basic" *ngIf="tabIndex === 0">
+    <deja-markdown [url]="'https://raw.githubusercontent.com/DSI-HUG/dejajs-components/develop/projects/deja-js/component/v2/numeric-stepper/readme.md'"></deja-markdown>
+</mat-card>
+
+<div *ngIf="tabIndex === 1">
+    <mat-card class="demo-card">
+        <mat-toolbar color="primary">Numeric Stepper</mat-toolbar>
+        <mat-card-content>
+            <div>
+                <h3>With step of 20</h3>
+                <deja-numeric-stepper [(ngModel)]="value1" [maxlength]="3" [step]="20"></deja-numeric-stepper>
+            </div>
+            <div>
+                <h3>With a format of 2 decimals</h3>
+                <deja-numeric-stepper [(ngModel)]="value2" [maxlength]="3" numberFormat="1.2-2" [step]="0.5"></deja-numeric-stepper>
+            </div>
+            <div>
+                <h3>With a format of 2 digits min</h3>
+                <deja-numeric-stepper [(ngModel)]="value3" [maxlength]="2" numberFormat="2."></deja-numeric-stepper>
+            </div>
+            <div>
+                <h3>Disabled</h3>
+                <deja-numeric-stepper [ngModel]="42" disabled></deja-numeric-stepper>
+            </div>
+        </mat-card-content>
+    </mat-card>
+</div>
