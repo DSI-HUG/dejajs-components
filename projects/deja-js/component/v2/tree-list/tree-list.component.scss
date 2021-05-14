@@ -101,6 +101,10 @@ tree-list {
                     transition-timing-function: ease-out;
                 }
 
+                &:not(.unselectable):hover {
+                    cursor: pointer;
+                }
+
                 [expandbtn] {
                     width: 24px;
                     cursor: pointer;
