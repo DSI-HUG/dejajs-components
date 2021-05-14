@@ -6,9 +6,10 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, Optional, Self, ViewChild } from '@angular/core';
+import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostBinding, Input, OnDestroy, Optional, Self, ViewChild } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
+import { MatFormFieldControl } from '@angular/material/form-field';
 import { DejaChildValidatorDirective, Destroy, KeyCodes } from '@deja-js/component/core';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, map, takeUntil } from 'rxjs/operators';
@@ -22,7 +23,16 @@ import { debounceTime, distinctUntilChanged, filter, map, takeUntil } from 'rxjs
     styleUrls: ['./numeric-stepper.component.scss'],
     templateUrl: './numeric-stepper.component.html'
 })
-export class DejaNumericStepperComponent extends Destroy implements ControlValueAccessor {
+export class DejaNumericStepperComponent extends Destroy implements ControlValueAccessor, MatFormFieldControl<number>, OnDestroy {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    public static nextId = 0;
+
+    @HostBinding('attr.aria-describedby') public describedBy = '';
+    @HostBinding() public id = `deja-numeric-stepper-${DejaNumericStepperComponent.nextId++}`;
+    @HostBinding('class.floating')
+    public get shouldLabelFloat(): boolean {
+        return this.focused || !this.empty;
+    }
 
     /** Max length of the number input */
     @Input() public maxlength: number;
@@ -30,35 +40,69 @@ export class DejaNumericStepperComponent extends Destroy implements ControlValue
     /** The number format to apply to the displayed input value. For more info see https://angular.io/api/common/DecimalPipe */
     @Input() public numberFormat: string;
 
+    @Input()
+    public get required(): boolean {
+        return this._required;
+    }
+
+    public set required(req: boolean) {
+        this._required = coerceBooleanProperty(req);
+        this.stateChanges.next();
+    }
+
     /** Step of the arrows */
     @Input() public step = 1;
 
     /** Disabled property setter. Can be string or empty so you can use it like : <time-picker disabled></time-picker> */
     @Input()
-    public set disabled(value: BooleanInput) {
+    public set disabled(value: boolean) {
         this._disabled = coerceBooleanProperty(value);
         this.changeDetectorRef.markForCheck();
     }
 
     /** To get disabled attribute. */
-    public get disabled(): BooleanInput {
+    public get disabled(): boolean {
         return this._disabled;
     }
 
+    public get empty(): boolean {
+        return !this._value;
+    }
+
+    /** Placeholder of the input */
+    @Input() public get placeholder(): string {
+        return this._placeholder;
+    }
+
+    public set placeholder(plh: string) {
+        this._placeholder = plh;
+        this.stateChanges.next();
+    }
+
+    public errorState = false;
+    public focused = false;
     public onInputChange$ = new Subject<Event>();
     public onInputKeydown$ = new Subject<KeyboardEvent>();
+    // eslint-disable-next-line rxjs/finnish
+    public stateChanges = new Subject<void>();
     private _disabled = false;
+    private _placeholder: string;
+    private _required = false;
     private _value: number;
 
     /**
      * Constructor.
      * Create onchange and onkeydown Observable needed inside this control.
      */
-    public constructor(private changeDetectorRef: ChangeDetectorRef, @Self() @Optional() public control: NgControl) {
+    public constructor(
+        private changeDetectorRef: ChangeDetectorRef,
+        private elementRef: ElementRef,
+        @Self() @Optional() public ngControl: NgControl
+    ) {
         super();
 
-        if (this.control) {
-            this.control.valueAccessor = this;
+        if (this.ngControl) {
+            this.ngControl.valueAccessor = this;
         }
 
         this.onInputChange$.pipe(
@@ -100,7 +144,7 @@ export class DejaNumericStepperComponent extends Destroy implements ControlValue
     @ViewChild(DejaChildValidatorDirective)
     protected set inputValidatorDirective(value: DejaChildValidatorDirective) {
         if (value) {
-            value.parentControl = this.control;
+            value.parentControl = this.ngControl;
         }
     }
 
@@ -110,6 +154,7 @@ export class DejaNumericStepperComponent extends Destroy implements ControlValue
         if (v !== this._value && !isNaN(v)) {
             this.writeValue(v);
             this.onChangeCallback(v);
+            this.stateChanges.next();
         }
     }
 
@@ -141,6 +186,20 @@ export class DejaNumericStepperComponent extends Destroy implements ControlValue
     }
     // ************* End of ControlValueAccessor Implementation **************
 
+    // eslint-disable-next-line @angular-eslint/no-conflicting-lifecycle
+    public ngOnDestroy(): void {
+        this.stateChanges.complete();
+    }
+
+    public onContainerClick(event: MouseEvent): void {
+        if ((event.target as Element).tagName.toLowerCase() !== 'input') {
+            this.elementRef.nativeElement.querySelector('input').focus();
+        }
+    }
+
+    public setDescribedByIds(ids: string[]): void {
+        this.describedBy = ids.join(' ');
+    }
 
     protected onChangeCallback = (_a: unknown): void => undefined;
     protected onTouchedCallback = (): void => undefined;
