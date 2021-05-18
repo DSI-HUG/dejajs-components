@@ -7,6 +7,7 @@
  */
 
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 
 import { DejaTimePickerModule } from '.';
 import { DejaTimePickerComponent } from './time-picker.component';
@@ -30,5 +31,50 @@ describe('DejaTimePickerComponent', () => {
 
     it('should create the component', () => {
         void expect(component).toBeTruthy();
+    });
+
+    it('should display a specific date', () => {
+        const hoursElement = fixture.debugElement.query(By.css('.time-picker > deja-numeric-stepper.hours > .numeric-stepper > .value-container > input.value')).nativeElement as HTMLInputElement;
+        const minutesElement = fixture.debugElement.query(By.css('.time-picker > deja-numeric-stepper.minutes > .numeric-stepper > .value-container > input.value')).nativeElement as HTMLInputElement;
+
+        fixture.detectChanges();
+
+        void expect(hoursElement.value).toEqual('09');
+        void expect(minutesElement.value).toEqual('55');
+    });
+
+    it('should increment the hours', () => {
+        const hoursIncrementArrowElement = fixture.debugElement.query(By.css('.time-picker > deja-numeric-stepper.hours > .numeric-stepper > .arrows.increment')).nativeElement as HTMLElement;
+        const hoursElement = fixture.debugElement.query(By.css('.time-picker > deja-numeric-stepper.hours > .numeric-stepper > .value-container > input.value')).nativeElement as HTMLInputElement;
+        const minutesElement = fixture.debugElement.query(By.css('.time-picker > deja-numeric-stepper.minutes > .numeric-stepper > .value-container > input.value')).nativeElement as HTMLInputElement;
+
+        hoursIncrementArrowElement.click();
+        fixture.detectChanges();
+
+        void expect(hoursElement.value).toEqual('10');
+        void expect(minutesElement.value).toEqual('55');
+    });
+
+    it('should increment the minutes', () => {
+        const minutesIncrementArrowElement = fixture.debugElement.query(By.css('.time-picker > deja-numeric-stepper.minutes > .numeric-stepper > .arrows.increment')).nativeElement as HTMLElement;
+        const hoursElement = fixture.debugElement.query(By.css('.time-picker > deja-numeric-stepper.hours > .numeric-stepper > .value-container > input.value')).nativeElement as HTMLInputElement;
+        const minutesElement = fixture.debugElement.query(By.css('.time-picker > deja-numeric-stepper.minutes > .numeric-stepper > .value-container > input.value')).nativeElement as HTMLInputElement;
+
+        minutesIncrementArrowElement.click();
+        fixture.detectChanges();
+
+        void expect(hoursElement.value).toEqual('09');
+        void expect(minutesElement.value).toEqual('56');
+    });
+
+    it('should be disabled', () => {
+        component.disabled = true;
+        fixture.detectChanges();
+
+        const hoursElement = fixture.debugElement.query(By.css('.time-picker > deja-numeric-stepper.hours > .numeric-stepper > .value-container > input.value')).nativeElement as HTMLInputElement;
+        const minutesElement = fixture.debugElement.query(By.css('.time-picker > deja-numeric-stepper.minutes > .numeric-stepper > .value-container > input.value')).nativeElement as HTMLInputElement;
+
+        void expect(hoursElement.getAttribute('disabled')).toEqual('');
+        void expect(minutesElement.getAttribute('disabled')).toEqual('');
     });
 });
