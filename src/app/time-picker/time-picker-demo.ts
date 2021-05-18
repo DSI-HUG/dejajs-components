@@ -6,44 +6,108 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewEncapsulation } from '@angular/core';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+import { MatDatepickerInputEvent } from '@angular/material/datepicker';
+import { MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter } from '@angular/material-moment-adapter';
+import { TimePickerDisplayModeEnum } from 'projects/deja-js/component/time-picker';
+
+export const myFormats = {
+    parse: {
+        dateInput: 'DD/MM/YYYY HH:mm'
+    },
+    display: {
+        dateInput: 'DD/MM/YYYY HH:mm',
+        monthYearLabel: 'MMM YYYY',
+        dateA11yLabel: 'DD/MM/YYYY HH:mm',
+        monthYearA11yLabel: 'MMMM YYYY'
+    }
+};
+
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'deja-time-picker-demo',
     styleUrls: ['./time-picker-demo.scss'],
-    templateUrl: './time-picker-demo.html'
+    templateUrl: './time-picker-demo.html',
+    encapsulation: ViewEncapsulation.None,
+    providers: [
+        {
+            provide: DateAdapter,
+            useClass: MomentDateAdapter,
+            deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS]
+        },
+        { provide: MAT_DATE_FORMATS, useValue: myFormats }
+    ]
 })
 export class DejaTimePickerDemoComponent {
     public tabIndex = 1;
 
+    public modeFullTime = TimePickerDisplayModeEnum.FULL_TIME;
+    public modeFullTimeWithHoursDisabled = TimePickerDisplayModeEnum.FULL_TIME_WITH_HOURS_DISABLED;
+    public modeFullTimeWithMinutesDisabled = TimePickerDisplayModeEnum.FULL_TIME_WITH_MINUTES_DISABLED;
+    public modeHoursOnly = TimePickerDisplayModeEnum.HOURS_ONLY;
+    public modeMinutesOnly = TimePickerDisplayModeEnum.MINUTES_ONLY;
+
+    public date0 = new Date();
     public date1 = new Date(2021, 4, 6, 9, 5, 0);
-    public hours1 = this.date1.getHours();
-    public minutes1 = this.date1.getMinutes();
-
     public date2 = new Date();
-    public hours2 = this.date2.getHours();
-    public minutes2 = this.date2.getMinutes();
+    public date3 = new Date();
+    public date4 = new Date();
+    public date5 = new Date();
+    public date6 = new Date();
+    public disable6 = true;
 
-    public hours1Changed(hours1: number): void {
-        this.date1.setHours(hours1);
-        this.hours1 = this.date1.getHours();
+    public constructor(private changeDetectorRef: ChangeDetectorRef) {}
+
+    public matDateChange(event: MatDatepickerInputEvent<Date>): void {
+        const date = event.value;
+        const clone = new Date(date);
+        clone.setHours(this.date0.getHours());
+        clone.setMinutes(this.date0.getMinutes());
+        this.date0 = clone;
+        this.changeDetectorRef.markForCheck();
     }
 
-    public minutes1Changed(minutes1: number): void {
-        this.date1.setMinutes(minutes1);
-        this.minutes1 = this.date1.getMinutes();
-        this.hours1 = this.date1.getHours();
+    public date0Changed(date: Date): void {
+        const clone = new Date(date.getTime());
+        this.date0 = clone;
+        this.changeDetectorRef.markForCheck();
     }
 
-    public hours2Changed(hours2: number): void {
-        this.date2.setHours(hours2);
-        this.hours2 = this.date2.getHours();
+    public date1Changed(date: Date): void {
+        const clone = new Date(date.getTime());
+        this.date1 = clone;
+        this.changeDetectorRef.markForCheck();
     }
 
-    public minutes2Changed(minutes2: number): void {
-        this.date2.setMinutes(minutes2);
-        this.hours2 = this.date2.getHours();
-        this.minutes2 = this.date2.getMinutes();
+    public date2Changed(date: Date): void {
+        const clone = new Date(date.getTime());
+        this.date2 = clone;
+        this.changeDetectorRef.markForCheck();
+    }
+
+    public date3Changed(date: Date): void {
+        const clone = new Date(date.getTime());
+        this.date3 = clone;
+        this.changeDetectorRef.markForCheck();
+    }
+
+    public date4Changed(date: Date): void {
+        const clone = new Date(date.getTime());
+        this.date4 = clone;
+        this.changeDetectorRef.markForCheck();
+    }
+
+    public date5Changed(date: Date): void {
+        const clone = new Date(date.getTime());
+        this.date5 = clone;
+        this.changeDetectorRef.markForCheck();
+    }
+
+    public date6Changed(date: Date): void {
+        const clone = new Date(date.getTime());
+        this.date6 = clone;
+        this.changeDetectorRef.markForCheck();
     }
 }

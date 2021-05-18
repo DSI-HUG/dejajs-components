@@ -9,7 +9,13 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { DejaTimePickerModule } from '@deja-js/component/time-picker';
@@ -18,13 +24,20 @@ import { DejaMarkdownModule } from '../../component/markdown/index';
 import { DejaTimePickerDemoComponent } from './time-picker-demo';
 import { routing } from './time-picker-demo.routes';
 
+
 @NgModule({
     declarations: [DejaTimePickerDemoComponent],
     exports: [DejaTimePickerDemoComponent],
     imports: [
         CommonModule,
         FormsModule,
+        MatButtonModule,
         MatCardModule,
+        MatCheckboxModule,
+        MatDatepickerModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatNativeDateModule,
         MatTabsModule,
         MatToolbarModule,
         DejaTimePickerModule,
