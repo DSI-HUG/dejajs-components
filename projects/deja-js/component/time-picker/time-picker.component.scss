@@ -1,84 +1,18 @@
 :host {
-    -webkit-touch-callout: none;
-    /* iOS Safari */
-    -webkit-user-select: none;
-    /* Chrome/Safari/Opera */
-    -khtml-user-select: none;
-    /* Konqueror */
-    -moz-user-select: none;
-    /* Firefox */
-    -ms-user-select: none;
-    /* Internet Explorer/Edge */
-    user-select: none;
-    /* Non-prefixed version, currently
-       not supported by any browser */
     position: relative;
     width: fit-content;
 
-    .time-picker:hover:not(.disabled) {
-        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-
-        .value-container .value {
-            border: 1px solid transparent;
-        }
-
-        .arrows {
-            visibility: visible;
-            opacity: 1;
-        }
-    }
-
     .time-picker {
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
         align-items: center;
         justify-content: center;
-        border-radius: 4px;
-        width: fit-content;
-        transition: box-shadow 0.15s ease-out;
+    }
 
-        .arrows {
-            visibility: hidden;
-            opacity: 0;
-            cursor: pointer;
-            transition: all 0.15s ease-out;
-            padding: 4px;
-        }
-
-        .value-container {
-            height: 60px;
-            width: 48px;
-
-            /* To remove the input arrows
-               Chrome, Safari, Edge, Opera */
-            .value::-webkit-outer-spin-button,
-            .value::-webkit-inner-spin-button {
-                -webkit-appearance: none;
-                margin: 0;
-            }
-
-            /* Firefox */
-            .value[type=number] {
-                -moz-appearance: textfield;
-            }
-
-            .value:focus {
-                outline: none;
-            }
-
-            .value {
-                width: 100%;
-                height: 100%;
-                font-size: 14px;
-                line-height: 20px;
-                text-align: center;
-                color: #424242;
-                padding: 0 !important;
-                border: 1px solid #E0E0E0;
-                border-radius: 4px;
-                box-sizing: border-box;
-                transition: border 0.15s ease-out;
-            }
-        }
+    .time-separator {
+        width: 4px;
+        font-size: 14.5px;
+        line-height: 17px;
+        margin: 0 8px;
     }
 }

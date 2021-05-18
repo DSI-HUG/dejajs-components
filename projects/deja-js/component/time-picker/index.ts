@@ -10,6 +10,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
+import { DejaNumericStepperModule } from '@deja-js/component/v2/numeric-stepper';
 
 import { DejaTimePickerComponent } from './time-picker.component';
 
@@ -18,6 +19,7 @@ import { DejaTimePickerComponent } from './time-picker.component';
     exports: [DejaTimePickerComponent],
     imports: [
         CommonModule,
+        DejaNumericStepperModule,
         MatIconModule,
         FormsModule
     ]

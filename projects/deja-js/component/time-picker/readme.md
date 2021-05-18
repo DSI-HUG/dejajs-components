@@ -1,5 +1,5 @@
 # Time Picker
-Composant pour séléctionner un nombre en écrivant dans l'input ou en cliquant sur les flèches. Implémente NgModel.  
+Composant pour sélectionner une heure en écrivant dans les input ou en cliquant sur les flèches. Implémente NgModel.  
 
 ### Utilisation
 > Ne pas oublier d'importer le `DejaTimePickerModule` dans les `imports` de votre module concerné !
@@ -28,19 +28,31 @@ Ensuite utiliser le composant comme ceci dans votre template :
             <td>disabled</td>
             <td>boolean</td>
             <td>false</td>
-            <td>Pour désactiver le time picker</td>
+            <td>Pour désactiver tout le time picker</td>
         </tr>
         <tr>
-            <td>hours</td>
-            <td>boolean</td>
-            <td>false</td>
-            <td>Pour indiquer 00 au lieu de 24 lorsque ce sont des heures</td>
+            <td>mode</td>
+            <td>TimePickerDisplayModeEnum *</td>
+            <td>TimePickerDisplayModeEnum.FULL_TIME</td>
+            <td>Mode d'affichage du composant permettant d'afficher ou de désactiver les heures ou les minutes</td>
         </tr>
         <tr>
             <td>step</td>
             <td>number</td>
             <td>1</td>
-            <td>Le pas à utiliser lors du click sur les flèches</td>
+            <td>Le pas des minutes lors du click sur les flèches</td>
         </tr>
     </tbody>
 </table>
+
+### Notes : 
+`*` : TimePickerDisplayModeEnum : 
+```javascript
+enum TimePickerDisplayModeEnum {
+    FULL_TIME,
+    FULL_TIME_WITH_HOURS_DISABLED,
+    FULL_TIME_WITH_MINUTES_DISABLED,
+    HOURS_ONLY,
+    MINUTES_ONLY,
+}
+```

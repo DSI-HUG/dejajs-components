@@ -1,7 +1,5 @@
-<div class="time-picker" #picker [class.disabled]="disabled">
-    <mat-icon class="arrows increment" (click)="value = value + step">keyboard_arrow_up</mat-icon>
-    <div class="value-container">
-        <input type="text" maxlength="2" class="value" [value]="hours && value === 24 ? '00' : ('0' + value).slice(-2)" (change)="onInputChange$.next($event)" [disabled]="disabled" />
-    </div>
-    <mat-icon class="arrows decrement" (click)="value = value - step">keyboard_arrow_down</mat-icon>
+<div class="time-picker">
+    <deja-numeric-stepper class="hours" [ngModel]="value?.getHours()" (ngModelChange)="hoursChanged($event)" [style.display]="mode === modeMinutesOnly ? 'none' : 'block'" [disabled]="disabled || hoursDisabled" [maxlength]="2" numberFormat="2."></deja-numeric-stepper>
+    <span class="time-separator" [style.display]="mode === modeMinutesOnly || mode === modeHoursOnly ? 'none' : 'block'">:</span>
+    <deja-numeric-stepper class="minutes" [ngModel]="value?.getMinutes()" (ngModelChange)="minutesChanged($event)" [style.display]="mode === modeHoursOnly ? 'none' : 'block'" [disabled]="disabled || minutesDisabled" [maxlength]="2" numberFormat="2." [step]="step"></deja-numeric-stepper>
 </div>

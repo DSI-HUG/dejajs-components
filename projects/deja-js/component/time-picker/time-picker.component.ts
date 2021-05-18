@@ -6,12 +6,18 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, Optional, Self } from '@angular/core';
+import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, Optional, Self } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { Destroy } from '@deja-js/component/core';
-import { Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, map, takeUntil } from 'rxjs/operators';
+
+export enum TimePickerDisplayModeEnum {
+    FULL_TIME,
+    FULL_TIME_WITH_HOURS_DISABLED,
+    FULL_TIME_WITH_MINUTES_DISABLED,
+    HOURS_ONLY,
+    MINUTES_ONLY,
+}
 
 /**
  * Time-picker component for Angular
@@ -22,77 +28,84 @@ import { debounceTime, distinctUntilChanged, map, takeUntil } from 'rxjs/operato
     styleUrls: ['./time-picker.component.scss'],
     templateUrl: './time-picker.component.html'
 })
-export class DejaTimePickerComponent extends Destroy implements ControlValueAccessor {
+export class DejaTimePickerComponent extends Destroy implements ControlValueAccessor, OnInit {
+
+    /** Display mode for the time-picker */
+    @Input() public mode = TimePickerDisplayModeEnum.FULL_TIME;
 
     /** Step of the arrows */
     @Input() public step = 1;
 
-    /** Is hours */
-    @Input()
-    public set hours(value: BooleanInput) {
-        this._hours = coerceBooleanProperty(value);
-        this.changeDetectorRef.markForCheck();
-    }
-
-    /** To get hours attribute. */
-    public get hours(): BooleanInput {
-        return this._hours;
-    }
-
     /** Disabled property setter. Can be string or empty so you can use it like : <time-picker disabled></time-picker> */
     @Input()
-    public set disabled(value: BooleanInput) {
+    public set disabled(value: boolean) {
         this._disabled = coerceBooleanProperty(value);
         this.changeDetectorRef.markForCheck();
     }
 
     /** To get disabled attribute. */
-    public get disabled(): BooleanInput {
+    public get disabled(): boolean {
         return this._disabled;
     }
 
-    public onInputChange$ = new Subject<Event>();
-    private _hours = false;
+    public hoursDisabled = false;
+    public minutesDisabled = false;
+    public modeMinutesOnly = TimePickerDisplayModeEnum.MINUTES_ONLY;
+    public modeHoursOnly = TimePickerDisplayModeEnum.HOURS_ONLY;
     private _disabled = false;
-    private _value: number;
+    private _value: Date;
 
-    /**
-     * Constructor.
-     * Create onkeydown Observable needed inside this control.
-     */
-    public constructor(private changeDetectorRef: ChangeDetectorRef, @Self() @Optional() public control: NgControl) {
+    public constructor(
+        private changeDetectorRef: ChangeDetectorRef,
+        @Self() @Optional() public control: NgControl
+    ) {
         super();
 
         if (this.control) {
             this.control.valueAccessor = this;
         }
+    }
 
-        this.onInputChange$.pipe(
-            debounceTime(1),
-            distinctUntilChanged(),
-            map(event => parseInt((event.target as HTMLInputElement).value, 10)),
-            takeUntil(this.destroyed$)
-        ).subscribe(v => this.value = v);
+    public ngOnInit(): void {
+        this.hoursDisabled = this.mode === TimePickerDisplayModeEnum.FULL_TIME_WITH_HOURS_DISABLED;
+        this.minutesDisabled = this.mode === TimePickerDisplayModeEnum.FULL_TIME_WITH_MINUTES_DISABLED;
+    }
+
+    public hoursChanged(hours: number): void {
+        const clone = new Date(this.value.getTime());
+        clone.setHours(hours);
+
+        this.value = clone;
+        this.changeDetectorRef.markForCheck();
+    }
+
+    public minutesChanged(minutes: number): void {
+        const clone = new Date(this.value.getTime());
+        clone.setMinutes(minutes);
+
+        this.value = clone;
+        this.changeDetectorRef.markForCheck();
     }
 
     // ************* ControlValueAccessor Implementation **************
     /** set accessor including call the onchange callback */
-    public set value(v: number) {
-        if (v !== this._value && !isNaN(v)) {
+    public set value(v: Date) {
+        if (v !== this._value) {
             this.writeValue(v);
             this.onChangeCallback(v);
         }
     }
 
     /** get accessor */
-    public get value(): number {
+    public get value(): Date {
         return this._value;
     }
 
     /** From ControlValueAccessor interface */
-    public writeValue(value: number): void {
-        if (value !== this._value) {
-            this._value = value;
+    public writeValue(value: Date): void {
+        if (value && value !== this._value) {
+            const clone = new Date(value.getTime());
+            this._value = clone;
             this.changeDetectorRef.markForCheck();
         }
     }
