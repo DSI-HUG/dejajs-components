@@ -1,3 +1,11 @@
+# [11.10.0](https://github.com/DSI-HUG/dejajs-components/compare/v11.9.0...v11.10.0) (2021-05-18)
+
+
+### Bug Fixes
+
+* **component:** increase deprecated components log level to warn ([ddfd319](https://github.com/DSI-HUG/dejajs-components/commit/ddfd31956c104e872764dc0542af1927d286c058))
+* **tree-list.component.html:** add pointer to item ([9d6a964](https://github.com/DSI-HUG/dejajs-components/commit/9d6a96451de330aded44b038881002e5e46841d7))
+
 ## [11.9.1-next.2](https://github.com/DSI-HUG/dejajs-components/compare/v11.9.1-next.1...v11.9.1-next.2) (2021-05-14)
 
 
