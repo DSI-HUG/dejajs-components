@@ -30,6 +30,9 @@
     <deja-message-box type="primary" title="Title" [actions]="closeAction">
         Du texte dans la <b>message box</b>
     </deja-message-box>
+    <deja-message-box type="primary" title="Title" horizontal [actions]="closeAction">
+        Du texte dans la <b>message box</b>
+    </deja-message-box>
 
     <deja-tooltip name="test-tt" *ngIf="tooltipVisible" (hide)="tooltipVisible = false">
         <ng-template #tooltipTemplate let-model>
@@ -68,5 +71,31 @@
 
     <deja-message-box horizontal>
         Un message horizontal sans type ni titre
+    </deja-message-box>
+
+    <deja-message-box type="danger" horizontal light [actions]="closeAction">
+        Un message horizontal sans type ni titre
+    </deja-message-box>
+    <deja-message-box type="success" horizontal light>
+        Un message horizontal sans type ni titre
+    </deja-message-box>
+    <deja-message-box type="warn" horizontal light>
+        Un message horizontal sans type ni titre
+    </deja-message-box>
+    <deja-message-box type="info" horizontal light>
+        Un message horizontal sans type ni titre
+    </deja-message-box>
+
+    <deja-message-box type="danger" title="Title" [actions]="actions" light>
+        <span deja-tooltip="test-tt" [tooltip-model]="toolTipModel" (tooltip-show)="tooltipVisible = true">Un message "success"</span>
+    </deja-message-box>
+    <deja-message-box type="success" title="Title" [actions]="actions" light>
+        <span deja-tooltip="test-tt" [tooltip-model]="toolTipModel" (tooltip-show)="tooltipVisible = true">Un message "success"</span>
+    </deja-message-box>
+    <deja-message-box type="warn" title="Title" [actions]="actions" light>
+        <span deja-tooltip="test-tt" [tooltip-model]="toolTipModel" (tooltip-show)="tooltipVisible = true">Un message "success"</span>
+    </deja-message-box>
+    <deja-message-box type="info" title="Title" [actions]="actions" light>
+        <span deja-tooltip="test-tt" [tooltip-model]="toolTipModel" (tooltip-show)="tooltipVisible = true">Un message "success"</span>
     </deja-message-box>
 </div>

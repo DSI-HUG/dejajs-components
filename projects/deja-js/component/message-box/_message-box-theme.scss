@@ -1,4 +1,40 @@
-@import '~@angular/material/theming';
+@mixin messageBoxStandard($palette) {
+    background-color: mat-color($palette, 500);
+    color: mat-contrast($palette, 900);
+    box-shadow: 0 4px 20px 0 rgba(0, 0, 0, .14), 0 7px 10px -5px rgba(mat-color($palette), .4);
+
+    mat-icon {
+        color: mat-contrast($palette, 900);
+    }
+
+    >.mat-card-actions {
+        background-color: mat-color($palette, 700);
+    }
+
+    button {
+        background-color: transparent;
+    }
+}
+
+
+@mixin messageBoxLight($palette) {
+    background-color: mat-color($palette, 50);
+    color: mat-color($palette, 700);
+    box-shadow: none;
+
+    mat-icon {
+        color: mat-color($palette, 700);
+    }
+
+    >.mat-card-actions {
+        color: mat-color($palette, 900);
+        background-color: mat-color($palette, 100);
+
+        button {
+            background-color: transparent;
+        }
+    }
+}
 
 @mixin message-box-theme($theme) {
     $primary: map-get($theme, primary);
@@ -10,70 +46,65 @@
 
 
     deja-message-box {
-        background-color: mat-color($background, card);
+        background-color: transparent;
+        overflow: hidden;
+        border-radius: 3px;
 
-        &:not([horizontal]) {
+        &[horizontal] {
             #msgbox {
+
                 &.info,
-                &.primary {
-                    .mat-card-actions {
-                        background-color: mat-color($primary, 700);
-                    }
-                }
-
-                &.danger {
-                    .mat-card-actions {
-                        background-color: mat-color($warn, 700);
-                    }
-                }
-
-                &.success {
-                    .mat-card-actions {
-                        background-color: mat-color($success, 700);
-                    }
-                }
-
+                &.primary,
+                &.danger,
+                &.success,
                 &.warn {
                     .mat-card-actions {
-                        background-color: mat-color($warning, 700);
+                        background-color: transparent !important;
                     }
                 }
             }
         }
 
+        &[light] {
+            #msgbox {
+
+                &.info,
+                &.primary {
+                    @include messageBoxLight($primary);
+                }
+
+                &.danger {
+                    @include messageBoxLight($warn);
+                }
+
+                &.warn {
+                    @include messageBoxLight($warning);
+                }
+
+                &.success {
+                    @include messageBoxLight($success);
+                }
+            }
+        }
+
+
         #msgbox {
 
             &.info,
-            &.primary,
-            &.danger,
-            &.success,
-            &.warn {
-                color: mat-color($background, card);
-
-                mat-icon {
-                    color: mat-color($background, card);
-                }
-            }
-
-            &.info,
             &.primary {
-                background-color: mat-color($primary);
-                box-shadow: 0 4px 20px 0 rgba(0,0,0,.14), 0 7px 10px -5px rgba(mat-color($primary), .4);
+                @include messageBoxStandard($primary);
             }
 
             &.danger {
-                background-color: mat-color($warn);
-                box-shadow: 0 4px 20px 0 rgba(0,0,0,.14), 0 7px 10px -5px rgba(mat-color($warn), .4);
+                @include messageBoxStandard($warn);
             }
 
             &.warn {
-                background-color: mat-color($warning);
-                box-shadow: 0 4px 20px 0 rgba(0,0,0,.14), 0 7px 10px -5px rgba(mat-color($warning), .4);
+                @include messageBoxStandard($warning);
             }
 
             &.success {
-                background-color: mat-color($success);
-                box-shadow: 0 4px 20px 0 rgba(0,0,0,.14), 0 7px 10px -5px rgba(mat-color($success), .4);
+                @include messageBoxStandard($success);
             }
 
             >.mat-card-actions {
