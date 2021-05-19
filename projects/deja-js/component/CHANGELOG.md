@@ -1,3 +1,10 @@
+# [10.9.0-develop.1](https://github.com/DSI-HUG/dejajs-components/compare/v10.8.0...v10.9.0-develop.1) (2021-05-19)
+
+
+### Features
+
+* message-box now have a light mode ([93472b7](https://github.com/DSI-HUG/dejajs-components/commit/93472b7d79c552e252649a2a25abedc7ad1ef44a))
+
 # [10.8.0](https://github.com/DSI-HUG/dejajs-components/compare/v10.7.0...v10.8.0) (2021-04-12)
 
 
