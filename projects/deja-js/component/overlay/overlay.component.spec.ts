@@ -106,6 +106,28 @@ describe('DejaOverlayComponent', () => {
         void expect(cdkBackdropContainerEl.classList.contains('cdk-overlay-opaque-backdrop')).toBeTruthy();
     });
 
+    it('should have overlay custom class when is visible', () => {
+        comp.overlayContainerClass = 'class1 class2';
+        comp.isVisible = true;
+        fixture.detectChanges();
+        const cdkOverlayContainerEl = document.querySelector('.cdk-overlay-container');
+        void expect(cdkOverlayContainerEl.classList.contains('deja-overlay-container')).toBeTruthy();
+        void expect(cdkOverlayContainerEl.classList.contains('class1')).toBeTruthy();
+        void expect(cdkOverlayContainerEl.classList.contains('class2')).toBeTruthy();
+    });
+
+    it('should not have overlay custom class when is not visible', () => {
+        comp.overlayContainerClass = 'class1 class2';
+        comp.isVisible = true;
+        fixture.detectChanges();
+        comp.isVisible = false;
+        fixture.detectChanges();
+        const cdkOverlayContainerEl = document.querySelector('.cdk-overlay-container');
+        void expect(cdkOverlayContainerEl.classList.contains('deja-overlay-container')).toBeTruthy();
+        void expect(cdkOverlayContainerEl.classList.contains('class1')).toBeFalsy();
+        void expect(cdkOverlayContainerEl.classList.contains('class2')).toBeFalsy();
+    });
+
     it('should have isVisible=true when invoking show() method', () => {
         fixture.detectChanges();
         void expect(comp.isVisible).toBeFalsy();
