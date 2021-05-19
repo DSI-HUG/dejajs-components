@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { coerceBooleanProperty, coerceNumberProperty } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostBinding, Input, OnDestroy, Optional, Self, ViewChild } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { MatFormFieldControl } from '@angular/material/form-field';
@@ -35,7 +35,15 @@ export class DejaNumericStepperComponent extends Destroy implements ControlValue
     }
 
     /** Max length of the number input */
-    @Input() public maxlength: number;
+    @Input()
+    public get maxLength(): number {
+        return this._maxLength;
+    }
+
+    public set maxLength(value: number) {
+        this._maxLength = coerceNumberProperty(value);
+        this.changeDetectorRef.markForCheck();
+    }
 
     /** The number format to apply to the displayed input value. For more info see https://angular.io/api/common/DecimalPipe */
     @Input() public numberFormat: string;
@@ -51,7 +59,15 @@ export class DejaNumericStepperComponent extends Destroy implements ControlValue
     }
 
     /** Step of the arrows */
-    @Input() public step = 1;
+    @Input()
+    public get step(): number {
+        return this._step;
+    }
+
+    public set step(value: number) {
+        this._step = coerceNumberProperty(value);
+        this.changeDetectorRef.markForCheck();
+    }
 
     /** Disabled property setter. Can be string or empty so you can use it like : <time-picker disabled></time-picker> */
     @Input()
@@ -86,8 +102,10 @@ export class DejaNumericStepperComponent extends Destroy implements ControlValue
     // eslint-disable-next-line rxjs/finnish
     public stateChanges = new Subject<void>();
     private _disabled = false;
+    private _maxLength: number;
     private _placeholder: string;
     private _required = false;
+    private _step = 1;
     private _value: number;
 
     /**

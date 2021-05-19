@@ -13,19 +13,19 @@
         <mat-card-content>
             <div>
                 <h3>With step of 20</h3>
-                <deja-numeric-stepper [(ngModel)]="value1" [maxlength]="3" [step]="20"></deja-numeric-stepper>
+                <deja-numeric-stepper [(ngModel)]="value1" [maxLength]="3" [step]="20"></deja-numeric-stepper>
             </div>
             <div>
                 <h3>With a format of 2 decimals</h3>
-                <deja-numeric-stepper [(ngModel)]="value2" [maxlength]="3" numberFormat="1.2-2" [step]="0.5"></deja-numeric-stepper>
+                <deja-numeric-stepper [(ngModel)]="value2" [maxLength]="3" numberFormat="1.2-2" [step]="0.5"></deja-numeric-stepper>
             </div>
             <div>
                 <h3>With a format of 2 digits min</h3>
-                <deja-numeric-stepper [(ngModel)]="value3" [maxlength]="2" numberFormat="2."></deja-numeric-stepper>
+                <deja-numeric-stepper [(ngModel)]="value3" [maxLength]="2" numberFormat="2."></deja-numeric-stepper>
             </div>
             <div [formGroup]="numberForm">
                 <h3>With a validator (has to be positive)</h3>
-                <deja-numeric-stepper formControlName="numberValue" [maxlength]="1"></deja-numeric-stepper>
+                <deja-numeric-stepper formControlName="numberValue" [maxLength]="1"></deja-numeric-stepper>
                 <mat-error>{{ numberForm.get('numberValue').errors ? numberForm.get('numberValue').errors[0] : ''}}</mat-error>
             </div>
             <div>

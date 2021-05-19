@@ -1,9 +1,7 @@
 @import '~@angular/material/theming';
 
-@mixin v2-numeric-stepper-theme($theme) {
+@mixin numeric-stepper-2-theme($theme) {
     $primary: map-get($theme, primary);
-    $background: map-get($theme, background);
-    $foreground: map-get($theme, foreground);
 
     .numeric-stepper {
         mat-icon {
