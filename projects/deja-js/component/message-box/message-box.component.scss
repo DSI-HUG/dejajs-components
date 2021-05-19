@@ -1,6 +1,8 @@
 deja-message-box {
     display: block;
     border-radius: 3px;
+    overflow: hidden;
+    background-color: transparent;
 
     #msgbox {
         border: 0;
@@ -23,8 +25,8 @@ deja-message-box {
 
             .header-actions {
                 position: absolute;
-                top:0;
-                right:0;
+                top: 0;
+                right: 0;
             }
         }
 

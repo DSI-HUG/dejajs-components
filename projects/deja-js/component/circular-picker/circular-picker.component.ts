@@ -7,22 +7,9 @@
  */
 
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
-import { ChangeDetectionStrategy } from '@angular/core';
-import { TemplateRef } from '@angular/core';
-import { ChangeDetectorRef } from '@angular/core';
-import { Component } from '@angular/core';
-import { ContentChild } from '@angular/core';
-import { ElementRef } from '@angular/core';
-import { Input } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { Optional } from '@angular/core';
-import { Self } from '@angular/core';
-import { ViewChild } from '@angular/core';
-import { ControlValueAccessor } from '@angular/forms';
-import { NgControl } from '@angular/forms';
-import { Circle } from '@deja-js/component/core';
-import { Destroy } from '@deja-js/component/core';
-import { Position } from '@deja-js/component/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, Input, OnInit, Optional, Self, TemplateRef, ViewChild } from '@angular/core';
+import { ControlValueAccessor, NgControl } from '@angular/forms';
+import { Circle, Destroy, Position } from '@deja-js/component/core';
 import { fromEvent, merge, Observable, Subject } from 'rxjs';
 import { debounceTime, filter, sampleTime, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 
