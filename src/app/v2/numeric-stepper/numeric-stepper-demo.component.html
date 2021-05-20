@@ -34,8 +34,8 @@
             </div>
             <div>
                 <mat-form-field appearance="outline">
-                    <mat-label>min : 0, max : 10, value : -5</mat-label>
-                    <deja-numeric-stepper placeholder="Without unit" min="0" max="10" [ngModel]="-5" #numericStepper="ngModel"></deja-numeric-stepper>
+                    <!-- <mat-label>min : 0, max : 10, value : -5</mat-label> -->
+                    <deja-numeric-stepper min="0" max="10" [ngModel]="-5" #numericStepper="ngModel"></deja-numeric-stepper>
                     <mat-error *ngIf="numericStepper.errors?.rangeError">
                         Min : {{numericStepper.errors?.rangeError?.min}}, Max : {{numericStepper.errors?.rangeError?.max}}
                     </mat-error>

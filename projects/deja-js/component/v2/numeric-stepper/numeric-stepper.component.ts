@@ -7,7 +7,7 @@
  */
 
 import { coerceBooleanProperty, coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DoCheck, ElementRef, HostBinding, Input, OnChanges, OnDestroy, Optional, Self, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DoCheck, ElementRef, HostBinding, Input, OnChanges, OnDestroy, Optional, Self, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, FormControl, FormGroupDirective, NgControl, NgForm, ValidationErrors, Validator, ValidatorFn } from '@angular/forms';
 import { CanUpdateErrorState, ErrorStateMatcher } from '@angular/material/core';
 import { MatFormFieldControl } from '@angular/material/form-field';
@@ -36,6 +36,7 @@ export const createCounterRangeValidator = (comp: DejaNumericStepperComponent) =
     if (c.value === null || c.value === undefined) {
         return null;
     }
+
     return comp.isOffLimits ? err : null;
 };
 
@@ -47,7 +48,8 @@ export const createCounterRangeValidator = (comp: DejaNumericStepperComponent) =
     providers: [{ provide: MatFormFieldControl, useExisting: DejaNumericStepperComponent }],
     selector: 'deja-numeric-stepper',
     styleUrls: ['./numeric-stepper.component.scss'],
-    templateUrl: './numeric-stepper.component.html'
+    templateUrl: './numeric-stepper.component.html',
+    encapsulation: ViewEncapsulation.None
 })
 // eslint-disable-next-line @angular-eslint/no-conflicting-lifecycle
 export class DejaNumericStepperComponent extends _MatInputMixinBase implements CanUpdateErrorState, ControlValueAccessor, DoCheck, MatFormFieldControl<number>, OnChanges, OnDestroy, Validator {
@@ -56,6 +58,12 @@ export class DejaNumericStepperComponent extends _MatInputMixinBase implements C
 
     @HostBinding('attr.aria-describedby') public describedBy = '';
     @HostBinding() public id = `deja-numeric-stepper-${DejaNumericStepperComponent.nextId++}`;
+
+    /** The number format to apply to the displayed input value. For more info see https://angular.io/api/common/DecimalPipe */
+    @Input() public numberFormat: string;
+
+    @HostBinding('attr.disabled') private _disabled = false;
+
     @HostBinding('class.floating')
     public get shouldLabelFloat(): boolean {
         return this.focused || !this.empty;
@@ -93,9 +101,6 @@ export class DejaNumericStepperComponent extends _MatInputMixinBase implements C
         this._maxLength = coerceNumberProperty(value);
         this.changeDetectorRef.markForCheck();
     }
-
-    /** The number format to apply to the displayed input value. For more info see https://angular.io/api/common/DecimalPipe */
-    @Input() public numberFormat: string;
 
     @Input()
     public get required(): boolean {
@@ -159,7 +164,6 @@ export class DejaNumericStepperComponent extends _MatInputMixinBase implements C
     /** Function for min / max validation */
     public validateFn: ValidatorFn;
     protected destroyed$ = new Subject();
-    private _disabled = false;
     private _maxLength: number;
     private _placeholder: string;
     private _required = false;

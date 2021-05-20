@@ -1,7 +1,3 @@
-<div class="numeric-stepper" #stepper [class.disabled]="disabled">
-    <mat-icon class="arrows increment" (click)="increment()">keyboard_arrow_up</mat-icon>
-    <div class="value-container">
-        <input type="text" deja-child-validator matInput [attr.maxlength]="maxLength" class="value" [class.off-limits]="isOffLimits" [min]="_min" [max]="_max" [value]="numberFormat ? (value | number:numberFormat) : value" (change)="onInputChange$.next($event)" (keydown)="onInputKeydown$.next($event)" [disabled]="disabled" />
-    </div>
-    <mat-icon class="arrows decrement" (click)="decrement()">keyboard_arrow_down</mat-icon>
-</div>
+<mat-icon class="arrows increment" (click)="increment()">keyboard_arrow_up</mat-icon>
+<mat-icon class="arrows decrement" (click)="decrement()">keyboard_arrow_down</mat-icon>
+<input type="number" deja-child-validator matInput [attr.maxlength]="maxLength" class="value" [class.off-limits]="isOffLimits" [min]="_min" [max]="_max" [value]="numberFormat ? (value | number:numberFormat) : value" (ngModelChange)="onInputChange$.next($event)" (keydown)="onInputKeydown$.next($event)" [disabled]="disabled" />

@@ -10,7 +10,6 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { DejaChildValidatorModule } from '@deja-js/component/core';
@@ -25,7 +24,6 @@ import { DejaNumericStepperComponent } from './numeric-stepper.component';
         DejaTextMetricsModule,
         FormsModule,
         MatButtonModule,
-        MatFormFieldModule,
         MatIconModule,
         MatInputModule
     ],
