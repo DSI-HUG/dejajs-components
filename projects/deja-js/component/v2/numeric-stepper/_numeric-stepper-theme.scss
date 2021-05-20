@@ -2,10 +2,33 @@
 
 @mixin numeric-stepper-2-theme($theme) {
     $primary: map-get($theme, primary);
+    $warn: map-get($theme, warn);
 
     .numeric-stepper {
         mat-icon {
             color: mat-color($primary);
         }
+    }
+
+    .ng-invalid .numeric-stepper:hover:not(.disabled) {
+        .increment {
+            border: 1px solid mat-color($warn);
+            border-bottom: none;
+        }
+
+        .decrement {
+            border: 1px solid mat-color($warn);
+            border-top: none;
+        }
+
+        .value-container .value {
+            border-top: none !important;
+            border-bottom: none !important;
+        }
+    }
+
+    .ng-invalid input {
+        color: mat-color($warn) !important;
+        border-color: mat-color($warn) !important;
     }
 }

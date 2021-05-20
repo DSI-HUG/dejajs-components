@@ -6,24 +6,51 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { coerceBooleanProperty, coerceNumberProperty } from '@angular/cdk/coercion';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostBinding, Input, OnDestroy, Optional, Self, ViewChild } from '@angular/core';
-import { ControlValueAccessor, NgControl } from '@angular/forms';
+import { coerceBooleanProperty, coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DoCheck, ElementRef, HostBinding, Input, OnChanges, OnDestroy, Optional, Self, ViewChild } from '@angular/core';
+import { ControlValueAccessor, FormControl, FormGroupDirective, NgControl, NgForm, ValidationErrors, Validator, ValidatorFn } from '@angular/forms';
+import { CanUpdateErrorState, ErrorStateMatcher } from '@angular/material/core';
 import { MatFormFieldControl } from '@angular/material/form-field';
-import { DejaChildValidatorDirective, Destroy, KeyCodes } from '@deja-js/component/core';
+import { DejaChildValidatorDirective, KeyCodes } from '@deja-js/component/core';
+import { _MatInputMixinBase } from '@deja-js/component/core/util';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, map, takeUntil } from 'rxjs/operators';
+
+export interface RangeError {
+    rangeError: {
+        given: unknown;
+        max: NumberInput;
+        min: NumberInput;
+    };
+}
+
+export const createCounterRangeValidator = (comp: DejaNumericStepperComponent) => (c: FormControl): RangeError => {
+    const err = {
+        rangeError: {
+            given: c.value,
+            max: comp.max,
+            min: comp.min
+        }
+    } as RangeError;
+
+    if (c.value === null || c.value === undefined) {
+        return null;
+    }
+    return comp.isOffLimits ? err : null;
+};
 
 /**
  * Numeric-stepper component for Angular
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [{ provide: MatFormFieldControl, useExisting: DejaNumericStepperComponent }],
     selector: 'deja-numeric-stepper',
     styleUrls: ['./numeric-stepper.component.scss'],
     templateUrl: './numeric-stepper.component.html'
 })
-export class DejaNumericStepperComponent extends Destroy implements ControlValueAccessor, MatFormFieldControl<number>, OnDestroy {
+// eslint-disable-next-line @angular-eslint/no-conflicting-lifecycle
+export class DejaNumericStepperComponent extends _MatInputMixinBase implements CanUpdateErrorState, ControlValueAccessor, DoCheck, MatFormFieldControl<number>, OnChanges, OnDestroy, Validator {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     public static nextId = 0;
 
@@ -34,13 +61,35 @@ export class DejaNumericStepperComponent extends Destroy implements ControlValue
         return this.focused || !this.empty;
     }
 
+    /** Max value of stepper */
+    public get max(): NumberInput {
+        return this._max;
+    }
+
+    @Input()
+    public set max(value: NumberInput) {
+        this._max = coerceNumberProperty(value, null);
+        this.changeDetectorRef.markForCheck();
+    }
+
+    /** Min value of stepper */
+    public get min(): NumberInput {
+        return this._min;
+    }
+
+    @Input()
+    public set min(value: NumberInput) {
+        this._min = coerceNumberProperty(value, null);
+        this.changeDetectorRef.markForCheck();
+    }
+
     /** Max length of the number input */
     @Input()
-    public get maxLength(): number {
+    public get maxLength(): NumberInput {
         return this._maxLength;
     }
 
-    public set maxLength(value: number) {
+    public set maxLength(value: NumberInput) {
         this._maxLength = coerceNumberProperty(value);
         this.changeDetectorRef.markForCheck();
     }
@@ -60,11 +109,11 @@ export class DejaNumericStepperComponent extends Destroy implements ControlValue
 
     /** Step of the arrows */
     @Input()
-    public get step(): number {
+    public get step(): NumberInput {
         return this._step;
     }
 
-    public set step(value: number) {
+    public set step(value: NumberInput) {
         this._step = coerceNumberProperty(value);
         this.changeDetectorRef.markForCheck();
     }
@@ -95,12 +144,21 @@ export class DejaNumericStepperComponent extends Destroy implements ControlValue
         this.stateChanges.next();
     }
 
+    public get isOffLimits(): boolean {
+        return (this.min !== null && this.value < this.min) || (this.max !== null && this.value > this.max);
+    }
+
     public errorState = false;
     public focused = false;
+    public _max: number = null;
+    public _min: number = null;
     public onInputChange$ = new Subject<Event>();
     public onInputKeydown$ = new Subject<KeyboardEvent>();
     // eslint-disable-next-line rxjs/finnish
     public stateChanges = new Subject<void>();
+    /** Function for min / max validation */
+    public validateFn: ValidatorFn;
+    protected destroyed$ = new Subject();
     private _disabled = false;
     private _maxLength: number;
     private _placeholder: string;
@@ -115,9 +173,12 @@ export class DejaNumericStepperComponent extends Destroy implements ControlValue
     public constructor(
         private changeDetectorRef: ChangeDetectorRef,
         private elementRef: ElementRef,
-        @Self() @Optional() public ngControl: NgControl
+        @Self() @Optional() public ngControl: NgControl,
+        @Optional() _parentForm: NgForm,
+        @Optional() _parentFormGroup: FormGroupDirective,
+        _defaultErrorStateMatcher: ErrorStateMatcher
     ) {
-        super();
+        super(_defaultErrorStateMatcher, _parentForm, _parentFormGroup, ngControl);
 
         if (this.ngControl) {
             this.ngControl.valueAccessor = this;
@@ -151,12 +212,14 @@ export class DejaNumericStepperComponent extends Destroy implements ControlValue
 
     /** Decrement the value by the step */
     public decrement(): void {
-        this.value = this.value - this.step;
+        this.value = this.value - this._step;
+        this.stateChanges.next();
     }
 
     /** Increment the value by the step */
     public increment(): void {
-        this.value = this.value + this.step;
+        this.value = this.value + this._step;
+        this.stateChanges.next();
     }
 
     @ViewChild(DejaChildValidatorDirective)
@@ -205,7 +268,33 @@ export class DejaNumericStepperComponent extends Destroy implements ControlValue
     // ************* End of ControlValueAccessor Implementation **************
 
     // eslint-disable-next-line @angular-eslint/no-conflicting-lifecycle
+    public ngDoCheck(): void {
+        if (this.ngControl) {
+            // We need to re-evaluate this on every change detection cycle, because there are some
+            // error triggers that we can't subscribe to (e.g. parent form submissions). This means
+            // that whatever logic is in here has to be super lean or we risk destroying the performance.
+            this.updateErrorState();
+        }
+    }
+
+    // eslint-disable-next-line @angular-eslint/no-conflicting-lifecycle, @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-module-boundary-types
+    public ngOnChanges(changes: any): void {
+        if (changes.min || changes.max) {
+            this.validateFn = createCounterRangeValidator(this);
+            if (this.ngControl?.control) {
+                const validators: ValidatorFn[] = [this.validateFn];
+                if (this.ngControl.control.validator) {
+                    validators.push(this.ngControl.control.validator);
+                }
+                this.ngControl.control.setValidators(validators);
+            }
+        }
+    }
+
+    // eslint-disable-next-line @angular-eslint/no-conflicting-lifecycle
     public ngOnDestroy(): void {
+        this.destroyed$.next();
+        this.destroyed$.unsubscribe();
         this.stateChanges.complete();
     }
 
@@ -219,7 +308,13 @@ export class DejaNumericStepperComponent extends Destroy implements ControlValue
         this.describedBy = ids.join(' ');
     }
 
+    public validate(c: FormControl): ValidationErrors {
+        return this.validateFn(c) || c.validator?.(c);
+    }
+
+    // NgModel implementation
     protected onChangeCallback = (_a: unknown): void => undefined;
     protected onTouchedCallback = (): void => undefined;
+    protected onValidatorChangeCallback = (): void => undefined;
 
 }
