@@ -1,32 +1,32 @@
 /* You can add global styles to this file, and also import other style files */
 
-@import '~@angular/material/theming';
+@use '~@angular/material'as mat;
 
 // use `~@deja-js/component/theming` inside your app
-@import '../projects/deja-js/component/styles/theming';
+@use '../projects/deja-js/component/styles/theming'as dejaTheme;
 
-@import './component/markdown/markdown-theme';
-@import './app/home/home-theme';
+@use './component/markdown/markdown-theme'as markdownTheme;
+@use './app/home/home-theme'as homeTest;
 
 @mixin create-theme($color1, $color2, $dark: false) {
-    @include mat-core(); // Define color scheme
+    @include mat.core(); // Define color scheme
 
-    $primary: mat-palette($color1);
-    $accent: mat-palette($color2);
-    $warn: mat-palette($mat-red); // Create the theme object from colors
-    $theme: mat-light-theme($primary, $accent, $warn); // Include theme styles for core and each component used in the app.
+    $primary: mat.define-palette($color1);
+    $accent: mat.define-palette($color2);
+    $warn: mat.define-palette(mat.$red-palette); // Create the theme object from colors
+    $theme: mat.define-light-theme($primary, $accent, $warn); // Include theme styles for core and each component used in the app.
 
     @if $dark==true {
-        $theme: mat-dark-theme($primary, $accent, $warn); // Include theme styles for core and each component used in the app.
+        $theme: mat.define-dark-theme($primary, $accent, $warn); // Include theme styles for core and each component used in the app.
     }
 
-    @include angular-material-theme($theme);
-    @include deja-theme($theme);
+    @include mat.all-component-themes($theme);
+    @include dejaTheme.deja-theme($theme);
     // @include deja-menu();
     // @include deja-tree-list-borders();
 
-    @include markdown-theme($theme);
-    @include home-demo-theme($theme);
+    @include markdownTheme.markdown-theme($theme);
+    @include homeTest.home-demo-theme($theme);
 }
 
 body {
@@ -38,19 +38,19 @@ body {
     }
 
     &[theme="blue"] {
-        @include create-theme($mat-blue, $mat-teal);
+        @include create-theme(mat.$blue-palette, mat.$teal-palette);
     }
 
     &[theme="pink"] {
-        @include create-theme($mat-pink, $mat-indigo, true);
+        @include create-theme(mat.$pink-palette, mat.$indigo-palette, true);
     }
 
     &[theme="teal"] {
-        @include create-theme($mat-teal, $mat-green);
+        @include create-theme(mat.$teal-palette, mat.$green-palette);
     }
 
     &[theme="amber"] {
-        @include create-theme($mat-amber, $mat-orange, true);
+        @include create-theme(mat.$amber-palette, mat.$orange-palette, true);
     }
 
     [text-ellipsis] {

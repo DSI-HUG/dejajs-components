@@ -1,11 +1,12 @@
+@use '~@angular/material' as mat;
 @mixin loader-theme($theme) {
     $primary: map-get($theme, primary);
 
     .waiter {
-        border-bottom: 1.25vmin solid mat-color($primary, 500, 0.2);
-        border-left: 1.25vmin solid mat-color($primary);
-        border-right: 1.25vmin solid mat-color($primary, 500, 0.2);
-        border-top: 1.25vmin solid mat-color($primary, 500, 0.2);
+        border-bottom: 1.25vmin solid mat.get-color-from-palette($primary, 500, 0.2);
+        border-left: 1.25vmin solid mat.get-color-from-palette($primary);
+        border-right: 1.25vmin solid mat.get-color-from-palette($primary, 500, 0.2);
+        border-top: 1.25vmin solid mat.get-color-from-palette($primary, 500, 0.2);
         font-size: 0.7rem;
         position: absolute;
         left: 50%;
@@ -30,10 +31,10 @@
             height: 15px;
             margin-top: -10px;
             margin-left: -5px;
-            border-bottom: 3px solid mat-color($primary, 500, 0.2);
-            border-left: 3px solid mat-color($primary);
-            border-right: 3px solid mat-color($primary, 500, 0.2);
-            border-top: 3px solid mat-color($primary, 500, 0.2);
+            border-bottom: 3px solid mat.get-color-from-palette($primary, 500, 0.2);
+            border-left: 3px solid mat.get-color-from-palette($primary);
+            border-right: 3px solid mat.get-color-from-palette($primary, 500, 0.2);
+            border-top: 3px solid mat.get-color-from-palette($primary, 500, 0.2);
         }
     }
 

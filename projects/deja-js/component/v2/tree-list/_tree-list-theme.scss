@@ -1,3 +1,4 @@
+@use '~@angular/material' as mat;
 @mixin tree-list-2-theme($theme) {
     $primary: map-get($theme, primary);
     $warn: map-get($theme, warn);
@@ -10,27 +11,27 @@
                 .mat-form-field-wrapper {
                     .mat-form-field-underline {
                         .mat-form-field-ripple {
-                            background-color: mat-color($warn);
+                            background-color: mat.get-color-from-palette($warn);
                         }
                     }
 
                     .mat-form-field-label {
-                        color: mat-color($warn) !important;
+                        color: mat.get-color-from-palette($warn) !important;
                     }
                 }
             }
         }
 
         #listheader {
-            border-bottom: solid 1px rgba(mat-color($primary), 0.8);
+            border-bottom: solid 1px rgba(mat.get-color-from-palette($primary), 0.8);
         }
 
         &[disabled="true"] {
             .listcontainer {
-                color: mat-color($foreground, disabled);
+                color: mat.get-color-from-palette($foreground, disabled);
 
                 #error-hint {
-                    color: mat-color($foreground, disabled);
+                    color: mat.get-color-from-palette($foreground, disabled);
                 }
 
                 div.listitem {
@@ -45,10 +46,10 @@
         &:not([disabled="true"]) {
             .listcontainer {
                 #error-hint {
-                    color: mat-color($warn);
+                    color: mat.get-color-from-palette($warn);
                 }
 
-                background-color: mat-color($background, card);
+                background-color: mat.get-color-from-palette($background, card);
 
                 &[keynav="false"]:not(.dragover) {
                     div.listitem:not(.unselectable):hover {
@@ -59,10 +60,10 @@
                         }
 
                         &.selected {
-                            background-color: rgba(mat-color($primary), 0.8);
+                            background-color: rgba(mat.get-color-from-palette($primary), 0.8);
 
                             &.current {
-                                background-color: rgba(mat-color($primary), 0.85);
+                                background-color: rgba(mat.get-color-from-palette($primary), 0.85);
                             }
                         }
                     }
@@ -74,11 +75,11 @@
                     }
 
                     &.selected {
-                        background-color: rgba(mat-color($primary), 0.75);
+                        background-color: rgba(mat.get-color-from-palette($primary), 0.75);
                         color: #fff;
 
                         &.current {
-                            background-color: rgba(mat-color($primary), 0.8);
+                            background-color: rgba(mat.get-color-from-palette($primary), 0.8);
                         }
                     }
                 }

@@ -1,3 +1,4 @@
+@use '~@angular/material' as mat;
 @mixin sub-item-list-theme($theme) {
     $primary: map-get($theme, primary);
 
@@ -20,7 +21,7 @@
                 }
 
                 &.selected {
-                    background-color: rgba(mat-color($primary), 0.75);
+                    background-color: rgba(mat.get-color-from-palette($primary), 0.75);
                     color: #fff;
                 }
             }

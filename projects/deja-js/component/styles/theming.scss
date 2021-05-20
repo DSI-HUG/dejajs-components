@@ -1,16 +1,35 @@
-@import '~@angular/material/core/theming/theming';
-
 /** global mixins */
-@import './mixins/backdrop';
-@import './mixins/loader';
-@import './mixins/menu';
-@import './mixins/popup';
-@import './mixins/tree-list-borders';
+@use './mixins/loader'as loader;
+@use './mixins/menu'as menu;
+@use './mixins/popup'as popup;
+@use './mixins/tree-list-borders'as treeListBorders;
 
 /* specials themes */
-@import './material/material';
-@import './mixins/menu-theme';
-@import './mixins/item-list-theme';
+@use './material/material'as materialTheme;
+@use './mixins/menu-theme'as menuTheme;
+
+/** Components Themes */
+@use '../chips/chips-theme'as chipsTheme;
+@use '../circular-picker/circular-picker-theme'as circularPickerTheme;
+@use '../color-picker/color-picker-theme'as colorPickerTheme;
+@use '../data-grid/data-grid-theme'as dataGridTheme;
+@use '../date-picker/date-picker-theme'as datePickerTheme;
+@use '../date-selector/date-selector-theme'as dateSelectorTheme;
+@use '../loaders/list-loader-theme'as listLoaderTheme;
+@use '../message-box/message-box-theme'as messageBoxTheme;
+@use '../mouse-dragdrop/mouse-dragdrop-theme'as mouseDragdropTheme;
+@use '../numeric-stepper/numeric-stepper-theme'as numericStepperTheme;
+@use '../popup/popup-theme'as popupTheme;
+@use '../range/range-theme'as rangeTheme;
+@use '../select/select-theme'as selectTheme;
+@use '../sidenav/sidenav-theme'as sidenavTheme;
+@use '../splitter/splitter-theme'as splitterTheme;
+@use '../tooltip/tooltip-theme'as tooltipTheme;
+@use '../tree-list/tree-list-theme'as treeListTheme;
+@use '../viewport/viewport-theme'as viewportTheme;
+@use '../v2/mouse-dragdrop/mouse-dragdrop-theme'as mouseDragdrop2Theme;
+@use '../v2/tree-list/tree-list-theme'as treeList2Theme;
+@use '../v2/viewport/viewport-theme'as viewport2Theme;
 
 /** Font icons */
 @import '~material-icons-font/sass/variables'; // mandatory and at first place
@@ -20,55 +39,32 @@ $MaterialIcons_FontPath: "~material-icons-font/fonts"; // for CLI project we cha
 @import '~material-icons-font/sass/main'; // mandatory main material font definition
 @import '~material-icons-font/sass/Regular'; // mandatory @font-face definition
 
-/** Components Themes */
-@import '../chips/chips-theme';
-@import '../circular-picker/circular-picker-theme';
-@import '../color-picker/color-picker-theme';
-@import '../data-grid/data-grid-theme';
-@import '../date-picker/date-picker-theme';
-@import '../date-selector/date-selector-theme';
-@import '../loaders/list-loader-theme';
-@import '../message-box/message-box-theme';
-@import '../mouse-dragdrop/mouse-dragdrop-theme';
-@import '../numeric-stepper/numeric-stepper-theme';
-@import '../popup/popup-theme';
-@import '../range/range-theme';
-@import '../select/select-theme';
-@import '../sidenav/sidenav-theme';
-@import '../splitter/splitter-theme';
-@import '../tooltip/tooltip-theme';
-@import '../tree-list/tree-list-theme';
-@import '../viewport/viewport-theme';
-@import '../v2/mouse-dragdrop/mouse-dragdrop-theme';
-@import '../v2/tree-list/tree-list-theme';
-@import '../v2/viewport/viewport-theme';
-
 @mixin deja-theme($custom-theme) {
-    @include chips-theme($custom-theme);
-    @include circular-picker-theme($custom-theme);
-    @include color-picker-theme($custom-theme);
-    @include data-grid-theme($custom-theme);
-    @include date-picker-theme($custom-theme);
-    @include date-selector-theme($custom-theme);
-    @include deja-menu();
-    @include deja-popup();
-    @include deja-tree-list-borders();
-    @include list-loader-theme($custom-theme);
-    @include loader-theme($custom-theme);
-    @include deja-material-theme($custom-theme);
-    @include menu-theme($custom-theme);
-    @include message-box-theme($custom-theme);
-    @include mouse-dragdrop-theme($custom-theme);
-    @include numeric-stepper-theme($custom-theme);
-    @include popup-theme($custom-theme);
-    @include range-theme($custom-theme);
-    @include select-theme($custom-theme);
-    @include sidenav-theme($custom-theme);
-    @include splitter-theme($custom-theme);
-    @include tooltip-theme($custom-theme);
-    @include tree-list-theme($custom-theme);
-    @include viewport-theme($custom-theme);
-    @include mouse-dragdrop-2-theme($custom-theme);
-    @include tree-list-2-theme($custom-theme);
-    @include viewport-2-theme($custom-theme);
+    @include chipsTheme.chips-theme($custom-theme);
+    @include circularPickerTheme.circular-picker-theme($custom-theme);
+    @include colorPickerTheme.color-picker-theme($custom-theme);
+    @include dataGridTheme.data-grid-theme($custom-theme);
+    @include datePickerTheme.date-picker-theme($custom-theme);
+    @include dateSelectorTheme.date-selector-theme($custom-theme);
+    @include menu.deja-menu();
+    @include popup.deja-popup();
+    @include treeListBorders.deja-tree-list-borders();
+    @include listLoaderTheme.list-loader-theme($custom-theme);
+    @include loader.loader-theme($custom-theme);
+    @include materialTheme.deja-material-theme($custom-theme);
+    @include menuTheme.menu-theme($custom-theme);
+    @include messageBoxTheme.message-box-theme($custom-theme);
+    @include mouseDragdropTheme.mouse-dragdrop-theme($custom-theme);
+    @include numericStepperTheme.numeric-stepper-theme($custom-theme);
+    @include popupTheme.popup-theme($custom-theme);
+    @include rangeTheme.range-theme($custom-theme);
+    @include selectTheme.select-theme($custom-theme);
+    @include sidenavTheme.sidenav-theme($custom-theme);
+    @include splitterTheme.splitter-theme($custom-theme);
+    @include tooltipTheme.tooltip-theme($custom-theme);
+    @include treeListTheme.tree-list-theme($custom-theme);
+    @include viewportTheme.viewport-theme($custom-theme);
+    @include mouseDragdrop2Theme.mouse-dragdrop-2-theme($custom-theme);
+    @include treeList2Theme.tree-list-2-theme($custom-theme);
+    @include viewport2Theme.viewport-2-theme($custom-theme);
 }

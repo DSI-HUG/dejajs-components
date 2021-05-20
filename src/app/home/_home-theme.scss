@@ -1,15 +1,15 @@
-@import '~@angular/material/core/theming/theming';
+@use '~@angular/material'as mat;
 
 @mixin home-demo-theme($theme) {
     $primary: map-get($theme, primary);
 
     home {
         header {
-            background-color: mat-color($primary) !important;
+            background-color: mat.get-color-from-palette($primary) !important;
         }
 
         footer {
-            background: mat-color($primary);
+            background: mat.get-color-from-palette($primary);
         }
     }
 }

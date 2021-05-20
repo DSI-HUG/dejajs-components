@@ -1,3 +1,4 @@
+@use '~@angular/material' as mat;
 @mixin menu-theme($theme) {
     $primary: map-get($theme, primary);
 
@@ -10,10 +11,10 @@
             &ul {
                 li {
                     background-color: #FFF;
-                    color: mat-color($primary);
+                    color: mat.get-color-from-palette($primary);
 
                     &:hover {
-                        background-color: mat-color($primary);
+                        background-color: mat.get-color-from-palette($primary);
                         color: #FFF;
                     }
                 }
@@ -22,10 +23,10 @@
             >button,
             >a {
                 background-color: #FFF;
-                color: mat-color($primary);
+                color: mat.get-color-from-palette($primary);
 
                 &:hover {
-                    background-color: mat-color($primary);
+                    background-color: mat.get-color-from-palette($primary);
                     color: #FFF;
                 }
             }

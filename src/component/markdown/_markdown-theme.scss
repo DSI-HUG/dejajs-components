@@ -1,4 +1,4 @@
-@import '~@angular/material/core/theming/theming';
+@use '~@angular/material'as mat;
 @import '~prismjs/themes/prism.css';
 @import '~prismjs/themes/prism-coy.css';
 
@@ -10,25 +10,25 @@
     .markdown-content {
         table {
             thead tr th {
-                background: mat-color($primary);
-                color: mat-color($primary, default-contrast);
+                background: mat.get-color-from-palette($primary);
+                color: mat.get-color-from-palette($primary, default-contrast);
             }
 
             tr {
                 &:nth-of-type(odd) {
-                    background-color: mat-color($background, focused-button);
+                    background-color: mat.get-color-from-palette($background, focused-button);
                 }
 
                 th,
                 td {
-                    border-color: mat-color($foreground, divider);
+                    border-color: mat.get-color-from-palette($foreground, divider);
                 }
             }
         }
 
         pre[class*="language-"]>code {
-            box-shadow: -1px 0px 0px 0px mat-color($primary), 0px 0px 0px 1px #dfdfdf;
-            border-left: 10px solid mat-color($primary);
+            box-shadow: -1px 0px 0px 0px mat.get-color-from-palette($primary), 0px 0px 0px 1px #dfdfdf;
+            border-left: 10px solid mat.get-color-from-palette($primary);
         }
     }
 }

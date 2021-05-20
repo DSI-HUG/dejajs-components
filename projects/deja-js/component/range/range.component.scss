@@ -1,4 +1,4 @@
-@import '~@angular/material/core/core';
+@use '~@angular/material'as mat;
 
 :host {
     /* the size of the separator has to be specified*/
@@ -53,10 +53,10 @@
 
         /* these styles could be overriden */
         &:hover {
-            @include mat-elevation(2);
+            @include mat.elevation(2);
         }
 
-        @include mat-elevation(1);
+        @include mat.elevation(1);
         $height: 32px;
         height: $height;
 

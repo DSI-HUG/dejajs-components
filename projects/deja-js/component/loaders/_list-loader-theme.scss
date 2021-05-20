@@ -1,7 +1,8 @@
+@use '~@angular/material' as mat;
 @mixin list-loader-theme($theme) {
     $primary: map-get($theme, primary);
 
     .spinner>div {
-        background-color: mat-color($primary);
+        background-color: mat.get-color-from-palette($primary);
     }
 }

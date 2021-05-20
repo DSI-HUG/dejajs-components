@@ -1,3 +1,6 @@
+@use '~@angular/material'as mat;
+@use '../styles/mixins/item-list-theme'as itemListTheme;
+
 @mixin select-theme($theme) {
     $primary: map-get($theme, primary);
     $warn: map-get($theme, warn);
@@ -8,7 +11,7 @@
         [matSuffix] {
             mat-progress-spinner {
                 svg path {
-                    stroke: mat-color($primary);
+                    stroke: mat.get-color-from-palette($primary);
                 }
             }
         }
@@ -18,7 +21,7 @@
             #clear-button,
             #drop-down-button {
                 &:hover {
-                    color: mat-color($primary);
+                    color: mat.get-color-from-palette($primary);
                 }
             }
         }
@@ -33,17 +36,17 @@
     .deja-overlay-container {
         .deja-listcontainer {
             box-shadow: 0 5px 5px -3px rgba(0, 0, 0, .2), 0 8px 10px 1px rgba(0, 0, 0, .14), 0 3px 14px 2px rgba(0, 0, 0, .12);
-            background-color: mat-color($background, card) !important;
-            color: mat-color($foreground, text) !important;
+            background-color: mat.get-color-from-palette($background, card) !important;
+            color: mat.get-color-from-palette($foreground, text) !important;
 
             &[keynav="false"] {
                 div.listitem:not(.unselectable):hover {
-                    background-color: mat-color($background, hover);
-                    color: mat-color($foreground, text);
+                    background-color: mat.get-color-from-palette($background, hover);
+                    color: mat.get-color-from-palette($foreground, text);
                 }
             }
         }
 
-        @include sub-item-list-theme($theme);
+        @include itemListTheme.sub-item-list-theme($theme);
     }
 }

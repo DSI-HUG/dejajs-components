@@ -1,3 +1,4 @@
+@use '~@angular/material' as mat;
 @mixin tabs-theme($theme) {
     $primary: map-get($theme, primary);
 
@@ -19,7 +20,7 @@
                 white-space: nowrap;
 
                 &:after {
-                    background-color: mat-color($primary);
+                    background-color: mat.get-color-from-palette($primary);
                     bottom: 0;
                     content: '';
                     height: 2px;
@@ -38,7 +39,7 @@
             }
 
             mat-ink-bar {
-                background-color: mat-color($primary) !important;
+                background-color: mat.get-color-from-palette($primary) !important;
                 display: none;
             }
         }

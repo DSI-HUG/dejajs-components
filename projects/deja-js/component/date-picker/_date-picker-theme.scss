@@ -1,3 +1,4 @@
+@use '~@angular/material' as mat;
 @mixin date-picker-theme($theme) {
     $warn: map-get($theme, warn);
 
@@ -6,14 +7,14 @@
             .mat-form-field-wrapper {
                 .mat-form-field-underline {
                     .mat-form-field-ripple {
-                        background-color: mat-color($warn);
+                        background-color: mat.get-color-from-palette($warn);
                     }
                 }
 
                 .mat-form-field-flex {
                     .mat-form-field-infix {
                         .mat-form-field-label {
-                            color: mat-color($warn);
+                            color: mat.get-color-from-palette($warn);
                         }
                     }
                 }

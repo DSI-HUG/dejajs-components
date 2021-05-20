@@ -1,5 +1,5 @@
-@import './data-grid-grouparea/data-grid-grouparea-theme';
-@import './data-grid-header/data-grid-header-theme';
+@use './data-grid-grouparea/data-grid-grouparea-theme'as groupareaTheme;
+@use './data-grid-header/data-grid-header-theme'as headerTheme;
 
 @mixin data-grid-theme($theme) {
 
@@ -20,7 +20,7 @@
             }
         }
 
-        @include data-grid-grouparea-theme($theme);
-        @include data-grid-header-theme($theme);
+        @include groupareaTheme.data-grid-grouparea-theme($theme);
+        @include headerTheme.data-grid-header-theme($theme);
     }
 }

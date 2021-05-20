@@ -17,14 +17,14 @@ import { Injectable } from '@angular/core';
 export class MonacoEditorService {
 
     private _loading: boolean;
-    private _loader: Promise<unknown>;
+    private _loader: Promise<void>;
 
     /**
      * Load the Monaco Editor Library
      *
      * @return Resolved promise when the library is loaded
      */
-    public initMonacoLib(): Promise<unknown> {
+    public initMonacoLib(): Promise<void> {
         if (!this._loading) {
             this.init();
         }
@@ -33,7 +33,7 @@ export class MonacoEditorService {
     }
 
     private init() {
-        this._loader = new Promise(resolve => {
+        this._loader = new Promise<void>(resolve => {
             this._loading = true;
             const baseElement = document.getElementsByTagName('base')[0] || {} as HTMLBaseElement;
             const baseHref = baseElement.href;

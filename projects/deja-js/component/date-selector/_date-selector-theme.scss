@@ -1,3 +1,4 @@
+@use '~@angular/material' as mat;
 @mixin date-selector-theme($theme) {
     $primary: map-get($theme, primary);
     $background: map-get($theme, background);
@@ -5,19 +6,19 @@
 
     #date-time-selector {
 
-        background: mat-color($background, card);
-        color: mat-color($foreground, text);
+        background: mat.get-color-from-palette($background, card);
+        color: mat.get-color-from-palette($foreground, text);
         box-shadow: rgba(0, 0, 0, 0.247059) 0px 14px 45px, rgba(0, 0, 0, 0.219608) 0px 10px 18px;
 
         #time-header,
         #date-header {
-            background-color: mat-color($primary);
-            color: mat-color($primary, default-contrast);
+            background-color: mat.get-color-from-palette($primary);
+            color: mat.get-color-from-palette($primary, default-contrast);
 
             button[mat-mini-fab] {
-                background: mat-color($primary);
+                background: mat.get-color-from-palette($primary);
                 box-shadow: none;
-                color: mat-color($primary, default-contrast);
+                color: mat.get-color-from-palette($primary, default-contrast);
             }
         }
 
@@ -27,11 +28,11 @@
                     background: transparent;
 
                     &:before {
-                        background-color: mat-color($primary);
+                        background-color: mat.get-color-from-palette($primary);
                     }
 
                     &.disabled:before {
-                        background: mat-color($foreground, disabled);
+                        background: mat.get-color-from-palette($foreground, disabled);
                     }
                 }
             }
@@ -41,14 +42,14 @@
             #sub-header {
                 .month {
                     button[mat-mini-fab] {
-                        background: mat-color($background, card);
-                        color: mat-color($primary);
+                        background: mat.get-color-from-palette($background, card);
+                        color: mat.get-color-from-palette($primary);
                     }
                 }
 
                 .days {
                     span {
-                        color: rgba(mat-color($foreground, text), 0.7);
+                        color: rgba(mat.get-color-from-palette($foreground, text), 0.7);
                     }
                 }
             }
@@ -58,8 +59,8 @@
                     .date {
                         .day {
                             &:hover {
-                                background: mat-color($primary);
-                                color: mat-color($primary, default-contrast);
+                                background: mat.get-color-from-palette($primary);
+                                color: mat.get-color-from-palette($primary, default-contrast);
                             }
                         }
                     }
@@ -68,15 +69,15 @@
                 .date {
                     .day {
                         &[current="true"] {
-                            color: mat-color($primary);
+                            color: mat.get-color-from-palette($primary);
                         }
 
                         &.background {
-                            color: rgba(mat-color($foreground, text), 0.5);
+                            color: rgba(mat.get-color-from-palette($foreground, text), 0.5);
                         }
 
                         &.disabled {
-                            color: rgba(mat-color($foreground, text), 0.3);
+                            color: rgba(mat.get-color-from-palette($foreground, text), 0.3);
 
                             &:hover {
                                 background: none;
@@ -85,8 +86,8 @@
                         }
 
                         &[selected] {
-                            background: mat-color($primary);
-                            color: mat-color($primary, default-contrast);
+                            background: mat.get-color-from-palette($primary);
+                            color: mat.get-color-from-palette($primary, default-contrast);
                         }
                     }
                 }

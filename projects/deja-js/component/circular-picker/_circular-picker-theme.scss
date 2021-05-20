@@ -1,11 +1,12 @@
+@use '~@angular/material' as mat;
 @mixin circular-picker-theme($theme) {
     $primary: map-get($theme, primary);
     $background: map-get($theme, background);
     $foreground: map-get($theme, foreground);
 
     .circular-picker {
-        border: 1px solid mat-color($background, status-bar);
-        background-color: mat-color($background, status-bar);
+        border: 1px solid mat.get-color-from-palette($background, status-bar);
+        background-color: mat.get-color-from-palette($background, status-bar);
 
         &.disabled {
             .value {
@@ -18,30 +19,30 @@
 
             .cursor-container {
                 .cursor {
-                    background-color: mat-color($foreground, disabled);
+                    background-color: mat.get-color-from-palette($foreground, disabled);
                 }
 
                 .cursorHand {
-                    background-color: mat-color($foreground, disabled);
+                    background-color: mat.get-color-from-palette($foreground, disabled);
                 }
             }
         }
 
         .value {
             &:hover {
-                background-color: mat-color($primary);
-                color: mat-color($primary, default-contrast);
+                background-color: mat.get-color-from-palette($primary);
+                color: mat.get-color-from-palette($primary, default-contrast);
             }
         }
 
         .cursor-container {
             .cursor {
-                background-color: mat-color($primary);
-                color: mat-color($primary, default-contrast);
+                background-color: mat.get-color-from-palette($primary);
+                color: mat.get-color-from-palette($primary, default-contrast);
             }
 
             .cursorHand {
-                background-color: mat-color($primary);
+                background-color: mat.get-color-from-palette($primary);
             }
         }
     }

@@ -1,3 +1,6 @@
+@use '~@angular/material'as mat;
+@use '../styles/mixins/item-list-theme'as itemListTheme;
+
 @mixin tree-list-theme($theme) {
     $primary: map-get($theme, primary);
     $warn: map-get($theme, warn);
@@ -7,10 +10,10 @@
     deja-tree-list {
         &[disabled="true"] {
             .deja-listcontainer {
-                color: mat-color($foreground, disabled);
+                color: mat.get-color-from-palette($foreground, disabled);
 
                 #error-hint {
-                    color: mat-color($foreground, disabled);
+                    color: mat.get-color-from-palette($foreground, disabled);
                 }
             }
         }
@@ -20,38 +23,38 @@
                 .mat-form-field-wrapper {
                     .mat-form-field-underline {
                         .mat-form-field-ripple {
-                            background-color: mat-color($warn);
+                            background-color: mat.get-color-from-palette($warn);
                         }
                     }
 
                     .mat-form-field-label {
-                        color: mat-color($warn) !important;
+                        color: mat.get-color-from-palette($warn) !important;
                     }
                 }
             }
         }
 
         #listheader {
-            border-bottom: solid 1px rgba(mat-color($primary), 0.8);
+            border-bottom: solid 1px rgba(mat.get-color-from-palette($primary), 0.8);
         }
 
         &:not([disabled="true"]) {
             .deja-listcontainer {
-                background-color: mat-color($background, card);
+                background-color: mat.get-color-from-palette($background, card);
 
                 &[keynav="false"]:not(.dragover) {
                     div.listitem:not(.unselectable):hover {
-                        background-color: mat-color($primary);
-                        color: mat-color($primary, default-contrast);
+                        background-color: mat.get-color-from-palette($primary);
+                        color: mat.get-color-from-palette($primary, default-contrast);
                     }
                 }
 
                 #error-hint {
-                    color: mat-color($warn);
+                    color: mat.get-color-from-palette($warn);
                 }
             }
         }
 
-        @include sub-item-list-theme($theme);
+        @include itemListTheme.sub-item-list-theme($theme);
     }
 }

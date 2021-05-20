@@ -1,4 +1,4 @@
-@import '~@angular/material/core/core';
+@use '~@angular/material'as mat;
 
 deja-sidenav {
     $large-sidenav-width: 320px;
@@ -134,7 +134,7 @@ deja-sidenav {
             }
 
             .mat-toolbar {
-                @include mat-elevation(3);
+                @include mat.elevation(3);
                 -webkit-font-smoothing: antialiased;
                 padding-right: 8px;
                 flex: 0 0 auto;

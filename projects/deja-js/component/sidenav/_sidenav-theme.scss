@@ -1,3 +1,4 @@
+@use '~@angular/material' as mat;
 @mixin sidenav-theme($theme) {
     $primary: map-get($theme, primary);
     $background: map-get($theme, background);
@@ -8,10 +9,10 @@
             &.sidenav-light {
                 .mat-sidenav {
                     .header {
-                        background: mat-color($primary);
+                        background: mat.get-color-from-palette($primary);
 
                         .header-menu-btn [fontIcon] {
-                            color: mat-color($primary, default-contrast);
+                            color: mat.get-color-from-palette($primary, default-contrast);
                         }
                     }
                 }
@@ -19,30 +20,30 @@
 
             .mat-sidenav {
                 .header {
-                    // border-right: 1px solid mat-color($primary);
-                    border-bottom: 1px solid mat-color($foreground, divider);
-                    background: mat-color($background, background);
+                    // border-right: 1px solid mat.get-color-from-palette($primary);
+                    border-bottom: 1px solid mat.get-color-from-palette($foreground, divider);
+                    background: mat.get-color-from-palette($background, background);
                 }
 
                 deja-sidenav-menu {
-                    border-right: 1px solid mat-color($foreground, divider);
+                    border-right: 1px solid mat.get-color-from-palette($foreground, divider);
 
                     .mat-list-item {
                         &.active {
 
                             .mat-list-icon,
                             .mat-list-text {
-                                color: mat-color($primary) !important;
+                                color: mat.get-color-from-palette($primary) !important;
                             }
                         }
 
                         .mat-list-item-content {
                             .mat-list-icon {
-                                color: mat-color($foreground, icons)
+                                color: mat.get-color-from-palette($foreground, icons)
                             }
 
                             .mat-list-text {
-                                color: mat-color($foreground, text)
+                                color: mat.get-color-from-palette($foreground, text)
                             }
                         }
                     }
