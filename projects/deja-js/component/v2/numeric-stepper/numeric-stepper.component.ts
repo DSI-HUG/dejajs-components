@@ -6,8 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Input, OnInit, ViewEncapsulation } from '@angular/core';
-import { NgModel } from '@angular/forms';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { timer } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -22,7 +21,8 @@ import { Destroy } from '../../core/destroy/destroy';
     encapsulation: ViewEncapsulation.None
 })
 export class DejaNumericStepperComponent extends Destroy implements OnInit {
-    @Input() public model: NgModel;
+    @Output() public readonly increment = new EventEmitter<void>();
+    @Output() public readonly decrement = new EventEmitter<void>();
 
     public left: number = null;
     public width: number = null;
@@ -64,20 +64,5 @@ export class DejaNumericStepperComponent extends Destroy implements OnInit {
             this.width = formFieldBounds.width;
             this.changeDetectorRef.markForCheck();
         });
-    }
-
-    public decrement(): void {
-        let value = +this.model.value;
-        value -= 1;
-        this.model.model = value;
-        console.log('decrement', this.model);
-    }
-
-    public increment(): void {
-        let value = +this.model.value;
-        value += 1;
-        this.model.model = value;
-        this.changeDetectorRef.markForCheck();
-        console.log('increment', this.model);
     }
 }

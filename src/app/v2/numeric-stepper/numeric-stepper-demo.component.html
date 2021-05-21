@@ -35,8 +35,8 @@
             <div>
                 <mat-form-field appearance="outline">
                     <!-- <mat-label>min : 0, max : 10, value : -5</mat-label> -->
-                    <deja-numeric-stepper [model]="numericStepper"></deja-numeric-stepper>
-                    <input matInput type="text" min="0" max="10" [ngModel]="-5" #numericStepper="ngModel" />
+                    <deja-numeric-stepper (increment)="value1 = value1 + 5" (decrement)="value1 = value1 -5"></deja-numeric-stepper>
+                    <input matInput type="text" min="0" max="10" [(ngModel)]="value1" #numericStepper="ngModel" />
                     <mat-error *ngIf="numericStepper.errors?.rangeError">
                         Min : {{numericStepper.errors?.rangeError?.min}}, Max : {{numericStepper.errors?.rangeError?.max}}
                     </mat-error>
