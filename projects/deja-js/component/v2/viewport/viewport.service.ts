@@ -81,7 +81,7 @@ export class ViewPortService<T> {
             distinctUntilChanged()
         );
 
-        const deleteSizeCache$ = () => combineLatest([this.items$, mode$]).pipe(
+        const deleteSizeCache$ = (): Observable<[ViewPortItem<T>[], ViewPortMode]> => combineLatest([this.items$, mode$]).pipe(
             take(1),
             tap(([items, mode]) => {
                 if (items?.length && mode === 'auto') {
@@ -103,9 +103,9 @@ export class ViewPortService<T> {
             distinctUntilChanged()
         );
 
-        const innerSize = (direction: ViewPortDirection) => direction === 'horizontal' ? window.innerWidth : window.innerHeight;
+        const innerSize = (direction: ViewPortDirection): number => direction === 'horizontal' ? window.innerWidth : window.innerHeight;
 
-        const clientSize = (element: HTMLElement, direction: ViewPortDirection) => Math.ceil(direction === 'horizontal' ? element.clientWidth : element.clientHeight);
+        const clientSize = (element: HTMLElement, direction: ViewPortDirection): number => Math.ceil(direction === 'horizontal' ? element.clientWidth : element.clientHeight);
 
         const calcFixedSizeViewPort$ = (params: ViewPortParams, items: ViewPortItem<T>[], scrollPosition: number, containerSize: ViewPortMaxSize): Observable<ViewPort<T>> => {
             this.log('calcFixedSizeViewPort');
@@ -298,7 +298,7 @@ export class ViewPortService<T> {
                 items: items
             } as ViewPort<T>;
 
-            if (elements.length !== items.length && bindIfAny !== false) {
+            if (elements.length !== items.length && bindIfAny) {
                 const measure$ = of(viewPort);
                 return merge(measure$, measure$.pipe(
                     delay(1),
@@ -561,7 +561,7 @@ export class ViewPortService<T> {
         this.refresh$.next(clearMeasuredSize);
     }
 
-    private log(message: unknown, ...optionalParams: unknown[]) {
+    private log(message: unknown, ...optionalParams: unknown[]): void {
         if (this.debug) {
             console.log(message, optionalParams.length ? optionalParams : undefined);
         }

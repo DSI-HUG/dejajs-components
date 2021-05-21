@@ -32,21 +32,23 @@ export class DejaEditorService {
         return this._loader;
     }
 
-    private init() {
+    private init(): void {
         this._loader = new Promise(resolve => {
             this._loading = true;
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment
             const wnd = <any>window;
 
             // Load AMD loader if necessary
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
             if (!wnd.ckeditor) {
                 const baseElement = document.getElementsByTagName('base')[0] || {} as HTMLBaseElement;
                 const baseHref = baseElement.href;
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
                 const basePath = wnd.CKEDITOR_BASEPATH || `${baseHref}assets/ckeditor/`;
                 const loaderScript = document.createElement('script');
                 document.head.appendChild(loaderScript);
                 loaderScript.type = 'text/javascript';
-                loaderScript.src = `${basePath}ckeditor.js`;
+                loaderScript.src = `${basePath as string}ckeditor.js`;
                 loaderScript.addEventListener('load', resolve);
             }
         });

@@ -7,26 +7,9 @@
  */
 
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
-import { AfterViewInit } from '@angular/core';
-import { TemplateRef } from '@angular/core';
-import { ChangeDetectionStrategy } from '@angular/core';
-import { ChangeDetectorRef } from '@angular/core';
-import { Component } from '@angular/core';
-import { ContentChild } from '@angular/core';
-import { ElementRef } from '@angular/core';
-import { EventEmitter } from '@angular/core';
-import { Input } from '@angular/core';
-import { OnDestroy } from '@angular/core';
-import { Optional } from '@angular/core';
-import { Output } from '@angular/core';
-import { Self } from '@angular/core';
-import { ViewChild } from '@angular/core';
-import { ControlValueAccessor } from '@angular/forms';
-import { NgControl } from '@angular/forms';
-import { Destroy } from '@deja-js/component/core';
-import { KeyCodes } from '@deja-js/component/core';
-import { Position } from '@deja-js/component/core';
-import { Rect } from '@deja-js/component/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, Input, OnDestroy, Optional, Output, Self, TemplateRef, ViewChild } from '@angular/core';
+import { ControlValueAccessor, NgControl } from '@angular/forms';
+import { Destroy, KeyCodes, Position, Rect } from '@deja-js/component/core';
 import { IDejaMouseDroppableContext, IDropCursorInfos } from '@deja-js/component/mouse-dragdrop';
 import { from, fromEvent, Observable, Subject, Subscription } from 'rxjs';
 import { debounceTime, filter, takeUntil } from 'rxjs/operators';
@@ -93,7 +76,7 @@ export class DejaTilesComponent extends Destroy implements AfterViewInit, Contro
 
     @ContentChild('tileTemplate')public tileTemplate: TemplateRef<unknown>;
 
-    @ViewChild('tilesContainer', { static: true }) private tilesContainer: ElementRef;
+    @ViewChild('tilesContainer', { static: true }) private tilesContainer: ElementRef<HTMLElement>;
 
     private _models = [] as DejaTile[];
     private delete$sub: Subscription;
@@ -343,7 +326,7 @@ export class DejaTilesComponent extends Destroy implements AfterViewInit, Contro
     }
 
     public hitTest(pageX: number, pageY: number): DejaTile {
-        const containerElement = this.tilesContainer.nativeElement as HTMLElement;
+        const containerElement = this.tilesContainer.nativeElement;
         const containerBounds = containerElement.getBoundingClientRect();
 
         const x = pageX - containerBounds.left;
@@ -358,7 +341,7 @@ export class DejaTilesComponent extends Destroy implements AfterViewInit, Contro
         }
 
         // Check if we drag on a tile
-        const containerElement = this.tilesContainer.nativeElement as HTMLElement;
+        const containerElement = this.tilesContainer.nativeElement;
         const containerBounds = containerElement.getBoundingClientRect();
 
         const x = pageX ? (pageX - containerBounds.left) : 0;

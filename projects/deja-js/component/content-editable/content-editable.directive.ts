@@ -54,7 +54,7 @@ export class DejaEditableDirective extends Destroy implements ControlValueAccess
         const inEdition$ = this.edit$.pipe(
             distinctUntilChanged(),
             map(([value, selectOnFocus]) => {
-                if (selectOnFocus !== false) {
+                if (selectOnFocus) {
                     timer(10).pipe(
                         take(1),
                         takeUntil(this.destroyed$)
@@ -243,7 +243,7 @@ export class DejaEditableDirective extends Destroy implements ControlValueAccess
     public onTouchedCallback = (): void => undefined;
     public onChangeCallback = (_a?: unknown): void => undefined;
 
-    private isChildElement(element: HTMLElement) {
+    private isChildElement(element: HTMLElement): boolean {
         let parentElement = element;
 
         // eslint-disable-next-line no-loops/no-loops
@@ -254,7 +254,7 @@ export class DejaEditableDirective extends Destroy implements ControlValueAccess
         return parentElement === this.element;
     }
 
-    private refreshView() {
+    private refreshView(): void {
         if (!this.model) {
             return;
         }

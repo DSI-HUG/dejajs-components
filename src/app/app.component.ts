@@ -6,13 +6,8 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { ChangeDetectionStrategy } from '@angular/core';
-import { Component } from '@angular/core';
-import { ElementRef } from '@angular/core';
-import { ViewEncapsulation } from '@angular/core';
-import { DejaTextMetricsService } from '@deja-js/component/core';
-import { IconService } from '@deja-js/component/core';
-import { Destroy } from '@deja-js/component/core';
+import { ChangeDetectionStrategy, Component, ElementRef, ViewEncapsulation } from '@angular/core';
+import { DejaTextMetricsService, Destroy, IconService } from '@deja-js/component/core';
 import { BehaviorSubject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -28,7 +23,7 @@ export class AppComponent extends Destroy {
     private _theme: string;
     private theme$: BehaviorSubject<string>;
 
-    public constructor(iconService: IconService, elementRef: ElementRef, textMetrics: DejaTextMetricsService) {
+    public constructor(iconService: IconService, elementRef: ElementRef<HTMLElement>, textMetrics: DejaTextMetricsService) {
         super();
 
         textMetrics.metricsElem = elementRef.nativeElement;

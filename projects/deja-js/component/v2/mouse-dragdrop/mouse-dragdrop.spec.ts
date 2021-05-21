@@ -47,14 +47,14 @@ import { MouseDroppableContext, MouseDroppableDirective } from './mouse-droppabl
     `]
 })
 class MouseDragDropComponent {
-    public getDragContext() {
+    public getDragContext(): MouseDraggableContext<string> {
         return {
             className: 'drag-cursor',
             dragStart: (target: HTMLElement) => target.innerText
         } as MouseDraggableContext<string>;
     }
 
-    public getDropContext(dropArea: HTMLElement) {
+    public getDropContext(dropArea: HTMLElement): MouseDroppableContext<string> {
         return {
             dragEnter: () => ({
                 width: 200,
@@ -92,10 +92,10 @@ describe('MouseDragDrop', () => {
         const fixture = TestBed.createComponent(MouseDragDropComponent);
         fixture.detectChanges();
         const draggableDebugElement = fixture.debugElement.query(By.directive(MouseDraggableDirective));
-        const draggableInstance = draggableDebugElement.componentInstance;
+        const draggableInstance = draggableDebugElement.componentInstance as HTMLElement;
         void expect(draggableInstance).toBeTruthy();
         const droppableDebugElement = fixture.debugElement.query(By.directive(MouseDroppableDirective));
-        const droppableInstance = droppableDebugElement.componentInstance;
+        const droppableInstance = droppableDebugElement.componentInstance as HTMLElement;
         void expect(droppableInstance).toBeTruthy();
     }));
 
@@ -108,8 +108,8 @@ describe('MouseDragDrop', () => {
             const dropDebugElement = fixture.debugElement.query(By.css('div#dropArea'));
             const dragElement = dragDebugElement.nativeElement as HTMLElement;
 
-            const sendMouseEvent = (element: EventTarget, type: string, x: number, y: number, buttons = 0) => {
-                const eventInit = () => ({
+            const sendMouseEvent = (element: EventTarget, type: string, x: number, y: number, buttons = 0): void => {
+                const eventInit = (): MouseEventInit => ({
                     bubbles: true,
                     cancelable: (type !== 'mousemove'),
                     view: document.defaultView,

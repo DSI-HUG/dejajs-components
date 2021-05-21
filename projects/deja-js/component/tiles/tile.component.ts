@@ -7,14 +7,7 @@
  */
 
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
-import { ChangeDetectionStrategy } from '@angular/core';
-import { TemplateRef } from '@angular/core';
-import { ChangeDetectorRef } from '@angular/core';
-import { Component } from '@angular/core';
-import { ElementRef } from '@angular/core';
-import { EventEmitter } from '@angular/core';
-import { Input } from '@angular/core';
-import { Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, Output, TemplateRef } from '@angular/core';
 import { Destroy } from '@deja-js/component/core';
 import { debounceTime, delay, filter, take, takeUntil, tap } from 'rxjs/operators';
 
@@ -59,7 +52,7 @@ export class DejaTileComponent extends Destroy {
         this._tile = tile;
 
         if (tile) {
-            const toogleAttribute = (attribute: string, value: BooleanInput) => {
+            const toogleAttribute = (attribute: string, value: BooleanInput): void => {
                 if (value) {
                     this.element.setAttribute(attribute, value.toString());
                 } else {

@@ -5,10 +5,7 @@
  *  Use of this source code is governed by an Apache-2.0 license that can be
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
-import { Component } from '@angular/core';
-import { EventEmitter } from '@angular/core';
-import { Output } from '@angular/core';
-import { ViewChild } from '@angular/core';
+import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
 import { DejaRangeComponent, IStepRangeEvent, Range } from '@deja-js/component/range';
 import { from, Observable } from 'rxjs';
 import { defaultIfEmpty, map, scan } from 'rxjs/operators';
@@ -59,7 +56,7 @@ export class DejaRangeDemoComponent {
                 message: error.message
             })),
             scan((acc, cur) => [...acc, cur], [] as Error[]),
-            defaultIfEmpty([])
+            defaultIfEmpty([] as Error[])
         );
     }
 

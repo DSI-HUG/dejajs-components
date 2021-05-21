@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /*
  *  @license
  *  Copyright Hôpitaux Universitaires de Genève. All Rights Reserved.
@@ -7,24 +9,16 @@
  */
 
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { DebugElement } from '@angular/core';
+import { Component, DebugElement } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { DejaItemModule } from '@deja-js/component/core';
-import { GroupingService } from '@deja-js/component/core';
-import { IItemBase } from '@deja-js/component/core';
-import { IItemTree } from '@deja-js/component/core';
-import { ISortInfos } from '@deja-js/component/core';
-import { ItemListService } from '@deja-js/component/core';
-import { KeyCodes } from '@deja-js/component/core';
-import { SortingService } from '@deja-js/component/core';
-import { ViewPortService } from '@deja-js/component/core';
+import { DejaItemModule, GroupingService, IItemBase, IItemTree, ISortInfos, ItemListService, KeyCodes, SortingService, ViewPortService } from '@deja-js/component/core';
 import { Observable, timer } from 'rxjs';
 import { debounceTime, delay, filter, take, tap } from 'rxjs/operators';
 
+import { IViewPort } from '../core';
 import { DejaTreeListModule } from './index';
 import { DejaTreeListComponent } from './tree-list.component';
 
@@ -41,8 +35,7 @@ class DejaTreeListContainerComponent {
     public itemList = [] as IItemTree<unknown>[];
 
     public constructor(groupingService: GroupingService) {
-        // eslint-disable-next-line prefer-spread
-        const itemList = Array.apply(null, { length: 2000 }).map((_n: unknown, i: number) => {
+        const itemList = Array.from({ length: 2000 }).map((_n: unknown, i: number) => {
             const rand = Math.floor(Math.random() * (70 - 33 + 1)) + 33; // random de 33 à 70
             return {
                 size: rand,
@@ -54,7 +47,7 @@ class DejaTreeListContainerComponent {
             take(1)
             // eslint-disable-next-line rxjs-angular/prefer-takeuntil
         ).subscribe(groupedResult => {
-            this.itemList = groupedResult;
+            this.itemList = groupedResult as IItemTree<unknown>[];
         });
     }
 }
@@ -78,8 +71,7 @@ class DejaTreeListByModelContainerComponent {
     public selectedModels: unknown[];
 
     public constructor(sortingService: SortingService) {
-        // eslint-disable-next-line prefer-spread
-        const modelsList = Array.apply(null, { length: 2000 }).map((_n: unknown, i: number) => {
+        const modelsList = Array.from({ length: 2000 }).map((_n: unknown, i: number) => {
             const rand = Math.floor(Math.random() * (70 - 33 + 1)) + 33; // random de 33 à 70;
             return {
                 id: i,
@@ -92,7 +84,7 @@ class DejaTreeListByModelContainerComponent {
         this.modelsList$ = sortingService.sort$(modelsList, { name: 'value' } as ISortInfos);
     }
 
-    public backgroundColor(item: IItemBase<unknown>) {
+    public backgroundColor(item: IItemBase<unknown>): string {
         return item.selected ? '#888' : null;
     }
 }
@@ -133,7 +125,7 @@ describe('DejaTreeListComponent', () => {
         }).compileComponents();
     }));
 
-    const observeViewPort$ = (fixture: ComponentFixture<DejaTreeListContainerComponent>) => {
+    const observeViewPort$ = (fixture: ComponentFixture<DejaTreeListContainerComponent>): Observable<IViewPort> => {
         const treeListDebugElement = fixture.debugElement.query(By.directive(DejaTreeListComponent));
         const viewPortService = treeListDebugElement.injector.get(ViewPortService);
 
@@ -153,7 +145,7 @@ describe('DejaTreeListComponent', () => {
         const fixture = TestBed.createComponent(DejaTreeListContainerComponent);
         const treeListDebugElement = fixture.debugElement.query(By.directive(DejaTreeListComponent));
         const treeListInstance = treeListDebugElement.componentInstance as DejaTreeListComponent;
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment
         const tl = treeListInstance as any;
         const itemListService = treeListInstance.itemListService;
         fixture.detectChanges();
@@ -287,8 +279,6 @@ describe('DejaTreeListComponent', () => {
         const fixture = TestBed.createComponent(DejaTreeListContainerComponent);
         const treeListDebugElement = fixture.debugElement.query(By.directive(DejaTreeListComponent));
         const treeListInstance = treeListDebugElement.componentInstance as DejaTreeListComponent;
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const tl = treeListInstance as any;
         let pass = 0;
 
         observeViewPort$(fixture).pipe(
@@ -301,9 +291,9 @@ describe('DejaTreeListComponent', () => {
                 case 1:
                     void expect(currentItems.length).toBe(0);
                     // Set current item by index
-                    tl.currentItemIndex = 20;
-                    void expect(tl.currentItemIndex).toBe(20);
-                    treeListInstance.ensureItemVisible(tl.currentItemIndex);
+                    treeListInstance.currentItemIndex = 20;
+                    void expect(treeListInstance.currentItemIndex).toBe(20);
+                    treeListInstance.ensureItemVisible(treeListInstance.currentItemIndex);
                     fixture.detectChanges();
                     break;
 
@@ -493,7 +483,7 @@ describe('DejaTreeListByModelContainerComponent', () => {
         }).compileComponents();
     }));
 
-    const observeModelViewPort$ = (fixture: ComponentFixture<DejaTreeListByModelContainerComponent>) => {
+    const observeModelViewPort$ = (fixture: ComponentFixture<DejaTreeListByModelContainerComponent>): Observable<IViewPort> => {
         const treeListDebugElement = fixture.debugElement.query(By.directive(DejaTreeListComponent));
         const viewPortService = treeListDebugElement.injector.get(ViewPortService);
 
@@ -616,7 +606,7 @@ describe('DejaTreeListByModelContainerComponent', () => {
             done();
         });
 
-        const sendKeyDown = (code: string, shiftKey?: boolean, ctrlKey?: boolean) => {
+        const sendKeyDown = (code: string, shiftKey?: boolean, ctrlKey?: boolean): void => {
             const event = new KeyboardEvent('keydown', {
                 code: code,
                 shiftKey: shiftKey,
@@ -637,7 +627,7 @@ describe('DejaTreeListByModelContainerComponent', () => {
         const treeListDebugElement = fixture.debugElement.query(By.directive(DejaTreeListComponent));
         const treeListInstance = treeListDebugElement.componentInstance as DejaTreeListComponent;
 
-        const sendKeyDown = (code: string, shiftKey?: boolean, ctrlKey?: boolean) => {
+        const sendKeyDown = (code: string, shiftKey?: boolean, ctrlKey?: boolean): void => {
             const event = new KeyboardEvent('keydown', {
                 code: code,
                 shiftKey: shiftKey,
@@ -929,7 +919,7 @@ describe('DejaTreeListByOptionsContainerComponent', () => {
         }).compileComponents();
     }));
 
-    const observeOptionsViewPort$ = (fixture: ComponentFixture<DejaTreeListByOptionsContainerComponent>) => {
+    const observeOptionsViewPort$ = (fixture: ComponentFixture<DejaTreeListByOptionsContainerComponent>): Observable<IViewPort> => {
         const treeListDebugElement = fixture.debugElement.query(By.directive(DejaTreeListComponent));
         const viewPortService = treeListDebugElement.injector.get(ViewPortService);
 
@@ -962,7 +952,7 @@ describe('DejaTreeListByOptionsContainerComponent', () => {
         const treeListDebugElement = fixture.debugElement.query(By.directive(DejaTreeListComponent));
         const treeListInstance = treeListDebugElement.componentInstance as DejaTreeListComponent;
 
-        const sendKeyUp = (code: string) => {
+        const sendKeyUp = (code: string): void => {
             const event = new KeyboardEvent('keyup', {
                 code: `Key${code.toUpperCase()}`,
                 key: code
@@ -1058,9 +1048,9 @@ describe('DejaTreeListByOptionsContainerComponent', () => {
         const treeListDebugElement = fixture.debugElement.query(By.directive(DejaTreeListComponent));
         const treeListInstance = treeListDebugElement.componentInstance as DejaTreeListComponent;
 
-        const sendMouseClick = (element: DebugElement, shiftKey?: boolean, ctrlKey?: boolean, upElement?: DebugElement) => {
+        const sendMouseClick = (element: DebugElement, shiftKey?: boolean, ctrlKey?: boolean, upElement?: DebugElement): void => {
             // Simulate a mouse click
-            const eventInit = () => ({
+            const eventInit = (): MouseEventInit => ({
                 bubbles: true,
                 cancelable: true,
                 view: document.defaultView,
@@ -1072,7 +1062,7 @@ describe('DejaTreeListByOptionsContainerComponent', () => {
                 buttons: 1,
                 clientX: 0,
                 clientY: 0,
-                relatedTarget: listElement.nativeElement,
+                relatedTarget: listElement.nativeElement as HTMLElement,
                 screenX: 0,
                 screenY: 0
             } as MouseEventInit);

@@ -6,13 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { ChangeDetectionStrategy } from '@angular/core';
-import { ChangeDetectorRef } from '@angular/core';
-import { Component } from '@angular/core';
-import { EventEmitter } from '@angular/core';
-import { Input } from '@angular/core';
-import { Optional } from '@angular/core';
-import { Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Optional, Output } from '@angular/core';
 import { IDejaChipsComponentCloseEvent } from '@deja-js/component/chips';
 import { DejaClipboardService } from '@deja-js/component/core';
 import { IDejaDragContext, IDejaDragEvent, IDejaDropContext, IDejaDropEvent } from '@deja-js/component/dragdrop';
@@ -73,7 +67,7 @@ export class DejaGridGroupAreaComponent {
             return null;
         }
 
-        const raiseEvent = (evt: Event, group: IDejaGridColumn) => {
+        const raiseEvent = (evt: Event, group: IDejaGridColumn): void => {
             const e = {
                 column: group,
                 columns: this.groups,

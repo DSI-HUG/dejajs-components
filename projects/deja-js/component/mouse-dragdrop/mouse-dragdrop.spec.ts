@@ -48,14 +48,14 @@ import { DejaMouseDroppableDirective, IDejaMouseDroppableContext } from './mouse
     `]
 })
 class DejaMouseDragDropComponent {
-    public getDragContext() {
+    public getDragContext(): IDejaMouseDraggableContext {
         return {
             className: 'drag-cursor',
             dragStart: (target: HTMLElement) => of(target.innerText)
         } as IDejaMouseDraggableContext;
     }
 
-    public getDropContext(dropArea: HTMLElement) {
+    public getDropContext(dropArea: HTMLElement): IDejaMouseDroppableContext {
         return {
             dragEnter: _dragContext => ({
                 width: 200,
@@ -93,10 +93,10 @@ describe('DejaMouseDragDrop', () => {
         const fixture = TestBed.createComponent(DejaMouseDragDropComponent);
         fixture.detectChanges();
         const draggableDebugElement = fixture.debugElement.query(By.directive(DejaMouseDraggableDirective));
-        const draggableInstance = draggableDebugElement.componentInstance;
+        const draggableInstance = draggableDebugElement.componentInstance as DejaMouseDraggableDirective;
         void expect(draggableInstance).toBeTruthy();
         const droppableDebugElement = fixture.debugElement.query(By.directive(DejaMouseDroppableDirective));
-        const droppableInstance = droppableDebugElement.componentInstance;
+        const droppableInstance = droppableDebugElement.componentInstance as DejaMouseDraggableDirective;
         void expect(droppableInstance).toBeTruthy();
     }));
 
@@ -109,8 +109,8 @@ describe('DejaMouseDragDrop', () => {
             const dropDebugElement = fixture.debugElement.query(By.css('div#dropArea'));
             const dragElement = dragDebugElement.nativeElement as HTMLElement;
 
-            const sendMouseEvent = (element: EventTarget, type: string, x: number, y: number, buttons = 0) => {
-                const eventInit = () => ({
+            const sendMouseEvent = (element: EventTarget, type: string, x: number, y: number, buttons = 0): void => {
+                const eventInit = (): MouseEventInit => ({
                     bubbles: true,
                     cancelable: (type !== 'mousemove'),
                     view: document.defaultView,

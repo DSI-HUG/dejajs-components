@@ -7,11 +7,7 @@
  */
 
 import { ComponentPortal, Portal } from '@angular/cdk/portal';
-import { Directive } from '@angular/core';
-import { ElementRef } from '@angular/core';
-import { Injector } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { Renderer2 } from '@angular/core';
+import { Directive, ElementRef, Injector, OnInit, Renderer2 } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Destroy } from '@deja-js/component/core';
 import { Subscription } from 'rxjs';

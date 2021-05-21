@@ -1,0 +1,14 @@
+{
+    "root": true,
+    "extends": [
+        "@hug/eslint-config/recommended"
+    ],
+    "overrides": [
+        {
+            "files": ["./**/*.ts"],
+            "rules": {
+                "@angular-eslint/prefer-on-push-component-change-detection": "off"
+            }
+        }
+    ]
+}

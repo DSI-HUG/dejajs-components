@@ -8,15 +8,8 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { ChangeDetectorRef } from '@angular/core';
-import { Component } from '@angular/core';
-import { ViewChild } from '@angular/core';
-import { ViewEncapsulation } from '@angular/core';
-import { Destroy } from '@deja-js/component/core';
-import { GroupingService } from '@deja-js/component/core';
-import { IGroupInfo } from '@deja-js/component/core';
-import { IItemTree } from '@deja-js/component/core';
-import { IViewPortItem } from '@deja-js/component/core';
+import { ChangeDetectorRef, Component, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Destroy, GroupingService, IGroupInfo, IItemTree, IViewPortItem } from '@deja-js/component/core';
 import { DejaGridComponent, IDejaGridColumn, IDejaGridColumnSizeEvent, IDejaGridRow } from '@deja-js/component/data-grid';
 import { IDejaDragContext, IDejaDropContext, IDejaDropEvent } from '@deja-js/component/dragdrop';
 import { cloneDeep } from 'lodash-es';
@@ -665,12 +658,14 @@ export class DejaGridDemoComponent extends Destroy {
         this.groupedByGenderPerson$ = peopleService.getPeople$().pipe(
             switchMap(people => groupingService.group$(people, {
                 groupByField: 'gender'
-            } as IGroupInfo)));
+            } as IGroupInfo) as Observable<Person[]>)
+        );
 
         this.groupedByEyesColorPeople$ = peopleService.getPeople$().pipe(
             switchMap(people => groupingService.group$(people, {
                 groupByField: 'eyeColor'
-            } as IGroupInfo)));
+            } as IGroupInfo) as Observable<Person[]>)
+        );
 
         peopleService.getPeople$().pipe(
             tap(items => this.peopleRows = items),
@@ -680,6 +675,7 @@ export class DejaGridDemoComponent extends Destroy {
             take(1),
             takeUntil(this.destroyed$)
         ).subscribe(items => {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             this.groupedByColorPeople = items;
         });
 
@@ -788,7 +784,7 @@ export class DejaGridDemoComponent extends Destroy {
     }
 
     public loadingRows(): (_query: string | RegExp, _selectedItems: IDejaGridRow<unknown>[]) => Observable<Person[]> {
-        return (_query: string | RegExp, _selectedItems: IDejaGridRow<unknown>[]) => this.peopleService.getPeople$().pipe(delay(3000));
+        return (_query: string | RegExp, _selectedItems: IDejaGridRow<unknown>[]): Observable<Person[]> => this.peopleService.getPeople$().pipe(delay(3000));
     }
 
     public collapsingRows() {
@@ -858,7 +854,7 @@ export class DejaGridDemoComponent extends Destroy {
     }
 
     public getDropContext(): IDejaDropContext {
-        const drag = (event: IDejaDropEvent) => {
+        const drag = (event: IDejaDropEvent): void => {
             const element = event?.dragInfo?.element as HTMLElement;
             if (element.tagName === 'DEJA-GRID-ROW') {
                 event.preventDefault();

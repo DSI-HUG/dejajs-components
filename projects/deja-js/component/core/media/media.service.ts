@@ -134,7 +134,7 @@ export class MediaService implements OnDestroy {
         });
     }
 
-    private onMqlEvent(alias: string, event: MediaQueryListEvent) {
+    private onMqlEvent(alias: string, event: MediaQueryListEvent): void {
         this.zone.run(() => {
             if (event.matches) {
                 this.mediaChanged$.next(alias);

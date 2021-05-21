@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /*
  *  @license
  *  Copyright Hôpitaux Universitaires de Genève. All Rights Reserved.

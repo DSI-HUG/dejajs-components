@@ -134,7 +134,7 @@ export class MonacoEditorControlComponent extends Destroy implements OnInit {
         ).subscribe(() => {
             const element = this.elementRef.nativeElement;
 
-            const setElementSize = () => {
+            const setElementSize = (): void => {
                 element.setAttribute('style', `height: ${element.parentElement.offsetHeight}px; width:100%;`);
             };
 

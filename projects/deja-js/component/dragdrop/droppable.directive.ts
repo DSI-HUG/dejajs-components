@@ -7,13 +7,8 @@
  */
 
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
-import { Directive } from '@angular/core';
-import { ElementRef } from '@angular/core';
-import { HostBinding } from '@angular/core';
-import { Input } from '@angular/core';
-import { Optional } from '@angular/core';
-import { DejaClipboardService } from '@deja-js/component/core';
-import { Destroy } from '@deja-js/component/core';
+import { Directive, ElementRef, HostBinding, Input, Optional } from '@angular/core';
+import { DejaClipboardService, Destroy } from '@deja-js/component/core';
 import { fromEvent, merge, Observable } from 'rxjs';
 import { filter, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 
@@ -100,10 +95,10 @@ export class DejaDroppableDirective extends Destroy {
                 const dragInfos = this.clipboardService.get(this.draginfokey) as Record<string, unknown>;
                 const e = dragEvent as IDejaDropEvent;
                 e.dragInfo = dragInfos;
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
                 e.dragObject = (<any>dragEvent)[this.objectKey];
                 e.dragElement = element;
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
                 e.itsMe = (<any>dragEvent)[this.elementKey] === element;
                 this.context.dragentercallback(e);
                 if (e.defaultPrevented) {

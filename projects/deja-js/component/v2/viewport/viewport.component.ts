@@ -222,7 +222,7 @@ export class ViewPortComponent<T> extends Destroy {
             switchMap(([buttons, viewPortElement]) => {
                 const clientSize = this.isHorizontal ? viewPortElement.clientWidth : viewPortElement.clientHeight;
 
-                const scroll = (event: MouseEvent, sign: number) => {
+                const scroll = (event: MouseEvent, sign: number): void => {
                     const delta = sign * (event.ctrlKey ? clientSize : +this.buttonsStep * 2);
                     if (this.isHorizontal) {
                         viewPortElement.scroll({ left: viewPortElement.scrollLeft + delta, top: 0 });
@@ -235,7 +235,7 @@ export class ViewPortComponent<T> extends Destroy {
                     mergeMap(button => {
                         const sign = button.id === 'down' ? 1 : -1;
 
-                        const autoScroll$ = (event: MouseEvent) => {
+                        const autoScroll$ = (event: MouseEvent): Observable<number> => {
                             const mouseup$ = merge(fromEvent<MouseEvent>(buttons[0], 'mouseup'), fromEvent<MouseEvent>(buttons[0], 'mouseleave'), fromEvent<MouseEvent>(buttons[1], 'mouseup'), fromEvent<MouseEvent>(buttons[1], 'mouseleave'));
                             return timer(750).pipe(
                                 mergeMap(() => interval(50)),

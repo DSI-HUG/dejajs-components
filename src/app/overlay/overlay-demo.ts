@@ -6,9 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Component } from '@angular/core';
-import { ViewChild } from '@angular/core';
-import { ViewEncapsulation } from '@angular/core';
+import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
 import { DejaOverlayComponent } from '@deja-js/component/overlay';
 
 @Component({

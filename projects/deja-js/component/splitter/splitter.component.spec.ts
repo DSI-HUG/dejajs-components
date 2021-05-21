@@ -32,10 +32,10 @@ class DejaSplitterContainerComponent {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-empty-function
-    public lockEvents() { }
+    public lockEvents(): void { }
 
     // eslint-disable-next-line @typescript-eslint/no-empty-function
-    public unlockEvents() { }
+    public unlockEvents(): void { }
 }
 
 describe('DejaSplitterContainerComponent', () => {
@@ -57,7 +57,7 @@ describe('DejaSplitterContainerComponent', () => {
     beforeEach(() => {
         fixture = TestBed.createComponent(DejaSplitterContainerComponent);
         const splitterDebugElement = fixture.debugElement.query(By.directive(DejaSplitterComponent));
-        component = splitterDebugElement.componentInstance;
+        component = splitterDebugElement.componentInstance as DejaSplitterComponent;
         fixture.detectChanges();
     });
 
@@ -74,8 +74,8 @@ describe('DejaSplitterContainerComponent', () => {
             const leftAreaElement = areaDebugElements[0].nativeElement as HTMLElement;
             const rightAreaElement = areaDebugElements[1].nativeElement as HTMLElement;
 
-            const sendMouseEvent = (element: EventTarget, type: string, x: number, y: number, buttons = 0) => {
-                const eventInit = () => ({
+            const sendMouseEvent = (element: EventTarget, type: string, x: number, y: number, buttons = 0): void => {
+                const eventInit = (): MouseEventInit => ({
                     bubbles: true,
                     cancelable: (type !== 'mousemove'),
                     view: document.defaultView,
@@ -114,8 +114,8 @@ describe('DejaSplitterContainerComponent', () => {
             const leftAreaElement = areaDebugElements[0].nativeElement as HTMLElement;
             const rightAreaElement = areaDebugElements[1].nativeElement as HTMLElement;
 
-            const sendMouseEvent = (element: EventTarget, type: string, x: number, y: number, buttons = 0) => {
-                const eventInit = () => ({
+            const sendMouseEvent = (element: EventTarget, type: string, x: number, y: number, buttons = 0): void => {
+                const eventInit = (): MouseEventInit => ({
                     bubbles: true,
                     cancelable: (type !== 'mousemove'),
                     view: document.defaultView,

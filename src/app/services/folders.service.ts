@@ -31,7 +31,7 @@ export class FoldersService {
         return this.folders;
     }
 
-    private addLevel(level: number, children: Folder[]) {
+    private addLevel(level: number, children: Folder[]): void {
         if (level > 15) {
             return;
         }

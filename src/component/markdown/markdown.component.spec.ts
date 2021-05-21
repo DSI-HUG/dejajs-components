@@ -47,13 +47,14 @@ describe('DejaMarkdownComponent', () => {
     it('should do nothing if value is null', () => {
         component.value = null;
         fixture.detectChanges();
-        void expect(fixture.nativeElement.innerText).toEqual('');
+        void expect((fixture.nativeElement as HTMLElement).innerText).toEqual('');
     });
 
     it('should convert string value to html', () => {
         component.value = '<p class="pTest"><a href="www.google.ch">site google</a></p>';
         fixture.detectChanges();
-        void expect(fixture.nativeElement.querySelector('.pTest > a').innerText).toEqual('site google');
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+        void expect(((fixture.nativeElement as HTMLElement).querySelector('.pTest > a') as HTMLElement).innerText).toEqual('site google');
     });
 
     it('should call markForCheck when set value', () => {
@@ -71,7 +72,7 @@ describe('DejaMarkdownComponent', () => {
 
         // Must do detectChanges after httpMock.flush()
         fixture.detectChanges();
-        void expect(fixture.nativeElement.querySelector('h1').innerText).toEqual('qwertzqwertz');
+        void expect((fixture.nativeElement as HTMLElement).querySelector('h1').innerText).toEqual('qwertzqwertz');
     });
 
     it('should process http error', () => {
@@ -80,6 +81,6 @@ describe('DejaMarkdownComponent', () => {
 
         fixture.detectChanges();
         // console.log(fixture.nativeElement.innerText);
-        void expect(fixture.nativeElement.innerText).toEqual('Http failure response for aWrongUrl: 0');
+        void expect((fixture.nativeElement as HTMLElement).innerText).toEqual('Http failure response for aWrongUrl: 0');
     });
 });

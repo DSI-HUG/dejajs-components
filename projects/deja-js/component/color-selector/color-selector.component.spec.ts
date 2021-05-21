@@ -8,8 +8,7 @@
 
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { Color } from '@deja-js/component/core';
-import { MaterialColors } from '@deja-js/component/core';
+import { Color, MaterialColors } from '@deja-js/component/core';
 import { timer } from 'rxjs';
 
 import { DejaColorFab } from './color-fab.class';
@@ -64,9 +63,10 @@ describe('DejaColorSelector', () => {
             void expect(component.disabled).toBeTruthy();
             const elements = fixture.debugElement.queryAll(By.css('deja-color-fab'));
             elements.forEach(el => {
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
                 const colorFab = el.componentInstance._colorFab as DejaColorFab;
                 void expect(colorFab.disabled).toBeTruthy();
-                const style = el.nativeElement.style.backgroundColor;
+                const style = (el.nativeElement as HTMLElement).style.backgroundColor;
                 const color = Color.parse(style);
                 void expect(color.r).toEqual(color.g);
                 void expect(color.r).toEqual(color.b);
@@ -99,10 +99,10 @@ describe('DejaColorSelector', () => {
     it('should be able to highligth the correct color', done => {
         component.colors = new MaterialColors().colors;
 
-        const sendMouseEvent = (element: EventTarget, type: string, x: number, y: number, buttons = 0) => {
+        const sendMouseEvent = (element: EventTarget, type: string, x: number, y: number, buttons = 0): void => {
             const dragDropContainerElement = fixture.nativeElement as HTMLElement;
             const dragDropContainerBounds = dragDropContainerElement.getBoundingClientRect();
-            const eventInit = () => ({
+            const eventInit = (): MouseEventInit => ({
                 bubbles: true,
                 cancelable: (type !== 'mousemove'),
                 view: document.defaultView,
@@ -128,9 +128,10 @@ describe('DejaColorSelector', () => {
             timer(200).subscribe(() => {
                 const activeElements = fixture.debugElement.queryAll(By.css('deja-color-fab[active]'));
                 void expect(activeElements.length).toBe(2);
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
                 const colorFab = activeElements[0].componentInstance._colorFab as DejaColorFab;
                 void expect(colorFab.active).toBeTruthy();
-                void expect(activeElements[0].nativeElement.style.backgroundColor).toEqual(elements[8].nativeElement.style.backgroundColor);
+                void expect((activeElements[0].nativeElement as HTMLElement).style.backgroundColor).toEqual((elements[8].nativeElement as HTMLElement).style.backgroundColor);
                 done();
             });
 
@@ -144,12 +145,12 @@ describe('DejaColorSelector', () => {
         fixture.detectChanges();
         return fixture.whenRenderingDone().then(() => {
             const elements = fixture.debugElement.queryAll(By.css('deja-color-fab'));
-            elements[8].nativeElement.click();
+            (elements[8].nativeElement as HTMLElement).click();
 
             fixture.detectChanges();
             return fixture.whenRenderingDone().then(() => {
                 const color = component.value;
-                const color2 = Color.parse(elements[8].nativeElement.style.backgroundColor);
+                const color2 = Color.parse((elements[8].nativeElement as HTMLElement).style.backgroundColor);
                 void expect(color?.toHex()).toEqual(color2?.toHex());
                 done();
             });

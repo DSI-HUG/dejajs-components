@@ -8,14 +8,7 @@
 
 import { Point } from '@angular/cdk/drag-drop';
 import { ComponentPortal, Portal } from '@angular/cdk/portal';
-import { AfterViewInit } from '@angular/core';
-import { Component } from '@angular/core';
-import { ElementRef } from '@angular/core';
-import { Inject } from '@angular/core';
-import { Injector } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { Renderer2 } from '@angular/core';
-import { ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Inject, Injector, OnInit, Renderer2, ViewEncapsulation } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DomSanitizer } from '@angular/platform-browser';
 import { timer } from 'rxjs';
@@ -28,8 +21,8 @@ import { DejaPopupConfig } from '../../model/popup-config.model';
 @Component({
     encapsulation: ViewEncapsulation.None,
     selector: 'deja-popup-advanced',
-    styleUrls: ['popup-advanced.component.scss'],
-    templateUrl: 'popup-advanced.component.html'
+    styleUrls: ['./popup-advanced.component.scss'],
+    templateUrl: './popup-advanced.component.html'
 })
 export class DejaPopupAdvancedComponent extends DejaPopupBase implements AfterViewInit, OnInit {
     public dragstart = false;
@@ -44,7 +37,7 @@ export class DejaPopupAdvancedComponent extends DejaPopupBase implements AfterVi
         @Inject(MAT_DIALOG_DATA) public config: DejaPopupConfig<unknown>,
         protected injector: Injector,
         protected renderer: Renderer2,
-        protected elRef: ElementRef,
+        protected elRef: ElementRef<HTMLElement>,
         private domSanitizer: DomSanitizer
     ) {
         super();

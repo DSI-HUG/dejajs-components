@@ -7,19 +7,7 @@
  */
 
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
-import { ChangeDetectionStrategy } from '@angular/core';
-import { ChangeDetectorRef } from '@angular/core';
-import { Component } from '@angular/core';
-import { ElementRef } from '@angular/core';
-import { EventEmitter } from '@angular/core';
-import { HostBinding } from '@angular/core';
-import { Input } from '@angular/core';
-import { OnChanges } from '@angular/core';
-import { OnDestroy } from '@angular/core';
-import { Output } from '@angular/core';
-import { Renderer2 } from '@angular/core';
-import { SimpleChanges } from '@angular/core';
-import { ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostBinding, Input, OnChanges, OnDestroy, Output, Renderer2, SimpleChanges, ViewEncapsulation } from '@angular/core';
 
 import { IAreaData } from './area-data.model';
 import { Point } from './point.model';
@@ -127,7 +115,7 @@ export class DejaSplitterComponent implements OnChanges, OnDestroy {
      * Constructor
      */
     public constructor(private cdRef: ChangeDetectorRef,
-        private elementRef: ElementRef,
+        private elementRef: ElementRef<HTMLElement>,
         private renderer: Renderer2) {
     }
 
@@ -295,12 +283,12 @@ export class DejaSplitterComponent implements OnChanges, OnDestroy {
         this.cdRef.markForCheck();
     }
 
-    private refreshStyleSizes() {
+    private refreshStyleSizes(): void {
         const f = this.gutterSize * this.nbGutters / this._areas.length;
         this._areas.forEach(a => a.component.setStyle('flex-basis', `calc( ${a.size}% - ${f}px )`));
     }
 
-    private dragEvent(event: MouseEvent, start: Point, areaA: IAreaData, areaB: IAreaData) {
+    private dragEvent(event: MouseEvent, start: Point, areaA: IAreaData, areaB: IAreaData): void {
         if (!this.isDragging) {
             return;
         }
@@ -313,7 +301,7 @@ export class DejaSplitterComponent implements OnChanges, OnDestroy {
         this.drag(start, end, areaA, areaB);
     }
 
-    private drag(start: Point, end: Point, areaA: IAreaData, areaB: IAreaData) {
+    private drag(start: Point, end: Point, areaA: IAreaData, areaB: IAreaData): void {
         const offsetPixel = (this.direction === 'horizontal') ? (start.x - end.x) : (start.y - end.y);
 
         const newSizePixelA = this.areaAsize - offsetPixel;
@@ -343,7 +331,7 @@ export class DejaSplitterComponent implements OnChanges, OnDestroy {
         this.notify('progress');
     }
 
-    private stopDragging() {
+    private stopDragging(): void {
         if (!this.isDragging) {
             return;
         }
@@ -366,7 +354,7 @@ export class DejaSplitterComponent implements OnChanges, OnDestroy {
         this.notify('end');
     }
 
-    private notify(type: string) {
+    private notify(type: string): void {
         const data: number[] = this._areas.map(a => a.size);
 
         switch (type) {

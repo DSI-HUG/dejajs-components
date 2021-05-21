@@ -6,12 +6,10 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Component } from '@angular/core';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { Component, NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { DejaConnectionPositionPair } from '@deja-js/component/core';
-import { MediaService } from '@deja-js/component/core';
+import { DejaConnectionPositionPair, MediaService } from '@deja-js/component/core';
 
 import { DejaOverlayModule } from './index';
 import { DejaOverlayComponent } from './overlay.component';
@@ -28,7 +26,7 @@ describe('DejaOverlayComponent', () => {
     let comp: DejaOverlayComponent;
     let fixture: ComponentFixture<DejaOverlayContainerComponent>;
 
-    const removeStaledOverlayContainersFunction = () => {
+    const removeStaledOverlayContainersFunction = (): void => {
         // Remove any stale overlay containers from previous tests that didn't clean up correctly.
         const staleContainers = document.querySelectorAll('.cdk-overlay-container');
         // eslint-disable-next-line no-loops/no-loops
@@ -59,7 +57,7 @@ describe('DejaOverlayComponent', () => {
     beforeEach(() => {
         fixture = TestBed.createComponent(DejaOverlayContainerComponent);
         const overlayDebugElement = fixture.debugElement.query(By.directive(DejaOverlayComponent));
-        comp = overlayDebugElement.componentInstance;
+        comp = overlayDebugElement.componentInstance as DejaOverlayComponent;
     });
 
     afterEach(() => {
@@ -76,7 +74,7 @@ describe('DejaOverlayComponent', () => {
         document.body.appendChild(ownerElement);
         comp.ownerElement = ownerElement;
         fixture.detectChanges();
-        const el: HTMLElement = comp.overlayOrigin.elementRef.nativeElement;
+        const el = comp.overlayOrigin.elementRef.nativeElement as HTMLElement;
         void expect(el).toBe(ownerElement);
     });
 

@@ -13,11 +13,11 @@ import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Destroy, GroupingService, KeyCodes } from '@deja-js/component/core';
-import { ItemModule, SortInfos, SortingService } from '@deja-js/component/v2/item-list';
-import { Item } from '@deja-js/component/v2/item-list';
-import { timer } from 'rxjs';
+import { Item, ItemModule, SortInfos, SortingService } from '@deja-js/component/v2/item-list';
+import { Observable, timer } from 'rxjs';
 import { debounceTime, delay, filter, take, takeUntil, tap } from 'rxjs/operators';
 
+import { ViewPort } from '../viewport';
 import { TreeListModule } from './index';
 import { TreeListComponent } from './tree-list.component';
 
@@ -38,7 +38,7 @@ class TreeListContainerComponent extends Destroy {
         super();
 
         // eslint-disable-next-line prefer-spread
-        const itemList = Array.apply(null, { length: 2000 }).map((_n: unknown, i: number) => {
+        const itemList = Array.from({ length: 2000 }).map((_n: unknown, i: number) => {
             const rand = Math.floor(Math.random() * (70 - 33 + 1)) + 33; // random de 33 à 70
             const item = new Item<unknown>(i.toString(), `${i} - Une ligne de test avec une taille de : ${rand}`);
             item.size = rand;
@@ -49,7 +49,7 @@ class TreeListContainerComponent extends Destroy {
             take(1),
             takeUntil(this.destroyed$)
         ).subscribe(groupedResult => {
-            this.itemList = groupedResult;
+            this.itemList = groupedResult as Item<unknown>[];
         });
     }
 }
@@ -74,7 +74,7 @@ class TreeListByModelContainerComponent {
 
     public constructor(sortingService: SortingService) {
         // eslint-disable-next-line prefer-spread
-        const modelsList = Array.apply(null, { length: 2000 }).map((_n: unknown, i: number) => {
+        const modelsList = Array.from({ length: 2000 }).map((_n: unknown, i: number) => {
             const rand = Math.floor(Math.random() * (70 - 33 + 1)) + 33; // random de 33 à 70;
             return {
                 id: i,
@@ -87,7 +87,7 @@ class TreeListByModelContainerComponent {
         this.modelsList = sortingService.sort(modelsList, { name: 'value' } as SortInfos);
     }
 
-    public backgroundColor(item: Item<unknown>) {
+    public backgroundColor(item: Item<unknown>): string {
         return item.selected ? '#888' : null;
     }
 }
@@ -127,7 +127,7 @@ describe('TreeListComponent', () => {
         }).compileComponents();
     }));
 
-    const observeViewPort$ = (fixture: ComponentFixture<TreeListContainerComponent>) => {
+    const observeViewPort$ = (fixture: ComponentFixture<TreeListContainerComponent>): Observable<ViewPort<unknown>> => {
         const treeListDebugElement = fixture.debugElement.query(By.directive(TreeListComponent));
         const treeListInstance = treeListDebugElement.componentInstance as TreeListComponent<unknown>;
 
@@ -328,7 +328,7 @@ describe('TreeListByModelContainerComponent', () => {
         }).compileComponents();
     }));
 
-    const observeModelViewPort$ = (fixture: ComponentFixture<TreeListByModelContainerComponent>) => {
+    const observeModelViewPort$ = (fixture: ComponentFixture<TreeListByModelContainerComponent>): Observable<ViewPort<unknown>> => {
         const treeListDebugElement = fixture.debugElement.query(By.directive(TreeListComponent));
         const treeListInstance = treeListDebugElement.componentInstance as TreeListComponent<unknown>;
 
@@ -449,13 +449,13 @@ describe('TreeListByModelContainerComponent', () => {
         const treeListInstance = treeListDebugElement.componentInstance as TreeListComponent<unknown>;
         const treeListListElement = fixture.debugElement.query(By.css('tree-list > .listcontainer'));
 
-        const sendKeyDown = (code: string, shiftKey?: boolean, ctrlKey?: boolean) => {
+        const sendKeyDown = (code: string, shiftKey?: boolean, ctrlKey?: boolean): void => {
             const event = new KeyboardEvent('keydown', {
                 code: code,
                 shiftKey: shiftKey,
                 ctrlKey: ctrlKey
             } as KeyboardEventInit);
-            treeListListElement.nativeElement.dispatchEvent(event);
+            (treeListListElement.nativeElement as HTMLElement).dispatchEvent(event);
             treeListInstance.refreshViewPort();
             fixture.detectChanges();
         };
@@ -738,7 +738,7 @@ describe('TreeListByOptionsContainerComponent', () => {
         }).compileComponents();
     }));
 
-    const observeOptionsViewPort$ = (fixture: ComponentFixture<TreeListByOptionsContainerComponent>) => {
+    const observeOptionsViewPort$ = (fixture: ComponentFixture<TreeListByOptionsContainerComponent>): Observable<ViewPort<unknown>> => {
         const treeListDebugElement = fixture.debugElement.query(By.directive(TreeListComponent));
         const treeListInstance = treeListDebugElement.componentInstance as TreeListComponent<unknown>;
 
@@ -775,12 +775,12 @@ describe('TreeListByOptionsContainerComponent', () => {
         const treeListInstance = treeListDebugElement.componentInstance as TreeListComponent<unknown>;
         const treeListListElement = fixture.debugElement.query(By.css('tree-list > .listcontainer'));
 
-        const sendKeyUp = (code: string) => {
+        const sendKeyUp = (code: string): void => {
             const event = new KeyboardEvent('keyup', {
                 code: `Key${code.toUpperCase()}`,
                 key: code
             } as KeyboardEventInit);
-            treeListListElement.nativeElement.dispatchEvent(event);
+            (treeListListElement.nativeElement as HTMLElement).dispatchEvent(event);
             treeListInstance.refreshViewPort();
             fixture.detectChanges();
         };
@@ -867,9 +867,9 @@ describe('TreeListByOptionsContainerComponent', () => {
         const treeListInstance = treeListDebugElement.componentInstance as TreeListComponent<unknown>;
         const treeListListElement = fixture.debugElement.query(By.css('tree-list > .listcontainer'));
 
-        const sendMouseClick = (element: DebugElement, shiftKey?: boolean, ctrlKey?: boolean, upElement?: DebugElement) => {
+        const sendMouseClick = (element: DebugElement, shiftKey?: boolean, ctrlKey?: boolean, upElement?: DebugElement): void => {
             // Simulate a mouse click
-            const eventInit = () => ({
+            const eventInit = (): MouseEventInit => ({
                 bubbles: true,
                 cancelable: true,
                 view: document.defaultView,
@@ -881,18 +881,18 @@ describe('TreeListByOptionsContainerComponent', () => {
                 buttons: 1,
                 clientX: 0,
                 clientY: 0,
-                relatedTarget: treeListListElement.nativeElement,
+                relatedTarget: treeListListElement.nativeElement as HTMLElement,
                 screenX: 0,
                 screenY: 0
             } as MouseEventInit);
             const event = new MouseEvent('mousedown', eventInit());
-            element.nativeElement.dispatchEvent(event);
+            (element.nativeElement as HTMLElement).dispatchEvent(event);
             fixture.detectChanges();
             timer(100).pipe(
                 take(1)
             ).subscribe(() => {
                 const upEvent = new MouseEvent('mouseup', eventInit());
-                (upElement || element).nativeElement.dispatchEvent(upEvent);
+                ((upElement || element).nativeElement as HTMLElement).dispatchEvent(upEvent);
                 treeListInstance.refreshViewPort();
                 fixture.detectChanges();
             });

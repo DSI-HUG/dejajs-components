@@ -6,13 +6,8 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
-import { Component } from '@angular/core';
-import { HostBinding } from '@angular/core';
-import { Input } from '@angular/core';
-import { Optional } from '@angular/core';
-import { Self } from '@angular/core';
-import { ControlValueAccessor } from '@angular/forms';
-import { NgControl } from '@angular/forms';
+import { Component, HostBinding, Input, Optional, Self } from '@angular/core';
+import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { KeyCodes } from '@deja-js/component/core';
 
 /**
@@ -22,8 +17,8 @@ import { KeyCodes } from '@deja-js/component/core';
  */
 @Component({
     selector: 'deja-tag',
-    templateUrl: 'tag.component.html',
-    styleUrls: ['tag.component.scss']
+    templateUrl: './tag.component.html',
+    styleUrls: ['./tag.component.scss']
 })
 export class DejaTagComponent implements ControlValueAccessor {
     @HostBinding('attr.disabled') public _disabled: boolean = null;

@@ -5,14 +5,8 @@
  *  Use of this source code is governed by an Apache-2.0 license that can be
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
-import { Directive } from '@angular/core';
-import { ElementRef } from '@angular/core';
-import { HostBinding } from '@angular/core';
-import { Input } from '@angular/core';
-import { Optional } from '@angular/core';
-import { DejaClipboardService } from '@deja-js/component/core';
-import { Destroy } from '@deja-js/component/core';
-import { UUID } from '@deja-js/component/core';
+import { Directive, ElementRef, HostBinding, Input, Optional } from '@angular/core';
+import { DejaClipboardService, Destroy, UUID } from '@deja-js/component/core';
 import { fromEvent } from 'rxjs';
 import { filter, switchMap, take, takeUntil } from 'rxjs/operators';
 
@@ -63,7 +57,7 @@ export class DejaDraggableDirective extends Destroy {
 
                 let data = 'notavailable';
                 if (object) {
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
                     (<any>object).dragged = true;
                     data = JSON.stringify(data);
                 }
@@ -90,7 +84,7 @@ export class DejaDraggableDirective extends Destroy {
             const dragEndInfos = this.clipboardService.get(this.draginfokey) as Record<string, unknown>;
             const obj = dragEndInfos?.[this.objectKey];
             if (obj) {
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
                 delete (<any>obj).dragged;
             }
 

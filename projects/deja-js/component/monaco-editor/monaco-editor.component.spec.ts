@@ -18,9 +18,10 @@ describe('DejaMonacoEditorComponent', () => {
     let fixture: ComponentFixture<DejaMonacoEditorComponent>;
 
     beforeEach(waitForAsync(() => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment
         const wnd = <any>window;
         // Define a monaco editor base path just for tests, because webpack configuration or asset plugin not working
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         wnd.MONACOEDITOR_BASEPATH = 'https://dsi-hug.github.io/dejajs-components/assets/monaco/vs';
 
         void TestBed.configureTestingModule({

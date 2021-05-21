@@ -8,33 +8,11 @@
 
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { BooleanInput, coerceBooleanProperty, coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
-import { ChangeDetectionStrategy } from '@angular/core';
-import { ChangeDetectorRef } from '@angular/core';
-import { Component } from '@angular/core';
-import { DoCheck } from '@angular/core';
-import { ElementRef } from '@angular/core';
-import { EventEmitter } from '@angular/core';
-import { HostBinding } from '@angular/core';
-import { Input } from '@angular/core';
-import { OnChanges } from '@angular/core';
-import { OnDestroy } from '@angular/core';
-import { Optional } from '@angular/core';
-import { Output } from '@angular/core';
-import { Self } from '@angular/core';
-import { ViewChild } from '@angular/core';
-import { ControlValueAccessor } from '@angular/forms';
-import { FormControl } from '@angular/forms';
-import { FormGroupDirective } from '@angular/forms';
-import { NgControl } from '@angular/forms';
-import { NgForm } from '@angular/forms';
-import { ValidationErrors } from '@angular/forms';
-import { Validator } from '@angular/forms';
-import { ValidatorFn } from '@angular/forms';
-import { CanUpdateErrorState } from '@angular/material/core';
-import { ErrorStateMatcher } from '@angular/material/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DoCheck, ElementRef, EventEmitter, HostBinding, Input, OnChanges, OnDestroy, Optional, Output, Self, ViewChild } from '@angular/core';
+import { ControlValueAccessor, FormControl, FormGroupDirective, NgControl, NgForm, ValidationErrors, Validator, ValidatorFn } from '@angular/forms';
+import { CanUpdateErrorState, ErrorStateMatcher } from '@angular/material/core';
 import { MatFormFieldControl } from '@angular/material/form-field';
-import { DejaChildValidatorDirective } from '@deja-js/component/core';
-import { DejaTextMetricsService } from '@deja-js/component/core';
+import { DejaChildValidatorDirective, DejaTextMetricsService } from '@deja-js/component/core';
 import { _MatInputMixinBase } from '@deja-js/component/core/util';
 import { Subject } from 'rxjs';
 
@@ -65,8 +43,8 @@ export const createCounterRangeValidator = (comp: DejaNumericStepperComponent) =
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [{ provide: MatFormFieldControl, useExisting: DejaNumericStepperComponent }],
     selector: 'deja-numeric-stepper',
-    styleUrls: ['numeric-stepper.component.scss'],
-    templateUrl: 'numeric-stepper.component.html'
+    styleUrls: ['./numeric-stepper.component.scss'],
+    templateUrl: './numeric-stepper.component.html'
 })
 // eslint-disable-next-line @angular-eslint/no-conflicting-lifecycle
 export class DejaNumericStepperComponent extends _MatInputMixinBase implements CanUpdateErrorState, DoCheck, OnChanges, OnDestroy, ControlValueAccessor, MatFormFieldControl<number>, Validator {
@@ -107,7 +85,7 @@ export class DejaNumericStepperComponent extends _MatInputMixinBase implements C
 
     /** InputElement of stepper */
     @ViewChild('inputStepper')
-    public set inputElementRef(element: ElementRef) {
+    public set inputElementRef(element: ElementRef<HTMLInputElement>) {
         if (element) {
             this.inputElement = element.nativeElement;
         }
@@ -120,7 +98,7 @@ export class DejaNumericStepperComponent extends _MatInputMixinBase implements C
 
     @Input()
     public set max(value: NumberInput) {
-        this._max = coerceNumberProperty(value, null);
+        this._max = coerceNumberProperty<number>(value, null);
         this.changeDetectorRef.markForCheck();
     }
 
@@ -131,7 +109,7 @@ export class DejaNumericStepperComponent extends _MatInputMixinBase implements C
 
     @Input()
     public set min(value: NumberInput) {
-        this._min = coerceNumberProperty(value, null);
+        this._min = coerceNumberProperty<number>(value, null);
         this.changeDetectorRef.markForCheck();
     }
 
@@ -228,7 +206,7 @@ export class DejaNumericStepperComponent extends _MatInputMixinBase implements C
 
     public constructor(
         public dejaTextMetricsService: DejaTextMetricsService,
-        private elementRef: ElementRef,
+        private elementRef: ElementRef<HTMLElement>,
         private changeDetectorRef: ChangeDetectorRef,
         @Self() @Optional() public ngControl: NgControl,
         private fm: FocusMonitor,
@@ -253,6 +231,7 @@ export class DejaNumericStepperComponent extends _MatInputMixinBase implements C
 
     // eslint-disable-next-line @angular-eslint/no-conflicting-lifecycle, @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-module-boundary-types
     public ngOnChanges(changes: any): void {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         if (changes.min || changes.max) {
             this.validateFn = createCounterRangeValidator(this);
             if (this.ngControl?.control) {

@@ -37,7 +37,7 @@ export class DejaTilesDemoComponent implements OnInit {
     public constructor(private countriesService: CountriesService) {
         this.messages$ = this.message$.pipe(
             scan((acc, curr) => [...acc, curr], [] as IMessage[]),
-            defaultIfEmpty([]));
+            defaultIfEmpty([] as IMessage[]));
     }
 
     public ngOnInit(): void {
@@ -131,6 +131,7 @@ export class DejaTilesDemoComponent implements OnInit {
             type: 'warn',
             gate: true,
             cancel: function(value: boolean) {
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
                 this.gate = false;
                 event.cancel$.next(value);
             }
@@ -147,6 +148,7 @@ export class DejaTilesDemoComponent implements OnInit {
             type: 'warn',
             gate: true,
             cancel: function(value: boolean) {
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
                 this.gate = false;
                 event.cancel$.next(value);
             }

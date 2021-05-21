@@ -8,22 +8,12 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { AfterViewInit } from '@angular/core';
-import { ChangeDetectionStrategy } from '@angular/core';
-import { ChangeDetectorRef } from '@angular/core';
-import { Component } from '@angular/core';
-import { ElementRef } from '@angular/core';
-import { EventEmitter } from '@angular/core';
-import { forwardRef } from '@angular/core';
-import { Input } from '@angular/core';
-import { NgZone } from '@angular/core';
-import { OnChanges } from '@angular/core';
-import { OnDestroy } from '@angular/core';
-import { Output } from '@angular/core';
-import { SimpleChanges } from '@angular/core';
-import { ViewChild } from '@angular/core';
-import { ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, forwardRef, Input, NgZone, OnChanges, OnDestroy, Output, SimpleChanges, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Destroy } from '@deja-js/component/core';
 import { cloneDeep } from 'lodash-es';
@@ -226,7 +216,7 @@ export class DejaEditorComponent extends Destroy implements OnChanges, AfterView
             if (!config.on) {
                 config.on = {};
             }
-            config.on.key = (event: any) => {
+            config.on.key = (event: any): void => {
                 // Override CTRL+A event. Native one cause editor switch on first try
                 if (event.data.code === 1114177) {
                     // CTRL + A
@@ -373,7 +363,7 @@ export class DejaEditorComponent extends Destroy implements OnChanges, AfterView
             // Focus is used during the CKEDITOR insertText process and cause deselection of the selected text
             // So we temporarily deactivate it
             const focus = this.instance.focus;
-            this.instance.focus = () => undefined as void;
+            this.instance.focus = (): void => undefined as void;
             this.instance.insertHtml(replace);
             this.instance.focus = focus;
             return;
@@ -401,7 +391,7 @@ export class DejaEditorComponent extends Destroy implements OnChanges, AfterView
         }
     }
 
-    private registerChangeListener() {
+    private registerChangeListener(): void {
         // CKEditor change event
         this.onDataChangeListener = this.instance.on('change', () => {
             // Debounce update
@@ -491,7 +481,7 @@ export class DejaEditorComponent extends Destroy implements OnChanges, AfterView
         return textNode;
     }
 
-    private firstNonEmptyTextNode(node: any, reverse = false) {
+    private firstNonEmptyTextNode(node: any, reverse = false): any {
         let x = node;
         // eslint-disable-next-line no-loops/no-loops
         while ((x = reverse ? x.getPrevious() : x.getNext())) {
@@ -602,6 +592,7 @@ export class DejaEditorComponent extends Destroy implements OnChanges, AfterView
             node.textNode.setText(beforeText);
             // Wrap into a span otherwise methode createFromHtml will only take the html element :
             // For instance if replace is 'abc<br/>def', createFromHtml will create an html text element with abc only
+            // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
             const newElement = CKEDITOR.dom.element.createFromHtml(`<span>${CKEDITOR.tools.htmlDecode(CKEDITOR.tools.transformPlainTextToHtml(
                 replace,
                 CKEDITOR.ENTER_BR

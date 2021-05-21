@@ -7,20 +7,13 @@
  */
 
 /* eslint-disable @typescript-eslint/naming-convention */
-import { Component } from '@angular/core';
-import { DebugElement } from '@angular/core';
+import { Component, DebugElement } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { GroupingService } from '@deja-js/component/core';
-import { IItemBase } from '@deja-js/component/core';
-import { ItemListService } from '@deja-js/component/core';
-import { IViewPort } from '@deja-js/component/core';
-import { KeyCodes } from '@deja-js/component/core';
-import { SortingService } from '@deja-js/component/core';
-import { ViewPortService } from '@deja-js/component/core';
+import { GroupingService, IItemBase, ItemListService, IViewPort, KeyCodes, SortingService, ViewPortService } from '@deja-js/component/core';
 import { cloneDeep } from 'lodash-es';
-import { from, timer } from 'rxjs';
+import { from, Observable, timer } from 'rxjs';
 import { debounceTime, delay, filter, take, tap } from 'rxjs/operators';
 
 import { DejaGridComponent } from './data-grid.component';
@@ -456,11 +449,11 @@ describe('DejaGridComponent', () => {
 
         fixture = TestBed.createComponent(DejaGridContainerComponent);
         gridDebugElement = fixture.debugElement.query(By.directive(DejaGridComponent));
-        gridInstance = gridDebugElement.componentInstance;
+        gridInstance = gridDebugElement.componentInstance as DejaGridComponent;
         gridContainerInstance = fixture.componentInstance;
     }));
 
-    const observeViewPort$ = () => gridInstance.viewPort.viewPortResult$.pipe(
+    const observeViewPort$ = (): Observable<IViewPort> => gridInstance.viewPort.viewPortResult$.pipe(
         filter((result: IViewPort) => result.viewPortSize > 0));
 
     it('should create the component', waitForAsync(() => {
@@ -609,7 +602,7 @@ describe('DejaGridComponent', () => {
         let pass = 0;
         let doneCount = 0;
 
-        const testIfDone = () => {
+        const testIfDone = (): void => {
             if (++doneCount === 2) {
                 done();
             }
@@ -635,7 +628,7 @@ describe('DejaGridComponent', () => {
                     void expect(vp.items.length).toBe(24);
                     void expect(groupChips.length).toBe(1);
                     if (groupChips.length) {
-                        groupChips[0].nativeElement.click();
+                        (groupChips[0].nativeElement as HTMLElement).click();
                         gridInstance.refresh();
                         fixture.detectChanges();
                     }
@@ -663,16 +656,16 @@ describe('DejaGridComponent', () => {
         let pass = 0;
         let doneCount = 0;
 
-        const testIfDone = () => {
+        const testIfDone = (): void => {
             if (++doneCount === 2) {
                 done();
             }
         };
 
-        const sendMouseClick = (element: DebugElement) => {
+        const sendMouseClick = (element: DebugElement): void => {
             // Simulate a mouse click on the header
             const gridHeader = fixture.debugElement.query(By.css('deja-grid > deja-tree-list > #listheader > deja-grid-header'));
-            const eventInit = () => ({
+            const eventInit = (): MouseEventInit => ({
                 bubbles: true,
                 cancelable: true,
                 view: document.defaultView,
@@ -684,18 +677,18 @@ describe('DejaGridComponent', () => {
                 buttons: 1,
                 clientX: 0,
                 clientY: 0,
-                relatedTarget: gridHeader.nativeElement,
+                relatedTarget: gridHeader.nativeElement as HTMLElement,
                 screenX: 0,
                 screenY: 0
             } as MouseEventInit);
             const event = new MouseEvent('mousedown', eventInit());
-            element.nativeElement.dispatchEvent(event);
+            (element.nativeElement as HTMLElement).dispatchEvent(event);
             fixture.detectChanges();
             timer(100).pipe(
                 take(1)
             ).subscribe(() => {
                 const upEvent = new MouseEvent('mouseup', eventInit());
-                element.nativeElement.dispatchEvent(upEvent);
+                (element.nativeElement as HTMLElement).dispatchEvent(upEvent);
                 gridInstance.refreshViewPort();
                 fixture.detectChanges();
             });
@@ -718,9 +711,9 @@ describe('DejaGridComponent', () => {
                     break;
 
                 default:
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
                     void expect((<any>vp.items[0]).name).toEqual('Banana');
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
                     void expect((<any>vp.items[8]).name).toEqual('Mango');
                     testIfDone();
                     break;
@@ -738,10 +731,10 @@ describe('DejaGridComponent', () => {
     it('should size the column when user click on the header separator', done => {
         let pass = 0;
 
-        const sendMouseMove = (element: DebugElement) => {
+        const sendMouseMove = (element: DebugElement): void => {
             // Simulate a mouse click on the header
             const gridHeader = fixture.debugElement.query(By.css('deja-grid > deja-tree-list > #listheader > deja-grid-header'));
-            const eventInit = () => ({
+            const eventInit = (): MouseEventInit => ({
                 bubbles: true,
                 cancelable: true,
                 view: document.defaultView,
@@ -753,12 +746,12 @@ describe('DejaGridComponent', () => {
                 buttons: 1,
                 clientX: 0,
                 clientY: 0,
-                relatedTarget: gridHeader.nativeElement,
+                relatedTarget: gridHeader.nativeElement as HTMLElement,
                 screenX: 0,
                 screenY: 0
             } as MouseEventInit);
             const event = new MouseEvent('mousedown', eventInit());
-            element.nativeElement.dispatchEvent(event);
+            (element.nativeElement as HTMLElement).dispatchEvent(event);
             fixture.detectChanges();
             timer(100).pipe(
                 take(1),
@@ -766,7 +759,7 @@ describe('DejaGridComponent', () => {
                     const ei = eventInit();
                     ei.screenX = 100;
                     const moveEvent = new MouseEvent('mousemove', ei);
-                    element.nativeElement.dispatchEvent(moveEvent);
+                    (element.nativeElement as HTMLElement).dispatchEvent(moveEvent);
                     fixture.detectChanges();
                 }),
                 delay(100)
@@ -774,7 +767,7 @@ describe('DejaGridComponent', () => {
                 const ei = eventInit();
                 ei.screenX = 100;
                 const upEvent = new MouseEvent('mouseup', ei);
-                element.nativeElement.dispatchEvent(upEvent);
+                (element.nativeElement as HTMLElement).dispatchEvent(upEvent);
                 gridInstance.refreshViewPort();
                 fixture.detectChanges();
             });
@@ -798,14 +791,14 @@ describe('DejaGridComponent', () => {
                     break;
 
                 case 2:
-                    void expect(cells[1].nativeElement.clientWidth).toBe(350);
+                    void expect((cells[1].nativeElement as HTMLElement).clientWidth).toBe(350);
                     gridContainerInstance.columns = gridContainerInstance.percentColumns;
                     fixture.detectChanges();
                     sendMouseMove(columnSeparators[2]);
                     break;
 
                 default:
-                    void expect(cells[2].nativeElement.clientWidth).toBeGreaterThan(10);
+                    void expect((cells[2].nativeElement as HTMLElement).clientWidth).toBeGreaterThan(10);
                     done();
                     break;
             }
@@ -850,14 +843,14 @@ describe('DejaGridComponent', () => {
     it('should navigate with the keyboard', done => {
         let pass = 0;
 
-        const sendKeyDown = (code: string) => {
+        const sendKeyDown = (code: string): void => {
             const event = new KeyboardEvent('keydown', {
                 code: code,
                 shiftKey: false,
                 altKey: false,
                 ctrlKey: false
             } as KeyboardEventInit);
-            gridDebugElement.nativeElement.dispatchEvent(event);
+            (gridDebugElement.nativeElement as HTMLElement).dispatchEvent(event);
             gridInstance.refreshViewPort();
             fixture.detectChanges();
         };
@@ -900,7 +893,7 @@ describe('DejaGridComponent', () => {
         let gridHeader: DebugElement;
         let pass = 0;
 
-        const eventInit = () => ({
+        const eventInit = (): MouseEventInit => ({
             bubbles: true,
             cancelable: true,
             view: document.defaultView,
@@ -912,7 +905,7 @@ describe('DejaGridComponent', () => {
             buttons: 1,
             clientX: 0,
             clientY: 0,
-            relatedTarget: gridHeader.nativeElement,
+            relatedTarget: gridHeader.nativeElement as HTMLElement,
             screenX: 0,
             screenY: 0,
             dataTransfer: new DataTransfer()
@@ -959,7 +952,7 @@ describe('DejaGridComponent', () => {
                     void expect(layout.column.name).toEqual('name');
                     void expect(layout.target.name).toEqual('VitaminB1');
                     dropEventInit = eventInit();
-                    dropTarget = columnHeaders[4].nativeElement;
+                    dropTarget = columnHeaders[4].nativeElement as HTMLElement;
                     dropTargetBounds = dropTarget.getBoundingClientRect();
                     dropEventInit.clientY = dropTargetBounds.top + 5;
                     dropEventInit.clientX = dropTargetBounds.right - 2;
@@ -988,7 +981,7 @@ describe('DejaGridComponent', () => {
                     take(1),
                     tap(() => {
                         const event = new DragEvent('dragstart', eventInit() as never);
-                        columnHeaders[1].nativeElement.dispatchEvent(event);
+                        (columnHeaders[1].nativeElement as HTMLElement).dispatchEvent(event);
                         fixture.detectChanges();
                     }),
                     delay(100),
@@ -1023,7 +1016,7 @@ describe('DejaGridComponent', () => {
         let gridHeader: DebugElement;
         let dragHeaderElement: HTMLElement;
 
-        const eventInit = () => ({
+        const eventInit = (): MouseEventInit => ({
             bubbles: true,
             cancelable: true,
             view: document.defaultView,
@@ -1035,7 +1028,7 @@ describe('DejaGridComponent', () => {
             buttons: 1,
             clientX: 0,
             clientY: 0,
-            relatedTarget: gridHeader.nativeElement,
+            relatedTarget: gridHeader.nativeElement as HTMLElement,
             screenX: 0,
             screenY: 0,
             dataTransfer: new DataTransfer()
@@ -1080,7 +1073,7 @@ describe('DejaGridComponent', () => {
                 timer(10).pipe(
                     take(1),
                     tap(() => {
-                        dragHeaderElement = columnHeaders[1].nativeElement;
+                        dragHeaderElement = columnHeaders[1].nativeElement as HTMLElement;
                         dragHeaderElement.dispatchEvent(new DragEvent('dragstart', eventInit() as never));
                         fixture.detectChanges();
                     }),
@@ -1118,7 +1111,7 @@ describe('DejaGridComponent', () => {
         let dragHeaderElement: HTMLElement;
         let pass = 0;
 
-        const eventInit = (relatedTarget: DebugElement) => ({
+        const eventInit = (relatedTarget: DebugElement): MouseEventInit => ({
             bubbles: true,
             cancelable: true,
             view: document.defaultView,
@@ -1130,7 +1123,7 @@ describe('DejaGridComponent', () => {
             buttons: 1,
             clientX: 0,
             clientY: 0,
-            relatedTarget: relatedTarget.nativeElement,
+            relatedTarget: relatedTarget.nativeElement as HTMLElement,
             screenX: 0,
             screenY: 0,
             dataTransfer: new DataTransfer()
@@ -1146,7 +1139,7 @@ describe('DejaGridComponent', () => {
             gridGroupArea = fixture.debugElement.query(By.css('deja-grid > deja-grid-grouparea > #deja-grid-grouparea'));
             const chipsDraggable = fixture.debugElement.queryAll(By.css('deja-grid > deja-grid-grouparea > #deja-grid-grouparea > deja-chips span[draggable]'));
 
-            const invertGroups = () => {
+            const invertGroups = (): void => {
                 timer(10).pipe(
                     take(1),
                     tap(() => {
@@ -1195,7 +1188,7 @@ describe('DejaGridComponent', () => {
                         timer(10).pipe(
                             take(1),
                             tap(() => {
-                                dragHeaderElement = columnHeaders[1].nativeElement;
+                                dragHeaderElement = columnHeaders[1].nativeElement as HTMLElement;
                                 dragHeaderElement.dispatchEvent(new DragEvent('dragstart', eventInit(gridHeader) as never));
                                 fixture.detectChanges();
                             }),
@@ -1225,15 +1218,15 @@ describe('DejaGridComponent', () => {
 
                 case 2:
                     void expect(vp.items.length).toBe(24);
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
                     void expect((<any>vp.items[0]).$text).toEqual('Peach');
                     void expect(chipsDraggable.length).toBe(1);
-                    void expect(chipsDraggable[0].nativeElement.innerText).toEqual('Name');
+                    void expect((chipsDraggable[0].nativeElement as HTMLElement).innerText).toEqual('Name');
                     // Drag a second column to the group area
                     timer(10).pipe(
                         take(1),
                         tap(() => {
-                            dragHeaderElement = columnHeaders[0].nativeElement;
+                            dragHeaderElement = columnHeaders[0].nativeElement as HTMLElement;
                             dragHeaderElement.dispatchEvent(new DragEvent('dragstart', eventInit(gridHeader) as never));
                             fixture.detectChanges();
                         }),
@@ -1262,12 +1255,12 @@ describe('DejaGridComponent', () => {
 
                 case 3:
                     void expect(vp.items.length).toBe(36);
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
                     void expect((<any>vp.items[0]).$text).toEqual('Peach');
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
                     void expect((<any>vp.items[1]).$text).toEqual('#FF6F00');
                     void expect(chipsDraggable.length).toBe(2);
-                    void expect(chipsDraggable[0].nativeElement.innerText).toEqual('Name');
+                    void expect((chipsDraggable[0].nativeElement as HTMLElement).innerText).toEqual('Name');
 
                     // Invert group in grouping area
                     invertGroups();
@@ -1275,9 +1268,9 @@ describe('DejaGridComponent', () => {
 
                 case 4:
                     void expect(vp.items.length).toBe(36);
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
                     void expect((<any>vp.items[1]).$text).toEqual('Peach');
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
                     void expect((<any>vp.items[0]).$text).toEqual('#FF6F00');
                     void expect(chipsDraggable.length).toBe(2);
 
@@ -1287,20 +1280,20 @@ describe('DejaGridComponent', () => {
 
                 case 5:
                     void expect(vp.items.length).toBe(36);
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
                     void expect((<any>vp.items[0]).$text).toEqual('Peach');
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
                     void expect((<any>vp.items[1]).$text).toEqual('#FF6F00');
                     void expect(chipsDraggable.length).toBe(2);
 
                     // Close name group
                     chipsCloseButtons = fixture.debugElement.queryAll(By.css('deja-grid > deja-grid-grouparea > #deja-grid-grouparea > deja-chips #close-button'));
-                    chipsCloseButtons[0].nativeElement.click();
+                    (chipsCloseButtons[0].nativeElement as HTMLElement).click();
                     break;
 
                 default:
                     void expect(vp.items.length).toBe(24);
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
                     void expect((<any>vp.items[0]).$text).toEqual('#FF6F00');
                     void expect(chipsDraggable.length).toBe(1);
                     done();

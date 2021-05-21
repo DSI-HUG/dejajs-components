@@ -62,7 +62,7 @@ export class ViewPortService extends Destroy {
         items: []
     } as IViewPort;
 
-    private _mode= 'fixed';
+    private _mode = 'fixed';
     private _itemsSize = ViewPortService.itemDefaultSize;
     private _direction = 'vertical';
     private _scrollPosition = 0;
@@ -90,9 +90,9 @@ export class ViewPortService extends Destroy {
         //     // console.log(_message);
         // };
 
-        const innerSize = () => this._direction === 'horizontal' ? window.innerWidth : window.innerHeight;
+        const innerSize = (): number => this._direction === 'horizontal' ? window.innerWidth : window.innerHeight;
 
-        const clientSize = (element: HTMLElement) => Math.ceil(this._direction === 'horizontal' ? element.clientWidth : element.clientHeight);
+        const clientSize = (element: HTMLElement): number => Math.ceil(this._direction === 'horizontal' ? element.clientWidth : element.clientHeight);
 
         const calcFixedSizeViewPort$ = (items: IViewPortItem[], containerSize: number, scrollPos: number, itemDefaultSize: number, ensureParams: IEnsureParams): Observable<IViewPort> => {
             // consoleLog(`calcFixedSizeViewPort`);
@@ -283,7 +283,7 @@ export class ViewPortService extends Destroy {
                 items: items
             } as IViewPort;
 
-            if (elements.length !== items.length && bindIfAny !== false) {
+            if (elements.length !== items.length && bindIfAny) {
                 this.viewPortResult$.next(viewPort);
                 return timer(1).pipe(
                     switchMap(() => calcDisabledViewPort$(items, containerSize, scrollPos, element, ensureParams, false)));

@@ -13,8 +13,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { DejaChildValidatorModule } from '@deja-js/component/core';
-import { DejaTextMetricsModule } from '@deja-js/component/core';
+import { DejaChildValidatorModule, DejaTextMetricsModule } from '@deja-js/component/core';
 
 import { DejaNumericStepperComponent } from './numeric-stepper.component';
 

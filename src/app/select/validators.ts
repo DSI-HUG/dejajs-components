@@ -8,7 +8,7 @@
 
 import { AbstractControl } from '@angular/forms';
 export const cheeseValidator = (control: AbstractControl): string[] => {
-    const val = control.value;
+    const val = control.value as string;
     if (val === 'gruyère') {
         return [`${val} is not a fruit`];
     }

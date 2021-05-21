@@ -86,19 +86,23 @@ export class ItemListService<T> {
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     public static getItemValue(item: any, valueField?: string): unknown {
         // eslint-disable-next-line eqeqeq
-        const isDefined = (value: any) => value != undefined;
+        const isDefined = (value: any): boolean => value != undefined;
 
         if (valueField) {
             const fields = valueField.split('.');
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
             let model = item.model?.[fields[0]] !== undefined ? item.model : item;
             fields.forEach(fieldName => {
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
                 model = model?.[fieldName];
             });
             if (isDefined(model)) {
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-call
                 return typeof model === 'function' ? model() : model;
             }
         }
 
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         return isDefined(item.value) ? item.value : (isDefined(item.model) && item.model) || item;
     }
 
@@ -112,19 +116,26 @@ export class ItemListService<T> {
         if (value) {
             if (textField) {
                 const fields = textField.split('.');
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
                 let model = value.model?.[fields[0]] !== undefined ? value.model : value;
                 fields.forEach(fieldName => {
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
                     model = model?.[fieldName];
                 });
                 if (model !== undefined) {
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
                     return typeof model === 'function' ? model() : model;
                 }
                 return '';
             }
 
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
             if (value.displayName) {
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
                 return typeof value.displayName === 'string' ? value.displayName : value.displayName();
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
             } else if (typeof value.toString === 'function') {
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
                 return value.toString();
             }
         }
@@ -226,7 +237,7 @@ export class ItemListService<T> {
         this.invalidateCache();
     }
 
-    private get items() {
+    private get items(): IItemBase<T>[] {
         return this._items;
     }
 
@@ -234,7 +245,7 @@ export class ItemListService<T> {
      * @param items Provider de la liste des éléments de la liste.
      */
     // eslint-disable-next-line rxjs/finnish
-    public setItems$(items: any[] | Promise<any[]> | Observable<any[]>): Observable<unknown> {
+    public setItems$(items: IItemBase<T>[] | Promise<IItemBase<T>[]> | Observable<IItemBase<T>[]>): Observable<unknown> {
         if (!items) {
             this.items = undefined;
             return of(null);
@@ -527,7 +538,7 @@ export class ItemListService<T> {
      */
     public toggleAll$(collapsed: boolean): Observable<IItemTree<T>[]> {
         return of(this._cache.flatList).pipe(
-            map((items: IItemTree<T>[]) => items.filter(item => item.$items && item.collapsible !== false)),
+            map((items: IItemTree<T>[]) => items.filter(item => item.$items && item.collapsible)),
             tap(() => delete this._cache.visibleList), // Invalidate view cache
             switchMap(items => collapsed ? this.collapseItems$(items) : this.expandItems$(items)));
     }
@@ -544,7 +555,7 @@ export class ItemListService<T> {
         }
 
         const item = visibleList[index] as IItemTree<T>;
-        if (!item || item.collapsible === false) {
+        if (!item || !item.collapsible) {
             return of([]);
         }
 
@@ -559,7 +570,7 @@ export class ItemListService<T> {
     public expandItems$(items: IItemBase<T>[]): Observable<IItemBase<T>[]> {
         return from(items || []).pipe(
             switchMap(item => this.expandItem$(item)),
-            reduce((acc, cur) => [...acc, cur], []));
+            reduce((acc, cur) => [...acc, cur], [] as IItemBase<T>[]));
     }
 
     /** Reduits les éléments spécifiés.
@@ -569,7 +580,7 @@ export class ItemListService<T> {
     public collapseItems$(items: IItemBase<T>[]): Observable<IItemBase<T>[]> {
         return from(items || []).pipe(
             switchMap(item => this.collapseItem$(item)),
-            reduce((acc, cur) => [...acc, cur], []));
+            reduce((acc, cur) => [...acc, cur], [] as IItemBase<T>[]));
     }
 
     /** Etends l'élément spécifié.
@@ -660,7 +671,7 @@ export class ItemListService<T> {
 
         return this.unselectAll$().pipe(
             map(() => visibleList.slice(Math.min(indexFrom, indexTo), 1 + Math.max(indexFrom, indexTo))),
-            map(items => items.filter(itm => itm.selectable !== false)),
+            map(items => items.filter(itm => itm.selectable)),
             tap(() => {
                 if (this.hideSelected) {
                     delete this._cache.visibleList;
@@ -841,7 +852,7 @@ export class ItemListService<T> {
      * @return Observable résolu par la fonction, qui retourne les informations sur le parent de l'élément spécifié
      */
     public getParentListInfos$(item: IItemTree<T>, multiSelect: boolean): Observable<IParentListInfoResult<T>> {
-        const search$ = (flatList: IItemBase<T>[]) => {
+        const search$ = (flatList: IItemBase<T>[]): Observable<IParentListInfoResult<T>> => {
             let flatIndex = flatList.findIndex(itm => itm === item);
             if (flatIndex < 0) {
                 throw new Error('Item not found.');
@@ -897,7 +908,7 @@ export class ItemListService<T> {
         ignoreCache = ignoreCache || queryChanged || !this.items || !this.items.length;
         this._lastQuery = query;
 
-        const escapeChars = (text: string) => {
+        const escapeChars = (text: string): string => {
             const specialChars = ['\\', '/', '|', '&', ';', '$', '%', '@', '"', '<', '>', '(', ')', '+'];
             specialChars.forEach(c => text = text.replace(c, `\\${c}`));
             return text;
@@ -923,7 +934,7 @@ export class ItemListService<T> {
             }
         }
 
-        const loadViewList = () => {
+        const loadViewList = (): IViewListResult<T> => {
             let viewList: IItemBase<T>[];
             if (ddStartIndex !== undefined && ddTargetIndex !== undefined && ddStartIndex !== ddTargetIndex) {
                 if (!this._ddList) {
@@ -1028,7 +1039,9 @@ export class ItemListService<T> {
         if (itmTree.$items) {
             return true;
         }
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
         const field = (<any>item)[searchField];
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
         const value = typeof field === 'function' ? field() : field || this.getTextValue(item, searchField);
         return value && regExp.test(Diacritics.remove(value));
     }
@@ -1061,7 +1074,7 @@ export class ItemListService<T> {
 
         if (regExp) {
             // Recalc visible list and select list from the filter
-            const getFilteredList = (treeList: IItemBase<T>[], depth: number, hidden: boolean) => {
+            const getFilteredList = (treeList: IItemBase<T>[], depth: number, hidden: boolean): IItemTree<T>[] => {
                 let filteredItems: IItemBase<T>[];
                 if (treeList) {
                     treeList.forEach(itm => {
@@ -1110,7 +1123,7 @@ export class ItemListService<T> {
 
         } else {
             // Get visible items list without filter
-            const getVisibleListInternal = (treeList: IItemTree<T>[], depth: number, hidden: boolean) => {
+            const getVisibleListInternal = (treeList: IItemTree<T>[], depth: number, hidden: boolean): void => {
                 if (treeList) {
                     treeList.forEach(item => {
                         if (!hidden && this.isVisible(item) && !(item.selected && this.hideSelected)) {
@@ -1163,7 +1176,7 @@ export class ItemListService<T> {
         let isTree = false;
         let odd = false;
 
-        const flatList$: any = (itms: IItemTree<T>[], depth: number, hidden: boolean) => from(itms || []).pipe(
+        const flatList$ = (itms: IItemTree<T>[], depth: number, hidden: boolean): Observable<IItemBase<T>> => from(itms || []).pipe(
             tap(item => {
                 if (depth > depthMax) {
                     depthMax = depth;
@@ -1221,7 +1234,7 @@ export class ItemListService<T> {
         this._cache.rowsCount = 0;
     }
 
-    private ensureSelectedItems(items: IItemBase<T>[]) {
+    private ensureSelectedItems(items: IItemBase<T>[]): IItemBase<T>[] {
         if (this.selectedList && this.selectedList.length > 0) {
             // Ensure selected flag
             this.selectedList.forEach(item => item.selected = true);
@@ -1231,7 +1244,7 @@ export class ItemListService<T> {
             }
 
             const newSelectedList = [] as IItemBase<T>[];
-            const ensureSelectedChildren = (children: IItemTree<T>[]) => {
+            const ensureSelectedChildren = (children: IItemTree<T>[]): void => {
                 children.forEach(item => {
                     const selectedItem = this.selectedList.find(selected => this.compareItems(selected, item));
                     if (selectedItem) {
@@ -1261,7 +1274,7 @@ export class ItemListService<T> {
                 return this.selectedList;
             }
 
-            const ensureSelectedChildren = (children: IItemTree<T>[]) => {
+            const ensureSelectedChildren = (children: IItemTree<T>[]): void => {
                 children.forEach(item => {
                     if (item.selected) {
                         this.selectedList.push(item);
@@ -1278,9 +1291,9 @@ export class ItemListService<T> {
         return this.selectedList;
     }
 
-    private compareItems = (item1: IItemBase<T>, item2: IItemBase<T>) => {
+    private compareItems = (item1: IItemBase<T>, item2: IItemBase<T>): boolean => {
         // eslint-disable-next-line eqeqeq
-        const isDefined = (value: any) => value != undefined;
+        const isDefined = (value: IItemBase<T>): boolean => value != undefined;
 
         if (!isDefined(item1) || !isDefined(item2)) {
             return false;
@@ -1301,7 +1314,7 @@ export class ItemListService<T> {
         }
     };
 
-    private ensureVisibleListCache$(searchField: string, regExp: RegExp, expandTree: boolean, multiSelect: boolean) {
+    private ensureVisibleListCache$(searchField: string, regExp: RegExp, expandTree: boolean, multiSelect: boolean): Observable<IItemBase<T>[]> {
         if (this._cache.visibleList?.length) {
             return of(this._cache.visibleList);
         } else {
@@ -1319,7 +1332,7 @@ export class ItemListService<T> {
         }
     }
 
-    private ensureFlatListCache$(isFiltered: boolean, multiSelect: boolean) {
+    private ensureFlatListCache$(isFiltered: boolean, multiSelect: boolean): Observable<IItemBase<T>[]> {
         if (this._cache.flatList?.length) {
             return of(this._cache.flatList);
         } else {
@@ -1346,7 +1359,7 @@ export class ItemListService<T> {
         }
     }
 
-    private ensureGroupedListCache$() {
+    private ensureGroupedListCache$(): Observable<IItemBase<T>[]> {
         if (this._cache.groupedList?.length) {
             return of(this._cache.groupedList);
         } else if (!this.groupInfos || this.groupInfos.length === 0) {
@@ -1362,26 +1375,28 @@ export class ItemListService<T> {
                     this._cache.groupedList = groupedList;
                 }));
         } else {
-            return of([]);
+            return of([] as IItemBase<T>[]);
         }
     }
 
-    private ensureChildrenProperties(items: IItemTree<T>[]) {
+    private ensureChildrenProperties(items: IItemTree<T>[]): void {
         if (!items) {
             return;
         }
 
         items.forEach(item => {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
             const field = (<any>item)[this.childrenField];
             if (field) {
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                 item.$items = field;
                 this.ensureChildrenProperties(item.$items);
             }
         });
     }
 
-    private isVisible(item: IItemBase<T>) {
-        return item.visible !== false;
+    private isVisible(item: IItemBase<T>): boolean {
+        return item.visible;
     }
 }
 

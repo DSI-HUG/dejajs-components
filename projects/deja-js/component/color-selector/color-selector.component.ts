@@ -187,13 +187,15 @@ export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestr
             takeUntil(this.destroyed$)
         ).subscribe(event => {
             const target = event.target as HTMLElement;
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
             const targetIndex = (<any>target.attributes)[DejaColorSelectorComponent.INDEX_ATTRIBUTE];
             if (target.hasAttribute('basecolor')) {
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
                 this.hilightedBaseIndex$.next(+targetIndex.value);
                 this.hilightedSubIndex$.next(this.hilightedSubIndex);
             } else if (target.hasAttribute('subcolor')) {
                 this.hilightedBaseIndex$.next(this.hilightedBaseIndex);
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
                 this.hilightedSubIndex$.next(+targetIndex.value);
             } else {
                 this.hilightedBaseIndex$.next(undefined);
@@ -253,7 +255,7 @@ export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestr
     }
 
     public set selectedColor(color: Color) {
-        const selectSubIndex = (index: number) => {
+        const selectSubIndex = (index: number): void => {
             timer(1).pipe(
                 take(1),
                 takeUntil(this.destroyed$)

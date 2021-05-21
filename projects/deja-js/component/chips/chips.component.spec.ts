@@ -38,9 +38,9 @@ describe('DejaChipsComponent', () => {
         // TODO: should find a better way to query (with a class for example)
         const spans = fixture.debugElement.queryAll(By.css('span > span'));
         void expect(spans.length).toEqual(3);
-        void expect(spans[0].nativeElement.innerHTML).toEqual('Angular');
-        void expect(spans[1].nativeElement.innerHTML).toEqual('Java');
-        void expect(spans[2].nativeElement.innerHTML).toEqual('Oracle');
+        void expect((spans[0].nativeElement as HTMLElement).innerHTML).toEqual('Angular');
+        void expect((spans[1].nativeElement as HTMLElement).innerHTML).toEqual('Java');
+        void expect((spans[2].nativeElement as HTMLElement).innerHTML).toEqual('Oracle');
     });
 
     it('should init with object items and textField', () => {
@@ -54,18 +54,18 @@ describe('DejaChipsComponent', () => {
 
         let spans = fixture.debugElement.queryAll(By.css('span > span'));
         void expect(spans.length).toEqual(3);
-        void expect(spans[0].nativeElement.innerHTML).toEqual('Peter');
-        void expect(spans[1].nativeElement.innerHTML).toEqual('Paul');
-        void expect(spans[2].nativeElement.innerHTML).toEqual('Jack');
+        void expect((spans[0].nativeElement as HTMLElement).innerHTML).toEqual('Peter');
+        void expect((spans[1].nativeElement as HTMLElement).innerHTML).toEqual('Paul');
+        void expect((spans[2].nativeElement as HTMLElement).innerHTML).toEqual('Jack');
 
         component.textField = 'speciality';
         fixture.detectChanges();
 
         spans = fixture.debugElement.queryAll(By.css('span > span'));
         void expect(spans.length).toEqual(3);
-        void expect(spans[0].nativeElement.innerHTML).toEqual('Java');
-        void expect(spans[1].nativeElement.innerHTML).toEqual('C++');
-        void expect(spans[2].nativeElement.innerHTML).toEqual('HTML5');
+        void expect((spans[0].nativeElement as HTMLElement).innerHTML).toEqual('Java');
+        void expect((spans[1].nativeElement as HTMLElement).innerHTML).toEqual('C++');
+        void expect((spans[2].nativeElement as HTMLElement).innerHTML).toEqual('HTML5');
     });
 
     it('should init with object items and displayName', () => {
@@ -78,24 +78,24 @@ describe('DejaChipsComponent', () => {
 
         const spans = fixture.debugElement.queryAll(By.css('span > span'));
         void expect(spans.length).toEqual(3);
-        void expect(spans[0].nativeElement.innerHTML).toEqual('Pierre');
-        void expect(spans[1].nativeElement.innerHTML).toEqual('Paul');
-        void expect(spans[2].nativeElement.innerHTML).toEqual('Jacques');
+        void expect((spans[0].nativeElement as HTMLElement).innerHTML).toEqual('Pierre');
+        void expect((spans[1].nativeElement as HTMLElement).innerHTML).toEqual('Paul');
+        void expect((spans[2].nativeElement as HTMLElement).innerHTML).toEqual('Jacques');
     });
 
     it('should init with object items and toString()', () => {
         component.items = [
-            { id: 1, name: 'Peter', toString: () => 'Pietro', speciality: 'Java' },
-            { id: 2, name: 'Paul', toString: () => 'Paolo', speciality: 'C++' },
-            { id: 3, name: 'Jack', toString: () => 'Giacomo', speciality: 'HTML5' }
+            { id: 1, name: 'Peter', toString: (): string => 'Pietro', speciality: 'Java' },
+            { id: 2, name: 'Paul', toString: (): string => 'Paolo', speciality: 'C++' },
+            { id: 3, name: 'Jack', toString: (): string => 'Giacomo', speciality: 'HTML5' }
         ];
         fixture.detectChanges();
 
         const spans = fixture.debugElement.queryAll(By.css('span > span'));
         void expect(spans.length).toEqual(3);
-        void expect(spans[0].nativeElement.innerHTML).toEqual('Pietro');
-        void expect(spans[1].nativeElement.innerHTML).toEqual('Paolo');
-        void expect(spans[2].nativeElement.innerHTML).toEqual('Giacomo');
+        void expect((spans[0].nativeElement as HTMLElement).innerHTML).toEqual('Pietro');
+        void expect((spans[1].nativeElement as HTMLElement).innerHTML).toEqual('Paolo');
+        void expect((spans[2].nativeElement as HTMLElement).innerHTML).toEqual('Giacomo');
     });
 
     // How to test the use of close button ?
@@ -111,7 +111,7 @@ describe('DejaChipsComponent', () => {
         const spy = spyOn(component, 'onClose');
 
         const clickEvent = new MouseEvent('click');
-        closeButtons[1].nativeElement.dispatchEvent(clickEvent);
+        (closeButtons[1].nativeElement as HTMLElement).dispatchEvent(clickEvent);
 
         void expect(spy).toHaveBeenCalledWith(clickEvent, 'Java', 1);
     });

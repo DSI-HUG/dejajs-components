@@ -70,7 +70,7 @@ export class MonacoEditorService {
             const baseHref = baseElement.href;
             const basePath = monacoWindow.MONACOEDITOR_BASEPATH || `${baseHref}assets/monaco/vs`;
 
-            const onGotAmdLoader = () => {
+            const onGotAmdLoader = (): void => {
                 // Load monaco
                 (monacoWindow.require as Require2).config({ paths: { vs: basePath } });
                 (monacoWindow.require as Require1)(['vs/editor/editor.main'], () => {

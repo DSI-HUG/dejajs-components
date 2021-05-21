@@ -12,12 +12,11 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { IViewPortItem } from '@deja-js/component/core';
-import { ViewPortService } from '@deja-js/component/core';
-import { delay, filter } from 'rxjs/operators';
-import { tap } from 'rxjs/operators';
-import { debounceTime } from 'rxjs/operators';
+import { IViewPortItem, ViewPortService } from '@deja-js/component/core';
+import { Observable } from 'rxjs';
+import { debounceTime, delay, filter, tap } from 'rxjs/operators';
 
+import { IViewPort } from '../core';
 import { DejaViewPortModule } from './index';
 import { DejaViewPortComponent } from './viewport.component';
 
@@ -68,7 +67,7 @@ describe('DejaViewPortComponent', () => {
         }).compileComponents();
     }));
 
-    const observeViewPort$ = (fixture: ComponentFixture<DejaViewportContainerComponent>, elementCount: number, expectedBeforeSize: number, expectedAfterSize: number, expectedViewPortSize: number, expectedViewPortStartIndex: number, expectedViewPortEndIndex: number) => {
+    const observeViewPort$ = (fixture: ComponentFixture<DejaViewportContainerComponent>, elementCount: number, expectedBeforeSize: number, expectedAfterSize: number, expectedViewPortSize: number, expectedViewPortStartIndex: number, expectedViewPortEndIndex: number): Observable<IViewPort> => {
         const viewPortDebugElement = fixture.debugElement.query(By.directive(DejaViewPortComponent));
         const viewPortService = viewPortDebugElement.injector.get(ViewPortService);
 
@@ -93,6 +92,7 @@ describe('DejaViewPortComponent', () => {
         const fixture = TestBed.createComponent(DejaViewportContainerComponent);
         fixture.detectChanges();
         const viewPortDebugElement = fixture.debugElement.query(By.directive(DejaViewPortComponent));
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         const viewPortInstance = viewPortDebugElement.componentInstance;
         void expect(viewPortInstance).toBeTruthy();
     }));
@@ -252,7 +252,7 @@ describe('DejaViewPortComponent', () => {
         }).compileComponents();
     }));
 
-    const observeViewPort$ = (fixture: ComponentFixture<DejaViewportAutoContainerComponent>, elementCount: number, expectedBeforeSize: number, expectedAfterSize: number, expectedViewPortSize: number, expectedViewPortStartIndex: number, expectedViewPortEndIndex: number) => {
+    const observeViewPort$ = (fixture: ComponentFixture<DejaViewportAutoContainerComponent>, elementCount: number, expectedBeforeSize: number, expectedAfterSize: number, expectedViewPortSize: number, expectedViewPortStartIndex: number, expectedViewPortEndIndex: number): Observable<IViewPort> => {
         const viewPortDebugElement = fixture.debugElement.query(By.directive(DejaViewPortComponent));
         const viewPortService = viewPortDebugElement.injector.get(ViewPortService);
 
@@ -320,7 +320,7 @@ describe('DejaViewPortComponent', () => {
     it('should able to refresh the viewport when the window is resized or scroll', done => {
         const fixture = TestBed.createComponent(DejaViewportAutoContainerComponent);
         const viewPortDebugElement = fixture.debugElement.query(By.directive(DejaViewPortComponent));
-        const viewPortElement = viewPortDebugElement.nativeElement;
+        const viewPortElement = viewPortDebugElement.nativeElement as HTMLElement;
         const viewPortService = viewPortDebugElement.injector.get(ViewPortService);
         const viewPortInstance = viewPortDebugElement.componentInstance as DejaViewPortComponent;
         const wrapperDebugElement = fixture.debugElement.query(By.css('deja-viewport > #viewport-wrapper'));

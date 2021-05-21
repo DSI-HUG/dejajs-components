@@ -6,17 +6,14 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Component } from '@angular/core';
-import { EventEmitter } from '@angular/core';
-import { Input } from '@angular/core';
-import { Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 import { News } from './news.model';
 
 @Component({
     selector: 'news-card',
     styleUrls: ['./news-card.component.scss'],
-    templateUrl: 'news-card.component.html'
+    templateUrl: './news-card.component.html'
 })
 export class NewsCardComponent {
     @Input()

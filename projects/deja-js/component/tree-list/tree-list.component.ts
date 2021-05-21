@@ -7,43 +7,9 @@
  */
 
 import { BooleanInput, coerceBooleanProperty, coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
-import { AfterContentInit } from '@angular/core';
-import { TemplateRef } from '@angular/core';
-import { AfterViewInit } from '@angular/core';
-import { ChangeDetectionStrategy } from '@angular/core';
-import { ChangeDetectorRef } from '@angular/core';
-import { Component } from '@angular/core';
-import { ContentChild } from '@angular/core';
-import { ContentChildren } from '@angular/core';
-import { ElementRef } from '@angular/core';
-import { EventEmitter } from '@angular/core';
-import { HostBinding } from '@angular/core';
-import { Input } from '@angular/core';
-import { Optional } from '@angular/core';
-import { Output } from '@angular/core';
-import { Self } from '@angular/core';
-import { ViewChild } from '@angular/core';
-import { ViewEncapsulation } from '@angular/core';
-import { ControlValueAccessor } from '@angular/forms';
-import { NgControl } from '@angular/forms';
-import { DejaChildValidatorDirective } from '@deja-js/component/core';
-import { DejaClipboardService } from '@deja-js/component/core';
-import { DejaItemComponent } from '@deja-js/component/core';
-import { DejaItemEvent } from '@deja-js/component/core';
-import { DejaItemsEvent } from '@deja-js/component/core';
-import { GroupingService } from '@deja-js/component/core';
-import { IFindItemResult } from '@deja-js/component/core';
-import { IItemBase } from '@deja-js/component/core';
-import { IItemTree } from '@deja-js/component/core';
-import { ItemListBase } from '@deja-js/component/core';
-import { ItemListService } from '@deja-js/component/core';
-import { IViewListResult } from '@deja-js/component/core';
-import { IViewPort } from '@deja-js/component/core';
-import { KeyCodes } from '@deja-js/component/core';
-import { Position } from '@deja-js/component/core';
-import { Rect } from '@deja-js/component/core';
-import { SortingService } from '@deja-js/component/core';
-import { ViewPortService } from '@deja-js/component/core';
+import { AfterContentInit, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ContentChildren, ElementRef, EventEmitter, HostBinding, Input, Optional, Output, Self, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ControlValueAccessor, NgControl } from '@angular/forms';
+import { DejaChildValidatorDirective, DejaClipboardService, DejaItemComponent, DejaItemEvent, DejaItemsEvent, GroupingService, IFindItemResult, IItemBase, IItemTree, ItemListBase, ItemListService, IViewListResult, IViewPort, KeyCodes, Position, Rect, SortingService, ViewPortService } from '@deja-js/component/core';
 import { IDejaDragContext, IDejaDragEvent, IDejaDropContext } from '@deja-js/component/dragdrop';
 import { BehaviorSubject, combineLatest, fromEvent, merge, Observable, of, Subject, Subscription, timer } from 'rxjs';
 import { debounceTime, filter, map, switchMap, take, takeUntil, tap } from 'rxjs/operators';
@@ -228,7 +194,7 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
     }
 
     @ViewChild('listElement', { static: true })
-    public set listElememtRef(elem: ElementRef) {
+    public set listElememtRef(elem: ElementRef<HTMLElement>) {
         this.listElement = elem.nativeElement;
     }
 
@@ -754,7 +720,7 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
                     }
 
                     // Set current item from index for keyboard features only
-                    const setCurrentIndex = (index: number) => {
+                    const setCurrentIndex = (index: number): void => {
                         this.currentItemIndex = index;
                         this.ensureItemVisible(this.currentItemIndex);
                         this.viewPort.refresh();
@@ -971,7 +937,7 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
             return undefined;
         }
 
-        const isExpandButton = (el: HTMLElement) => el.id === 'expandbtn' || el.parentElement.id === 'expandbtn';
+        const isExpandButton = (el: HTMLElement): boolean => el.id === 'expandbtn' || el.parentElement.id === 'expandbtn';
 
         const item = this._itemList[itemIndex - this.vpStartRow];
         this.clickedItem = item;
@@ -1011,21 +977,21 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
                 const upTarget = upevt.target as HTMLElement;
                 const upIndex = this.getItemIndexFromHTMLElement(upTarget);
                 if (upIndex === undefined) {
-                    return of(null);
+                    return of(null as number);
                 }
 
                 const upItem = this._itemList[upIndex - this.vpStartRow];
                 if (this.clickedItem && upItem !== this.clickedItem) {
-                    return of(null);
+                    return of(null as number);
                 }
 
                 if (upevt.shiftKey) {
-                    return of(null);
+                    return of(null as number);
                 }
 
                 if (upevt.button !== 0) {
                     // Right click menu
-                    return of(null);
+                    return of(null as number);
                 }
 
                 if (this.isCollapsible(upItem) && (isExpandButton(upTarget) || !this.isSelectable(upItem))) {
@@ -1048,7 +1014,7 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
                 }
 
                 this.rangeStartIndex = -1;
-                return of(null);
+                return of(null as number);
             }),
             filter(currentIndex => currentIndex !== null),
             takeUntil(this.destroyed$)
@@ -1241,7 +1207,7 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
         if (item.selected) {
             classNames.push('selected');
         }
-        if (item.selectable === false) {
+        if (!item.selectable) {
             classNames.push('unselectable');
         }
         if (item.depth === this._depthMax && item.odd) {

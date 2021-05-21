@@ -7,12 +7,7 @@
  */
 
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { AfterViewChecked } from '@angular/core';
-import { ChangeDetectionStrategy } from '@angular/core';
-import { ChangeDetectorRef } from '@angular/core';
-import { Component } from '@angular/core';
-import { Input } from '@angular/core';
-import { ViewEncapsulation } from '@angular/core';
+import { AfterViewChecked, ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, ViewEncapsulation } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Destroy } from '@deja-js/component/core';
 import * as Prism from 'prismjs';
@@ -51,7 +46,7 @@ export class DejaMarkdownComponent extends Destroy implements AfterViewChecked {
             takeUntil(this.destroyed$)
         ).subscribe(object => {
             this.value = object.toString();
-        }, error => {
+        }, (error: {message: string}) => {
             this.value = `${error.message}`;
         });
     }

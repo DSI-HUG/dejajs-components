@@ -6,8 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Component } from '@angular/core';
-import { OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Destroy } from '@deja-js/component/core';
 import { Language } from '@deja-js/component/v2/monaco-editor';
 import { takeUntil } from 'rxjs/operators';

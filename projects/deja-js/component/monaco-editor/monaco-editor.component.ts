@@ -6,28 +6,19 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
-import { AfterViewInit } from '@angular/core';
-import { Component } from '@angular/core';
-import { ElementRef } from '@angular/core';
-import { EventEmitter } from '@angular/core';
-import { HostListener } from '@angular/core';
-import { Input } from '@angular/core';
-import { OnChanges } from '@angular/core';
-import { OnDestroy } from '@angular/core';
-import { Optional } from '@angular/core';
-import { Output } from '@angular/core';
-import { Self } from '@angular/core';
-import { ViewChild } from '@angular/core';
-import { ViewEncapsulation } from '@angular/core';
-import { ControlValueAccessor } from '@angular/forms';
-import { NgControl } from '@angular/forms';
+
+import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, OnChanges, OnDestroy, Optional, Output, Self, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ControlValueAccessor, NgControl } from '@angular/forms';
 
 import { MonacoEditorService } from './monaco-editor.service';
 import { EditorOptions } from './options/editor-options.model';
 import { EditorScrollbarOptions } from './options/editor-scrollbar-options.model';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 declare const monaco: any;
 
 export type Languages = 'bat' | 'c' | 'cpp' | 'csharp' | 'css' | 'dockerfile' | 'fsharp' | 'go' | 'handlebars' | 'html' | 'ini' | 'jade' | 'javascript' | 'json' | 'less' | 'lua' | 'markdown' | 'objective-c' | 'php' | 'plaintext' | 'postiats' | 'powershell' | 'python' | 'r' | 'razor' | 'ruby' | 'scss' | 'sql' | 'swift' | 'typescript' | 'vb' | 'xml' | 'yaml';
@@ -445,9 +436,8 @@ export class DejaMonacoEditorComponent implements OnDestroy, AfterViewInit, OnCh
     public readonly onInit = new EventEmitter();
 
     @ViewChild('editor', { static: true })
-    private editorContent: ElementRef;
+    private editorContent: ElementRef<HTMLDivElement>;
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private _editor: any;
     private _value = '';
     private _valueToCompare = '';
@@ -542,7 +532,7 @@ export class DejaMonacoEditorComponent implements OnDestroy, AfterViewInit, OnCh
     /**
      * Init the component
      */
-    private initEditor() {
+    private initEditor(): void {
         const myDiv: HTMLDivElement = this.editorContent.nativeElement;
         const options = this.getOptions();
         this.dispose();
@@ -582,7 +572,7 @@ export class DejaMonacoEditorComponent implements OnDestroy, AfterViewInit, OnCh
      * @param options
      * @return instance of monaco
      */
-    private initSimpleEditor(div: HTMLDivElement, options: EditorOptions) {
+    private initSimpleEditor(div: HTMLDivElement, options: EditorOptions): any {
         return monaco.editor.create(div, options);
     }
 
@@ -591,7 +581,7 @@ export class DejaMonacoEditorComponent implements OnDestroy, AfterViewInit, OnCh
      * @param div
      * @return instance of monaco
      */
-    private initDiffEditor(div: HTMLDivElement, options: EditorOptions) {
+    private initDiffEditor(div: HTMLDivElement, options: EditorOptions): any {
         const originalModel = monaco.editor.createModel(this._value, this.language);
         const modifiedModel = monaco.editor.createModel(this._valueToCompare, this.language);
 
@@ -677,7 +667,7 @@ export class DejaMonacoEditorComponent implements OnDestroy, AfterViewInit, OnCh
      *
      * @param value
      */
-    private updateValue(value: string) {
+    private updateValue(value: string): void {
         // this.value = value;
         this._value = value;
         this.valueChange.emit(value);
@@ -689,13 +679,13 @@ export class DejaMonacoEditorComponent implements OnDestroy, AfterViewInit, OnCh
      *
      * @param value
      */
-    private updateValueToCompare(value: string) {
+    private updateValueToCompare(value: string): void {
         // this.valueToCompare = value;
         this._valueToCompare = value;
         this.valueToCompareChange.emit(value);
     }
 
-    private getOriginalModel() {
+    private getOriginalModel(): any {
         if (this._editor) {
             const model = this._editor.getModel();
             return model.original || model;
@@ -703,7 +693,7 @@ export class DejaMonacoEditorComponent implements OnDestroy, AfterViewInit, OnCh
         return undefined;
     }
 
-    private getModifiedModel() {
+    private getModifiedModel(): any {
         if (this._editor) {
             const model = this._editor.getModel();
             return model.modified || null;

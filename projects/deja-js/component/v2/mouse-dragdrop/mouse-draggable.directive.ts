@@ -6,12 +6,8 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Directive } from '@angular/core';
-import { ElementRef } from '@angular/core';
-import { Input } from '@angular/core';
-import { Destroy } from '@deja-js/component/core';
-import { Position } from '@deja-js/component/core';
-import { Rect } from '@deja-js/component/core';
+import { Directive, ElementRef, Input } from '@angular/core';
+import { Destroy, Position, Rect } from '@deja-js/component/core';
 import { fromEvent, isObservable, merge, Observable, of, Subject } from 'rxjs';
 import { filter, map, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 
@@ -52,7 +48,7 @@ export class MouseDraggableDirective<T> extends Destroy {
                 switchMap(event => {
                     let target: HTMLElement;
 
-                    const match = (el: HTMLElement) => el.tagName === this.context.target.toUpperCase() || `#${el.id}` === this.context.target || el.hasAttribute(this.context.target.substring(1, this.context.target.length - 1)) || el.className.split(' ').some(className => `.${className}` === this.context.target);
+                    const match = (el: HTMLElement): boolean => el.tagName === this.context.target.toUpperCase() || `#${el.id}` === this.context.target || el.hasAttribute(this.context.target.substring(1, this.context.target.length - 1)) || el.className.split(' ').some(className => `.${className}` === this.context.target);
 
                     if (this.context) {
                         if (this.context.target) {
@@ -85,7 +81,7 @@ export class MouseDraggableDirective<T> extends Destroy {
                             }
                         }
                     }
-                    return of(null);
+                    return of(null as HTMLElement);
                 }),
                 filter(target => !!target), // Start Drag if target is defined
                 switchMap(target => {

@@ -111,7 +111,7 @@ export class ItemService<T> {
                         return [...a, ...addItems(item.items, depth + 1)];
                     }
                     return a;
-                }, []);
+                }, [] as Item<T>[]);
                 return (items && addItems(items, 0)) || [];
             }),
             tap(() => {
@@ -130,7 +130,7 @@ export class ItemService<T> {
             switchMap(([flatItemList, query, minSearchLength, searchField]) => {
                 if (minSearchLength > 0 && (!query || typeof query === 'string' && query.length < minSearchLength)) {
                     this.previousQuery = null;
-                    return of([]);
+                    return of([] as Item<T>[]);
                 }
 
                 if (!query) {
@@ -141,7 +141,7 @@ export class ItemService<T> {
 
                 this.previousQuery = typeof query === 'string' ? query : null;
 
-                const escapeChars = (text: string) => {
+                const escapeChars = (text: string): string => {
                     const specialChars = ['\\', '/', '|', '&', ';', '$', '%', '@', '"', '<', '>', '(', ')', '+'];
                     specialChars.forEach(c => text = text.replace(c, `\\${c}`));
                     return text;
@@ -201,7 +201,7 @@ export class ItemService<T> {
                         // hidden by parent
                         return false;
                     }
-                    if (item.isVisible !== false) {
+                    if (item.isVisible) {
                         if (item.collapsed) {
                             // hide all children
                             hideDepth = item.depth + 1;
@@ -254,7 +254,7 @@ export class ItemService<T> {
                     const itemList = unselect === 'all' ? items : unselect;
                     itemsToChange = itemList.filter(item => {
                         item.selecting = item.selected ? false : undefined;
-                        return item.selecting === false;
+                        return !item.selecting;
                     });
                 } else {
                     itemsToChange = [] as Item<T>[];
@@ -295,8 +295,8 @@ export class ItemService<T> {
                     });
                 }
 
-                const itemsToSelect = itemsToChange.filter(item => item.selecting === true);
-                const itemsToUnselect = itemsToChange.filter(item => item.selecting === false);
+                const itemsToSelect = itemsToChange.filter(item => item.selecting);
+                const itemsToUnselect = itemsToChange.filter(item => !item.selecting);
 
                 const selecting$ = itemsToSelect.length && this.selectingItems ? this.selectingItems(itemsToSelect) : of(itemsToSelect);
                 return selecting$.pipe(
@@ -447,7 +447,7 @@ export class ItemService<T> {
     }
 
     protected compareItems = (item1: Item<T>, item2: Item<T>): boolean => {
-        const isDefined = (value: any) => value !== undefined && value !== null;
+        const isDefined = (value: Item<T>): boolean => value !== undefined && value !== null;
 
         if (!isDefined(item1) || !isDefined(item2)) {
             return false;
@@ -467,7 +467,7 @@ export class ItemService<T> {
     };
 
     protected compareModels = (model1: T, model2: T, valueField: string): boolean => {
-        const isDefined = (value: any) => value !== undefined && value !== null;
+        const isDefined = (value: T): boolean => value !== undefined && value !== null;
 
         if (!isDefined(model1) || !isDefined(model2)) {
             return false;

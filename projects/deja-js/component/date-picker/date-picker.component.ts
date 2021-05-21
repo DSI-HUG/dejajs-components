@@ -189,7 +189,7 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
     private dateChanged$ = new Subject<Date | string>();
 
     @ViewChild('inputelement')
-    public set inputElementRef(element: ElementRef) {
+    public set inputElementRef(element: ElementRef<HTMLInputElement>) {
         if (element) {
             this.inputElement = element.nativeElement;
             this.overlayOwnerElement = this.inputElement || this.elementRef.nativeElement;
@@ -221,7 +221,7 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
      * subscribe on different events needed inside this component
      */
     public constructor(
-        private elementRef: ElementRef,
+        private elementRef: ElementRef<HTMLInputElement>,
         private changeDetectorRef: ChangeDetectorRef,
         @Self() @Optional() public ngControl: NgControl,
         @Optional() _parentForm: NgForm,
@@ -649,7 +649,7 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
         this.selectHours();
     }
 
-    private selectHours() {
+    private selectHours(): void {
         if (this.layout === DateComponentLayout.datetime) {
             timer(0).pipe(
                 takeUntil(this.destroyed$)
@@ -683,7 +683,7 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
         return this.value;
     }
 
-    private toDate(value: Date | string) {
+    private toDate(value: Date | string): Date {
         return typeof value === 'string' ? parse(value, this.format, startOfToday()) : value;
     }
 }

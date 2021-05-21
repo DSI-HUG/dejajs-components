@@ -12,13 +12,12 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { delay, filter, take } from 'rxjs/operators';
-import { tap } from 'rxjs/operators';
-import { debounceTime } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { debounceTime, delay, filter, take, tap } from 'rxjs/operators';
 
 import { ViewPortModule } from './index';
 import { ViewPortComponent } from './viewport.component';
-import { ViewPortItem, ViewPortService } from './viewport.service';
+import { ViewPort, ViewPortItem, ViewPortService } from './viewport.service';
 
 @Component({
     selector: 'ViewportContainerComponent',
@@ -67,7 +66,7 @@ describe('ViewPortComponent', () => {
         }).compileComponents();
     }));
 
-    const observeViewPort$ = (fixture: ComponentFixture<ViewportContainerComponent>, elementCount: number, expectedBeforeSize: number, expectedAfterSize: number, expectedViewPortSize: number, expectedViewPortStartIndex: number, expectedViewPortEndIndex: number) => {
+    const observeViewPort$ = (fixture: ComponentFixture<ViewportContainerComponent>, elementCount: number, expectedBeforeSize: number, expectedAfterSize: number, expectedViewPortSize: number, expectedViewPortStartIndex: number, expectedViewPortEndIndex: number): Observable<ViewPort<unknown>> => {
         const viewPortDebugElement = fixture.debugElement.query(By.directive(ViewPortComponent));
         const viewPortService = viewPortDebugElement.injector.get(ViewPortService);
 
@@ -93,7 +92,7 @@ describe('ViewPortComponent', () => {
         const fixture = TestBed.createComponent(ViewportContainerComponent);
         fixture.detectChanges();
         const viewPortDebugElement = fixture.debugElement.query(By.directive(ViewPortComponent));
-        const viewPortInstance = viewPortDebugElement.componentInstance;
+        const viewPortInstance = viewPortDebugElement.componentInstance as HTMLElement;
         void expect(viewPortInstance).toBeTruthy();
     }));
 
@@ -249,7 +248,7 @@ describe('ViewPortComponent', () => {
         }).compileComponents();
     }));
 
-    const observeViewPort$ = (fixture: ComponentFixture<ViewportAutoContainerComponent>, elementCount: number, expectedBeforeSize: number, expectedAfterSize: number, expectedViewPortSize: number, expectedViewPortStartIndex: number, expectedViewPortEndIndex: number) => {
+    const observeViewPort$ = (fixture: ComponentFixture<ViewportAutoContainerComponent>, elementCount: number, expectedBeforeSize: number, expectedAfterSize: number, expectedViewPortSize: number, expectedViewPortStartIndex: number, expectedViewPortEndIndex: number): Observable<ViewPort<unknown>> => {
         const viewPortDebugElement = fixture.debugElement.query(By.directive(ViewPortComponent));
         const viewPortService = viewPortDebugElement.injector.get(ViewPortService);
 

@@ -6,19 +6,8 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { Component } from '@angular/core';
-import { TemplateRef } from '@angular/core';
-import { ContentChild } from '@angular/core';
-import { ElementRef } from '@angular/core';
-import { EventEmitter } from '@angular/core';
-import { Input } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { Output } from '@angular/core';
-import { ViewEncapsulation } from '@angular/core';
-import { DejaConnectionPositionPair } from '@deja-js/component/core';
-import { Destroy } from '@deja-js/component/core';
-import { Position } from '@deja-js/component/core';
-import { Rect } from '@deja-js/component/core';
+import { Component, ContentChild, ElementRef, EventEmitter, Input, OnInit, Output, TemplateRef, ViewEncapsulation } from '@angular/core';
+import { DejaConnectionPositionPair, Destroy, Position, Rect } from '@deja-js/component/core';
 import { from, fromEvent, Observable } from 'rxjs';
 import { debounceTime, delay, filter, map, takeUntil, tap } from 'rxjs/operators';
 
@@ -31,7 +20,7 @@ import { ITooltipParams } from './tooltip-params.interface';
 @Component({
     encapsulation: ViewEncapsulation.None,
     selector: 'deja-tooltip',
-    templateUrl: 'tooltip.component.html',
+    templateUrl: './tooltip.component.html',
     styleUrls: [
         './tooltip.component.scss'
     ]
@@ -157,7 +146,7 @@ export class DejaTooltipComponent extends Destroy implements OnInit {
                 if (this._closeOnMoveOver) {
                     return true;
                 }
-                const ownerElement = (this.params.ownerElement as ElementRef).nativeElement || this.params.ownerElement;
+                const ownerElement = (this.params.ownerElement as ElementRef<HTMLElement>).nativeElement || this.params.ownerElement as HTMLElement;
                 const ownerRect = new Rect(ownerElement.getBoundingClientRect());
                 return !ownerRect.containsPoint(position);
             }),
@@ -178,7 +167,7 @@ export class DejaTooltipComponent extends Destroy implements OnInit {
             throw (new Error('Name is required'));
         }
         this.params = this.tooltipService.params[this.name];
-        this.ownerElement = (this.params.ownerElement as ElementRef).nativeElement || this.params.ownerElement;
+        this.ownerElement = (this.params.ownerElement as ElementRef<HTMLElement>).nativeElement || this.params.ownerElement as HTMLElement;
 
         const model$ = this.params.model as Observable<unknown>;
         if (!model$) {

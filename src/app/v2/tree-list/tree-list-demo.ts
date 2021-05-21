@@ -8,8 +8,7 @@
 import { ChangeDetectorRef, Component, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Destroy, GroupingService } from '@deja-js/component/core';
-import { Item } from '@deja-js/component/v2/item-list';
-import { SortInfos, SortingService } from '@deja-js/component/v2/item-list';
+import { Item, SortInfos, SortingService } from '@deja-js/component/v2/item-list';
 import { DropCursorInfos, MouseDraggableContext, MouseDroppableContext } from '@deja-js/component/v2/mouse-dragdrop';
 import { TreeListComponent } from '@deja-js/component/v2/tree-list';
 import { ViewPortItem } from '@deja-js/component/v2/viewport';
@@ -120,7 +119,7 @@ export class TreeListDemoComponent extends Destroy {
         private fb: FormBuilder
     ) {
         super();
-        this.multiselectModel = JSON.parse('[{"naqme":"ÅlandIslands","code":"AX","label":"ÅlandIslands","depth":0,"odd":true,"selected":true},{"naqme":"AmericanSamoa","code":"AS","label":"AmericanSamoa","depth":0,"odd":false,"selected":true},{"naqme":"Argentina","code":"AR","label":"Argentina","depth":0,"odd":false,"selected":true},{"naqme":"ChristmasIsland","code":"CX","label":"ChristmasIsland","depth":0,"odd":false,"selected":true},{"naqme":"Egypt","code":"EG","label":"Egypt","depth":0,"odd":true,"selected":true},{"naqme":"Dominica","code":"DM","label":"Dominica","depth":0,"odd":false,"selected":true}]');
+        this.multiselectModel = JSON.parse('[{"naqme":"ÅlandIslands","code":"AX","label":"ÅlandIslands","depth":0,"odd":true,"selected":true},{"naqme":"AmericanSamoa","code":"AS","label":"AmericanSamoa","depth":0,"odd":false,"selected":true},{"naqme":"Argentina","code":"AR","label":"Argentina","depth":0,"odd":false,"selected":true},{"naqme":"ChristmasIsland","code":"CX","label":"ChristmasIsland","depth":0,"odd":false,"selected":true},{"naqme":"Egypt","code":"EG","label":"Egypt","depth":0,"odd":true,"selected":true},{"naqme":"Dominica","code":"DM","label":"Dominica","depth":0,"odd":false,"selected":true}]') as Country[];
         this.news$ = newsService.getNews$(50);
         this.bigCountries$ = countriesService.getCountries$(null, 100000);
 
@@ -224,7 +223,7 @@ export class TreeListDemoComponent extends Destroy {
             delay(1),
             takeUntil(this.destroyed$)
         ).subscribe(() => {
-            this.multiselectModel = JSON.parse('[{"naqme":"ÅlandIslands","code":"AX","label":"ÅlandIslands","depth":0,"odd":true,"selected":true},{"naqme":"AmericanSamoa","code":"AS","label":"AmericanSamoa","depth":0,"odd":false,"selected":true},{"naqme":"Argentina","code":"AR","label":"Argentina","depth":0,"odd":false,"selected":true},{"naqme":"ChristmasIsland","code":"CX","label":"ChristmasIsland","depth":0,"odd":false,"selected":true},{"naqme":"Egypt","code":"EG","label":"Egypt","depth":0,"odd":true,"selected":true},{"naqme":"Dominica","code":"DM","label":"Dominica","depth":0,"odd":false,"selected":true}]');
+            this.multiselectModel = JSON.parse('[{"naqme":"ÅlandIslands","code":"AX","label":"ÅlandIslands","depth":0,"odd":true,"selected":true},{"naqme":"AmericanSamoa","code":"AS","label":"AmericanSamoa","depth":0,"odd":false,"selected":true},{"naqme":"Argentina","code":"AR","label":"Argentina","depth":0,"odd":false,"selected":true},{"naqme":"ChristmasIsland","code":"CX","label":"ChristmasIsland","depth":0,"odd":false,"selected":true},{"naqme":"Egypt","code":"EG","label":"Egypt","depth":0,"odd":true,"selected":true},{"naqme":"Dominica","code":"DM","label":"Dominica","depth":0,"odd":false,"selected":true}]') as Country[];
         });
 
         this.groupedCountryItems$ = this.countries$.pipe(

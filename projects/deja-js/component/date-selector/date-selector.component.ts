@@ -104,7 +104,7 @@ export class DejaDateSelectorComponent extends Destroy implements OnInit, Contro
     public set layout(value: DateComponentLayout | string) {
         if (value) {
             if (typeof value === 'string') {
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
                 this.layoutId = (<any>DateComponentLayout)[value];
                 if (!this.layoutId) {
                     throw new Error('Invalid type for DateComponentLayout');
@@ -323,7 +323,7 @@ export class DejaDateSelectorComponent extends Destroy implements OnInit, Contro
         // Du coup on ajoute une ligne vide quand c'est nécessaire
         if (days.length < 42) {
             const x = 42 - days.length;
-            this._emptyDays = new Array(x);
+            this._emptyDays = new Array<number>(x);
         } else {
             this._emptyDays = null;
         }
@@ -446,7 +446,7 @@ export class DejaDateSelectorComponent extends Destroy implements OnInit, Contro
     public onTouchedCallback = (): void => undefined;
     public onChangeCallback = (_a?: unknown): void => undefined;
 
-    private bind() {
+    private bind(): void {
         const month = this._displayedDate.getMonth();
         const year = this._displayedDate.getFullYear();
 

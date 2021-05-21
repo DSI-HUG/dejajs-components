@@ -5,8 +5,7 @@
  *  Use of this source code is governed by an Apache-2.0 license that can be
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
-import { Pipe } from '@angular/core';
-import { PipeTransform } from '@angular/core';
+import { Pipe, PipeTransform } from '@angular/core';
 import { formatWithLocale } from '@deja-js/component/core';
 
 @Pipe({

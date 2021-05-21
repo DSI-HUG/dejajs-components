@@ -6,9 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 import { BooleanInput } from '@angular/cdk/coercion';
-import { Component } from '@angular/core';
-import { ElementRef } from '@angular/core';
-import { Input } from '@angular/core';
+import { Component, ElementRef, Input } from '@angular/core';
 import { Destroy } from '@deja-js/component/core';
 import { combineLatest } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
@@ -37,7 +35,7 @@ export class DejaColorFabComponent extends Destroy {
         this._colorFab = colorFab;
 
         if (colorFab) {
-            const toogleAttribute = (attribute: string, value: BooleanInput) => {
+            const toogleAttribute = (attribute: string, value: BooleanInput): void => {
                 if (value) {
                     this.element.setAttribute(attribute, value.toString());
                 } else {

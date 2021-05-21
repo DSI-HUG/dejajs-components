@@ -7,15 +7,8 @@
  */
 
 /* eslint-disable rxjs/finnish */
-import { Injectable } from '@angular/core';
-import { Optional } from '@angular/core';
-import { DejaClipboardService } from '@deja-js/component/core';
-import { Destroy } from '@deja-js/component/core';
-import { Directions } from '@deja-js/component/core';
-import { KeyCodes } from '@deja-js/component/core';
-import { Position } from '@deja-js/component/core';
-import { Rect } from '@deja-js/component/core';
-import { Size } from '@deja-js/component/core';
+import { Injectable, Optional } from '@angular/core';
+import { DejaClipboardService, Destroy, Directions, KeyCodes, Position, Rect, Size } from '@deja-js/component/core';
 import { IDragCursorInfos, IDragDropContext } from '@deja-js/component/mouse-dragdrop';
 import { BehaviorSubject, from, fromEvent, merge, Observable, of, Subject, Subscription, timer } from 'rxjs';
 import { debounceTime, delay, filter, map, reduce, switchMap, take, takeUntil, tap } from 'rxjs/operators';
@@ -220,7 +213,7 @@ export class DejaTilesLayoutProvider extends Destroy {
         ).subscribe(percentBounds => {
             const { left, right, top, bottom } = this.getPixelBounds(percentBounds);
 
-            const findScrollContainer = (container: HTMLElement) => {
+            const findScrollContainer = (container: HTMLElement): HTMLElement => {
                 // eslint-disable-next-line no-loops/no-loops
                 while (container && container.tagName !== 'DEJA-TILES') {
                     container = container.parentElement;
@@ -556,7 +549,7 @@ export class DejaTilesLayoutProvider extends Destroy {
         this.extractValueAndUnit('_maxWidth', value);
     }
 
-    private get targetBounds() {
+    private get targetBounds(): Rect {
         return this._targetBounds;
     }
 
@@ -757,7 +750,7 @@ export class DejaTilesLayoutProvider extends Destroy {
         if (freePlaces.length > 0) {
             // add at the nearest free place
             freePlaces.sort((bounds1, bounds2) => {
-                const calcDistance = (bounds: Rect) => Math.min(Math.abs(bounds.left - idealBounds.left), Math.abs(bounds.right - idealBounds.right)) + 200 * Math.min(Math.abs(bounds.top - idealBounds.top), Math.abs(bounds.bottom - idealBounds.bottom));
+                const calcDistance = (bounds: Rect): number => Math.min(Math.abs(bounds.left - idealBounds.left), Math.abs(bounds.right - idealBounds.right)) + 200 * Math.min(Math.abs(bounds.top - idealBounds.top), Math.abs(bounds.bottom - idealBounds.bottom));
                 return calcDistance(bounds1) - calcDistance(bounds2);
             });
 
@@ -1035,14 +1028,14 @@ export class DejaTilesLayoutProvider extends Destroy {
             });
         }
 
-        const deleteSourceTiles = () => {
+        const deleteSourceTiles = (): void => {
             if (sourceTiles) {
                 deleteSourceProvider$.next(sourceTiles);
                 this.clipboardService.clear();
             }
         };
 
-        const validateNewTiles = (tiles: Array<DejaTile>) => {
+        const validateNewTiles = (tiles: Array<DejaTile>): void => {
             // Remove original tiles if cut operation
             deleteSourceTiles();
 
@@ -1097,7 +1090,7 @@ export class DejaTilesLayoutProvider extends Destroy {
         }
     }
 
-    private size(tile: DejaTile, pixelPos: Position, directions: Directions) {
+    private size(tile: DejaTile, pixelPos: Position, directions: Directions): void {
         // Calc new tile bounds
         const percentPos = new Position(this.getPercentSize(pixelPos.left), this.getPercentSize(pixelPos.top));
         const dragBounds = tile.percentBounds.clone();
@@ -1184,14 +1177,14 @@ export class DejaTilesLayoutProvider extends Destroy {
         }
     }
 
-    private clearMoveTimer() {
+    private clearMoveTimer(): void {
         if (this.moveTimOut) {
             this.moveTimOut.unsubscribe();
             this.moveTimOut = undefined;
         }
     }
 
-    private move() {
+    private move(): void {
         const minWidth = this.getTileMinPercentWidth();
         const minHeight = this.getTileMinPercentHeight();
 
@@ -1279,7 +1272,7 @@ export class DejaTilesLayoutProvider extends Destroy {
             if (freePlaces.length > 0) {
                 // add at the nearest free place
                 freePlaces.sort((bounds1, bounds2) => {
-                    const calcDistance = (bounds: Rect) => Math.min(Math.abs(bounds.left - newTargetBounds.left), Math.abs(bounds.right - newTargetBounds.right)) + 200 * Math.min(Math.abs(bounds.top - newTargetBounds.top), Math.abs(bounds.bottom - newTargetBounds.bottom));
+                    const calcDistance = (bounds: Rect): number => Math.min(Math.abs(bounds.left - newTargetBounds.left), Math.abs(bounds.right - newTargetBounds.right)) + 200 * Math.min(Math.abs(bounds.top - newTargetBounds.top), Math.abs(bounds.bottom - newTargetBounds.bottom));
                     return calcDistance(bounds1) - calcDistance(bounds2);
                 });
 
@@ -1456,7 +1449,7 @@ export class DejaTilesLayoutProvider extends Destroy {
         return layout;
     }
 
-    private getPixelBounds(rect: Rect) {
+    private getPixelBounds(rect: Rect): Rect {
         return Rect.fromLTRB(Math.round(rect.left * this.hundredPercentWith / 100), Math.round(rect.top * this.hundredPercentWith / 100), Math.round(rect.right * this.hundredPercentWith / 100), Math.round(rect.bottom * this.hundredPercentWith / 100));
     }
 
@@ -1520,7 +1513,7 @@ export class DejaTilesLayoutProvider extends Destroy {
         return Math.max(5, this.getSizePercentLimit('_maxHeight'));
     }
 
-    private getCursorFromHtmlElement(x: number, y: number, element: HTMLElement) {
+    private getCursorFromHtmlElement(x: number, y: number, element: HTMLElement): string {
         const tileElement = this.getTileElementFromHTMLElement(element);
         if (!tileElement) {
             return null;
@@ -1553,7 +1546,7 @@ export class DejaTilesLayoutProvider extends Destroy {
         }
     }
 
-    private extractValueAndUnit(prop: string, value: string) {
+    private extractValueAndUnit(prop: string, value: string): void {
         const regexp = /(\d+)(.*)/i;
         const matches = regexp.exec(value);
 
@@ -1568,7 +1561,7 @@ export class DejaTilesLayoutProvider extends Destroy {
         }
     }
 
-    private restoreLayout(layout: ILayoutInfos) {
+    private restoreLayout(layout: ILayoutInfos): void {
         this.tiles.forEach(tile => {
             const config = layout[tile.id] as ILayoutInfo;
             if (config) {
@@ -1609,7 +1602,7 @@ export class DejaTilesLayoutProvider extends Destroy {
         return overflow;
     }
 
-    private moveHorizontal(direction: number, tiles: Array<DejaTile>, offset: number, targetBounds: Map<string, Rect>) {
+    private moveHorizontal(direction: number, tiles: Array<DejaTile>, offset: number, targetBounds: Map<string, Rect>): void {
         tiles.forEach(t => {
             if (!targetBounds.has(t.id)) {
                 // Offset tile
@@ -1690,7 +1683,7 @@ export class DejaTilesLayoutProvider extends Destroy {
         return overflow;
     }
 
-    private moveVertical(direction: number, tiles: Array<DejaTile>, offset: number, targetBounds: Map<string, Rect>) {
+    private moveVertical(direction: number, tiles: Array<DejaTile>, offset: number, targetBounds: Map<string, Rect>): void {
         tiles.forEach(t => {
             if (!targetBounds.has(t.id)) {
                 // Offset tile
@@ -1734,7 +1727,7 @@ export class DejaTilesLayoutProvider extends Destroy {
         return overflow;
     }
 
-    private copyTiles(tiles: Array<DejaTile>, isCut?: boolean) {
+    private copyTiles(tiles: Array<DejaTile>, isCut?: boolean): void {
         if (!this.clipboardService) {
             if (!tiles) {
                 return;
@@ -1755,7 +1748,7 @@ export class DejaTilesLayoutProvider extends Destroy {
         }
     }
 
-    private removeTemporaryTile() {
+    private removeTemporaryTile(): void {
         let index = this.tiles.length;
         // eslint-disable-next-line no-loops/no-loops
         while (--index >= 0) {

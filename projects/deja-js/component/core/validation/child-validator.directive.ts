@@ -6,8 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Directive } from '@angular/core';
-import { forwardRef } from '@angular/core';
+import { Directive, forwardRef } from '@angular/core';
 import { NG_VALIDATORS, NgControl, ValidationErrors, Validator } from '@angular/forms';
 
 @Directive({
