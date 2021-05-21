@@ -7,10 +7,9 @@
  */
 
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, OnInit, Output, ViewEncapsulation } from '@angular/core';
+import { Destroy } from '@deja-js/component/core';
 import { timer } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-
-import { Destroy } from '../../core/destroy/destroy';
 
 
 @Component({

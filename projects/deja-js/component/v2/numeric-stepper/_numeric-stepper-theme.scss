@@ -1,14 +1,12 @@
 @import '~@angular/material/theming';
 
 @mixin numeric-stepper-2-theme($theme) {
-    // $primary: map-get($theme, primary);
+    $primary: map-get($theme, primary);
     // $warn: map-get($theme, warn);
 
-    // .numeric-stepper {
-    //     mat-icon {
-    //         color: mat-color($primary);
-    //     }
-    // }
+    mat-icon {
+        color: mat-color($primary);
+    }
 
     // .ng-invalid .numeric-stepper:hover:not(.disabled) {
     //     .increment {

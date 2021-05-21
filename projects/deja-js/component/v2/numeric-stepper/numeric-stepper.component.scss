@@ -1,4 +1,33 @@
 mat-form-field[deja-numeric-stepper-form-field] {
+    height: 60px;
+    width: 48px;
+
+    .mat-form-field-wrapper {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+
+        .mat-form-field-flex {
+            margin: 0;
+            height: 100%;
+
+            >div {
+                top: 0;
+                height: 100%;
+            }
+
+            .mat-form-field-infix {
+                padding: 0;
+                border-top: none;
+
+                input {
+                    text-align: center;
+                    height: 100%;
+                    width: 100%;
+                }
+            }
+        }
+    }
 
     &:hover:not(.disabled) {
         box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
@@ -11,7 +40,12 @@ mat-form-field[deja-numeric-stepper-form-field] {
         .arrow {
             visibility: visible;
             opacity: 1;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
         }
+    }
+
+    &.mat-form-field-appearance-outline.mat-focused .mat-form-field-outline-thick {
+        color: transparent !important;
     }
 
     deja-numeric-stepper {
@@ -30,7 +64,7 @@ mat-form-field[deja-numeric-stepper-form-field] {
             z-index: 1;
             box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
             box-sizing: border-box;
-            background-color: brown;
+            background-color: #fff;
         }
 
         .increment {
