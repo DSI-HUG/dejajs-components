@@ -1,5 +1,5 @@
 <div class="time-picker">
-    <deja-numeric-stepper class="hours" [ngModel]="value?.getHours()" (ngModelChange)="hoursChanged($event)" [style.display]="mode === modeMinutesOnly ? 'none' : 'block'" [disabled]="disabled || hoursDisabled" [maxLength]="2" numberFormat="2."></deja-numeric-stepper>
+    <!-- <deja-numeric-stepper class="hours" [ngModel]="value?.getHours()" (ngModelChange)="hoursChanged($event)" [style.display]="mode === modeMinutesOnly ? 'none' : 'block'" [disabled]="disabled || hoursDisabled" [maxLength]="2" numberFormat="2."></deja-numeric-stepper> -->
     <span class="time-separator" [style.display]="mode === modeMinutesOnly || mode === modeHoursOnly ? 'none' : 'block'">:</span>
-    <deja-numeric-stepper class="minutes" [ngModel]="value?.getMinutes()" (ngModelChange)="minutesChanged($event)" [style.display]="mode === modeHoursOnly ? 'none' : 'block'" [disabled]="disabled || minutesDisabled" [maxLength]="2" numberFormat="2." [step]="step"></deja-numeric-stepper>
+    <!-- <deja-numeric-stepper class="minutes" [ngModel]="value?.getMinutes()" (ngModelChange)="minutesChanged($event)" [style.display]="mode === modeHoursOnly ? 'none' : 'block'" [disabled]="disabled || minutesDisabled" [maxLength]="2" numberFormat="2." [step]="step"></deja-numeric-stepper> -->
 </div>

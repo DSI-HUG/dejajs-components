@@ -11,7 +11,7 @@
     <mat-card class="demo-card">
         <mat-toolbar color="primary">Numeric Stepper</mat-toolbar>
         <mat-card-content>
-            <div>
+            <!-- <div>
                 <h3>With step of 20</h3>
                 <deja-numeric-stepper [(ngModel)]="value1" [maxLength]="3" [step]="20"></deja-numeric-stepper>
             </div>
@@ -31,11 +31,12 @@
             <div>
                 <h3>Disabled</h3>
                 <deja-numeric-stepper [ngModel]="42" [disabled]="true"></deja-numeric-stepper>
-            </div>
+            </div> -->
             <div>
                 <mat-form-field appearance="outline">
                     <!-- <mat-label>min : 0, max : 10, value : -5</mat-label> -->
-                    <deja-numeric-stepper min="0" max="10" [ngModel]="-5" #numericStepper="ngModel"></deja-numeric-stepper>
+                    <deja-numeric-stepper [model]="numericStepper"></deja-numeric-stepper>
+                    <input matInput type="text" min="0" max="10" [ngModel]="-5" #numericStepper="ngModel" />
                     <mat-error *ngIf="numericStepper.errors?.rangeError">
                         Min : {{numericStepper.errors?.rangeError?.min}}, Max : {{numericStepper.errors?.rangeError?.max}}
                     </mat-error>

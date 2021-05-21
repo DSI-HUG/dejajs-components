@@ -1,99 +1,81 @@
-deja-numeric-stepper {
-    -webkit-touch-callout: none;
-    /* iOS Safari */
-    -webkit-user-select: none;
-    /* Chrome/Safari/Opera */
-    -khtml-user-select: none;
-    /* Konqueror */
-    -moz-user-select: none;
-    /* Firefox */
-    -ms-user-select: none;
-    /* Internet Explorer/Edge */
-    user-select: none;
-    /* Non-prefixed version, currently
-       not supported by any browser */
-    position: relative;
-    display: flex;
-    background-color: aquamarine;
+mat-form-field[deja-numeric-stepper-form-field] {
 
     &:hover:not(.disabled) {
-        // box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 
         // .value-container .value {
         //     border: 1px solid transparent;
         //     border-radius: 0px;
         // }
 
-        .arrows {
+        .arrow {
             visibility: visible;
             opacity: 1;
         }
     }
 
-    .arrows {
-        visibility: hidden;
-        opacity: 0;
-        cursor: pointer;
-        transition: all 0.15s ease-out;
-        position: absolute;
-        height: 32px;
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background-color: #fff;
-        // z-index: 10;
-        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-        box-sizing: border-box;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background-color: brown;
+    deja-numeric-stepper {
+        position: relative;
+
+        .arrow {
+            visibility: hidden;
+            opacity: 0;
+            cursor: pointer;
+            transition: all 0.15s ease-out;
+            position: absolute;
+            height: 32px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+            box-sizing: border-box;
+            background-color: brown;
+        }
+
+        .increment {
+            border-radius: 4px 4px 0 0;
+        }
+
+        .decrement {
+            border-radius: 0 0 4px 4px;
+        }
     }
 
-    .increment {
-        top: -100%;
-        border-radius: 4px 4px 0 0;
-    }
+    // /* To remove the input arrows Chrome, Safari, Edge, Opera */
+    // .value::-webkit-outer-spin-button,
+    // .value::-webkit-inner-spin-button {
+    //     -webkit-appearance: none;
+    //     margin: 0;
+    // }
 
-    .decrement {
-        top: 200%;
-        border-radius: 0 0 4px 4px;
-    }
+    // /* Firefox */
+    // .value[type=number] {
+    //     -moz-appearance: textfield;
+    // }
 
-    /* To remove the input arrows Chrome, Safari, Edge, Opera */
-    .value::-webkit-outer-spin-button,
-    .value::-webkit-inner-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-    }
+    // .value:focus {
+    //     outline: none;
+    // }
 
-    /* Firefox */
-    .value[type=number] {
-        -moz-appearance: textfield;
-    }
-
-    .value:focus {
-        outline: none;
-    }
-
-    .value {
-        border: none;
-        background: none;
-        font: inherit;
-        min-width: 2px;
-        outline: none;
-        padding: 0;
-        padding-right: 2px;
-        text-align: center;
-        flex: 0 0 100%;
-        // width: 48px;
-        // height: 60px;
-        // line-height: 20px;
-        // color: #424242;
-        // padding: 0 !important;
-        // border: 1px solid #E0E0E0;
-        // border-radius: 4px;
-        // box-sizing: border-box;
-        // transition: border 0.15s ease-out;
-    }
+    // .value {
+    //     border: none;
+    //     background: none;
+    //     font: inherit;
+    //     min-width: 2px;
+    //     outline: none;
+    //     padding: 0;
+    //     padding-right: 2px;
+    //     text-align: center;
+    //     flex: 0 0 100%;
+    //     // width: 48px;
+    //     // height: 60px;
+    //     // line-height: 20px;
+    //     // color: #424242;
+    //     // padding: 0 !important;
+    //     // border: 1px solid #E0E0E0;
+    //     // border-radius: 4px;
+    //     // box-sizing: border-box;
+    //     // transition: border 0.15s ease-out;
+    // }
 }
