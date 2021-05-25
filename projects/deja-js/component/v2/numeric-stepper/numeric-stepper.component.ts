@@ -9,7 +9,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { Destroy, KeyCodes } from '@deja-js/component/core';
 import { fromEvent, timer } from 'rxjs';
-import { delay, map, shareReplay, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { map, shareReplay, switchMap, takeUntil, tap } from 'rxjs/operators';
 
 
 @Component({

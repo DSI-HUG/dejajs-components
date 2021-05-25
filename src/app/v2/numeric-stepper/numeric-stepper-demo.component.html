@@ -9,76 +9,71 @@
 
 <div *ngIf="tabIndex === 1">
     <mat-card class="demo-card">
-        <mat-toolbar color="primary">Numeric Stepper</mat-toolbar>
+        <mat-toolbar color="primary">Numeric Stepper in Material Form Field with different appearances</mat-toolbar>
         <mat-card-content>
-            <!-- <div>
-                <h3>With step of 20</h3>
-                <deja-numeric-stepper [(ngModel)]="value1" [maxLength]="3" [step]="20"></deja-numeric-stepper>
-            </div>
-            <div>
-                <h3>With a format of 2 decimals</h3>
-                <deja-numeric-stepper [(ngModel)]="value2" [maxLength]="3" numberFormat="1.2-2" [step]="0.5"></deja-numeric-stepper>
-            </div>
-            <div>
-                <h3>With a format of 2 digits min</h3>
-                <deja-numeric-stepper [(ngModel)]="value3" [maxLength]="2" numberFormat="2."></deja-numeric-stepper>
-            </div>
-            <div [formGroup]="numberForm">
-                <h3>With a validator (has to be positive)</h3>
-                <deja-numeric-stepper formControlName="numberValue" [maxLength]="1"></deja-numeric-stepper>
-                <mat-error>{{ numberForm.get('numberValue').errors ? numberForm.get('numberValue').errors[0] : ''}}</mat-error>
-            </div>
-            <div>
-                <h3>Disabled</h3>
-                <deja-numeric-stepper [ngModel]="42" [disabled]="true"></deja-numeric-stepper>
-            </div> -->
             <div>
                 <mat-form-field appearance="outline">
-                    <!-- <mat-label>min : 0, max : 10, value : -5</mat-label> -->
-                    <deja-numeric-stepper (increment)="value1 = value1 + 5" (decrement)="value1 = value1 -5"></deja-numeric-stepper>
-                    <input matInput type="text" min="0" max="10" [(ngModel)]="value1" #numericStepper="ngModel" />
-                    <mat-error *ngIf="numericStepper.errors?.rangeError">
-                        Min : {{numericStepper.errors?.rangeError?.min}}, Max : {{numericStepper.errors?.rangeError?.max}}
-                    </mat-error>
+                    <mat-label>Outline</mat-label>
+                    <input matInput type="text" [ngModel]="value1 | number:'3.'" (change)="value1 = +$event.value" #numericStepper="ngModel" />
+                    <deja-numeric-stepper (increment)="value1 = value1 + 20" (decrement)="value1 = value1 - 20"></deja-numeric-stepper>
                 </mat-form-field>
             </div>
-            <div [formGroup]="numberForm">
+            <div>
+                <mat-form-field appearance="legacy">
+                    <mat-label>Legacy</mat-label>
+                    <input matInput type="text" [ngModel]="value1 | number:'.1-2'" (change)="value1 = +$event.value" #numericStepper="ngModel" />
+                    <deja-numeric-stepper (increment)="value1 = value1 + 5" (decrement)="value1 = value1 - 5"></deja-numeric-stepper>
+                </mat-form-field>
+            </div>
+            <div>
                 <mat-form-field appearance="standard">
-                    <mat-label>Standard appearance</mat-label>
+                    <mat-label>Standard</mat-label>
+                    <input matInput type="text" [(ngModel)]="value1" #numericStepper="ngModel" />
+                    <deja-numeric-stepper (increment)="value1 = value1 + 5" (decrement)="value1 = value1 - 5"></deja-numeric-stepper>
+                </mat-form-field>
+            </div>
+            <div>
+                <mat-form-field appearance="fill">
+                    <mat-label>Fill</mat-label>
+                    <input matInput type="text" [(ngModel)]="value1" #numericStepper="ngModel" />
+                    <deja-numeric-stepper (increment)="value1 = value1 + 5" (decrement)="value1 = value1 - 5"></deja-numeric-stepper>
+                </mat-form-field>
+            </div>
+        </mat-card-content>
+    </mat-card>
+    <mat-card class="demo-card">
+        <mat-toolbar color="primary">Numeric Stepper with validator</mat-toolbar>
+        <mat-card-content>
+            <div [formGroup]="numberForm">
+                <mat-form-field appearance="outline" [style.width.px]="130">
+                    <mat-label>Outline appearance</mat-label>
                     <deja-numeric-stepper (increment)="changeValue3(2)" (decrement)="changeValue3(-2)"></deja-numeric-stepper>
                     <input matInput type="text" formControlName="numberValue3" />
                     <mat-error>{{ numberForm.get('numberValue3').errors ? numberForm.get('numberValue3').errors[0] : ''}}</mat-error>
                 </mat-form-field>
             </div>
             <div [formGroup]="numberForm">
-                <mat-form-field appearance="outline">
-                    <mat-label>With a validator (has to be positive)</mat-label>
+                <mat-form-field appearance="legacy" [style.width.px]="80">
+                    <mat-label>Legacy</mat-label>
                     <deja-numeric-stepper (increment)="changeValue4(2)" (decrement)="changeValue4(-2)"></deja-numeric-stepper>
                     <input matInput type="text" formControlName="numberValue4" />
                     <mat-error>{{ numberForm.get('numberValue4').errors ? numberForm.get('numberValue4').errors[0] : ''}}</mat-error>
                 </mat-form-field>
             </div>
             <div [formGroup]="numberForm">
+                <mat-form-field appearance="standard" [style.width.px]="80">
+                    <mat-label>Standard</mat-label>
+                    <deja-numeric-stepper (increment)="changeValue5(2)" (decrement)="changeValue5(-2)"></deja-numeric-stepper>
+                    <input matInput type="text" formControlName="numberValue5" />
+                    <mat-error>{{ numberForm.get('numberValue5').errors ? numberForm.get('numberValue5').errors[0] : ''}}</mat-error>
+                </mat-form-field>
+            </div>
+            <div [formGroup]="numberForm">
                 <mat-form-field appearance="fill">
-                    <mat-label>With a validator (has to be positive)</mat-label>
-                    <deja-numeric-stepper (increment)="changeValue5(2)" (decrement)="changeValue5(-2)"></deja-numeric-stepper>
-                    <input matInput type="text" formControlName="numberValue5" />
-                    <mat-error>{{ numberForm.get('numberValue5').errors ? numberForm.get('numberValue5').errors[0] : ''}}</mat-error>
-                </mat-form-field>
-            </div>
-            <div [formGroup]="numberForm">
-                <mat-form-field appearance="outline">
-                    <mat-label>With a validator (has to be positive)</mat-label>
-                    <input matInput type="text" formControlName="numberValue5" />
-                    <mat-error>{{ numberForm.get('numberValue5').errors ? numberForm.get('numberValue5').errors[0] : ''}}</mat-error>
-                </mat-form-field>
-            </div>
-            <div [formGroup]="numberForm">
-                <mat-form-field appearance="outline">
-                    <mat-label>With a validator (has to be positive)</mat-label>
-                    <input matInput type="text" formControlName="numberValue5" />
-                    <deja-numeric-stepper (increment)="changeValue5(2)" (decrement)="changeValue5(-2)"></deja-numeric-stepper>
-                    <mat-error>{{ numberForm.get('numberValue5').errors ? numberForm.get('numberValue5').errors[0] : ''}}</mat-error>
+                    <mat-label>Fill</mat-label>
+                    <deja-numeric-stepper (increment)="changeValue6(2)" (decrement)="changeValue6(-2)"></deja-numeric-stepper>
+                    <input matInput type="text" formControlName="numberValue6" />
+                    <mat-error>{{ numberForm.get('numberValue6').errors ? numberForm.get('numberValue6').errors[0] : ''}}</mat-error>
                 </mat-form-field>
             </div>
         </mat-card-content>

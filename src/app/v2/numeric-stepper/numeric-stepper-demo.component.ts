@@ -19,7 +19,7 @@ import { numberValidator } from './validators';
 export class DejaNumericStepperDemoComponent {
     public tabIndex = 1;
 
-    public value1 = 100;
+    public value1 = 90;
     public value2 = 9.5;
     public value3 = 5;
     public value4 = 1;
