@@ -25,7 +25,7 @@ branches:
   - next/12.x.x
   - release/12.x.x
 before_install:
-- if [[ $TRAVIS_COMMIT_MESSAGE =~ ("from DSI-HUG/master"|"from DSI-HUG/release/11.x.x") ]]; then
+- if [[ $TRAVIS_COMMIT_MESSAGE =~ ("from DSI-HUG/master"|"from DSI-HUG/release/11.x.x"|"from DSI-HUG/release/12.x.x") ]]; then
     echo "merge from RELEASE branch, skipping";
     exit 0;
   fi
