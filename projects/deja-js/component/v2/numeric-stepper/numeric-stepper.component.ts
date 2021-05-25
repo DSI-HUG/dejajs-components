@@ -62,6 +62,7 @@ export class DejaNumericStepperComponent extends Destroy implements OnInit {
         formFieldElement$.pipe(
             switchMap(formFieldElement => fromEvent<MouseEvent>(formFieldElement, 'mouseenter').pipe(
                 tap(() => {
+                    const appearance = formFieldElement.getAttribute('appearance');
                     const formFieldBounds = formFieldElement.getBoundingClientRect();
                     const bounds = this.elementRef.nativeElement.getBoundingClientRect();
 
@@ -70,6 +71,12 @@ export class DejaNumericStepperComponent extends Destroy implements OnInit {
                     this.topDown = formFieldBounds.bottom - bounds.top - 10;
                     this.width = formFieldBounds.width;
                     this.height = this.topDown - this.topUp + 32;
+
+                    if (appearance === 'standard') {
+                        this.height -= 10;
+                        this.topUp += 10;
+                    }
+
                     this.changeDetectorRef.markForCheck();
                 })
             )),
