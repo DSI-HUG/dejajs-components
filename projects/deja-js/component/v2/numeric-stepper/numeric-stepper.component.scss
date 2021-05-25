@@ -16,6 +16,10 @@ mat-form-field[deja-numeric-stepper-form-field] {
                 height: 100%;
             }
 
+            .mat-form-field-outline-thick {
+                color: transparent !important;
+            }
+
             .mat-form-field-infix {
                 padding: 0;
                 border-top: none;
@@ -42,10 +46,6 @@ mat-form-field[deja-numeric-stepper-form-field] {
             opacity: 1;
             box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
         }
-    }
-
-    &.mat-form-field-appearance-outline.mat-focused .mat-form-field-outline-thick {
-        color: transparent !important;
     }
 
     deja-numeric-stepper {
