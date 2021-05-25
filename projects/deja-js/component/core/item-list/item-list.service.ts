@@ -538,7 +538,7 @@ export class ItemListService<T> {
      */
     public toggleAll$(collapsed: boolean): Observable<IItemTree<T>[]> {
         return of(this._cache.flatList).pipe(
-            map((items: IItemTree<T>[]) => items.filter(item => item.$items && item.collapsible)),
+            map((items: IItemTree<T>[]) => items.filter(item => item.$items && (item.collapsible ?? true))),
             tap(() => delete this._cache.visibleList), // Invalidate view cache
             switchMap(items => collapsed ? this.collapseItems$(items) : this.expandItems$(items)));
     }
@@ -555,7 +555,7 @@ export class ItemListService<T> {
         }
 
         const item = visibleList[index] as IItemTree<T>;
-        if (!item || !item.collapsible) {
+        if (!item || !(item.collapsible ?? true)) {
             return of([]);
         }
 
@@ -671,7 +671,7 @@ export class ItemListService<T> {
 
         return this.unselectAll$().pipe(
             map(() => visibleList.slice(Math.min(indexFrom, indexTo), 1 + Math.max(indexFrom, indexTo))),
-            map(items => items.filter(itm => itm.selectable)),
+            map(items => items.filter(itm => itm.selectable ?? true)),
             tap(() => {
                 if (this.hideSelected) {
                     delete this._cache.visibleList;
@@ -1396,7 +1396,7 @@ export class ItemListService<T> {
     }
 
     private isVisible(item: IItemBase<T>): boolean {
-        return item.visible;
+        return item.visible ?? true;
     }
 }
 

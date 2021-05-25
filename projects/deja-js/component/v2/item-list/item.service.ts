@@ -201,7 +201,7 @@ export class ItemService<T> {
                         // hidden by parent
                         return false;
                     }
-                    if (item.isVisible) {
+                    if (item.isVisible ?? true) {
                         if (item.collapsed) {
                             // hide all children
                             hideDepth = item.depth + 1;
@@ -254,7 +254,7 @@ export class ItemService<T> {
                     const itemList = unselect === 'all' ? items : unselect;
                     itemsToChange = itemList.filter(item => {
                         item.selecting = item.selected ? false : undefined;
-                        return !item.selecting;
+                        return !(item.selecting ?? true);
                     });
                 } else {
                     itemsToChange = [] as Item<T>[];

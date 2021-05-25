@@ -215,7 +215,7 @@ export class DejaGridHeaderComponent extends Destroy {
     }
 
     public getDragContext(column: IDejaGridColumn): IDejaDragContext {
-        if (!this.clipboardService || (!this.columnsDraggable && !this.columnsSortable) || !column.draggable) {
+        if (!this.clipboardService || (!this.columnsDraggable && !this.columnsSortable) || !(column.draggable ?? true)) {
             return null as IDejaDragContext;
         }
 

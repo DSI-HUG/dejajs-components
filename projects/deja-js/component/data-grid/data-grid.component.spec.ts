@@ -791,7 +791,7 @@ describe('DejaGridComponent', () => {
                     break;
 
                 case 2:
-                    void expect((cells[1].nativeElement as HTMLElement).clientWidth).toBe(350);
+                    void expect((cells[1].nativeElement as HTMLElement).clientWidth).toBe(250);
                     gridContainerInstance.columns = gridContainerInstance.percentColumns;
                     fixture.detectChanges();
                     sendMouseMove(columnSeparators[2]);

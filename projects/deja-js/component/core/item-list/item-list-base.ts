@@ -345,7 +345,7 @@ export abstract class ItemListBase<T> extends Destroy {
         this.allCollapsed = (collapsed !== undefined) ? collapsed : !this.allCollapsed;
         if (this.viewPort.mode === 'disabled') {
             return from(this._itemList).pipe(
-                filter((item: IItemTree<T>) => item.$items && item.depth === 0 && item.collapsible),
+                filter((item: IItemTree<T>) => item.$items && item.depth === 0 && (item.collapsible ?? true)),
                 switchMap((_item: IItemTree<T>, index: number) => this.toggleCollapse$(index + this.vpStartRow, this.allCollapsed)),
                 reduce((acc, item) => {
                     acc.push(item);
@@ -659,7 +659,7 @@ export abstract class ItemListBase<T> extends Destroy {
      * @return True si l'élément peut être réduit.
      */
     protected isCollapsible(item: IItemTree<T>): boolean {
-        return item?.$items && item.collapsible;
+        return item?.$items && (item.collapsible ?? true);
     }
 
     /** Définit si l'élément spécifié est selectionable.
@@ -667,7 +667,7 @@ export abstract class ItemListBase<T> extends Destroy {
      * @return True si l'élément est selectionable.
      */
     protected isSelectable(item: IItemBase<T>): boolean {
-        return item?.selectable;
+        return item && (item.selectable ?? true);
     }
 
     /** Définit le champ à utiliser comme valeur d'affichage.

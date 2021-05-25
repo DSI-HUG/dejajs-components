@@ -283,7 +283,7 @@ export class ViewPortService extends Destroy {
                 items: items
             } as IViewPort;
 
-            if (elements.length !== items.length && bindIfAny) {
+            if (elements.length !== items.length && (bindIfAny ?? true)) {
                 this.viewPortResult$.next(viewPort);
                 return timer(1).pipe(
                     switchMap(() => calcDisabledViewPort$(items, containerSize, scrollPos, element, ensureParams, false)));

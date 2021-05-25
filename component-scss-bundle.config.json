@@ -1,6 +1,0 @@
-{
-    "bundlerOptions": {
-        "entryFile": "./projects/deja-js/component/styles/theming.scss",
-        "outFile": "dist/deja-js/component/theming.scss"
-    }
-}

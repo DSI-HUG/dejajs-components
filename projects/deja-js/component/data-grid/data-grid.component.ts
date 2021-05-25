@@ -8,13 +8,13 @@
 
 import { BooleanInput, coerceBooleanProperty, coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, Input, Optional, Output, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import { IDejaChipsComponentCloseEvent } from '@deja-js/component/chips';
 import { DejaClipboardService, Destroy, GroupingService, IGroupInfo, IItemBase, IItemTree, ISortInfos, ItemListService, IViewListResult, IViewPort, KeyCodes, SortingService, ViewPortService } from '@deja-js/component/core';
 import { IDejaDragEvent } from '@deja-js/component/dragdrop';
 import { DejaTreeListComponent, DejaTreeListScrollEvent } from '@deja-js/component/tree-list';
 import { combineLatest, fromEvent, Observable, ReplaySubject, Subject, timer } from 'rxjs';
 import { debounceTime, filter, map, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 
-import { IDejaChipsComponentCloseEvent } from '../chips';
 import { IDejaGridColumn, IDejaGridColumnEvent, IDejaGridColumnLayoutEvent, IDejaGridColumnSizeEvent } from './data-grid-column/data-grid-column';
 import { IDejaGridColumnLayout } from './data-grid-column/data-grid-column-layout';
 import { DejaGridColumnsLayoutInfos } from './data-grid-column/data-grid-column-layout-infos';
@@ -693,7 +693,7 @@ export class DejaGridComponent extends Destroy {
     }
 
     public onColumnHeaderClicked(event: IDejaGridColumnEvent): void {
-        if (this.treeListComponent && !this.sortable || !event.column.sortable) {
+        if (this.treeListComponent && !this.sortable || !(event.column.sortable ?? true)) {
             return;
         }
 

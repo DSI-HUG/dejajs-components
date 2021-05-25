@@ -54,7 +54,7 @@ export class DejaEditableDirective extends Destroy implements ControlValueAccess
         const inEdition$ = this.edit$.pipe(
             distinctUntilChanged(),
             map(([value, selectOnFocus]) => {
-                if (selectOnFocus) {
+                if (selectOnFocus ?? true) {
                     timer(10).pipe(
                         take(1),
                         takeUntil(this.destroyed$)

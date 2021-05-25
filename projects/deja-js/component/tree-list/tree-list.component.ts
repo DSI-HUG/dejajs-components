@@ -1207,7 +1207,7 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
         if (item.selected) {
             classNames.push('selected');
         }
-        if (!item.selectable) {
+        if (!(item.selectable ?? true)) {
             classNames.push('unselectable');
         }
         if (item.depth === this._depthMax && item.odd) {

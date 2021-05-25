@@ -298,7 +298,7 @@ export class ViewPortService<T> {
                 items: items
             } as ViewPort<T>;
 
-            if (elements.length !== items.length && bindIfAny) {
+            if (elements.length !== items.length && (bindIfAny ?? true)) {
                 const measure$ = of(viewPort);
                 return merge(measure$, measure$.pipe(
                     delay(1),

@@ -30,7 +30,7 @@ export class DejaPopupToolbarComponent {
 
         if (!conf.fullscreen) {
             this.defaultActions.unshift(this.buttonFullscreen);
-        } else if (conf.buttonFullscreenExit) {
+        } else if (conf.buttonFullscreenExit ?? true) {
             this.defaultActions.unshift(this.buttonFullscreenExit);
         }
 

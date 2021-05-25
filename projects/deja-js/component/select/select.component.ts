@@ -14,12 +14,10 @@ import { CanDisable, CanUpdateErrorState, ErrorStateMatcher } from '@angular/mat
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { IDejaChipsComponentCloseEvent } from '@deja-js/component/chips';
-import { DejaChildValidatorDirective, DejaConnectionPositionPair, DejaItemComponent, DejaItemEvent, DejaItemsEvent, GroupingService, IItemBase, IItemTree, ItemListBase, ItemListService, IViewListResult, IViewPort, KeyCodes, MediaService, SortingService, ViewPortService } from '@deja-js/component/core';
+import { DejaChildValidatorDirective, DejaConnectionPositionPair, DejaItemComponent, DejaItemEvent, DejaItemsEvent, GroupingService, IFindItemResult, IItemBase, IItemTree, ItemListBase, ItemListService, IViewListResult, IViewPort, KeyCodes, MediaService, SortingService, ViewPortService } from '@deja-js/component/core';
 import { DejaOverlayComponent } from '@deja-js/component/overlay';
 import { BehaviorSubject, combineLatest, fromEvent, merge, Observable, of, Subject, Subscription, timer } from 'rxjs';
 import { debounce, debounceTime, delay, delayWhen, filter, map, switchMap, take, takeUntil, tap } from 'rxjs/operators';
-
-import { IFindItemResult } from '../core';
 
 export type SelectType = 'autocomplete' | 'multiselect' | 'select';
 
@@ -1242,7 +1240,7 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
         if (item.selected) {
             classNames.push('selected');
         }
-        if (!item.selectable) {
+        if (!(item.selectable ?? true)) {
             classNames.push('unselectable');
         }
         if (item.depth === this._depthMax && item.odd) {
@@ -1422,7 +1420,7 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
         }
 
         this.htmlInputElement.focus();
-        if (hideDropDown) {
+        if (hideDropDown ?? true) {
             this.hideDropDown();
         }
     }
