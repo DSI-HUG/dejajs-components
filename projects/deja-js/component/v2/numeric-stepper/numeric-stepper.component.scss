@@ -1,33 +1,26 @@
 mat-form-field[deja-numeric-stepper-form-field] {
-    height: 60px;
-    width: 48px;
-
     .mat-form-field-wrapper {
-        height: 100%;
-        margin: 0;
-        padding: 0;
+        // height: 100%;
+        // margin: 0;
+        // padding: 0;
 
         .mat-form-field-flex {
-            margin: 0;
-            height: 100%;
+            // margin: 0;
+            // height: 100%;
 
             >div {
-                top: 0;
-                height: 100%;
-            }
-
-            .mat-form-field-outline-thick {
-                color: transparent !important;
+                // top: 0;
+                // height: 100%;
             }
 
             .mat-form-field-infix {
-                padding: 0;
-                border-top: none;
+                // padding: 0;
+                // border-top: none;
 
                 input {
                     text-align: center;
-                    height: 100%;
-                    width: 100%;
+                    // height: 100%;
+                    // width: 100%;
                 }
             }
         }
@@ -41,10 +34,52 @@ mat-form-field[deja-numeric-stepper-form-field] {
         //     border-radius: 0px;
         // }
 
+        &[appearance="fill"] {
+            .mat-form-field-flex {
+                background-color: #fff;
+            }
+        }
+
         .arrow {
             visibility: visible;
             opacity: 1;
-            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .increment {
+            box-shadow: 0px -3px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .decrement {
+            box-shadow: 0px 3px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .mat-form-field-label-wrapper,
+        .mat-form-field-outline,
+        .mat-form-field-outline-thick,
+        .mat-form-field-underline {
+            opacity: 0 !important;
+        }
+
+        &.mat-form-field-invalid {
+            box-shadow: 0px 2px 4px rgba(#f44336, 0.3);
+
+            deja-numeric-stepper {
+                .arrow {
+                    color: #f44336;
+                }
+
+                .increment {
+                    box-shadow: 0px -3px 4px rgba(#f44336, 0.3);
+                }
+
+                .decrement {
+                    box-shadow: 0px 3px 4px rgba(#f44336, 0.3);
+                }
+            }
+
+            .mat-form-field-subscript-wrapper {
+                visibility: hidden;
+            }
         }
     }
 
@@ -61,8 +96,6 @@ mat-form-field[deja-numeric-stepper-form-field] {
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 1;
-            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
             box-sizing: border-box;
             background-color: #fff;
         }

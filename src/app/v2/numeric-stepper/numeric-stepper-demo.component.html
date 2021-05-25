@@ -42,6 +42,45 @@
                     </mat-error>
                 </mat-form-field>
             </div>
+            <div [formGroup]="numberForm">
+                <mat-form-field appearance="standard">
+                    <mat-label>Standard appearance</mat-label>
+                    <deja-numeric-stepper (increment)="changeValue3(2)" (decrement)="changeValue3(-2)"></deja-numeric-stepper>
+                    <input matInput type="text" formControlName="numberValue3" />
+                    <mat-error>{{ numberForm.get('numberValue3').errors ? numberForm.get('numberValue3').errors[0] : ''}}</mat-error>
+                </mat-form-field>
+            </div>
+            <div [formGroup]="numberForm">
+                <mat-form-field appearance="outline">
+                    <mat-label>With a validator (has to be positive)</mat-label>
+                    <deja-numeric-stepper (increment)="changeValue4(2)" (decrement)="changeValue4(-2)"></deja-numeric-stepper>
+                    <input matInput type="text" formControlName="numberValue4" />
+                    <mat-error>{{ numberForm.get('numberValue4').errors ? numberForm.get('numberValue4').errors[0] : ''}}</mat-error>
+                </mat-form-field>
+            </div>
+            <div [formGroup]="numberForm">
+                <mat-form-field appearance="fill">
+                    <mat-label>With a validator (has to be positive)</mat-label>
+                    <deja-numeric-stepper (increment)="changeValue5(2)" (decrement)="changeValue5(-2)"></deja-numeric-stepper>
+                    <input matInput type="text" formControlName="numberValue5" />
+                    <mat-error>{{ numberForm.get('numberValue5').errors ? numberForm.get('numberValue5').errors[0] : ''}}</mat-error>
+                </mat-form-field>
+            </div>
+            <div [formGroup]="numberForm">
+                <mat-form-field appearance="outline">
+                    <mat-label>With a validator (has to be positive)</mat-label>
+                    <input matInput type="text" formControlName="numberValue5" />
+                    <mat-error>{{ numberForm.get('numberValue5').errors ? numberForm.get('numberValue5').errors[0] : ''}}</mat-error>
+                </mat-form-field>
+            </div>
+            <div [formGroup]="numberForm">
+                <mat-form-field appearance="outline">
+                    <mat-label>With a validator (has to be positive)</mat-label>
+                    <deja-numeric-stepper (increment)="changeValue5(2)" (decrement)="changeValue5(-2)"></deja-numeric-stepper>
+                    <input matInput type="text" formControlName="numberValue5" />
+                    <mat-error>{{ numberForm.get('numberValue5').errors ? numberForm.get('numberValue5').errors[0] : ''}}</mat-error>
+                </mat-form-field>
+            </div>
         </mat-card-content>
     </mat-card>
 </div>

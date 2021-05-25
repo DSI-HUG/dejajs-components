@@ -3,6 +3,7 @@
     flex-direction: row;
     align-items: flex-start;
     justify-content: space-around;
+    padding-top: 100px;
 
     >div {
         display: flex;
@@ -11,10 +12,9 @@
     }
 
     mat-form-field {
+        // height: 60px;
+        width: 48px;
 
-        //     .mat-form-field-flex {
-        //         padding: 0;
-        //         margin: 0;
-        //     }
+        &[deja-numeric-stepper-form-field] {}
     }
 }

@@ -58,8 +58,8 @@ export class DejaNumericStepperComponent extends Destroy implements OnInit {
             const bounds = this.elementRef.nativeElement.getBoundingClientRect();
 
             this.left = formFieldBounds.left - bounds.left;
-            this.topUp = formFieldBounds.top - bounds.top - 32;
-            this.topDown = formFieldBounds.bottom - bounds.top;
+            this.topUp = formFieldBounds.top - bounds.top - 28;
+            this.topDown = formFieldBounds.bottom - bounds.top - 10;
             this.width = formFieldBounds.width;
             this.changeDetectorRef.markForCheck();
         });
