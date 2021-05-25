@@ -1,3 +1,26 @@
+# [12.0.0-next.1](https://github.com/DSI-HUG/dejajs-components/compare/v11.10.0...v12.0.0-next.1) (2021-05-25)
+
+
+* refactor!: finish new version ([89a0690](https://github.com/DSI-HUG/dejajs-components/commit/89a06905a40e40225f966d49811a57531cf12613))
+
+
+### Bug Fixes
+
+* correct regression when fixing lint ([37ab4e8](https://github.com/DSI-HUG/dejajs-components/commit/37ab4e8499a46b427517f96c19d1a068cbb4f71c))
+* upgrade to eslint lib ([aee11f6](https://github.com/DSI-HUG/dejajs-components/commit/aee11f6c33a8bf926024d04144d49f01ab19c022))
+* **DejaEditor:** Remove takeUntil on ready subscription in ngOnDestroy ([5833f97](https://github.com/DSI-HUG/dejajs-components/commit/5833f9759dd4b92847e8d2910fb981c03b72322e))
+* **overlay:** rework css class visibility (DEJS-965) ([abcc989](https://github.com/DSI-HUG/dejajs-components/commit/abcc989b272296d77767eeca2fb6f04c68a82b03))
+
+
+### Features
+
+* message-box now have a light mode ([93472b7](https://github.com/DSI-HUG/dejajs-components/commit/93472b7d79c552e252649a2a25abedc7ad1ef44a))
+
+
+### BREAKING CHANGES
+
+* init dejajs version 12
+
 # [11.11.0-next.1](https://github.com/DSI-HUG/dejajs-components/compare/v11.10.0...v11.11.0-next.1) (2021-05-19)
 
 
