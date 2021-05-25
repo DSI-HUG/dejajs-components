@@ -1,56 +1,45 @@
 mat-form-field[deja-numeric-stepper-form-field] {
+    .noselect {
+        -webkit-touch-callout: none;
+        /* iOS Safari */
+        -webkit-user-select: none;
+        /* Chrome/Safari/Opera */
+        -khtml-user-select: none;
+        /* Konqueror */
+        -moz-user-select: none;
+        /* Firefox */
+        -ms-user-select: none;
+        /* Internet Explorer/Edge */
+        user-select: none;
+        /* Non-prefixed version, currently
+           not supported by any browser */
+    }
+
     .mat-form-field-wrapper {
-        // height: 100%;
-        // margin: 0;
-        // padding: 0;
-
         .mat-form-field-flex {
-            // margin: 0;
-            // height: 100%;
-
-            >div {
-                // top: 0;
-                // height: 100%;
-            }
-
             .mat-form-field-infix {
-                // padding: 0;
-                // border-top: none;
-
                 input {
                     text-align: center;
-                    // height: 100%;
-                    // width: 100%;
                 }
             }
         }
     }
 
     &:hover:not(.disabled) {
-        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-
-        // .value-container .value {
-        //     border: 1px solid transparent;
-        //     border-radius: 0px;
-        // }
-
         &[appearance="fill"] {
             .mat-form-field-flex {
                 background-color: #fff;
             }
         }
 
-        .arrow {
+        .arrow,
+        .shadow {
             visibility: visible;
             opacity: 1;
         }
 
-        .increment {
-            box-shadow: 0px -3px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .decrement {
-            box-shadow: 0px 3px 4px rgba(0, 0, 0, 0.1);
+        .shadow {
+            box-shadow: 0px 2px 4px rgba(#000, 0.3);
         }
 
         .mat-form-field-label-wrapper,
@@ -61,19 +50,13 @@ mat-form-field[deja-numeric-stepper-form-field] {
         }
 
         &.mat-form-field-invalid {
-            box-shadow: 0px 2px 4px rgba(#f44336, 0.3);
-
             deja-numeric-stepper {
                 .arrow {
                     color: #f44336;
                 }
 
-                .increment {
-                    box-shadow: 0px -3px 4px rgba(#f44336, 0.3);
-                }
-
-                .decrement {
-                    box-shadow: 0px 3px 4px rgba(#f44336, 0.3);
+                .shadow {
+                    box-shadow: 0px 2px 4px rgba(#f44336, 0.3);
                 }
             }
 
@@ -81,23 +64,40 @@ mat-form-field[deja-numeric-stepper-form-field] {
                 visibility: hidden;
             }
         }
+
+        .mat-form-field-flex {
+            .mat-form-field-infix {
+                input {
+                    position: relative;
+                    z-index: 1;
+                }
+            }
+        }
     }
 
     deja-numeric-stepper {
         position: relative;
 
-        .arrow {
+        .arrow,
+        .shadow {
+            transition: opacity 0.15s ease-out;
+            position: absolute;
             visibility: hidden;
             opacity: 0;
+        }
+
+        .arrow {
             cursor: pointer;
-            transition: all 0.15s ease-out;
-            position: absolute;
             height: 32px;
             display: flex;
             justify-content: center;
             align-items: center;
             box-sizing: border-box;
-            background-color: #fff;
+            z-index: 1;
+        }
+
+        .shadow {
+            border-radius: 4px;
         }
 
         .increment {
@@ -108,41 +108,4 @@ mat-form-field[deja-numeric-stepper-form-field] {
             border-radius: 0 0 4px 4px;
         }
     }
-
-    // /* To remove the input arrows Chrome, Safari, Edge, Opera */
-    // .value::-webkit-outer-spin-button,
-    // .value::-webkit-inner-spin-button {
-    //     -webkit-appearance: none;
-    //     margin: 0;
-    // }
-
-    // /* Firefox */
-    // .value[type=number] {
-    //     -moz-appearance: textfield;
-    // }
-
-    // .value:focus {
-    //     outline: none;
-    // }
-
-    // .value {
-    //     border: none;
-    //     background: none;
-    //     font: inherit;
-    //     min-width: 2px;
-    //     outline: none;
-    //     padding: 0;
-    //     padding-right: 2px;
-    //     text-align: center;
-    //     flex: 0 0 100%;
-    //     // width: 48px;
-    //     // height: 60px;
-    //     // line-height: 20px;
-    //     // color: #424242;
-    //     // padding: 0 !important;
-    //     // border: 1px solid #E0E0E0;
-    //     // border-radius: 4px;
-    //     // box-sizing: border-box;
-    //     // transition: border 0.15s ease-out;
-    // }
 }

@@ -76,8 +76,8 @@
             <div [formGroup]="numberForm">
                 <mat-form-field appearance="outline">
                     <mat-label>With a validator (has to be positive)</mat-label>
-                    <deja-numeric-stepper (increment)="changeValue5(2)" (decrement)="changeValue5(-2)"></deja-numeric-stepper>
                     <input matInput type="text" formControlName="numberValue5" />
+                    <deja-numeric-stepper (increment)="changeValue5(2)" (decrement)="changeValue5(-2)"></deja-numeric-stepper>
                     <mat-error>{{ numberForm.get('numberValue5').errors ? numberForm.get('numberValue5').errors[0] : ''}}</mat-error>
                 </mat-form-field>
             </div>
