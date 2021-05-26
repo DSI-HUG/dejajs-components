@@ -10,6 +10,8 @@ import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, Optional, Self } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { Destroy } from '@deja-js/component/core';
+import { Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, map, takeUntil } from 'rxjs/operators';
 
 export enum TimePickerDisplayModeEnum {
     FULL_TIME,
@@ -52,6 +54,8 @@ export class DejaTimePickerComponent extends Destroy implements ControlValueAcce
     public minutesDisabled = false;
     public modeMinutesOnly = TimePickerDisplayModeEnum.MINUTES_ONLY;
     public modeHoursOnly = TimePickerDisplayModeEnum.HOURS_ONLY;
+    public onHoursChange$ = new Subject<Event | number>();
+    public onMinutesChange$ = new Subject<Event | number>();
     private _disabled = false;
     private _value: Date;
 
@@ -64,27 +68,47 @@ export class DejaTimePickerComponent extends Destroy implements ControlValueAcce
         if (this.control) {
             this.control.valueAccessor = this;
         }
+
+        this.onHoursChange$.pipe(
+            debounceTime(1),
+            distinctUntilChanged(),
+            map(hours => {
+                if (hours instanceof Event) {
+                    hours = parseInt((hours.target as HTMLInputElement).value, 10);
+                }
+                return hours;
+            }),
+            takeUntil(this.destroyed$)
+        ).subscribe(hours => {
+            const clone = new Date(this.value.getTime());
+            clone.setHours(hours);
+
+            this.value = clone;
+            this.changeDetectorRef.markForCheck();
+        });
+
+        this.onMinutesChange$.pipe(
+            debounceTime(1),
+            distinctUntilChanged(),
+            map(minutes => {
+                if (minutes instanceof Event) {
+                    minutes = parseInt((minutes.target as HTMLInputElement).value, 10);
+                }
+                return minutes;
+            }),
+            takeUntil(this.destroyed$)
+        ).subscribe(minutes => {
+            const clone = new Date(this.value.getTime());
+            clone.setMinutes(minutes);
+
+            this.value = clone;
+            this.changeDetectorRef.markForCheck();
+        });
     }
 
     public ngOnInit(): void {
         this.hoursDisabled = this.mode === TimePickerDisplayModeEnum.FULL_TIME_WITH_HOURS_DISABLED;
         this.minutesDisabled = this.mode === TimePickerDisplayModeEnum.FULL_TIME_WITH_MINUTES_DISABLED;
-    }
-
-    public hoursChanged(hours: number): void {
-        const clone = new Date(this.value.getTime());
-        clone.setHours(hours);
-
-        this.value = clone;
-        this.changeDetectorRef.markForCheck();
-    }
-
-    public minutesChanged(minutes: number): void {
-        const clone = new Date(this.value.getTime());
-        clone.setMinutes(minutes);
-
-        this.value = clone;
-        this.changeDetectorRef.markForCheck();
     }
 
     // ************* ControlValueAccessor Implementation **************
