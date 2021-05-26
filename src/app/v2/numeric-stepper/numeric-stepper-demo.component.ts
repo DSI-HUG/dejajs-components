@@ -6,8 +6,11 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { Destroy } from '@deja-js/component/core';
+import { Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, map, takeUntil } from 'rxjs/operators';
 
 import { numberValidator } from './validators';
 
@@ -16,7 +19,7 @@ import { numberValidator } from './validators';
     styleUrls: ['./numeric-stepper-demo.component.scss'],
     templateUrl: './numeric-stepper-demo.component.html'
 })
-export class DejaNumericStepperDemoComponent {
+export class DejaNumericStepperDemoComponent extends Destroy {
     public tabIndex = 1;
 
     public value1 = 90;
@@ -27,13 +30,29 @@ export class DejaNumericStepperDemoComponent {
     public value6 = 1;
 
     public numberForm: FormGroup;
+    public onInput1Change$ = new Subject<Event>();
 
-    public constructor(private fb: FormBuilder) {
+    public constructor(
+        private changeDetectorRef: ChangeDetectorRef,
+        private fb: FormBuilder
+    ) {
+        super();
+
         this.numberForm = this.fb.group({
             numberValue3: [this.value3, numberValidator],
             numberValue4: [this.value4, numberValidator],
             numberValue5: [this.value5, numberValidator],
             numberValue6: [this.value6, numberValidator]
+        });
+
+        this.onInput1Change$.pipe(
+            debounceTime(1),
+            distinctUntilChanged(),
+            map(event => parseFloat((event.target as HTMLInputElement).value)),
+            takeUntil(this.destroyed$)
+        ).subscribe(v => {
+            this.value1 = v;
+            this.changeDetectorRef.markForCheck();
         });
     }
 

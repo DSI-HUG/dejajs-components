@@ -14,14 +14,14 @@
             <div>
                 <mat-form-field appearance="outline">
                     <mat-label>Outline</mat-label>
-                    <input matInput type="text" [ngModel]="value1 | number:'3.'" (change)="value1 = +$any($event).value" #numericStepper="ngModel" />
+                    <input matInput type="text" [ngModel]="value1 | number:'3.'" (change)="onInput1Change$.next($event)" #numericStepper="ngModel" />
                     <deja-numeric-stepper (increment)="value1 = value1 + 20" (decrement)="value1 = value1 - 20"></deja-numeric-stepper>
                 </mat-form-field>
             </div>
             <div>
                 <mat-form-field appearance="legacy">
                     <mat-label>Legacy</mat-label>
-                    <input matInput type="text" [ngModel]="value1 | number:'.1-2'" (change)="value1 = +$any($event).value" #numericStepper="ngModel" />
+                    <input matInput type="text" [ngModel]="value1 | number:'.1-2'" (change)="onInput1Change$.next($event)" #numericStepper="ngModel" />
                     <deja-numeric-stepper (increment)="value1 = value1 + 5" (decrement)="value1 = value1 - 5"></deja-numeric-stepper>
                 </mat-form-field>
             </div>
