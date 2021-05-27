@@ -1,4 +1,4 @@
-:host {
+deja-time-picker {
     position: relative;
     width: fit-content;
 
@@ -7,17 +7,24 @@
         flex-direction: row;
         align-items: center;
         justify-content: center;
-    }
 
-    .time-separator {
-        width: 4px;
-        font-size: 14.5px;
-        line-height: 17px;
-        margin: 0 8px;
-    }
+        mat-form-field[deja-numeric-stepper-form-field] {
+            width: 48px;
 
-    mat-form-field {
-        height: 60px;
-        width: 48px;
+            .mat-form-field-wrapper {
+                padding-bottom: 0;
+
+                .mat-form-field-infix {
+                    border-bottom: 0.7em solid transparent;
+                }
+            }
+        }
+
+        .time-separator {
+            width: 4px;
+            font-size: 14.5px;
+            line-height: 17px;
+            margin: 0 8px;
+        }
     }
 }

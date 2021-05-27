@@ -7,7 +7,7 @@
  */
 
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, Optional, Self } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, Optional, Self, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { Destroy } from '@deja-js/component/core';
 import { Subject } from 'rxjs';
@@ -28,7 +28,8 @@ export enum TimePickerDisplayModeEnum {
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'deja-time-picker',
     styleUrls: ['./time-picker.component.scss'],
-    templateUrl: './time-picker.component.html'
+    templateUrl: './time-picker.component.html',
+    encapsulation: ViewEncapsulation.None
 })
 export class DejaTimePickerComponent extends Destroy implements ControlValueAccessor, OnInit {
 
