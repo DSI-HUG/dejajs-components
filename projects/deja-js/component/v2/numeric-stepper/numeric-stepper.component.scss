@@ -26,11 +26,6 @@ mat-form-field[deja-numeric-stepper-form-field] {
     }
 
     &:hover:not(.disabled) {
-        &[appearance="fill"] {
-            .mat-form-field-flex {
-                background-color: #fff;
-            }
-        }
 
         .arrow,
         .shadow {
@@ -50,16 +45,6 @@ mat-form-field[deja-numeric-stepper-form-field] {
         }
 
         &.mat-form-field-invalid {
-            deja-numeric-stepper {
-                .arrow {
-                    color: #f44336;
-                }
-
-                .shadow {
-                    box-shadow: 0px 2px 4px rgba(#f44336, 0.3);
-                }
-            }
-
             .mat-form-field-subscript-wrapper {
                 visibility: hidden;
             }
