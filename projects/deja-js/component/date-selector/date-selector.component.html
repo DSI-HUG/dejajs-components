@@ -42,11 +42,11 @@
         </div>
     </div>
     <div id="time-selector" *ngIf="layoutId > 1">
-        <div id="time-header">
+        <!-- <div id="time-header">
             {{('0'+displayedDate.getHours()).slice(-2)}}:{{('0'+displayedDate.getMinutes()).slice(-2)}}
-        </div>
-        <div id="time-body">
-            <!-- <deja-circular-picker [ngModel]="(this.displayedDate) ? this.displayedDate.getMinutes() : 0" (ngModelChange)="updateMinutes($event)"
+        </div> -->
+        <!-- <div id="time-body"> -->
+        <!-- <deja-circular-picker [ngModel]="(this.displayedDate) ? this.displayedDate.getMinutes() : 0" (ngModelChange)="updateMinutes($event)"
                 [ranges]="clocks.minutes.ranges" [outerLabels]="true" class="minutes" [disabled]="disabled"></deja-circular-picker>
             <deja-circular-picker [ngModel]="(this.displayedDate && this.displayedDate.getHours() != 0) ? this.displayedDate.getHours() : 24" (ngModelChange)="updateHours($event)"
                 [ranges]="clocks.hours.ranges" class="hours" [disabled]="disabled">
@@ -55,7 +55,7 @@
                 </ng-template>
             </deja-circular-picker> -->
 
-            <deja-time-picker [ngModel]="(this.displayedDate) ? this.displayedDate.getMinutes() : 0" (ngModelChange)="updateMinutes($event)" [disabled]="disabled"></deja-time-picker>
-        </div>
+        <deja-time-picker [ngModel]="(this.displayedDate) ? this.displayedDate.getMinutes() : 0" (ngModelChange)="updateMinutes($event)" [disabled]="disabled"></deja-time-picker>
+        <!-- </div> -->
     </div>
 </div>
