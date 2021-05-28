@@ -6,32 +6,45 @@ deja-date-time-selector {
         width: 310px;
         outline: none;
 
-        &[with-time] {
-            width: 663px;
-        }
-
-        &.datetime {
-            width: 663px;
-        }
-
         &.timeonly {
-            width: 361px;
-            height: 452px;
+            height: 15rem;
         }
 
         #date-header {
-            align-items: center;
             display: flex;
-            flex: 1 100%;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
             font-size: 2rem;
             height: 94px;
-            justify-content: center;
             padding: 0;
             position: relative;
+
+            [current] {
+                font-size: 2rem;
+            }
+
+            .year {
+                align-items: center;
+                display: flex;
+                font-size: 1rem;
+                justify-content: center;
+                width: 50%;
+
+                [fontIcon] {
+                    flex: 0 0 auto;
+                    cursor: pointer;
+                }
+
+                div {
+                    flex: 1 1 auto;
+                    text-align: center;
+                }
+            }
         }
 
         #time-selector {
-            height: 10rem;
+            height: 8rem;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -40,32 +53,6 @@ deja-date-time-selector {
         #date-selector {
             margin: 0 auto;
             width: 310px;
-
-            #date-header {
-                flex-direction: column;
-
-                [current] {
-                    font-size: 2rem;
-                }
-
-                .year {
-                    align-items: center;
-                    display: flex;
-                    font-size: 1rem;
-                    justify-content: center;
-                    width: 50%;
-
-                    [fontIcon] {
-                        flex: 0 0 auto;
-                        cursor: pointer;
-                    }
-
-                    div {
-                        flex: 1 1 auto;
-                        text-align: center;
-                    }
-                }
-            }
 
             #sub-header {
                 .month {

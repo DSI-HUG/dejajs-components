@@ -8,25 +8,15 @@
 
 /* eslint-disable @typescript-eslint/naming-convention */
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
-import { ChangeDetectionStrategy } from '@angular/core';
-import { ChangeDetectorRef } from '@angular/core';
-import { Component } from '@angular/core';
-import { ElementRef } from '@angular/core';
-import { EventEmitter } from '@angular/core';
-import { Input } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { Optional } from '@angular/core';
-import { Output } from '@angular/core';
-import { Self } from '@angular/core';
-import { ViewEncapsulation } from '@angular/core';
-import { ControlValueAccessor } from '@angular/forms';
-import { NgControl } from '@angular/forms';
-import { Destroy } from '@deja-js/component/core';
-import { KeyCodes } from '@deja-js/component/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnInit, Optional, Output, Self, ViewEncapsulation } from '@angular/core';
+import { ControlValueAccessor, NgControl } from '@angular/forms';
+import { MomentDateAdapter } from '@angular/material-moment-adapter';
+import { Destroy, KeyCodes } from '@deja-js/component/core';
 import { from, fromEvent, merge, Subject } from 'rxjs';
 import { debounceTime, filter, takeUntil, tap } from 'rxjs/operators';
 
 import { IDateSelectorItem } from './date-selector-item.model';
+
 
 export enum DaysOfWeek {
     Sunday = 0,
@@ -161,7 +151,7 @@ export class DejaDateSelectorComponent extends Destroy implements OnInit, Contro
         return this._disabled;
     }
 
-    public constructor(elementRef: ElementRef, private changeDetectorRef: ChangeDetectorRef, @Self() @Optional() public _control: NgControl) {
+    public constructor(elementRef: ElementRef, private changeDetectorRef: ChangeDetectorRef, private momentDateAdapter: MomentDateAdapter, @Self() @Optional() public _control: NgControl) {
         super();
 
         const element = elementRef.nativeElement as HTMLElement;
@@ -410,6 +400,24 @@ export class DejaDateSelectorComponent extends Destroy implements OnInit, Contro
         d.setHours(hours.getHours(), hours.getMinutes(), hours.getSeconds(), hours.getMilliseconds());
         this.value = d;
         this.timeChange.emit(this.value);
+    }
+
+    public getDisplayedDate(): string {
+        const sb = new Array<string>();
+        if (!this.format) {
+            if (this.layoutId < 3) {
+                sb.push(this.displayedDate?.toLocaleDateString());
+            }
+            if (this.layoutId > 1) {
+                const hours = `0${this.displayedDate.getHours()}`;
+                const minutes = `0${this.displayedDate.getMinutes()}`;
+                sb.push(`${hours.slice(-2)}:${minutes.slice(-2)}`);
+            }
+        } else {
+            sb.push((this.displayedDate && this.format && this.momentDateAdapter.deserialize(this.displayedDate)?.format(this.format)) || this.displayedDate?.toLocaleDateString());
+        }
+
+        return sb.join('&nbsp;&nbsp;');
     }
 
     public onTouchedCallback = (): void => undefined;
