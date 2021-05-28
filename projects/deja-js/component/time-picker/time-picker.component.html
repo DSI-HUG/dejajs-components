@@ -1,6 +1,6 @@
 <div class="time-picker">
     <!-- Hours -->
-    <mat-form-field appearance="outline" [class.disabled]="disabled || hoursDisabled" [style.display]="mode === modeMinutesOnly ? 'none' : 'block'">
+    <mat-form-field appearance="outline" class="hours" [class.disabled]="disabled || hoursDisabled" [style.display]="mode === modeMinutesOnly ? 'none' : 'block'">
         <input matInput type="text" [ngModel]="value?.getHours() | number:'2.'" (change)="onHoursChange$.next($event)" [disabled]="disabled || hoursDisabled" [maxLength]="2" />
         <deja-numeric-stepper (increment)="onHoursChange$.next(value.getHours() + 1)" (decrement)="onHoursChange$.next(value.getHours() - 1)"></deja-numeric-stepper>
     </mat-form-field>
@@ -9,7 +9,7 @@
     <span class="time-separator" [style.display]="mode === modeMinutesOnly || mode === modeHoursOnly ? 'none' : 'block'">:</span>
 
     <!-- Minutes -->
-    <mat-form-field appearance="outline" [class.disabled]="disabled || minutesDisabled" [style.display]="mode === modeHoursOnly ? 'none' : 'block'">
+    <mat-form-field appearance="outline" class="minutes" [class.disabled]="disabled || minutesDisabled" [style.display]="mode === modeHoursOnly ? 'none' : 'block'">
         <input matInput type="text" [ngModel]="value?.getMinutes() | number:'2.'" (change)="onMinutesChange$.next($event)" [disabled]="disabled || minutesDisabled" [maxLength]="2" />
         <deja-numeric-stepper (increment)="onMinutesChange$.next(value.getMinutes() + step)" (decrement)="onMinutesChange$.next(value.getMinutes() - step)"></deja-numeric-stepper>
     </mat-form-field>

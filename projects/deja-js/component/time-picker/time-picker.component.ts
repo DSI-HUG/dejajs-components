@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, Optional, Self, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { Destroy } from '@deja-js/component/core';
@@ -41,13 +41,13 @@ export class DejaTimePickerComponent extends Destroy implements ControlValueAcce
 
     /** Disabled property setter. Can be string or empty so you can use it like : <time-picker disabled></time-picker> */
     @Input()
-    public set disabled(value: boolean) {
+    public set disabled(value: BooleanInput) {
         this._disabled = coerceBooleanProperty(value);
         this.changeDetectorRef.markForCheck();
     }
 
     /** To get disabled attribute. */
-    public get disabled(): boolean {
+    public get disabled(): BooleanInput {
         return this._disabled;
     }
 

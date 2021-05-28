@@ -34,8 +34,7 @@
         </div>
         <div id="date-body" (keydown)="keyDown($event)" tabindex="0" [attr.keynav]="keyboardNavigation">
             <div class="date" *ngFor="let dateSelectorItem of currentDays; let index=index">
-                <div class="day" [attr.dateindex]="index" [class.background]="dateSelectorItem.background" [class.disabled]="dateSelectorItem.disabled"
-                    [attr.current]="dateSelectorItem.currentDate || null" [attr.selected]="dateSelectorItem.selected || null">
+                <div class="day" [attr.dateindex]="index" [class.background]="dateSelectorItem.background" [class.disabled]="dateSelectorItem.disabled" [attr.current]="dateSelectorItem.currentDate || null" [attr.selected]="dateSelectorItem.selected || null">
                     {{dateSelectorItem.date.getDate()}}
                 </div>
             </div>
@@ -47,14 +46,16 @@
             {{('0'+displayedDate.getHours()).slice(-2)}}:{{('0'+displayedDate.getMinutes()).slice(-2)}}
         </div>
         <div id="time-body">
-            <deja-circular-picker [ngModel]="(this.displayedDate) ? this.displayedDate.getMinutes() : 0" (ngModelChange)="updateMinutes($event)"
+            <!-- <deja-circular-picker [ngModel]="(this.displayedDate) ? this.displayedDate.getMinutes() : 0" (ngModelChange)="updateMinutes($event)"
                 [ranges]="clocks.minutes.ranges" [outerLabels]="true" class="minutes" [disabled]="disabled"></deja-circular-picker>
             <deja-circular-picker [ngModel]="(this.displayedDate && this.displayedDate.getHours() != 0) ? this.displayedDate.getHours() : 24" (ngModelChange)="updateHours($event)"
                 [ranges]="clocks.hours.ranges" class="hours" [disabled]="disabled">
                 <ng-template #cursorTemplate #labelTemplate let-value>
                     {{ value === 24 ? 0 : value }}
                 </ng-template>
-            </deja-circular-picker>
+            </deja-circular-picker> -->
+
+            <deja-time-picker [ngModel]="(this.displayedDate) ? this.displayedDate.getMinutes() : 0" (ngModelChange)="updateMinutes($event)" [disabled]="disabled"></deja-time-picker>
         </div>
     </div>
 </div>
