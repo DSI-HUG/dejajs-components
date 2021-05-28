@@ -116,7 +116,7 @@ export class DejaTimePickerDemoComponent {
 
     public date7Changed(date: Date): void {
         const clone = new Date(date.getTime());
-        this.date6 = clone;
+        this.date7 = clone;
         this.changeDetectorRef.markForCheck();
     }
 }
