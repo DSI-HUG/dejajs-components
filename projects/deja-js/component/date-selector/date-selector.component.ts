@@ -65,22 +65,7 @@ export class DejaDateSelectorComponent extends Destroy implements OnInit, Contro
     public layoutClass: string;
     public layoutId: number;
 
-    // Time
-    public beginOffset = Math.PI / 3;
-    public clocks = {
-        hours: {
-            ranges: [
-                { min: 1, max: 12, beginOffset: Math.PI / 3 },
-                { min: 13, max: 24, beginOffset: Math.PI / 3 }
-            ]
-        },
-        minutes: {
-            ranges: [
-                { min: 0, max: 59, labelInterval: 5 }
-            ]
-        }
-    };
-    // /Time
+    public zeroHourDate = new Date(0, 0, 0, 0, 0, 0, 0);
 
     private _keyboardNavigation = false;
     private _keyboardNavigation$ = new Subject<boolean>();
@@ -412,26 +397,7 @@ export class DejaDateSelectorComponent extends Destroy implements OnInit, Contro
         return false;
     }
 
-    public updateHours(hours: number): void {
-        let d: Date;
-
-        if (hours === 24) {
-            hours = 0;
-        }
-
-        if (this.selectedDate) {
-            d = new Date(this.selectedDate);
-        } else {
-            d = new Date();
-            d.setHours(0, 0, 0, 0);
-        }
-
-        d.setHours(hours);
-        this.value = d;
-        this.timeChange.emit(this.value);
-    }
-
-    public updateMinutes(minutes: number): void {
+    public updateTime(hours: Date): void {
         let d: Date;
 
         if (this.selectedDate) {
@@ -441,7 +407,7 @@ export class DejaDateSelectorComponent extends Destroy implements OnInit, Contro
             d.setHours(0, 0, 0, 0);
         }
 
-        d.setMinutes(minutes);
+        d.setHours(hours.getHours(), hours.getMinutes(), hours.getSeconds(), hours.getMilliseconds());
         this.value = d;
         this.timeChange.emit(this.value);
     }
