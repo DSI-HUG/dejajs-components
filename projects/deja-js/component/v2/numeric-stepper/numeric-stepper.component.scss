@@ -33,6 +33,10 @@ mat-form-field[deja-numeric-stepper-form-field] {
             opacity: 1;
         }
 
+        .arrow {
+            transform: translateY(0px);
+        }
+
         .shadow {
             box-shadow: 0px 2px 4px rgba(#000, 0.3);
         }
@@ -79,6 +83,7 @@ mat-form-field[deja-numeric-stepper-form-field] {
             align-items: center;
             box-sizing: border-box;
             z-index: 1;
+            transition: transform 0.15s ease-out;
         }
 
         .shadow {
@@ -87,10 +92,12 @@ mat-form-field[deja-numeric-stepper-form-field] {
 
         .increment {
             border-radius: 4px 4px 0 0;
+            transform: translateY(5px);
         }
 
         .decrement {
             border-radius: 0 0 4px 4px;
+            transform: translateY(-5px);
         }
     }
 }
