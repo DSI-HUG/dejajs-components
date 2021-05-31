@@ -3,7 +3,8 @@
     flex-direction: row;
     justify-content: space-between;
 
-    >div {
+    >div,
+    >form {
         flex: 1 1 auto;
     }
 }
