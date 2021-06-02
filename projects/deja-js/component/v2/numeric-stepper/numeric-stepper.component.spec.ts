@@ -18,7 +18,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DejaNumericStepperModule } from '.';
 import { DejaNumericStepperComponent } from './numeric-stepper.component';
 
-
 @Component({
     selector: 'DejaNumericStepperContainerComponent',
     template: `<mat-form-field appearance="outline" [formGroup]="numberForm">
@@ -26,8 +25,8 @@ import { DejaNumericStepperComponent } from './numeric-stepper.component';
                 <deja-numeric-stepper (increment)="numberValue = numberValue + step" (decrement)="numberValue = numberValue - step"></deja-numeric-stepper></mat-form-field>`
 })
 class DejaNumericStepperContainerComponent {
-    public numberValue = 30;
     public numberForm: FormGroup;
+    public numberValue = 30;
     public step = 10;
 
     public constructor(private fb: FormBuilder) {
@@ -68,6 +67,7 @@ describe('DejaNumericStepperComponent', () => {
 
     it('should create the component', () => {
         void expect(component).toBeTruthy();
+        void expect(containerComponent).toBeTruthy();
     });
 
     it('should change the value in input', () => {
@@ -93,14 +93,4 @@ describe('DejaNumericStepperComponent', () => {
         fixture.detectChanges();
         void expect(containerComponent.numberValue).toEqual(20);
     });
-
-    // it('should apply a given number format', () => {
-    //     component.value = 5;
-    //     component.numberFormat = '2.';
-    //     fixture.detectChanges();
-
-    //     const inputElement = fixture.debugElement.query(By.css('.numeric-stepper > .value-container > input.value')).nativeElement as HTMLInputElement;
-
-    //     void expect(inputElement.value).toEqual('05');
-    // });
 });

@@ -80,7 +80,7 @@ describe('DejaTimePickerComponent', () => {
         void expect(minutesElement.value).toEqual('55');
     });
 
-    it('should update the inputs', () => {
+    it('should update the inputs', done => {
         const hoursInputElement = fixture.debugElement.query(By.css('.time-picker > .hours input')).nativeElement as HTMLInputElement;
         const minutesInputElement = fixture.debugElement.query(By.css('.time-picker > .minutes input')).nativeElement as HTMLInputElement;
 
@@ -88,9 +88,12 @@ describe('DejaTimePickerComponent', () => {
 
         fixture.detectChanges();
 
-        timer(1).subscribe(() => {
-            void expect(hoursInputElement.value).toEqual('10');
-            void expect(minutesInputElement.value).toEqual('55');
+        return fixture.whenRenderingDone().then(() => {
+            timer(200).subscribe(() => {
+                void expect(hoursInputElement.value).toEqual('10');
+                void expect(minutesInputElement.value).toEqual('55');
+                done();
+            });
         });
     });
 
