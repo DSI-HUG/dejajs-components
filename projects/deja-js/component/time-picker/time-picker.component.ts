@@ -6,20 +6,14 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, Optional, Self, ViewEncapsulation } from '@angular/core';
+import { BooleanInput, coerceBooleanProperty, coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, Optional, Self, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { Destroy } from '@deja-js/component/core';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, takeUntil } from 'rxjs/operators';
 
-export enum TimePickerDisplayModeEnum {
-    FULL_TIME,
-    FULL_TIME_WITH_HOURS_DISABLED,
-    FULL_TIME_WITH_MINUTES_DISABLED,
-    HOURS_ONLY,
-    MINUTES_ONLY,
-}
+export type TimePickerDisplayMode = 'FULL_TIME' | 'FULL_TIME_WITH_HOURS_DISABLED' | 'FULL_TIME_WITH_MINUTES_DISABLED' | 'HOURS_ONLY' | 'MINUTES_ONLY';
 
 /**
  * Time-picker component for Angular
@@ -31,13 +25,22 @@ export enum TimePickerDisplayModeEnum {
     templateUrl: './time-picker.component.html',
     encapsulation: ViewEncapsulation.None
 })
-export class DejaTimePickerComponent extends Destroy implements ControlValueAccessor, OnInit {
+export class DejaTimePickerComponent extends Destroy implements ControlValueAccessor {
 
     /** Display mode for the time-picker */
-    @Input() public mode = TimePickerDisplayModeEnum.FULL_TIME;
+    @Input() public mode: TimePickerDisplayMode = 'FULL_TIME';
 
     /** Step of the arrows */
-    @Input() public step = 1;
+    @Input()
+    public set step(value: NumberInput) {
+        this._step = coerceNumberProperty(value);
+        this.changeDetectorRef.markForCheck();
+    }
+
+    /** To get the step of the minutes arrows */
+    public get step(): NumberInput {
+        return this._step;
+    }
 
     /** Disabled property setter. Can be string or empty so you can use it like : <time-picker disabled></time-picker> */
     @Input()
@@ -51,12 +54,9 @@ export class DejaTimePickerComponent extends Destroy implements ControlValueAcce
         return this._disabled;
     }
 
-    public hoursDisabled = false;
-    public minutesDisabled = false;
-    public modeMinutesOnly = TimePickerDisplayModeEnum.MINUTES_ONLY;
-    public modeHoursOnly = TimePickerDisplayModeEnum.HOURS_ONLY;
     public onHoursChange$ = new Subject<Event | number>();
     public onMinutesChange$ = new Subject<Event | number>();
+    public _step = 1;
     private _disabled = false;
     private _value: Date;
 
@@ -71,7 +71,7 @@ export class DejaTimePickerComponent extends Destroy implements ControlValueAcce
         }
 
         this.onHoursChange$.pipe(
-            debounceTime(1),
+            debounceTime(10),
             distinctUntilChanged(),
             map(hours => {
                 if (hours instanceof Event) {
@@ -89,7 +89,7 @@ export class DejaTimePickerComponent extends Destroy implements ControlValueAcce
         });
 
         this.onMinutesChange$.pipe(
-            debounceTime(1),
+            debounceTime(10),
             distinctUntilChanged(),
             map(minutes => {
                 if (minutes instanceof Event) {
@@ -105,11 +105,6 @@ export class DejaTimePickerComponent extends Destroy implements ControlValueAcce
             this.value = clone;
             this.changeDetectorRef.markForCheck();
         });
-    }
-
-    public ngOnInit(): void {
-        this.hoursDisabled = this.mode === TimePickerDisplayModeEnum.FULL_TIME_WITH_HOURS_DISABLED;
-        this.minutesDisabled = this.mode === TimePickerDisplayModeEnum.FULL_TIME_WITH_MINUTES_DISABLED;
     }
 
     // ************* ControlValueAccessor Implementation **************

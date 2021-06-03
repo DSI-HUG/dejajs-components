@@ -5,13 +5,9 @@
  *  Use of this source code is governed by an Apache-2.0 license that can be
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
-
-import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -48,11 +44,7 @@ describe('DejaNumericStepperComponent', () => {
             ],
             imports: [
                 BrowserAnimationsModule,
-                CommonModule,
-                FormsModule,
                 DejaNumericStepperModule,
-                MatFormFieldModule,
-                MatInputModule,
                 ReactiveFormsModule
             ],
             providers: [FormBuilder]

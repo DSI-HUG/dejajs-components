@@ -11,7 +11,6 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter } from '@angular/material-moment-adapter';
-import { TimePickerDisplayModeEnum } from 'projects/deja-js/component/time-picker';
 
 export const myFormats = {
     parse: {
@@ -43,12 +42,6 @@ export const myFormats = {
 })
 export class DejaTimePickerDemoComponent {
     public tabIndex = 1;
-
-    public modeFullTime = TimePickerDisplayModeEnum.FULL_TIME;
-    public modeFullTimeWithHoursDisabled = TimePickerDisplayModeEnum.FULL_TIME_WITH_HOURS_DISABLED;
-    public modeFullTimeWithMinutesDisabled = TimePickerDisplayModeEnum.FULL_TIME_WITH_MINUTES_DISABLED;
-    public modeHoursOnly = TimePickerDisplayModeEnum.HOURS_ONLY;
-    public modeMinutesOnly = TimePickerDisplayModeEnum.MINUTES_ONLY;
 
     public date0 = new Date();
     public date1 = new Date(2021, 4, 6, 9, 5, 0);

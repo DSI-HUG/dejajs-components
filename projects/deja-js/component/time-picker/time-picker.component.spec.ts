@@ -6,15 +6,11 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { DejaNumericStepperModule } from '@deja-js/component/v2/numeric-stepper';
 import { timer } from 'rxjs';
 
 import { DejaTimePickerComponent, DejaTimePickerModule } from '.';
@@ -48,13 +44,8 @@ describe('DejaTimePickerComponent', () => {
             ],
             imports: [
                 BrowserAnimationsModule,
-                CommonModule,
                 DejaTimePickerModule,
-                FormsModule,
-                ReactiveFormsModule,
-                DejaNumericStepperModule,
-                MatFormFieldModule,
-                MatInputModule
+                ReactiveFormsModule
             ],
             providers: [FormBuilder]
         }).compileComponents();
@@ -71,8 +62,8 @@ describe('DejaTimePickerComponent', () => {
     });
 
     it('should display a specific date', () => {
-        const hoursElement = fixture.debugElement.query(By.css('.time-picker > .hours input')).nativeElement as HTMLInputElement;
-        const minutesElement = fixture.debugElement.query(By.css('.time-picker > .minutes input')).nativeElement as HTMLInputElement;
+        const hoursElement = fixture.debugElement.query(By.css('deja-time-picker > .hours input')).nativeElement as HTMLInputElement;
+        const minutesElement = fixture.debugElement.query(By.css('deja-time-picker > .minutes input')).nativeElement as HTMLInputElement;
 
         fixture.detectChanges();
 
@@ -81,8 +72,8 @@ describe('DejaTimePickerComponent', () => {
     });
 
     it('should update the inputs', done => {
-        const hoursInputElement = fixture.debugElement.query(By.css('.time-picker > .hours input')).nativeElement as HTMLInputElement;
-        const minutesInputElement = fixture.debugElement.query(By.css('.time-picker > .minutes input')).nativeElement as HTMLInputElement;
+        const hoursInputElement = fixture.debugElement.query(By.css('deja-time-picker > .hours input')).nativeElement as HTMLInputElement;
+        const minutesInputElement = fixture.debugElement.query(By.css('deja-time-picker > .minutes input')).nativeElement as HTMLInputElement;
 
         containerComponent.dateForm.controls.dateValue.patchValue(new Date(2021, 4, 12, 10, 55));
 
@@ -98,7 +89,7 @@ describe('DejaTimePickerComponent', () => {
     });
 
     it('should disable both hours and minutes mat form fields', () => {
-        const hoursMinutesFields = fixture.debugElement.query(By.css('.time-picker mat-form-field')).nativeElement as HTMLInputElement;
+        const hoursMinutesFields = fixture.debugElement.query(By.css('deja-time-picker mat-form-field')).nativeElement as HTMLInputElement;
         component.disabled = true;
 
         fixture.detectChanges();

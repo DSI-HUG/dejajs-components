@@ -46,8 +46,8 @@ Ensuite utiliser le composant comme ceci dans votre template :
         </tr>
         <tr>
             <td>mode</td>
-            <td>TimePickerDisplayModeEnum *</td>
-            <td>TimePickerDisplayModeEnum.FULL_TIME</td>
+            <td>TimePickerDisplayMode *</td>
+            <td>FULL_TIME</td>
             <td>Mode d'affichage du composant permettant d'afficher ou de désactiver les heures ou les minutes</td>
         </tr>
         <tr>
@@ -60,13 +60,7 @@ Ensuite utiliser le composant comme ceci dans votre template :
 </table>
 
 ### Notes : 
-`*` : TimePickerDisplayModeEnum : 
+`*` : TimePickerDisplayMode : 
 ```javascript
-enum TimePickerDisplayModeEnum {
-    FULL_TIME,
-    FULL_TIME_WITH_HOURS_DISABLED,
-    FULL_TIME_WITH_MINUTES_DISABLED,
-    HOURS_ONLY,
-    MINUTES_ONLY,
-}
+type TimePickerDisplayMode = 'FULL_TIME' | 'FULL_TIME_WITH_HOURS_DISABLED' | 'FULL_TIME_WITH_MINUTES_DISABLED' | 'HOURS_ONLY' | 'MINUTES_ONLY';
 ```
