@@ -47,7 +47,7 @@ Ensuite utiliser le composant comme ceci dans votre template :
         <tr>
             <td>mode</td>
             <td>TimePickerDisplayMode *</td>
-            <td>FULL_TIME</td>
+            <td>fullTime</td>
             <td>Mode d'affichage du composant permettant d'afficher ou de désactiver les heures ou les minutes</td>
         </tr>
         <tr>
@@ -62,5 +62,5 @@ Ensuite utiliser le composant comme ceci dans votre template :
 ### Notes : 
 `*` : TimePickerDisplayMode : 
 ```javascript
-type TimePickerDisplayMode = 'FULL_TIME' | 'FULL_TIME_WITH_HOURS_DISABLED' | 'FULL_TIME_WITH_MINUTES_DISABLED' | 'HOURS_ONLY' | 'MINUTES_ONLY';
+type TimePickerDisplayMode = 'fullTime' | 'fullTimeWithHoursDisabled' | 'fullTimeWithMinutesDisabled' | 'hoursOnly' | 'minutesOnly';
 ```

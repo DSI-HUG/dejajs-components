@@ -1,14 +1,14 @@
 <!-- Hours -->
-<mat-form-field appearance="outline" class="hours" [class.disabled]="disabled || mode === 'FULL_TIME_WITH_HOURS_DISABLED'" [style.display]="mode === 'MINUTES_ONLY' ? 'none' : 'block'">
-    <input matInput type="text" [ngModel]="value?.getHours() | number:'2.'" (change)="onHoursChange$.next($event)" [disabled]="disabled || mode === 'FULL_TIME_WITH_HOURS_DISABLED'" [maxLength]="2" />
+<mat-form-field appearance="outline" class="hours" [class.disabled]="disabled || mode === 'fullTimeWithHoursDisabled'" [style.display]="mode === 'minutesOnly' ? 'none' : 'block'">
+    <input matInput type="text" [ngModel]="value?.getHours() | number:'2.'" (change)="onHoursChange$.next($event)" [disabled]="disabled || mode === 'fullTimeWithHoursDisabled'" [maxLength]="2" />
     <deja-numeric-stepper (increment)="onHoursChange$.next(value.getHours() + 1)" (decrement)="onHoursChange$.next(value.getHours() - 1)"></deja-numeric-stepper>
 </mat-form-field>
 
 <!-- Separator -->
-<span class="time-separator" [style.display]="mode === 'MINUTES_ONLY' || mode === 'HOURS_ONLY' ? 'none' : 'block'">:</span>
+<span class="time-separator" [style.display]="mode === 'minutesOnly' || mode === 'hoursOnly' ? 'none' : 'block'">:</span>
 
 <!-- Minutes -->
-<mat-form-field appearance="outline" class="minutes" [class.disabled]="disabled || mode === 'FULL_TIME_WITH_MINUTES_DISABLED'" [style.display]="mode === 'HOURS_ONLY' ? 'none' : 'block'">
-    <input matInput type="text" [ngModel]="value?.getMinutes() | number:'2.'" (change)="onMinutesChange$.next($event)" [disabled]="disabled || mode === 'FULL_TIME_WITH_MINUTES_DISABLED'" [maxLength]="2" />
+<mat-form-field appearance="outline" class="minutes" [class.disabled]="disabled || mode === 'fullTimeWithMinutesDisabled'" [style.display]="mode === 'hoursOnly' ? 'none' : 'block'">
+    <input matInput type="text" [ngModel]="value?.getMinutes() | number:'2.'" (change)="onMinutesChange$.next($event)" [disabled]="disabled || mode === 'fullTimeWithMinutesDisabled'" [maxLength]="2" />
     <deja-numeric-stepper (increment)="onMinutesChange$.next(value.getMinutes() + _step)" (decrement)="onMinutesChange$.next(value.getMinutes() - _step)"></deja-numeric-stepper>
 </mat-form-field>

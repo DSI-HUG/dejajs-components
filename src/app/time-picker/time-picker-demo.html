@@ -39,7 +39,7 @@
                 <div>
                     <h3>With initial hours and minutes (09:05)</h3>
                     <div class="flex-layout-center">
-                        <deja-time-picker [ngModel]="date1" (ngModelChange)="date1Changed($event)" mode="FULL_TIME"></deja-time-picker>
+                        <deja-time-picker [ngModel]="date1" (ngModelChange)="date1Changed($event)" mode="fullTime"></deja-time-picker>
                     </div>
                     <p>Selected : {{ date1 | date:'HH:mm' }}</p>
                 </div>
@@ -53,28 +53,28 @@
                 <div>
                     <h3>With hours disabled</h3>
                     <div class="flex-layout-center">
-                        <deja-time-picker [ngModel]="date2" (ngModelChange)="date2Changed($event)" [step]="5" mode="FULL_TIME_WITH_HOURS_DISABLED"></deja-time-picker>
+                        <deja-time-picker [ngModel]="date2" (ngModelChange)="date2Changed($event)" [step]="5" mode="fullTimeWithHoursDisabled"></deja-time-picker>
                     </div>
                     <p>Selected date : {{ date2 | date:'HH:mm' }}</p>
                 </div>
                 <div>
                     <h3>With minutes disabled</h3>
                     <div class="flex-layout-center">
-                        <deja-time-picker [ngModel]="date3" (ngModelChange)="date3Changed($event)" mode="FULL_TIME_WITH_MINUTES_DISABLED"></deja-time-picker>
+                        <deja-time-picker [ngModel]="date3" (ngModelChange)="date3Changed($event)" mode="fullTimeWithMinutesDisabled"></deja-time-picker>
                     </div>
                     <p>Selected date : {{ date3 | date:'HH:mm' }}</p>
                 </div>
                 <div>
                     <h3>With hours displayed only</h3>
                     <div class="flex-layout-center">
-                        <deja-time-picker [ngModel]="date4" (ngModelChange)="date4Changed($event)" mode="HOURS_ONLY"></deja-time-picker>
+                        <deja-time-picker [ngModel]="date4" (ngModelChange)="date4Changed($event)" mode="hoursOnly"></deja-time-picker>
                     </div>
                     <p>Selected date : {{ date4 | date:'HH:mm' }}</p>
                 </div>
                 <div>
                     <h3>With minutes displayed only</h3>
                     <div class="flex-layout-center">
-                        <deja-time-picker [ngModel]="date5" (ngModelChange)="date5Changed($event)" mode="MINUTES_ONLY"></deja-time-picker>
+                        <deja-time-picker [ngModel]="date5" (ngModelChange)="date5Changed($event)" mode="minutesOnly"></deja-time-picker>
                     </div>
                     <p>Selected date : {{ date5 | date:'HH:mm' }}</p>
                 </div>
@@ -88,7 +88,7 @@
                 <div>
                     <h3>Time Picker with hours locked</h3>
                     <div class="flex-layout-center">
-                        <deja-time-picker [ngModel]="date6" (ngModelChange)="date6Changed($event)" [step]="5" mode="FULL_TIME_WITH_HOURS_DISABLED"></deja-time-picker>
+                        <deja-time-picker [ngModel]="date6" (ngModelChange)="date6Changed($event)" [step]="5" mode="fullTimeWithHoursDisabled"></deja-time-picker>
                     </div>
                     <p>Selected date : {{ date6 | date:'HH:mm' }}</p>
                 </div>

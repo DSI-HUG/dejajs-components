@@ -13,7 +13,7 @@ import { Destroy } from '@deja-js/component/core';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, takeUntil } from 'rxjs/operators';
 
-export type TimePickerDisplayMode = 'FULL_TIME' | 'FULL_TIME_WITH_HOURS_DISABLED' | 'FULL_TIME_WITH_MINUTES_DISABLED' | 'HOURS_ONLY' | 'MINUTES_ONLY';
+export type TimePickerDisplayMode = 'fullTime' | 'fullTimeWithHoursDisabled' | 'fullTimeWithMinutesDisabled' | 'hoursOnly' | 'minutesOnly';
 
 /**
  * Time-picker component for Angular
@@ -28,7 +28,7 @@ export type TimePickerDisplayMode = 'FULL_TIME' | 'FULL_TIME_WITH_HOURS_DISABLED
 export class DejaTimePickerComponent extends Destroy implements ControlValueAccessor {
 
     /** Display mode for the time-picker */
-    @Input() public mode: TimePickerDisplayMode = 'FULL_TIME';
+    @Input() public mode: TimePickerDisplayMode = 'fullTime';
 
     /** Step of the arrows */
     @Input()
