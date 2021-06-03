@@ -45,14 +45,14 @@ export class MouseDraggableDirective<T> extends Destroy {
                 filter(event => event.buttons === 1),
                 // eslint-disable-next-line rxjs/no-unsafe-takeuntil
                 takeUntil(mouseLeaveEvent$),
-                switchMap(event => {
-                    let target: HTMLElement;
-
+                switchMap(mouseDownEvent => {
                     const match = (el: HTMLElement): boolean => el.tagName === this.context.target.toUpperCase() || `#${el.id}` === this.context.target || el.hasAttribute(this.context.target.substring(1, this.context.target.length - 1)) || el.className.split(' ').some(className => `.${className}` === this.context.target);
 
+                    let target$ = of(null as HTMLElement);
                     if (this.context) {
+                        let target: HTMLElement;
                         if (this.context.target) {
-                            target = event.target as HTMLElement;
+                            target = mouseDownEvent.target as HTMLElement;
                             // eslint-disable-next-line no-loops/no-loops
                             while (target && !match(target)) {
                                 target = target.parentElement;
@@ -65,9 +65,9 @@ export class MouseDraggableDirective<T> extends Destroy {
                             const dragContext = this.context.dragStart(target);
                             if (dragContext) {
                                 if (isObservable(dragContext)) {
-                                    const context$ = dragContext as Observable<T>;
+                                    const dragContext$ = dragContext as Observable<T>;
                                     // Observable
-                                    return context$.pipe(
+                                    target$ = dragContext$.pipe(
                                         take(1),
                                         map(context => {
                                             dragDropService.context = context;
@@ -76,57 +76,63 @@ export class MouseDraggableDirective<T> extends Destroy {
                                     );
                                 } else {
                                     dragDropService.context = dragContext;
-                                    return of(target);
+                                    target$ = of(target);
                                 }
                             }
                         }
                     }
-                    return of(null as HTMLElement);
-                }),
-                filter(target => !!target), // Start Drag if target is defined
-                switchMap(target => {
-                    dragDropService.dragging$.next(true);
+                    return target$.pipe(
+                        filter(target => !!target), // Start Drag if target is defined
+                        switchMap(target => {
+                            dragDropService.dragging$.next(true);
 
-                    const moveUp$ = new Subject();
+                            const moveUp$ = new Subject();
 
-                    const enterWhileNotDragDropEvent$ = mouseEnterEvent$.pipe(
-                        filter(event => event.buttons !== 1 && dragDropService.isDragging)
-                    );
+                            const enterWhileNotDragDropEvent$ = mouseEnterEvent$.pipe(
+                                filter(event => event.buttons !== 1 && dragDropService.isDragging)
+                            );
 
-                    const kill$ = merge(mouseUpEvent$, enterWhileNotDragDropEvent$, moveUp$).pipe(
-                        take(1),
-                        tap(() => {
-                            dragDropService.dragCursor$.next(null);
-                            dragDropService.dragging$.next(false);
-                        }));
+                            const kill$ = merge(mouseUpEvent$, enterWhileNotDragDropEvent$, moveUp$).pipe(
+                                take(1),
+                                tap(() => {
+                                    dragDropService.dragCursor$.next(null);
+                                    dragDropService.dragging$.next(false);
+                                }));
 
-                    return mouseMoveEvent$.pipe(
-                        // eslint-disable-next-line rxjs/no-unsafe-takeuntil
-                        takeUntil(kill$),
-                        tap(ev => {
-                            console.log('mouseMoveEvent');
-                            if (target && ev.buttons === 1) {
-                                const bounds = new Rect(element.getBoundingClientRect());
-                                const position = new Position(ev.pageX, ev.pageY);
-                                const html = bounds.containsPoint(position) ? target.innerHTML : undefined;
+                            return mouseMoveEvent$.pipe(
+                                // eslint-disable-next-line rxjs/no-unsafe-takeuntil
+                                takeUntil(kill$),
+                                tap(mouseMoveEvent => {
+                                    console.log('mouseMoveEvent');
+                                    if (target && mouseMoveEvent.buttons === 1) {
+                                        const bounds = new Rect(element.getBoundingClientRect());
+                                        const position = new Position(mouseMoveEvent.pageX, mouseMoveEvent.pageY);
+                                        const html = bounds.containsPoint(position) ? target.innerHTML : undefined;
 
-                                // Post cursor infos to service
-                                dragDropService.dragCursor$.next({
-                                    position: position,
-                                    html: html,
-                                    originalHtml: target.innerHTML,
-                                    width: target.offsetWidth,
-                                    height: target.offsetHeight,
-                                    className: this.context.className,
-                                    originalEvent: ev
-                                } as DragCursorInfos);
+                                        const padding = 5;
+                                        let deadBounds = new Rect(mouseDownEvent.pageX, mouseDownEvent.pageY, padding * 2, padding * 2);
+                                        deadBounds = deadBounds.offset(-padding, -padding);
 
-                            } else {
-                                moveUp$.next();
-                            }
+                                        if (!deadBounds.containsPoint(position)) {
+                                            // Post cursor infos to service
+                                            dragDropService.dragCursor$.next({
+                                                position: position,
+                                                html: html,
+                                                originalHtml: target.innerHTML,
+                                                width: target.offsetWidth,
+                                                height: target.offsetHeight,
+                                                className: this.context.className,
+                                                originalEvent: mouseMoveEvent
+                                            } as DragCursorInfos);
+                                        }
+                                    } else {
+                                        moveUp$.next();
+                                    }
 
-                            // ev.preventDefault();
-                            return false;
+                                    // ev.preventDefault();
+                                    return false;
+                                })
+                            );
                         })
                     );
                 })
