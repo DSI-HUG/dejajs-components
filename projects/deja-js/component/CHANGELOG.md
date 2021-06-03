@@ -1,3 +1,17 @@
+# [11.11.0](https://github.com/DSI-HUG/dejajs-components/compare/v11.10.0...v11.11.0) (2021-06-03)
+
+
+### Bug Fixes
+
+* **DejaEditor:** Remove takeUntil on ready subscription in ngOnDestroy ([5833f97](https://github.com/DSI-HUG/dejajs-components/commit/5833f9759dd4b92847e8d2910fb981c03b72322e))
+* **mouse-draggable:** prevent drag mode before mouse moved of padding PRESCOFO-721 ([3a7962a](https://github.com/DSI-HUG/dejajs-components/commit/3a7962a425692fc7908f00c40267abcb73bde645))
+* **overlay:** rework css class visibility (DEJS-965) ([abcc989](https://github.com/DSI-HUG/dejajs-components/commit/abcc989b272296d77767eeca2fb6f04c68a82b03))
+
+
+### Features
+
+* message-box now have a light mode ([93472b7](https://github.com/DSI-HUG/dejajs-components/commit/93472b7d79c552e252649a2a25abedc7ad1ef44a))
+
 # [11.11.0-next.1](https://github.com/DSI-HUG/dejajs-components/compare/v11.10.0...v11.11.0-next.1) (2021-05-19)
 
 
