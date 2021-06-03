@@ -6,10 +6,18 @@ Composant pour sélectionner une heure en écrivant dans les input ou en cliquan
 
 Ensuite utiliser le composant comme ceci dans votre template :
 
- - implémentation :
+ - implémentation avec ngModel :
 
 ```html
 <deja-time-picker [(ngModel)]="test" [step]="15"></deja-time-picker>
+```
+
+- implémentation avec un reactive form :
+
+```html
+<form [formGroup]="myFormGroup">
+    <deja-time-picker formControlName="time"></deja-time-picker>
+</form>
 ```
 
 ### Propriétés
@@ -29,6 +37,12 @@ Ensuite utiliser le composant comme ceci dans votre template :
             <td>boolean</td>
             <td>false</td>
             <td>Pour désactiver tout le time picker</td>
+        </tr>
+        <tr>
+            <td>formControlName</td>
+            <td>string</td>
+            <td></td>
+            <td>N'est pas une propriété de deja-time-picker mais une directive d'@angular/form. Permet de binder une FormControl au select. **Le type de la valeur passée comme input détermine le type rendu en output: si en première instance on passe null, deja-time-picker retourne un objet générique.**</td>
         </tr>
         <tr>
             <td>mode</td>
