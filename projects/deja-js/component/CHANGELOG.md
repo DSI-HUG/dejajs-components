@@ -1,3 +1,10 @@
+## [12.0.1](https://github.com/DSI-HUG/dejajs-components/compare/v12.0.0...v12.0.1) (2021-06-03)
+
+
+### Bug Fixes
+
+* **mouse-draggable:** prevent drag mode before mouse moved of padding PRESCOFO-721 ([3a7962a](https://github.com/DSI-HUG/dejajs-components/commit/3a7962a425692fc7908f00c40267abcb73bde645))
+
 # [12.0.0](https://github.com/DSI-HUG/dejajs-components/compare/v11.10.0...v12.0.0) (2021-06-02)
 
 
