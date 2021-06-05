@@ -9,7 +9,6 @@
         color: mat-color($foreground, text);
         box-shadow: rgba(0, 0, 0, 0.247059) 0px 14px 45px, rgba(0, 0, 0, 0.219608) 0px 10px 18px;
 
-        #time-header,
         #date-header {
             background-color: mat-color($primary);
             color: mat-color($primary, default-contrast);
@@ -18,22 +17,6 @@
                 background: mat-color($primary);
                 box-shadow: none;
                 color: mat-color($primary, default-contrast);
-            }
-        }
-
-        #time-selector {
-            deja-circular-picker {
-                &.hours .circular-picker {
-                    background: transparent;
-
-                    &:before {
-                        background-color: mat-color($primary);
-                    }
-
-                    &.disabled:before {
-                        background: mat-color($foreground, disabled);
-                    }
-                }
             }
         }
 
