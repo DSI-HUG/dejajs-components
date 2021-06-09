@@ -28,6 +28,8 @@ export class DejaNumericStepperDemoComponent extends Destroy {
     public value4 = 1;
     public value5 = 1;
     public value6 = 1;
+    public value6min = 0;
+    public value6max = 20;
 
     public numberForm: FormGroup;
     public onInput1Change$ = new Subject<Event>();
@@ -69,6 +71,7 @@ export class DejaNumericStepperDemoComponent extends Destroy {
     }
 
     public changeValue6(step: number): void {
-        this.numberForm.controls.numberValue6.setValue(+this.numberForm.controls.numberValue6.value + step);
+        const value = Math.max(Math.min(+this.numberForm.controls.numberValue6.value + step, this.value6max), this.value6min);
+        this.numberForm.controls.numberValue6.setValue(value);
     }
 }

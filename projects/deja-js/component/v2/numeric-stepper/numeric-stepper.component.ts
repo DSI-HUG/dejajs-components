@@ -8,8 +8,8 @@
 
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostBinding, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { Destroy, KeyCodes } from '@deja-js/component/core';
-import { fromEvent, timer } from 'rxjs';
-import { delay, map, shareReplay, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { combineLatest, fromEvent, Subject, timer } from 'rxjs';
+import { debounceTime, delay, filter, map, shareReplay, switchMap, takeUntil, tap, withLatestFrom } from 'rxjs/operators';
 
 export type DejaNumericStepperLayout = 'vertical' | 'horizontal';
 
@@ -38,6 +38,11 @@ export class DejaNumericStepperComponent extends Destroy implements OnInit {
     public topShadow: number = null;
     public widthShadow: number = null;
     public heightShadow: number = null;
+
+    public disableUp = false;
+    public disableDown = false;
+
+    private validateArrows$ = new Subject();
 
     public constructor(
         private elementRef: ElementRef<HTMLElement>,
@@ -69,13 +74,23 @@ export class DejaNumericStepperComponent extends Destroy implements OnInit {
             shareReplay(1)
         );
 
+        const inputElement$ = formFieldElement$.pipe(
+            map(formFieldElement => {
+                const inputElements = formFieldElement.getElementsByTagName('INPUT');
+                return inputElements?.[0] as HTMLInputElement || null;
+            })
+        );
+
         formFieldElement$.pipe(
-            switchMap(formFieldElement => fromEvent<MouseEvent>(formFieldElement, 'mouseenter').pipe(
+            withLatestFrom(inputElement$),
+            switchMap(([formFieldElement, inputElement]) => fromEvent<MouseEvent>(formFieldElement, 'mouseenter').pipe(
                 switchMap(() => {
                     const formFieldBounds = formFieldElement.getBoundingClientRect();
                     const bounds = this.elementRef.nativeElement.getBoundingClientRect();
-                    const inputElements = formFieldElement.getElementsByTagName('INPUT');
-                    const inputBounds = inputElements?.[0]?.getBoundingClientRect() || formFieldBounds;
+
+                    const inputBounds = inputElement?.getBoundingClientRect() || formFieldBounds;
+
+                    this.validateArrows$.next();
 
                     // Ensure delayed hover in case of the mouse leave accidentally
                     formFieldElement.setAttribute('hover', '');
@@ -111,22 +126,41 @@ export class DejaNumericStepperComponent extends Destroy implements OnInit {
         ).subscribe();
 
         formFieldElement$.pipe(
-            switchMap(formFieldElement => fromEvent<KeyboardEvent>(formFieldElement, 'keydown').pipe(
-                map(event => {
-                    if (event.code === KeyCodes.UpArrow) {
-                        this.increment.emit();
-                        event.preventDefault();
-                        return false;
-                    } else if (event.code === KeyCodes.DownArrow) {
-                        this.decrement.emit();
-                        event.preventDefault();
-                        return false;
-                    }
-
-                    return undefined;
-                })
-            )),
+            switchMap(formFieldElement => fromEvent<KeyboardEvent>(formFieldElement, 'keydown')),
+            filter(event => event.code === KeyCodes.UpArrow || event.code === KeyCodes.DownArrow),
             takeUntil(this.destroyed$)
-        ).subscribe();
+        ).subscribe(event => {
+            this.onArrowClicked(event.code === KeyCodes.UpArrow);
+            event.preventDefault();
+            return false;
+        });
+
+        combineLatest([inputElement$, this.validateArrows$]).pipe(
+            debounceTime(1),
+            filter(([inputElement]) => !!inputElement),
+            takeUntil(this.destroyed$)
+        ).subscribe(([inputElement]) => {
+            const min = inputElement.min;
+            if (min !== '' && !isNaN(+min)) {
+                this.disableDown = +inputElement.value <= +min;
+            }
+            const max = inputElement.max;
+            if (max !== '' && !isNaN(+max)) {
+                this.disableUp = +inputElement.value >= +max;
+            }
+            this.changeDetectorRef.markForCheck();
+        });
+    }
+
+    public onArrowClicked(isUp: boolean): void {
+        if (isUp) {
+            if (!this.disableUp) {
+                this.increment.emit();
+                this.validateArrows$.next();
+            }
+        } else if (!this.disableDown) {
+            this.decrement.emit();
+            this.validateArrows$.next();
+        }
     }
 }
