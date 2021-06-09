@@ -1,4 +1,4 @@
-mat-form-field[deja-numeric-stepper-form-field] {
+[deja-numeric-stepper-form-field] {
     .noselect {
         -webkit-touch-callout: none;
         /* iOS Safari */
@@ -15,50 +15,54 @@ mat-form-field[deja-numeric-stepper-form-field] {
            not supported by any browser */
     }
 
-    .mat-form-field-wrapper {
-        .mat-form-field-flex {
-            .mat-form-field-infix {
-                input {
-                    text-align: center;
-                }
-            }
-        }
+    * {
+        transition: opacity 250ms ease-out;
     }
 
-    &:hover:not(.disabled) {
+    .mat-input-element {
+        text-align: center;
+        z-index: 1;
+    }
 
-        .arrow,
-        .shadow {
-            visibility: visible;
-            opacity: 1;
-        }
+    &:not(.disabled) {
+        &:hover {
 
-        .arrow {
-            transform: translateY(0px);
-        }
-
-        .shadow {
-            box-shadow: 0px 2px 4px rgba(#000, 0.3);
-        }
-
-        .mat-form-field-label-wrapper,
-        .mat-form-field-outline,
-        .mat-form-field-outline-thick,
-        .mat-form-field-underline {
-            opacity: 0 !important;
-        }
-
-        &.mat-form-field-invalid {
-            .mat-form-field-subscript-wrapper {
-                visibility: hidden;
+            .arrow,
+            .shadow {
+                opacity: 1;
             }
         }
 
-        .mat-form-field-flex {
-            .mat-form-field-infix {
-                input {
-                    position: relative;
-                    z-index: 1;
+        &:hover,
+        &[hover] {
+
+            .arrow,
+            .shadow {
+                visibility: visible;
+            }
+        }
+
+        &:hover {
+
+            .mat-form-field-label-wrapper,
+            .mat-form-field-outline,
+            .mat-form-field-outline-thick,
+            .mat-form-field-underline {
+                opacity: 0 !important;
+            }
+
+            &.mat-form-field-invalid {
+                .mat-form-field-subscript-wrapper {
+                    visibility: hidden;
+                }
+            }
+
+            .mat-form-field-flex {
+                .mat-form-field-infix {
+                    input {
+                        position: relative;
+                        z-index: 1;
+                    }
                 }
             }
         }
@@ -69,7 +73,6 @@ mat-form-field[deja-numeric-stepper-form-field] {
 
         .arrow,
         .shadow {
-            transition: opacity 0.15s ease-out;
             position: absolute;
             visibility: hidden;
             opacity: 0;
@@ -77,27 +80,24 @@ mat-form-field[deja-numeric-stepper-form-field] {
 
         .arrow {
             cursor: pointer;
-            height: 32px;
             display: flex;
             justify-content: center;
             align-items: center;
             box-sizing: border-box;
             z-index: 1;
-            transition: transform 0.15s ease-out;
         }
 
         .shadow {
             border-radius: 4px;
+            box-shadow: 0px 2px 4px rgba(#000, 0.3);
         }
 
         .increment {
             border-radius: 4px 4px 0 0;
-            transform: translateY(5px);
         }
 
         .decrement {
             border-radius: 0 0 4px 4px;
-            transform: translateY(-5px);
         }
     }
 }

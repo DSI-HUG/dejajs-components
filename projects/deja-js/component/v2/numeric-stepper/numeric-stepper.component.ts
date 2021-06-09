@@ -6,11 +6,12 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, OnInit, Output, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostBinding, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { Destroy, KeyCodes } from '@deja-js/component/core';
 import { fromEvent, timer } from 'rxjs';
-import { map, shareReplay, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { delay, map, shareReplay, switchMap, takeUntil, tap } from 'rxjs/operators';
 
+export type DejaNumericStepperLayout = 'vertical' | 'horizontal';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -20,14 +21,23 @@ import { map, shareReplay, switchMap, takeUntil, tap } from 'rxjs/operators';
     encapsulation: ViewEncapsulation.None
 })
 export class DejaNumericStepperComponent extends Destroy implements OnInit {
+    @HostBinding('attr.layout') @Input() public layout: DejaNumericStepperLayout = 'vertical';
     @Output() public readonly increment = new EventEmitter<void>();
     @Output() public readonly decrement = new EventEmitter<void>();
 
-    public left: number = null;
-    public width: number = null;
+    @HostBinding('attr.hover')
+    protected hover = null as boolean;
+
+    public leftUp: number = null;
+    public leftDown: number = null;
     public topUp: number = null;
     public topDown: number = null;
+    public width: number = null;
     public height: number = null;
+    public leftShadow: number = null;
+    public topShadow: number = null;
+    public widthShadow: number = null;
+    public heightShadow: number = null;
 
     public constructor(
         private elementRef: ElementRef<HTMLElement>,
@@ -44,7 +54,7 @@ export class DejaNumericStepperComponent extends Destroy implements OnInit {
                 let formFieldElement = parentElement;
                 // eslint-disable-next-line no-loops/no-loops
                 while (formFieldElement) {
-                    if (formFieldElement.tagName === 'MAT-FORM-FIELD') {
+                    if (formFieldElement.tagName === 'MAT-FORM-FIELD' || formFieldElement.hasAttribute('deja-numeric-stepper-form-field')) {
                         break;
                     }
                     formFieldElement = formFieldElement.parentElement;
@@ -61,23 +71,40 @@ export class DejaNumericStepperComponent extends Destroy implements OnInit {
 
         formFieldElement$.pipe(
             switchMap(formFieldElement => fromEvent<MouseEvent>(formFieldElement, 'mouseenter').pipe(
-                tap(() => {
-                    const appearance = formFieldElement.getAttribute('appearance');
+                switchMap(() => {
                     const formFieldBounds = formFieldElement.getBoundingClientRect();
                     const bounds = this.elementRef.nativeElement.getBoundingClientRect();
+                    const inputElements = formFieldElement.getElementsByTagName('INPUT');
+                    const inputBounds = inputElements?.[0]?.getBoundingClientRect() || formFieldBounds;
 
-                    this.left = formFieldBounds.left - bounds.left;
-                    this.topUp = formFieldBounds.top - bounds.top - 28;
-                    this.topDown = formFieldBounds.bottom - bounds.top - 10;
-                    this.width = formFieldBounds.width;
-                    this.height = this.topDown - this.topUp + 32;
+                    // Ensure delayed hover in case of the mouse leave accidentally
+                    formFieldElement.setAttribute('hover', '');
 
-                    if (appearance === 'standard') {
-                        this.height -= 10;
-                        this.topUp += 10;
+                    if (this.layout === 'horizontal') {
+                        this.heightShadow = this.height = Math.min(48, formFieldBounds.height);
+                        this.topShadow = this.topUp = this.topDown = inputBounds.top - bounds.top + (inputBounds.height - this.heightShadow) / 2;
+                        this.leftDown = this.leftShadow = formFieldBounds.left - bounds.left - 28;
+                        this.leftUp = formFieldBounds.right - bounds.left;
+                        this.width = 32;
+                        this.widthShadow = this.leftUp - this.leftDown + 32;
+
+                    } else {
+                        this.heightShadow = 106;
+                        this.height = 32;
+                        this.topShadow = inputBounds.top - bounds.top + (inputBounds.height - this.heightShadow) / 2;
+                        this.leftUp = this.leftDown = this.leftShadow = formFieldBounds.left - bounds.left;
+                        this.topUp = this.topShadow;
+                        this.topDown = this.topShadow + this.heightShadow - this.height;
+                        this.width = this.widthShadow = formFieldBounds.width;
                     }
 
                     this.changeDetectorRef.markForCheck();
+
+                    return fromEvent<MouseEvent>(formFieldElement, 'mouseleave');
+                }),
+                delay(400),
+                tap(() => {
+                    formFieldElement.removeAttribute('hover');
                 })
             )),
             takeUntil(this.destroyed$)

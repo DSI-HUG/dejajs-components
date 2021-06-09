@@ -22,6 +22,7 @@ import { DejaDialogModule } from '@deja-js/component/dialog';
 import { DejaMessageBoxModule } from '@deja-js/component/message-box';
 import { ItemModule } from '@deja-js/component/v2/item-list';
 import { MouseDragDropModule } from '@deja-js/component/v2/mouse-dragdrop';
+import { DejaNumericStepperModule } from '@deja-js/component/v2/numeric-stepper';
 import { TreeListModule } from '@deja-js/component/v2/tree-list';
 
 import { DejaMarkdownModule } from '../../../component/markdown/index';
@@ -48,12 +49,12 @@ import { routing } from './tree-list-demo.routes';
         MatCardModule,
         MatTabsModule,
         MatToolbarModule,
-        MatIconModule,
         MouseDragDropModule,
         TreeListModule,
         DejaMarkdownModule,
         DejaMessageBoxModule,
         DejaDialogModule,
+        DejaNumericStepperModule,
         ItemModule,
         DejaSortingModule,
         NewsCardModule,
