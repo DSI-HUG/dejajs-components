@@ -27,6 +27,7 @@
 @use '../tooltip/tooltip-theme'as tooltipTheme;
 @use '../tree-list/tree-list-theme'as treeListTheme;
 @use '../viewport/viewport-theme'as viewportTheme;
+@use '../v2/numeric-stepper/numeric-stepper-theme'as numericStepper2Theme;
 @use '../v2/mouse-dragdrop/mouse-dragdrop-theme'as mouseDragdrop2Theme;
 @use '../v2/tree-list/tree-list-theme'as treeList2Theme;
 @use '../v2/viewport/viewport-theme'as viewport2Theme;
@@ -67,4 +68,5 @@ $MaterialIcons_FontPath: "~material-icons-font/fonts"; // for CLI project we cha
     @include mouseDragdrop2Theme.mouse-dragdrop-2-theme($custom-theme);
     @include treeList2Theme.tree-list-2-theme($custom-theme);
     @include viewport2Theme.viewport-2-theme($custom-theme);
+    @include numericStepper2Theme.numeric-stepper-2-theme($custom-theme);
 }

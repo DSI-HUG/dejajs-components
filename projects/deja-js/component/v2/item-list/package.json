@@ -2,7 +2,9 @@
     "ngPackage": {
         "lib": {
             "entryFile": "./index.ts",
-            "umdModuleIds": {}
+            "umdModuleIds": {
+                "lodash-es": "lodash-es"
+            }
         }
     },
     "peerDependencies": {

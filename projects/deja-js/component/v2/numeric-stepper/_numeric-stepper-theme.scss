@@ -1,0 +1,58 @@
+@use '~@angular/material'as mat;
+
+@mixin numeric-stepper-2-theme($theme) {
+    $primary: map-get($theme, primary);
+    $warn: map-get($theme, warn);
+    $background: map-get($theme, background);
+
+    [deja-numeric-stepper-form-field] {
+
+        &[hover],
+        &:hover {
+            &.mat-form-field-appearance-fill {
+                .mat-form-field-flex {
+                    background-color: inherit;
+                }
+
+                deja-numeric-stepper {
+                    .shadow {
+                        background-color: rgba(0, 0, 0, 0.04);
+                    }
+                }
+            }
+        }
+    }
+
+    [deja-numeric-stepper-form-field] {
+        deja-numeric-stepper {
+            .arrow {
+                background-color: mat.get-color-from-palette($background);
+                color: mat.get-color-from-palette($primary);
+
+                &[disabled] {
+                    color: rgba(#000, 0.3);
+                }
+            }
+        }
+
+        &:not(.disabled) {
+
+            &[hover],
+            &:hover {
+                &.mat-form-field-invalid deja-numeric-stepper {
+                    .arrow:not([disabled]) {
+                        color: mat.get-color-from-palette($warn);
+                    }
+
+                    .shadow {
+                        box-shadow: 0px 2px 4px rgba(mat.get-color-from-palette($warn), 0.3);
+                    }
+                }
+
+                .mat-form-field-flex {
+                    background-color: mat.get-color-from-palette($background);
+                }
+            }
+        }
+    }
+}

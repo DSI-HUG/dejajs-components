@@ -67,6 +67,7 @@ export class TreeListDemoComponent extends Destroy {
     public itemExpand$ = new Subject<CountryGroupItem>();
     public sortCountries$ = new BehaviorSubject<void>(undefined);
     public sortInfos$: Observable<SortInfos>;
+    public numbers: number[];
 
     public disabled: boolean;
     public country: Country;
@@ -305,6 +306,8 @@ export class TreeListDemoComponent extends Destroy {
             item.items = countries.filter(country => country.naqme.startsWith(item.firstLetter)).map(country => new Item<Country>(country.code, country.displayName));
             this.onExpandList.itemService.refreshFlatItemList$.next();
         });
+
+        this.numbers = Array.from({ length: 40 }, () => Math.floor(Math.random() * 40));
     }
 
     public loadingItems() {

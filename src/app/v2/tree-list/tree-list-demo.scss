@@ -19,6 +19,33 @@ tree-list-demo {
                 &.news {
                     max-height: 600px;
                 }
+
+                [deja-numeric-stepper-form-field] {
+                    height: 100%;
+                    width: 32px;
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                }
+
+                .selected {
+                    [deja-numeric-stepper-form-field] {
+
+                        &:hover,
+                        &[hover] {
+
+                            .arrow,
+                            .shadow {
+                                background-color: rgba(33, 150, 243, 0.8);
+                                color: inherit;
+                            }
+
+                            .mat-input-element {
+                                caret-color: inherit;
+                            }
+                        }
+                    }
+                }
             }
 
             mat-form-field {

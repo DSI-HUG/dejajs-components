@@ -8,29 +8,25 @@
 
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { DejaChildValidatorModule, DejaTextMetricsModule } from '@deja-js/component/core';
+import { DejaChildValidatorModule } from '@deja-js/component/core';
 
 import { DejaNumericStepperComponent } from './numeric-stepper.component';
 
 @NgModule({
+    declarations: [DejaNumericStepperComponent],
+    exports: [DejaNumericStepperComponent],
     imports: [
         CommonModule,
         DejaChildValidatorModule,
-        DejaTextMetricsModule,
         FormsModule,
-        MatButtonModule,
+        MatFormFieldModule,
         MatIconModule,
-        MatInputModule
-    ],
-    exports: [
-        DejaNumericStepperComponent
-    ],
-    declarations: [
-        DejaNumericStepperComponent
+        MatInputModule,
+        ReactiveFormsModule
     ]
 })
 export class DejaNumericStepperModule { }
