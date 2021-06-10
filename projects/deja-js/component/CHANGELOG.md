@@ -1,3 +1,10 @@
+# [12.1.0-next.3](https://github.com/DSI-HUG/dejajs-components/compare/v12.1.0-next.2...v12.1.0-next.3) (2021-06-10)
+
+
+### Features
+
+* use input stepUp and stepDown if increment and decrement events are not registered ([af6cf0d](https://github.com/DSI-HUG/dejajs-components/commit/af6cf0d7de9d42000378159aa29f2b4798cd630a))
+
 # [12.1.0-next.2](https://github.com/DSI-HUG/dejajs-components/compare/v12.1.0-next.1...v12.1.0-next.2) (2021-06-10)
 
 
