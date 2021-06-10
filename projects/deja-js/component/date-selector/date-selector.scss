@@ -1,88 +1,59 @@
 deja-date-time-selector {
     #date-time-selector {
         display: flex;
+        flex-direction: column;
         margin: 0 auto;
         width: 310px;
         outline: none;
-        &[with-time] {
-            width: 663px;
-        }
-        &.datetime {
-            width: 663px;
-        }
+
         &.timeonly {
-            width: 361px;
-            height: 452px;
+            height: 15rem;
         }
-        #time-header,
+
         #date-header {
-            align-items: center;
             display: flex;
-            flex: 1 100%;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
             font-size: 2rem;
             height: 94px;
-            justify-content: center;
             padding: 0;
             position: relative;
+
+            [current] {
+                font-size: 2rem;
+            }
+
+            .year {
+                align-items: center;
+                display: flex;
+                font-size: 1rem;
+                justify-content: center;
+                width: 50%;
+
+                [fontIcon] {
+                    flex: 0 0 auto;
+                    cursor: pointer;
+                }
+
+                div {
+                    flex: 1 1 auto;
+                    text-align: center;
+                }
+            }
         }
+
         #time-selector {
-            position: relative;
-            width: 361px;
-            #time-body {
-                height: calc(100% - 94px);
-                position: relative;
-            }
-            deja-circular-picker {
-                left: 50%;
-                position: absolute;
-                top: 50%;
-                transform: translate(-50%, -50%);
-                .circular-picker {
-                    left: 50%;
-                    position: absolute !important;
-                    top: 50%;
-                    transform: translate(-50%, -50%);
-                }
-                &.hours .circular-picker {
-                    border: none;
-                    &:before {
-                        border-radius: 50%;
-                        content: '';
-                        height: 1rem;
-                        left: 50%;
-                        margin-left: -0.5rem;
-                        margin-top: -0.5rem;
-                        position: absolute;
-                        top: 50%;
-                        width: 1rem;
-                    }
-                }
-            }
+            height: 8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
+
         #date-selector {
             margin: 0 auto;
             width: 310px;
-            #date-header {
-                flex-direction: column;
-                [current] {
-                    font-size: 2rem;
-                }
-                .year {
-                    align-items: center;
-                    display: flex;
-                    font-size: 1rem;
-                    justify-content: center;
-                    width: 50%;
-                    [fontIcon] {
-                        flex: 0 0 auto;
-                        cursor: pointer;
-                    }
-                    div {
-                        flex: 1 1 auto;
-                        text-align: center;
-                    }
-                }
-            }
+
             #sub-header {
                 .month {
                     align-items: center;
@@ -90,16 +61,19 @@ deja-date-time-selector {
                     justify-content: center;
                     padding: 1rem;
                     text-align: center;
+
                     span {
                         flex: 1 1 auto;
                         font-size: 1rem;
                         text-transform: capitalize;
                     }
+
                     button[mat-mini-fab] {
                         flex: 0 0 auto;
                         box-shadow: none;
                     }
                 }
+
                 .days {
                     align-items: center;
                     display: flex;
@@ -107,29 +81,35 @@ deja-date-time-selector {
                     justify-content: center;
                     margin-bottom: 0.5rem;
                     text-align: center;
+
                     span {
                         flex: 0 0 14%;
                         position: relative;
                     }
                 }
             }
+
             #date-body {
                 align-items: center;
                 display: flex;
                 flex-wrap: wrap;
                 justify-content: center;
                 text-align: center;
+
                 &:focus {
                     outline: none;
                 }
+
                 .date {
                     flex: 0 0 14%;
                     position: relative;
+
                     &:before {
                         content: '';
                         float: left;
                         padding-top: 100%;
                     }
+
                     .day {
                         align-items: center;
                         border-radius: 50%;
@@ -141,11 +121,13 @@ deja-date-time-selector {
                         right: 0;
                         top: 0;
                         transition: all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms;
+
                         &.disabled {
                             &:hover {
                                 cursor: not-allowed;
                             }
                         }
+
                         &:hover,
                         &[selected] {
                             cursor: pointer;
