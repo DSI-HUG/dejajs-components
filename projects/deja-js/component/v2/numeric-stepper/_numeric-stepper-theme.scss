@@ -1,4 +1,4 @@
-@use '~@angular/material'as mat;
+@import '~@angular/material/theming';
 
 @mixin numeric-stepper-2-theme($theme) {
     $primary: map-get($theme, primary);
@@ -9,27 +9,27 @@
     mat-form-field[deja-numeric-stepper-form-field] {
         deja-numeric-stepper {
             .arrow {
-                background-color: mat.get-color-from-palette($background);
+                background-color: mat-color($background, card);
             }
 
             mat-icon {
-                color: mat.get-color-from-palette($primary);
+                color: mat-color($primary);
             }
         }
 
         &:hover:not(.disabled) {
             &.mat-form-field-invalid deja-numeric-stepper {
                 .arrow {
-                    color: mat.get-color-from-palette($warn);
+                    color: mat-color($warn);
                 }
 
                 .shadow {
-                    box-shadow: 0px 2px 4px rgba(mat.get-color-from-palette($warn), 0.3);
+                    box-shadow: 0px 2px 4px rgba(mat-color($warn), 0.3);
                 }
             }
 
             .mat-form-field-flex {
-                background-color: mat.get-color-from-palette($background);
+                background-color: mat-color($background, card);
             }
         }
     }
