@@ -71,7 +71,7 @@
             <div [formGroup]="numberForm">
                 <mat-form-field appearance="fill" [style.width.px]="160">
                     <mat-label>min/max with disabled arrows</mat-label>
-                    <deja-numeric-stepper (increment)="changeValue6(1)" (decrement)="changeValue6(-1)"></deja-numeric-stepper>
+                    <deja-numeric-stepper></deja-numeric-stepper>
                     <!-- Binding angular not woorking here if min or max is 0 -->
                     <input type="number" min="{{value6min}}" max="{{value6max}}" matInput formControlName="numberValue6" />
                     <mat-error>{{ numberForm.get('numberValue6').errors ? numberForm.get('numberValue6').errors[0] : ''}}</mat-error>

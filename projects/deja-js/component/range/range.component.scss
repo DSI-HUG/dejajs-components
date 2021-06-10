@@ -1,5 +1,4 @@
 @use '~@angular/material'as mat;
-@use 'sass:math';
 
 :host {
     /* the size of the separator has to be specified*/
@@ -81,8 +80,8 @@
 
             .default-separator {
                 width: 7px;
-                height: math.div($height, 10) * 8;
-                margin-top: math.div($height, 10);
+                height: ($height / 10) * 8;
+                margin-top: ($height / 10);
                 display: -webkit-box;
                 display: -ms-flexbox;
                 display: flex;

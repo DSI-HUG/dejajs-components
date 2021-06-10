@@ -105,8 +105,5 @@
         "hooks": {
             "commit-msg": "commitlint --edit"
         }
-    },
-    "resolutions": {
-        "sass": "~1.33.0"
     }
 }

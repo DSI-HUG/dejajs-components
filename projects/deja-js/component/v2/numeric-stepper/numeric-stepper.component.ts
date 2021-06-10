@@ -41,6 +41,7 @@ export class DejaNumericStepperComponent extends Destroy implements OnInit {
 
     public disableUp = false;
     public disableDown = false;
+    public clickArrow$ = new Subject<boolean>();
 
     private validateArrows$ = new Subject();
 
@@ -130,7 +131,7 @@ export class DejaNumericStepperComponent extends Destroy implements OnInit {
             filter(event => event.code === KeyCodes.UpArrow || event.code === KeyCodes.DownArrow),
             takeUntil(this.destroyed$)
         ).subscribe(event => {
-            this.onArrowClicked(event.code === KeyCodes.UpArrow);
+            this.clickArrow$.next(event.code === KeyCodes.UpArrow);
             event.preventDefault();
             return false;
         });
@@ -150,17 +151,28 @@ export class DejaNumericStepperComponent extends Destroy implements OnInit {
             }
             this.changeDetectorRef.markForCheck();
         });
-    }
 
-    public onArrowClicked(isUp: boolean): void {
-        if (isUp) {
-            if (!this.disableUp) {
-                this.increment.emit();
+        this.clickArrow$.pipe(
+            debounceTime(10),
+            withLatestFrom(inputElement$),
+            takeUntil(this.destroyed$)
+        ).subscribe(([isUp, inputElement]) => {
+            if (isUp && !this.disableUp) {
+                if (inputElement && !!inputElement.stepUp && this.increment.observers.length === 0) {
+                    inputElement.stepUp();
+                } else {
+                    this.increment.emit();
+                }
                 this.validateArrows$.next();
             }
-        } else if (!this.disableDown) {
-            this.decrement.emit();
-            this.validateArrows$.next();
-        }
+            if (!isUp && !this.disableDown) {
+                if (inputElement && !!inputElement.stepDown && this.decrement.observers.length === 0) {
+                    inputElement.stepDown();
+                } else {
+                    this.decrement.emit();
+                }
+                this.validateArrows$.next();
+            }
+        });
     }
 }
