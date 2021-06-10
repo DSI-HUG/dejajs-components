@@ -1,3 +1,15 @@
+# [12.1.0-next.2](https://github.com/DSI-HUG/dejajs-components/compare/v12.1.0-next.1...v12.1.0-next.2) (2021-06-10)
+
+
+### Bug Fixes
+
+* **numeric_stepper:** fix fail in theme file ([e45fea4](https://github.com/DSI-HUG/dejajs-components/commit/e45fea4f25463d2734ef53a3f3ba41863db91abb))
+
+
+### Features
+
+* **numeric-stepper-component-v2:** add disabled state to the arrows from the min/max input attr ([a6dff7a](https://github.com/DSI-HUG/dejajs-components/commit/a6dff7a047312d621b4d28e19d2dc31e480a8a8c))
+
 # [12.1.0-next.1](https://github.com/DSI-HUG/dejajs-components/compare/v12.0.1...v12.1.0-next.1) (2021-06-10)
 
 
