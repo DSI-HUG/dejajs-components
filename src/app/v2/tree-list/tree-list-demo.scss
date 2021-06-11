@@ -26,23 +26,21 @@ tree-list-demo {
                     display: flex;
                     flex-direction: row;
                     align-items: center;
+                    padding-left: 6px;
                 }
 
                 .selected {
                     [deja-numeric-stepper-form-field] {
+                        .shadow {
+                            background-color: rgba(33, 150, 243, 0.8);
+                        }
 
-                        &:hover,
-                        &[hover] {
+                        .arrow {
+                            color: inherit;
+                        }
 
-                            .arrow,
-                            .shadow {
-                                background-color: rgba(33, 150, 243, 0.8);
-                                color: inherit;
-                            }
-
-                            .mat-input-element {
-                                caret-color: inherit;
-                            }
+                        .mat-input-element {
+                            caret-color: inherit;
                         }
                     }
                 }
