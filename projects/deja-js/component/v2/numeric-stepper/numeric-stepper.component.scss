@@ -19,16 +19,16 @@
         transition: opacity 250ms ease-out;
     }
 
+    input::-webkit-inner-spin-button,
+    input::-webkit-outer-spin-button {
+        -webkit-appearance: none !important;
+        margin: 0 !important;
+        -moz-appearance: textfield !important;
+    }
+
     .mat-input-element {
         text-align: center;
         z-index: 1;
-
-        &::-webkit-inner-spin-button,
-        &::-webkit-outer-spin-button {
-            -webkit-appearance: none !important;
-            margin: 0 !important;
-            -moz-appearance: textfield !important;
-        }
     }
 
     &:not(.disabled) {
