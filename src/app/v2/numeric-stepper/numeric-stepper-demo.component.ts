@@ -7,7 +7,7 @@
  */
 
 import { ChangeDetectorRef, Component } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Destroy } from '@deja-js/component/core';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, takeUntil } from 'rxjs/operators';
@@ -42,7 +42,7 @@ export class DejaNumericStepperDemoComponent extends Destroy {
 
         this.numberForm = this.fb.group({
             numberValue3: [this.value3, numberValidator],
-            numberValue4: [this.value4, numberValidator],
+            numberValue4: [this.value4, [numberValidator, Validators.required]],
             numberValue5: [this.value5, numberValidator],
             numberValue6: [this.value6, numberValidator]
         });
