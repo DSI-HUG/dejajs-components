@@ -55,6 +55,7 @@
             <div [formGroup]="numberForm">
                 <mat-form-field appearance="legacy" [style.width.px]="80">
                     <mat-label>Legacy</mat-label>
+                    <!-- Increment/Decrement are linked to ngControl -->
                     <deja-numeric-stepper [input]="model4"></deja-numeric-stepper>
                     <input matInput required type="number" formControlName="numberValue4" #model4="matInput" />
                     <mat-error>{{ numberForm.get('numberValue4').errors ? numberForm.get('numberValue4').errors[0] : ''}}</mat-error>
