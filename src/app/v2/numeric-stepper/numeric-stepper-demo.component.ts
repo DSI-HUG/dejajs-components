@@ -42,7 +42,7 @@ export class DejaNumericStepperDemoComponent extends Destroy {
 
         this.numberForm = this.fb.group({
             numberValue3: [this.value3, numberValidator],
-            numberValue4: [this.value4, [numberValidator, Validators.required]],
+            numberValue4: [this.value4, [Validators.required, numberValidator]],
             numberValue5: [this.value5, numberValidator],
             numberValue6: [this.value6, numberValidator]
         });
