@@ -1,3 +1,10 @@
+# [12.1.0-next.6](https://github.com/DSI-HUG/dejajs-components/compare/v12.1.0-next.5...v12.1.0-next.6) (2021-06-16)
+
+
+### Bug Fixes
+
+* **numeric-stepper-v2:** fix update model on increment or decrement ([8a7525b](https://github.com/DSI-HUG/dejajs-components/commit/8a7525b288eeca28948150e062d6593547bfdf91))
+
 # [12.1.0-next.5](https://github.com/DSI-HUG/dejajs-components/compare/v12.1.0-next.4...v12.1.0-next.5) (2021-06-11)
 
 
