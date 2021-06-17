@@ -37,7 +37,7 @@ export const myFormats = {
 export class DejaTimePickerDemoComponent {
     public tabIndex = 1;
 
-    public date0 = new Date();
+    public date0: Date = null;
     public date1 = new Date(2021, 4, 6, 9, 5, 0);
     public date2 = new Date();
     public date3 = new Date();

@@ -12,6 +12,7 @@ import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { Destroy } from '@deja-js/component/core';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, takeUntil } from 'rxjs/operators';
+import {set} from "date-fns";
 
 export type TimePickerDisplayMode = 'fullTime' | 'fullTimeWithHoursDisabled' | 'fullTimeWithMinutesDisabled' | 'hoursOnly' | 'minutesOnly';
 
@@ -59,6 +60,7 @@ export class DejaTimePickerComponent extends Destroy implements ControlValueAcce
     public _step = 1;
     private _disabled = false;
     private _value: Date;
+    private today = new Date();
 
     public constructor(
         private changeDetectorRef: ChangeDetectorRef,
@@ -81,7 +83,7 @@ export class DejaTimePickerComponent extends Destroy implements ControlValueAcce
             }),
             takeUntil(this.destroyed$)
         ).subscribe(hours => {
-            const clone = new Date(this.value.getTime());
+            const clone = this.value ? new Date(this.value.getTime()) : set(this.today, { hours: 0, minutes:0, seconds: 0 });
             clone.setHours(hours);
 
             this.value = clone;
@@ -99,7 +101,7 @@ export class DejaTimePickerComponent extends Destroy implements ControlValueAcce
             }),
             takeUntil(this.destroyed$)
         ).subscribe(minutes => {
-            const clone = new Date(this.value.getTime());
+            const clone = this.value ? new Date(this.value.getTime()) : set(this.today, { hours: 0, minutes:0, seconds: 0 });
             clone.setMinutes(minutes);
 
             this.value = clone;
