@@ -20,8 +20,8 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { DejaTimePickerModule } from '@deja-js/component/time-picker';
 
 import { DejaMarkdownModule } from '../../component/markdown';
-import { DejaDatePickerMaterialDemoComponent } from './date-picker-material-demo';
 import { CustomDateFormatDirective, CustomDateTimeFormatDirective } from './custom-date-format.directive';
+import { DejaDatePickerMaterialDemoComponent } from './date-picker-material-demo';
 import { routing } from './date-picker-material-demo.routes';
 
 @NgModule({

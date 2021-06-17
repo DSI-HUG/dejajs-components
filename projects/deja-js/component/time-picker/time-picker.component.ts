@@ -10,9 +10,9 @@ import { BooleanInput, coerceBooleanProperty, coerceNumberProperty, NumberInput 
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, Optional, Self, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { Destroy } from '@deja-js/component/core';
+import { set } from 'date-fns';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, takeUntil } from 'rxjs/operators';
-import {set} from "date-fns";
 
 export type TimePickerDisplayMode = 'fullTime' | 'fullTimeWithHoursDisabled' | 'fullTimeWithMinutesDisabled' | 'hoursOnly' | 'minutesOnly';
 
@@ -83,7 +83,7 @@ export class DejaTimePickerComponent extends Destroy implements ControlValueAcce
             }),
             takeUntil(this.destroyed$)
         ).subscribe(hours => {
-            const clone = this.value ? new Date(this.value.getTime()) : set(this.today, { hours: 0, minutes:0, seconds: 0 });
+            const clone = this.value ? new Date(this.value.getTime()) : set(this.today, { hours: 0, minutes: 0, seconds: 0 });
             clone.setHours(hours);
 
             this.value = clone;
@@ -101,7 +101,7 @@ export class DejaTimePickerComponent extends Destroy implements ControlValueAcce
             }),
             takeUntil(this.destroyed$)
         ).subscribe(minutes => {
-            const clone = this.value ? new Date(this.value.getTime()) : set(this.today, { hours: 0, minutes:0, seconds: 0 });
+            const clone = this.value ? new Date(this.value.getTime()) : set(this.today, { hours: 0, minutes: 0, seconds: 0 });
             clone.setMinutes(minutes);
 
             this.value = clone;
@@ -126,8 +126,7 @@ export class DejaTimePickerComponent extends Destroy implements ControlValueAcce
     /** From ControlValueAccessor interface */
     public writeValue(value: Date): void {
         if (value && value !== this._value) {
-            const clone = new Date(value.getTime());
-            this._value = clone;
+            this._value = new Date(value.getTime());
             this.changeDetectorRef.markForCheck();
         }
     }
