@@ -60,7 +60,6 @@ export class DejaTimePickerComponent extends Destroy implements ControlValueAcce
     public _step = 1;
     private _disabled = false;
     private _value: Date;
-    private today = new Date();
 
     public constructor(
         private changeDetectorRef: ChangeDetectorRef,
@@ -83,7 +82,7 @@ export class DejaTimePickerComponent extends Destroy implements ControlValueAcce
             }),
             takeUntil(this.destroyed$)
         ).subscribe(hours => {
-            const clone = this.value ? new Date(this.value.getTime()) : set(this.today, { hours: 0, minutes: 0, seconds: 0 });
+            const clone = new Date(this.value.getTime());
             clone.setHours(hours);
 
             this.value = clone;
@@ -101,7 +100,7 @@ export class DejaTimePickerComponent extends Destroy implements ControlValueAcce
             }),
             takeUntil(this.destroyed$)
         ).subscribe(minutes => {
-            const clone = this.value ? new Date(this.value.getTime()) : set(this.today, { hours: 0, minutes: 0, seconds: 0 });
+            const clone = new Date(this.value.getTime());
             clone.setMinutes(minutes);
 
             this.value = clone;
@@ -125,7 +124,10 @@ export class DejaTimePickerComponent extends Destroy implements ControlValueAcce
 
     /** From ControlValueAccessor interface */
     public writeValue(value: Date): void {
-        if (value && value !== this._value) {
+        if (!value) {
+            this._value = set(new Date(), { hours: 0, minutes: 0, seconds: 0 });
+            this.changeDetectorRef.markForCheck();
+        } else if (value !== this._value) {
             this._value = new Date(value.getTime());
             this.changeDetectorRef.markForCheck();
         }
