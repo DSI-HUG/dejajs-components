@@ -115,8 +115,7 @@ La valeur du Timepicker est stockée dans un deuxième champ `time` du formulair
             <mat-datepicker-actions>
                 <deja-time-picker formControlName="time"></deja-time-picker>
                 <div class="action-buttons">
-                    <button mat-button matDatepickerCancel>Cancel</button>
-                    <button mat-raised-button color="primary" matDatepickerApply>Apply</button>
+                    <button mat-raised-button color="primary" matDatepickerApply>OK</button>
                 </div>
             </mat-datepicker-actions>
         </mat-datepicker>
@@ -205,8 +204,7 @@ C'est un mix entre le date time picker et le date range picker, du coup le formu
                     <deja-time-picker formControlName="endTime"></deja-time-picker>
                 </div>
                 <div class="action-buttons">
-                    <button mat-button matDateRangePickerCancel>Cancel</button>
-                    <button mat-raised-button color="primary" matDateRangePickerApply>Apply</button>
+                    <button mat-raised-button color="primary" matDateRangePickerApply (click)="this.dateTimeRangeApplied = true">OK</button>
                 </div>
             </mat-date-range-picker-actions>
         </mat-date-range-picker>
@@ -220,6 +218,7 @@ C'est un mix entre le date time picker et le date range picker, du coup le formu
 import { isMatch, parse, set, startOfToday } from 'date-fns';
 [...]
 public dateTimeRangeForm: FormGroup;
+public dateTimeRangeApplied = false;
 
 public constructor(private fb: FormBuilder) {
     this.dateTimeRangeForm = this.fb.group({
@@ -254,10 +253,19 @@ public onDateTimeRangeChange(event: MatDatepickerInputEvent<unknown>, dateFieldN
  * Triggered when closing the calendar popup
  */
 public onDateTimeRangeClosed(dateTimeRangePicker: MatDateRangePicker<unknown>): void {
-    // copy the date field values to each time fields (useful if the timepicker was updated but the datepicker popup was closed without applying the change)
-    const dateRange = (dateTimeRangePicker.datepickerInput as MatDateRangeInput<DateRange<Date>>).value;
-    this.dateTimeRangeForm.get('startTime').setValue(dateRange.start);
-    this.dateTimeRangeForm.get('endTime').setValue(dateRange.end);
+    const dateRange = (dateTimeRangePicker.datepickerInput as MatDateRangeInput<Date>).value;
+    if (this.dateTimeRangeApplied) {
+        // workaround to apply time to date since the apply event is not fired when the date range is not changed
+        const startTime = this.dateTimeRangeForm.get('startTime').value as Date;
+        this.dateTimeRangeForm.get('start').setValue(set(dateRange.start, { hours: startTime.getHours(), minutes: startTime.getMinutes() }));
+        const endTime = this.dateTimeRangeForm.get('endTime').value as Date;
+        this.dateTimeRangeForm.get('end').setValue(set(dateRange.end, { hours: endTime.getHours(), minutes: endTime.getMinutes() }));
+    } else {
+        // copy the date field values to each time fields (useful if the timepicker was updated but the datepicker popup was closed without applying the change)
+        this.dateTimeRangeForm.get('startTime').setValue(dateRange.start);
+        this.dateTimeRangeForm.get('endTime').setValue(dateRange.end);
+    }
+    this.dateTimeRangeApplied = false;
 }
 ```
 

@@ -57,8 +57,7 @@
                                 <mat-datepicker-actions>
                                     <deja-time-picker formControlName="time"></deja-time-picker>
                                     <div class="action-buttons">
-                                        <button mat-button matDatepickerCancel>Cancel</button>
-                                        <button mat-raised-button color="primary" matDatepickerApply>Apply</button>
+                                        <button mat-raised-button color="primary" matDatepickerApply>OK</button>
                                     </div>
                                 </mat-datepicker-actions>
                             </mat-datepicker>
@@ -84,8 +83,7 @@
                                         <deja-time-picker formControlName="endTime"></deja-time-picker>
                                     </div>
                                     <div class="action-buttons">
-                                        <button mat-button matDateRangePickerCancel>Cancel</button>
-                                        <button mat-raised-button color="primary" matDateRangePickerApply>Apply</button>
+                                        <button mat-raised-button color="primary" matDateRangePickerApply (click)="this.dateTimeRangeApplied = true">OK</button>
                                     </div>
                                 </mat-date-range-picker-actions>
                             </mat-date-range-picker>
