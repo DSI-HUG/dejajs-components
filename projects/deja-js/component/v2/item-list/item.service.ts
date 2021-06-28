@@ -32,6 +32,7 @@ export class ItemService<T> {
     public valueField$ = new BehaviorSubject<string>('value');
     public searchField$ = new BehaviorSubject<string>('searchText');
     public query$ = new BehaviorSubject<RegExp | string>('');
+    public applyFilterOnParents$ = new BehaviorSubject<boolean>(false);
     public minSearchLength$ = new BehaviorSubject<number>(0);
 
     public itemList$: Observable<Item<T>[]>;
@@ -126,8 +127,8 @@ export class ItemService<T> {
             })
         );
 
-        this.filteredItemList$ = combineLatest([this.flatItemList$, this.query$, this.minSearchLength$, this.searchField$, refreshFilterItemList$]).pipe(
-            switchMap(([flatItemList, query, minSearchLength, searchField]) => {
+        this.filteredItemList$ = combineLatest([this.flatItemList$, this.query$, this.minSearchLength$, this.searchField$, this.applyFilterOnParents$, refreshFilterItemList$]).pipe(
+            switchMap(([flatItemList, query, minSearchLength, searchField, applyFilterOnParents]) => {
                 if (minSearchLength > 0 && (!query || typeof query === 'string' && query.length < minSearchLength)) {
                     this.previousQuery = null;
                     return of([] as Item<T>[]);
@@ -174,7 +175,7 @@ export class ItemService<T> {
                         let previousItem: Item<T>;
                         return [...itemList].reverse().filter(item => {
                             let isVisible: boolean;
-                            if (item.items === undefined) {
+                            if (item.items === undefined || applyFilterOnParents) {
                                 // child
                                 isVisible = this.itemMatch(item, searchField, regExp);
                             } else {
