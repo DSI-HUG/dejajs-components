@@ -106,6 +106,7 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
     private lastClickedItem: Item<T>; // Double-click detection
     private reloadViewPort$ = new BehaviorSubject<void>(undefined);
     private _query: string;
+    private _applyFilterOnParents = false;
 
     @ViewChild(ViewPortComponent)
     public set viewPortComponent(viewPortComponent: ViewPortComponent<T>) {
@@ -243,6 +244,17 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
 
     public get query(): string {
         return this._query;
+    }
+
+    /** Definit si le filtrage doit s'appliquer sur les parents ou uniquement les derniers enfants */
+    @Input()
+    public set applyFilterOnParents(value: BooleanInput) {
+        this._applyFilterOnParents = coerceBooleanProperty(value);
+        this.itemService.applyFilterOnParents$.next(this._applyFilterOnParents);
+    }
+
+    public get applyFilterOnParents(): BooleanInput {
+        return this._applyFilterOnParents;
     }
 
     @Input() public set selectingItems(value: (items: Item<T>[]) => Observable<Item<T>[]>) {
