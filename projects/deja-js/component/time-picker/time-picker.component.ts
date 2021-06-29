@@ -7,7 +7,7 @@
  */
 
 import { BooleanInput, coerceBooleanProperty, coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, Optional, Self, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Optional, Output, Self, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { Destroy } from '@deja-js/component/core';
 import { set } from 'date-fns';
@@ -27,9 +27,19 @@ export type TimePickerDisplayMode = 'fullTime' | 'fullTimeWithHoursDisabled' | '
     encapsulation: ViewEncapsulation.None
 })
 export class DejaTimePickerComponent extends Destroy implements ControlValueAccessor {
+    @Output() public readonly timeChange = new EventEmitter<Date>();
 
     /** Display mode for the time-picker */
     @Input() public mode: TimePickerDisplayMode = 'fullTime';
+
+    @Input()
+    public set time(value: Date) {
+        this.writeValue(value);
+    }
+
+    public get time(): Date {
+        return this.value;
+    }
 
     /** Step of the arrows */
     @Input()
@@ -82,7 +92,8 @@ export class DejaTimePickerComponent extends Destroy implements ControlValueAcce
             }),
             takeUntil(this.destroyed$)
         ).subscribe(hours => {
-            const clone = new Date(this.value.getTime());
+            const value = this.value?.getTime();
+            const clone = value ? new Date(value) : set(new Date(), { hours: 0, minutes: 0, seconds: 0 });
             clone.setHours(hours);
 
             this.value = clone;
@@ -100,7 +111,8 @@ export class DejaTimePickerComponent extends Destroy implements ControlValueAcce
             }),
             takeUntil(this.destroyed$)
         ).subscribe(minutes => {
-            const clone = new Date(this.value.getTime());
+            const value = this.value?.getTime();
+            const clone = value ? new Date(value) : set(new Date(), { hours: 0, minutes: 0, seconds: 0 });
             clone.setMinutes(minutes);
 
             this.value = clone;
@@ -114,6 +126,7 @@ export class DejaTimePickerComponent extends Destroy implements ControlValueAcce
         if (v !== this._value) {
             this.writeValue(v);
             this.onChangeCallback(v);
+            this.timeChange.emit(v);
         }
     }
 
@@ -124,11 +137,8 @@ export class DejaTimePickerComponent extends Destroy implements ControlValueAcce
 
     /** From ControlValueAccessor interface */
     public writeValue(value: Date): void {
-        if (!value) {
-            this._value = set(new Date(), { hours: 0, minutes: 0, seconds: 0 });
-            this.changeDetectorRef.markForCheck();
-        } else if (value !== this._value) {
-            this._value = new Date(value.getTime());
+        if ((value || null) !== (this._value || null)) {
+            this._value = value ? new Date(value.getTime()) : set(new Date(), { hours: 0, minutes: 0, seconds: 0 });
             this.changeDetectorRef.markForCheck();
         }
     }

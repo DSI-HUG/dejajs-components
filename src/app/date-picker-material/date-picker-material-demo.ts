@@ -7,10 +7,19 @@
  */
 
 import { Component, ViewEncapsulation } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
 import { Destroy } from '@deja-js/component/core';
-import { combineLatest, merge, of } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { IFormBuilder, IFormGroup } from '@rxweb/types';
+import { debounceTime, takeUntil } from 'rxjs/operators';
+
+interface DateForm {
+    date: Date;
+}
+
+interface DateRangeForm {
+    from: Date;
+    to: Date;
+}
 
 @Component({
     selector: 'dejadate-picker-material-demo',
@@ -21,64 +30,69 @@ import { takeUntil } from 'rxjs/operators';
 export class DejaDatePickerMaterialDemoComponent extends Destroy {
     public tabIndex = 1;
 
-    public dateForm: FormGroup;
-    public dateRangeForm: FormGroup;
-    public dateTimeForm: FormGroup;
-    public dateTimeRangeForm: FormGroup;
-    public dateTimeRangeApplied = false;
+    public dateForm: IFormGroup<DateForm>;
+    public dateRangeForm: IFormGroup<DateRangeForm>;
 
-    public constructor(private fb: FormBuilder) {
+    public time: Date;
+    public from: Date;
+    public to: Date;
+
+    public constructor(fb: FormBuilder) {
         super();
 
-        this.dateForm = this.fb.group({
+        const formBuilder = fb as IFormBuilder;
+
+        this.dateForm = formBuilder.group<DateForm>({
             date: null
         });
 
-        this.dateRangeForm = this.fb.group({
-            start: null,
-            end: null
+        this.dateRangeForm = formBuilder.group<DateRangeForm>({
+            from: null,
+            to: null
         });
 
-        this.dateTimeForm = this.fb.group({
-            datetime: null,
-            time: null
-        });
-
-        this.dateTimeRangeForm = this.fb.group({
-            startDateTime: null,
-            endDateTime: null,
-            startTime: null,
-            endTime: null
-        });
-
-        this.dateTimeForm.valueChanges.pipe(
+        this.dateForm.valueChanges.pipe(
+            debounceTime(10),
             takeUntil(this.destroyed$)
-        ).subscribe((values: { time: Date; datetime: Date }) => {
-            let datetime = values.datetime;
-            if (!datetime) {
-                datetime = new Date();
-            }
-            datetime.setHours(values.time?.getHours() || 0);
-            datetime.setMinutes(values.time?.getMinutes() || 0);
-            datetime.setSeconds(values.time?.getSeconds() || 0);
-            this.dateTimeForm.controls.datetime.setValue(datetime, { emitEvent: false, emitModelToViewChange: true });
-            console.log(datetime);
+        ).subscribe(values => {
+            console.log('date selected', values.date);
         });
 
-        const startDateTime$ = combineLatest([of(this.dateTimeRangeForm.controls.startDateTime), this.dateTimeRangeForm.controls.startDateTime.valueChanges, this.dateTimeRangeForm.controls.startTime.valueChanges]);
-        const endDateTime$ = combineLatest([of(this.dateTimeRangeForm.controls.endDateTime), this.dateTimeRangeForm.controls.endDateTime.valueChanges, this.dateTimeRangeForm.controls.endTime.valueChanges]);
-        merge(startDateTime$, endDateTime$).pipe(
+        this.dateRangeForm.valueChanges.pipe(
+            debounceTime(10),
             takeUntil(this.destroyed$)
-        ).subscribe(([control, dateTime, time]: [AbstractControl, Date, Date]) => {
-            if (!dateTime) {
-                dateTime = new Date();
-            }
-
-            dateTime.setHours(time?.getHours() || 0);
-            dateTime.setMinutes(time?.getMinutes() || 0);
-            dateTime.setSeconds(time?.getSeconds() || 0);
-            control.setValue(dateTime, { emitEvent: false, emitModelToViewChange: true });
-            console.log(dateTime);
+        ).subscribe(values => {
+            console.log('Range selected', values.from, 'to', values.to);
         });
+    }
+
+    public onDateTimeClosed(time: Date): void {
+        const values = this.dateForm.value;
+        if (!values.date) {
+            values.date = new Date();
+        }
+        values.date.setHours(time.getHours());
+        values.date.setMinutes(time.getMinutes());
+        values.date.setSeconds(time.getSeconds());
+        this.dateForm.setValue(values);
+    }
+
+    public onDateTimeRangeClosed(from: Date, to: Date): void {
+        const values = this.dateRangeForm.value;
+        if (!values.from && !values.to) {
+            values.from = new Date();
+            values.to = new Date();
+        } else if (!values.from) {
+            values.from = values.to;
+        } else if (!values.to) {
+            values.to = values.from;
+        }
+        values.from.setHours(from?.getHours() || 0);
+        values.from.setMinutes(from?.getMinutes() || 0);
+        values.from.setSeconds(from?.getSeconds() || 0);
+        values.to.setHours(to?.getHours() || 0);
+        values.to.setMinutes(to?.getMinutes() || 0);
+        values.to.setSeconds(to?.getSeconds() || 0);
+        this.dateRangeForm.setValue(values);
     }
 }

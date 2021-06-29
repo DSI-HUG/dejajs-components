@@ -29,8 +29,8 @@
                         <mat-form-field appearance="fill" date-format>
                             <mat-label>Enter a date range</mat-label>
                             <mat-date-range-input [rangePicker]="dateRangePicker">
-                                <input matStartDate placeholder="Start date" formControlName="start">
-                                <input matEndDate placeholder="End date" formControlName="end">
+                                <input matStartDate placeholder="Start date" formControlName="from">
+                                <input matEndDate placeholder="End date" formControlName="to">
                             </mat-date-range-input>
                                 <mat-datepicker-toggle matSuffix [for]="dateRangePicker"></mat-datepicker-toggle>
                                 <mat-date-range-picker #dateRangePicker></mat-date-range-picker>
@@ -46,16 +46,16 @@
         <mat-card-content>
             <div class="flex-layout">
                 <div>
-                    <form [formGroup]="dateTimeForm">
+                    <form [formGroup]="dateForm">
                         <h3>Date time picker :</h3>
                         <mat-form-field appearance="fill" date-time-format>
                             <mat-label>Choose a date and time</mat-label>
                             <mat-hint>Format : dd.MM.yyyy HH:mm</mat-hint>
-                            <input matInput [matDatepicker]="dateTimePicker" formControlName="datetime">
+                            <input matInput [matDatepicker]="dateTimePicker" formControlName="date">
                             <mat-datepicker-toggle matSuffix [for]="dateTimePicker"></mat-datepicker-toggle>
-                            <mat-datepicker #dateTimePicker>
+                            <mat-datepicker #dateTimePicker (closed)="onDateTimeClosed(time)">
                                 <mat-datepicker-actions>
-                                    <deja-time-picker formControlName="time"></deja-time-picker>
+                                    <deja-time-picker [(time)]="time"></deja-time-picker>
                                     <div class="action-buttons">
                                         <button mat-raised-button color="primary" matDatepickerApply>OK</button>
                                     </div>
@@ -65,25 +65,25 @@
                     </form>
                 </div>
                 <div class="date-time-range">
-                    <form [formGroup]="dateTimeRangeForm">
+                    <form [formGroup]="dateRangeForm">
                         <h3>Date time range Picker :</h3>
                         <mat-form-field appearance="fill" date-time-format>
                             <mat-label>Enter a date range</mat-label>
                             <mat-hint>Format : dd.MM.yyyy HH:mm - dd.MM.yyyy HH:mm</mat-hint>
                             <mat-date-range-input [rangePicker]="dateTimeRangePicker">
-                                <input matStartDate placeholder="Start date" formControlName="startDateTime">
-                                <input matEndDate placeholder="End date" formControlName="endDateTime">
+                                <input matStartDate placeholder="Start date" formControlName="from">
+                                <input matEndDate placeholder="End date" formControlName="to">
                             </mat-date-range-input>
                                 <mat-datepicker-toggle matSuffix [for]="dateTimeRangePicker"></mat-datepicker-toggle>
-                                <mat-date-range-picker #dateTimeRangePicker>
+                                <mat-date-range-picker #dateTimeRangePicker (closed)="onDateTimeRangeClosed(from, to)">
                                     <mat-date-range-picker-actions>
                                         <div class="time-range">
-                                            <deja-time-picker formControlName="startTime"></deja-time-picker>
+                                            <deja-time-picker [(time)]="from"></deja-time-picker>
                                             <div class="time-picker-separator">-</div>
-                                            <deja-time-picker formControlName="endTime"></deja-time-picker>
+                                            <deja-time-picker [(time)]="to"></deja-time-picker>
                                         </div>
                                         <div class="action-buttons">
-                                            <button mat-raised-button color="primary" matDateRangePickerApply (click)="this.dateTimeRangeApplied = true">OK</button>
+                                            <button mat-raised-button color="primary" matDateRangePickerApply>OK</button>
                                         </div>
                                     </mat-date-range-picker-actions>
                                 </mat-date-range-picker>
