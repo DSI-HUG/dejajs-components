@@ -337,7 +337,7 @@
             <tree-list class="demo-half-width fixed-height" multiSelect textField="naqme" valueField="code" [selectingItems]="selectingItems()" [models]="countries$ | async"> </tree-list>
             <h1>Confirm Expand and Collapse </h1>
             <div>A dialog will confirm the expand and collapse or an item if the children are not loaded. The children will be loaded asynchronously after the item expansion.</div>
-            <tree-list #onexpand class="demo-half-width fixed-height" applyFilterOnParents="true" searchArea [items]="onDemandGroupedCountryItems$ | async" (itemExpand)="itemExpand$.next($event.item)" [expandingItem]="expandingItem()" [collapsingItem]="collapsingItem()"></tree-list>
+            <tree-list #onexpand class="demo-half-width fixed-height" searchArea [items]="onDemandGroupedCountryItems$ | async" (itemExpand)="itemExpand$.next($event.item)" [expandingItem]="expandingItem()" [collapsingItem]="collapsingItem()"></tree-list>
         </mat-card-content>
     </mat-card>
 </div>
