@@ -1,3 +1,10 @@
+# [12.1.0-next.8](https://github.com/DSI-HUG/dejajs-components/compare/v12.1.0-next.7...v12.1.0-next.8) (2021-07-04)
+
+
+### Features
+
+* **tree-list:** add capability to filter on parent items ([b958ebd](https://github.com/DSI-HUG/dejajs-components/commit/b958ebdb04d5c7585c08a3c2f5825e55dd496eaa))
+
 # [12.1.0-next.7](https://github.com/DSI-HUG/dejajs-components/compare/v12.1.0-next.6...v12.1.0-next.7) (2021-06-28)
 
 
