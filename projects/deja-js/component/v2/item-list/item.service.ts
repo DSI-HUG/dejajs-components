@@ -178,8 +178,8 @@ export class ItemService<T> {
                                 // child
                                 isVisible = this.itemMatch(item, searchField, regExp);
                             } else {
-                                // parent, visible only if a child is visible
-                                isVisible = this.parentItemMatch(previousItem, item, searchField, regExp);
+                                // parent
+                                isVisible = this.parentItemMatch(item, previousItem, searchField, regExp);
                             }
                             if (isVisible) {
                                 previousItem = item;
@@ -447,6 +447,7 @@ export class ItemService<T> {
     }
 
     protected parentItemMatch(item: Item<T>, previousItem: Item<T>, _searchField: string, _regExp: RegExp): boolean {
+        // parent, visible only if a child is visible
         return previousItem && previousItem.depth === item.depth + 1;
     }
 
