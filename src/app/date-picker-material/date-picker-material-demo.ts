@@ -71,6 +71,9 @@ export class DejaDatePickerMaterialDemoComponent extends Destroy {
         if (!values.date) {
             values.date = new Date();
         }
+        if (!time) {
+            time = new Date();
+        }
         values.date.setHours(time.getHours());
         values.date.setMinutes(time.getMinutes());
         values.date.setSeconds(time.getSeconds());

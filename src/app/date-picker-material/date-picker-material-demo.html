@@ -53,11 +53,11 @@
                             <mat-hint>Format : dd.MM.yyyy HH:mm</mat-hint>
                             <input matInput [matDatepicker]="dateTimePicker" formControlName="date">
                             <mat-datepicker-toggle matSuffix [for]="dateTimePicker"></mat-datepicker-toggle>
-                            <mat-datepicker #dateTimePicker (closed)="onDateTimeClosed(time)">
+                            <mat-datepicker #dateTimePicker>
                                 <mat-datepicker-actions>
                                     <deja-time-picker [(time)]="time"></deja-time-picker>
                                     <div class="action-buttons">
-                                        <button mat-raised-button color="primary" matDatepickerApply>OK</button>
+                                        <button mat-raised-button color="primary" matDatepickerApply (click)="onDateTimeClosed(time)">OK</button>
                                     </div>
                                 </mat-datepicker-actions>
                             </mat-datepicker>
@@ -75,7 +75,7 @@
                                 <input matEndDate placeholder="End date" formControlName="to">
                             </mat-date-range-input>
                                 <mat-datepicker-toggle matSuffix [for]="dateTimeRangePicker"></mat-datepicker-toggle>
-                                <mat-date-range-picker #dateTimeRangePicker (closed)="onDateTimeRangeClosed(from, to)">
+                                <mat-date-range-picker #dateTimeRangePicker>
                                     <mat-date-range-picker-actions>
                                         <div class="time-range">
                                             <deja-time-picker [(time)]="from"></deja-time-picker>
@@ -83,7 +83,7 @@
                                             <deja-time-picker [(time)]="to"></deja-time-picker>
                                         </div>
                                         <div class="action-buttons">
-                                            <button mat-raised-button color="primary" matDateRangePickerApply>OK</button>
+                                            <button mat-raised-button color="primary" matDateRangePickerApply (click)="onDateTimeRangeClosed(from, to)">OK</button>
                                         </div>
                                     </mat-date-range-picker-actions>
                                 </mat-date-range-picker>
