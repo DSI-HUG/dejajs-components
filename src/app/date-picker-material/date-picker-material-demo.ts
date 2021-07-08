@@ -74,6 +74,7 @@ export class DejaDatePickerMaterialDemoComponent extends Destroy {
         if (!time) {
             time = new Date();
         }
+        this.time = time;
         values.date.setHours(time.getHours());
         values.date.setMinutes(time.getMinutes());
         values.date.setSeconds(time.getSeconds());
@@ -86,16 +87,24 @@ export class DejaDatePickerMaterialDemoComponent extends Destroy {
             values.from = new Date();
             values.to = new Date();
         } else if (!values.from) {
-            values.from = values.to;
+            values.from = new Date(values.to);
         } else if (!values.to) {
-            values.to = values.from;
+            values.to = new Date(values.from);
         }
-        values.from.setHours(from?.getHours() || 0);
-        values.from.setMinutes(from?.getMinutes() || 0);
-        values.from.setSeconds(from?.getSeconds() || 0);
-        values.to.setHours(to?.getHours() || 0);
-        values.to.setMinutes(to?.getMinutes() || 0);
-        values.to.setSeconds(to?.getSeconds() || 0);
+        if (!from) {
+            from = new Date(0, 0, 0, 0, 0, 0);
+        }
+        if (!to) {
+            to = new Date(0, 0, 0, 23, 59, 59);
+        }
+        this.from = from;
+        this.to = to;
+        values.from.setHours(from.getHours());
+        values.from.setMinutes(from.getMinutes());
+        values.from.setSeconds(from.getSeconds());
+        values.to.setHours(to.getHours());
+        values.to.setMinutes(to.getMinutes());
+        values.to.setSeconds(to.getSeconds());
         this.dateRangeForm.setValue(values);
     }
 }
