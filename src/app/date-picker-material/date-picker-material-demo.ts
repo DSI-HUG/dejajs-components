@@ -36,8 +36,8 @@ export class DejaDatePickerMaterialDemoComponent extends Destroy {
     public dateTimeRangeForm: IFormGroup<DateRangeForm>;
 
     public time: Date;
-    public from: Date;
-    public to: Date;
+    public timeFrom: Date;
+    public timeTo: Date;
 
     public constructor(fb: FormBuilder) {
         super();
@@ -84,8 +84,8 @@ export class DejaDatePickerMaterialDemoComponent extends Destroy {
 
     public onDateTimeRangeOpened(): void {
         const values = this.dateTimeRangeForm.value;
-        this.from = values.from ? new Date(values.from) : null;
-        this.to = values.to ? new Date(values.to) : null;
+        this.timeFrom = values.from ? new Date(values.from) : null;
+        this.timeTo = values.to ? new Date(values.to) : null;
     }
 
     public onDateTimeClosed(time: Date): void {

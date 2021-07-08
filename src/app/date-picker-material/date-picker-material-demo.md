@@ -8,7 +8,7 @@ Documentation officielle : https://material.angular.io/components/datepicker/ove
 
 ### Import des modules
 
-> Importer `MatDatepickerModule` et `MatNativeDateModule` dans les `imports` de votre module  
+> Importer `MatDatepickerModule` et `MatNativeDateModule` dans les `imports` de votre module (en plus des modules Material pour la gestion des formulaires, comme MatFormFieldModule, ReactiveFormsModule...)  
 > Si vous intégrez le TimePicker, importer également `DejaTimePickerModule`
 
 ### Gestion des dates et heures
@@ -50,14 +50,24 @@ Pour corriger ce problème, vous pouvez ajouter ce style :
 ### Component
 
 ```typescript
-public dateForm: FormGroup;
+import { IFormBuilder, IFormGroup } from '@rxweb/types';
+[...]
+interface DateForm {
+    date: Date;
+}
+[...]
+public dateForm: IFormGroup<DateForm>;
 
-public constructor(private fb: FormBuilder) {
-    this.dateForm = this.fb.group({
+public constructor(fb: FormBuilder) {
+    const formBuilder = fb as IFormBuilder;
+
+    this.dateForm = formBuilder.group<DateForm>({
         date: null
     });
 }
 ```
+
+> la lib [@rxweb/types](https://docs.rxweb.io/strongly-typed/angular-strongly-typed) est utilisée pour la gestion des reactive forms
 
 ## Date range picker
 
@@ -72,8 +82,8 @@ Au niveau du formulaire, on a deux champs pour gérer la date de début et la da
     <mat-form-field appearance="fill" date-format>
         <mat-label>Enter a date range</mat-label>
         <mat-date-range-input [rangePicker]="dateRangePicker">
-            <input matStartDate placeholder="Start date" formControlName="start">
-            <input matEndDate placeholder="End date" formControlName="end">
+            <input matStartDate placeholder="Start date" formControlName="from">
+            <input matEndDate placeholder="End date" formControlName="to">
         </mat-date-range-input>
         <mat-datepicker-toggle matSuffix [for]="dateRangePicker"></mat-datepicker-toggle>
         <mat-date-range-picker #dateRangePicker></mat-date-range-picker>
@@ -84,21 +94,30 @@ Au niveau du formulaire, on a deux champs pour gérer la date de début et la da
 ### Component
 
 ```typescript
-public dateRangeForm: FormGroup;
+import { IFormBuilder, IFormGroup } from '@rxweb/types';
+[...]
+interface DateRangeForm {
+    from: Date;
+    to: Date;
+}
+[...]
+public dateRangeForm: IFormGroup<DateRangeForm>;
 
-public constructor(private fb: FormBuilder) {
-    this.dateRangeForm = this.fb.group({
-        start: null,
-        end: null
+public constructor(fb: FormBuilder) {
+    const formBuilder = fb as IFormBuilder;
+
+    this.dateRangeForm = formBuilder.group<DateRangeForm>({
+        from: null,
+        to: null
     });
 }
 ```
 
 ## Date time picker
 
-Le TimePicker de DejaJS peut être intégré à la popup du calendrier de Datepicker Material en l'insérant dans la partie `action buttons` du datepicker.  
+Le TimePicker de DejaJS peut être intégré à la popup du calendrier de Datepicker Material en l'insérant dans la partie `<mat-datepicker-actions>` du datepicker.  
 
-La valeur du Timepicker est stockée dans un deuxième champ `time` du formulaire et des fonctions doivent être ajoutées dans le composant pour lier les heures et minutes au champ `date` lors les events `dateInput`, `dateChange` et `closed`
+La valeur du Timepicker est stockée dans une variable `time` du formulaire et des fonctions doivent être ajoutées dans le composant pour le lier au champ `date` lors de l'event `opened` et lors du click sur le bouton `OK`
 
 > Ne pas oublier de customiser le format de date pour gérer les heures et les minutes, en appliquant par exemple la directive `date-time-format`
 
@@ -109,13 +128,13 @@ La valeur du Timepicker est stockée dans un deuxième champ `time` du formulair
     <mat-form-field appearance="fill" date-time-format>
         <mat-label>Choose a date and time</mat-label>
         <mat-hint>Format : dd.MM.yyyy HH:mm</mat-hint>
-        <input matInput [matDatepicker]="dateTimePicker" formControlName="date" (dateInput)="onDateTimeInput($event)" (dateChange)="onDateTimeChange($event)">
+        <input matInput [matDatepicker]="dateTimePicker" formControlName="date">
         <mat-datepicker-toggle matSuffix [for]="dateTimePicker"></mat-datepicker-toggle>
-        <mat-datepicker #dateTimePicker (closed)="onDateTimeClosed(dateTimePicker)">
+        <mat-datepicker #dateTimePicker (opened)="onDateTimeOpened()">
             <mat-datepicker-actions>
-                <deja-time-picker formControlName="time"></deja-time-picker>
+                <deja-time-picker [(time)]="time"></deja-time-picker>
                 <div class="action-buttons">
-                    <button mat-raised-button color="primary" matDatepickerApply>OK</button>
+                    <button mat-raised-button color="primary" matDatepickerApply (click)="onDateTimeClosed(time)">OK</button>
                 </div>
             </mat-datepicker-actions>
         </mat-datepicker>
@@ -126,43 +145,41 @@ La valeur du Timepicker est stockée dans un deuxième champ `time` du formulair
 ### Component
 
 ```typescript
-import { isMatch, parse, set, startOfToday } from 'date-fns';
+import { IFormBuilder, IFormGroup } from '@rxweb/types';
 [...]
-public dateTimeForm: FormGroup;
+interface DateForm {
+    date: Date;
+}
+[...]
+public dateTimeForm: IFormGroup<DateForm>;
 
-public constructor(private fb: FormBuilder) {
-    this.dateTimeForm = this.fb.group({
-        date: null,
-        time: null
+public time: Date;
+
+public constructor(fb: FormBuilder) {
+    const formBuilder = fb as IFormBuilder;
+
+    this.dateTimeForm = formBuilder.group<DateForm>({
+        date: null
     });
 }
 
-/**
- * Triggered when changing date in calendar popup
- */
-public onDateTimeInput(event: MatDatepickerInputEvent<unknown>): void {
-    const time = this.dateTimeForm.get('time').value as Date;
-    this.dateTimeForm.get('date').setValue(set(event.value as Date, { hours: time.getHours(), minutes: time.getMinutes() }));
+public onDateTimeOpened(): void {
+    const values = this.dateTimeForm.value;
+    this.time = values.date ? new Date(values.date) : null;
 }
 
-/**
- * Triggered when changing date in input field or calendar popup
- */
-public onDateTimeChange(event: MatDatepickerInputEvent<unknown>): void {
-    const inputValue = (event.targetElement as HTMLInputElement).value;
-    if (isMatch(inputValue, dateTimeFormat)) {
-        const newDate = parse(inputValue, dateTimeFormat, startOfToday());
-        this.dateTimeForm.get('date').setValue(newDate);
-        this.dateTimeForm.get('time').setValue(newDate);
+public onDateTimeClosed(time: Date): void {
+    const values = this.dateTimeForm.value;
+    if (!values.date) {
+        values.date = new Date();
     }
-}
-
-/**
- * Triggered when closing the calendar popup
- */
-public onDateTimeClosed(dateTimePicker: MatDatepicker<unknown>): void {
-    // copy the date field value to the time field (useful if the timepicker was updated but the datepicker popup was closed without applying the change)
-    this.dateTimeForm.get('time').setValue((dateTimePicker.datepickerInput as MatDatepickerInput<Date>).value);
+    if (!time) {
+        time = new Date();
+    }
+    values.date.setHours(time.getHours());
+    values.date.setMinutes(time.getMinutes());
+    values.date.setSeconds(time.getSeconds());
+    this.dateTimeForm.setValue(values);
 }
 ```
 
@@ -182,7 +199,7 @@ public onDateTimeClosed(dateTimePicker: MatDatepicker<unknown>): void {
 
 ## Date time range picker
 
-C'est un mix entre le date time picker et le date range picker, du coup le formulaire contient quatre champs : `start`, `end`, `startTime` et `endTime`
+C'est un mix entre le date time picker et le date range picker, avec deux variables `timeFrom` et `timeTo` pour stocker les heures de début et de fin.
 
 ### Template
 
@@ -192,19 +209,19 @@ C'est un mix entre le date time picker et le date range picker, du coup le formu
         <mat-label>Enter a date range</mat-label>
         <mat-hint>Format : dd.MM.yyyy HH:mm - dd.MM.yyyy HH:mm</mat-hint>
         <mat-date-range-input [rangePicker]="dateTimeRangePicker">
-            <input matStartDate placeholder="Start date" formControlName="start" (dateInput)="onDateTimeRangeInput($event, 'start')" (dateChange)="onDateTimeRangeChange($event, 'start')">
-            <input matEndDate placeholder="End date" formControlName="end" (dateInput)="onDateTimeRangeInput($event,'end')" (dateChange)="onDateTimeRangeChange($event,'end')">
+            <input matStartDate placeholder="Start date" formControlName="from">
+            <input matEndDate placeholder="End date" formControlName="to">
         </mat-date-range-input>
         <mat-datepicker-toggle matSuffix [for]="dateTimeRangePicker"></mat-datepicker-toggle>
-        <mat-date-range-picker #dateTimeRangePicker (closed)="onDateTimeRangeClosed(dateTimeRangePicker)">
+        <mat-date-range-picker #dateTimeRangePicker (opened)="onDateTimeRangeOpened()">
             <mat-date-range-picker-actions>
                 <div class="time-range">
-                    <deja-time-picker formControlName="startTime"></deja-time-picker>
+                    <deja-time-picker [(time)]="timeFrom"></deja-time-picker>
                     <div class="time-picker-separator">-</div>
-                    <deja-time-picker formControlName="endTime"></deja-time-picker>
+                    <deja-time-picker [(time)]="timeTo"></deja-time-picker>
                 </div>
                 <div class="action-buttons">
-                    <button mat-raised-button color="primary" matDateRangePickerApply (click)="this.dateTimeRangeApplied = true">OK</button>
+                    <button mat-raised-button color="primary" matDateRangePickerApply (click)="onDateTimeRangeClosed(timeFrom, timeTo)">OK</button>
                 </div>
             </mat-date-range-picker-actions>
         </mat-date-range-picker>
@@ -215,57 +232,55 @@ C'est un mix entre le date time picker et le date range picker, du coup le formu
 ### Component
 
 ```typescript
-import { isMatch, parse, set, startOfToday } from 'date-fns';
+import { IFormBuilder, IFormGroup } from '@rxweb/types';
 [...]
-public dateTimeRangeForm: FormGroup;
-public dateTimeRangeApplied = false;
+interface DateRangeForm {
+    from: Date;
+    to: Date;
+}
+[...]
+public dateTimeRangeForm: IFormGroup<DateRangeForm>;
+public timeFrom: Date;
+public timeTo: Date;
 
-public constructor(private fb: FormBuilder) {
-    this.dateTimeRangeForm = this.fb.group({
-        start: null,
-        end: null,
-        startTime: null,
-        endTime: null
+public constructor(fb: FormBuilder) {
+    const formBuilder = fb as IFormBuilder;
+
+    this.dateTimeRangeForm = formBuilder.group<DateRangeForm>({
+        from: null,
+        to: null
     });
 }
 
-/**
- * Triggered when changing start or end date in calendar popup
- */
-public onDateTimeRangeInput(event: MatDatepickerInputEvent<unknown>, dateFieldName: string): void {
-    const time = this.dateTimeRangeForm.get(`${dateFieldName}Time`).value as Date;
-    this.dateTimeRangeForm.get(dateFieldName).setValue(set(event.value as Date, { hours: time.getHours(), minutes: time.getMinutes() }));
+public onDateTimeRangeOpened(): void {
+    const values = this.dateTimeRangeForm.value;
+    this.timeFrom = values.from ? new Date(values.from) : null;
+    this.timeTo = values.to ? new Date(values.to) : null;
 }
 
-/**
- * Triggered when changing start or end date in input field or calendar popup
- */
-public onDateTimeRangeChange(event: MatDatepickerInputEvent<unknown>, dateFieldName: string): void {
-    const inputValue = (event.targetElement as HTMLInputElement).value;
-    if (isMatch(inputValue, dateTimeFormat)) {
-        const newDate = parse(inputValue, dateTimeFormat, startOfToday());
-        this.dateTimeRangeForm.get(dateFieldName).setValue(newDate);
-        this.dateTimeRangeForm.get(`${dateFieldName}Time`).setValue(newDate);
+public onDateTimeRangeClosed(from: Date, to: Date): void {
+    const values = this.dateTimeRangeForm.value;
+    if (!values.from && !values.to) {
+        values.from = new Date();
+        values.to = new Date();
+    } else if (!values.from) {
+        values.from = new Date(values.to);
+    } else if (!values.to) {
+        values.to = new Date(values.from);
     }
-}
-
-/**
- * Triggered when closing the calendar popup
- */
-public onDateTimeRangeClosed(dateTimeRangePicker: MatDateRangePicker<unknown>): void {
-    const dateRange = (dateTimeRangePicker.datepickerInput as MatDateRangeInput<Date>).value;
-    if (this.dateTimeRangeApplied) {
-        // workaround to apply time to date since the apply event is not fired when the date range is not changed
-        const startTime = this.dateTimeRangeForm.get('startTime').value as Date;
-        this.dateTimeRangeForm.get('start').setValue(set(dateRange.start, { hours: startTime.getHours(), minutes: startTime.getMinutes() }));
-        const endTime = this.dateTimeRangeForm.get('endTime').value as Date;
-        this.dateTimeRangeForm.get('end').setValue(set(dateRange.end, { hours: endTime.getHours(), minutes: endTime.getMinutes() }));
-    } else {
-        // copy the date field values to each time fields (useful if the timepicker was updated but the datepicker popup was closed without applying the change)
-        this.dateTimeRangeForm.get('startTime').setValue(dateRange.start);
-        this.dateTimeRangeForm.get('endTime').setValue(dateRange.end);
+    if (!from) {
+        from = new Date(0, 0, 0, 0, 0, 0);
     }
-    this.dateTimeRangeApplied = false;
+    if (!to) {
+        to = new Date(0, 0, 0, 23, 59, 59);
+    }
+    values.from.setHours(from.getHours());
+    values.from.setMinutes(from.getMinutes());
+    values.from.setSeconds(from.getSeconds());
+    values.to.setHours(to.getHours());
+    values.to.setMinutes(to.getMinutes());
+    values.to.setSeconds(to.getSeconds());
+    this.dateTimeRangeForm.setValue(values);
 }
 ```
 

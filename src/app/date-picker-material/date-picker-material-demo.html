@@ -78,12 +78,12 @@
                                 <mat-date-range-picker #dateTimeRangePicker (opened)="onDateTimeRangeOpened()">
                                     <mat-date-range-picker-actions>
                                         <div class="time-range">
-                                            <deja-time-picker [(time)]="from"></deja-time-picker>
+                                            <deja-time-picker [(time)]="timeFrom"></deja-time-picker>
                                             <div class="time-picker-separator">-</div>
-                                            <deja-time-picker [(time)]="to"></deja-time-picker>
+                                            <deja-time-picker [(time)]="timeTo"></deja-time-picker>
                                         </div>
                                         <div class="action-buttons">
-                                            <button mat-raised-button color="primary" matDateRangePickerApply (click)="onDateTimeRangeClosed(from, to)">OK</button>
+                                            <button mat-raised-button color="primary" matDateRangePickerApply (click)="onDateTimeRangeClosed(timeFrom, timeTo)">OK</button>
                                         </div>
                                     </mat-date-range-picker-actions>
                                 </mat-date-range-picker>
