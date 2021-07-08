@@ -77,6 +77,17 @@ export class DejaDatePickerMaterialDemoComponent extends Destroy {
         });
     }
 
+    public onDateTimeOpened(): void {
+        const values = this.dateTimeForm.value;
+        this.time = values.date ? new Date(values.date) : null;
+    }
+
+    public onDateTimeRangeOpened(): void {
+        const values = this.dateTimeRangeForm.value;
+        this.from = values.from ? new Date(values.from) : null;
+        this.to = values.to ? new Date(values.to) : null;
+    }
+
     public onDateTimeClosed(time: Date): void {
         const values = this.dateTimeForm.value;
         if (!values.date) {
@@ -85,7 +96,6 @@ export class DejaDatePickerMaterialDemoComponent extends Destroy {
         if (!time) {
             time = new Date();
         }
-        this.time = time;
         values.date.setHours(time.getHours());
         values.date.setMinutes(time.getMinutes());
         values.date.setSeconds(time.getSeconds());
@@ -108,8 +118,6 @@ export class DejaDatePickerMaterialDemoComponent extends Destroy {
         if (!to) {
             to = new Date(0, 0, 0, 23, 59, 59);
         }
-        this.from = from;
-        this.to = to;
         values.from.setHours(from.getHours());
         values.from.setMinutes(from.getMinutes());
         values.from.setSeconds(from.getSeconds());

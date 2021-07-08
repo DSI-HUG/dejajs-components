@@ -64,6 +64,10 @@ export class CustomDateTimeAdapter extends NativeDateAdapter {
     format(date: Date, displayFormat: string): string {
         return formatWithLocale(date, displayFormat);
     }
+
+    sameDate(first: Date | null, second: Date | null): boolean {
+        return first?.getTime() === second?.getTime();
+    }
 }
 
 @Directive({

@@ -53,7 +53,7 @@
                             <mat-hint>Format : dd.MM.yyyy HH:mm</mat-hint>
                             <input matInput [matDatepicker]="dateTimePicker" formControlName="date">
                             <mat-datepicker-toggle matSuffix [for]="dateTimePicker"></mat-datepicker-toggle>
-                            <mat-datepicker #dateTimePicker>
+                            <mat-datepicker #dateTimePicker (opened)="onDateTimeOpened()">
                                 <mat-datepicker-actions>
                                     <deja-time-picker [(time)]="time"></deja-time-picker>
                                     <div class="action-buttons">
@@ -75,7 +75,7 @@
                                 <input matEndDate placeholder="End date" formControlName="to">
                             </mat-date-range-input>
                                 <mat-datepicker-toggle matSuffix [for]="dateTimeRangePicker"></mat-datepicker-toggle>
-                                <mat-date-range-picker #dateTimeRangePicker>
+                                <mat-date-range-picker #dateTimeRangePicker (opened)="onDateTimeRangeOpened()">
                                     <mat-date-range-picker-actions>
                                         <div class="time-range">
                                             <deja-time-picker [(time)]="from"></deja-time-picker>
