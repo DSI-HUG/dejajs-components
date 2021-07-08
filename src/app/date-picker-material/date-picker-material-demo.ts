@@ -32,6 +32,8 @@ export class DejaDatePickerMaterialDemoComponent extends Destroy {
 
     public dateForm: IFormGroup<DateForm>;
     public dateRangeForm: IFormGroup<DateRangeForm>;
+    public dateTimeForm: IFormGroup<DateForm>;
+    public dateTimeRangeForm: IFormGroup<DateRangeForm>;
 
     public time: Date;
     public from: Date;
@@ -51,14 +53,23 @@ export class DejaDatePickerMaterialDemoComponent extends Destroy {
             to: null
         });
 
-        this.dateForm.valueChanges.pipe(
+        this.dateTimeForm = formBuilder.group<DateForm>({
+            date: null
+        });
+
+        this.dateTimeRangeForm = formBuilder.group<DateRangeForm>({
+            from: null,
+            to: null
+        });
+
+        this.dateTimeForm.valueChanges.pipe(
             debounceTime(10),
             takeUntil(this.destroyed$)
         ).subscribe(values => {
             console.log('date selected', values.date);
         });
 
-        this.dateRangeForm.valueChanges.pipe(
+        this.dateTimeRangeForm.valueChanges.pipe(
             debounceTime(10),
             takeUntil(this.destroyed$)
         ).subscribe(values => {
@@ -67,7 +78,7 @@ export class DejaDatePickerMaterialDemoComponent extends Destroy {
     }
 
     public onDateTimeClosed(time: Date): void {
-        const values = this.dateForm.value;
+        const values = this.dateTimeForm.value;
         if (!values.date) {
             values.date = new Date();
         }
@@ -78,11 +89,11 @@ export class DejaDatePickerMaterialDemoComponent extends Destroy {
         values.date.setHours(time.getHours());
         values.date.setMinutes(time.getMinutes());
         values.date.setSeconds(time.getSeconds());
-        this.dateForm.setValue(values);
+        this.dateTimeForm.setValue(values);
     }
 
     public onDateTimeRangeClosed(from: Date, to: Date): void {
-        const values = this.dateRangeForm.value;
+        const values = this.dateTimeRangeForm.value;
         if (!values.from && !values.to) {
             values.from = new Date();
             values.to = new Date();
@@ -105,6 +116,6 @@ export class DejaDatePickerMaterialDemoComponent extends Destroy {
         values.to.setHours(to.getHours());
         values.to.setMinutes(to.getMinutes());
         values.to.setSeconds(to.getSeconds());
-        this.dateRangeForm.setValue(values);
+        this.dateTimeRangeForm.setValue(values);
     }
 }
