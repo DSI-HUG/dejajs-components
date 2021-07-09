@@ -20,6 +20,7 @@ const routes: Routes = [
     // { path: 'combo-list', loadChildren: './combo-list/combo-list-demo.module#DejaComboListDemoModule', data: { title: 'Combo List' } },
     { path: 'contenteditableselector', loadChildren: () => import('./content-editable/content-editable-demo.module').then(m => m.DejaContentEditableDemoModule), data: { title: 'Content Editable' } },
     { path: 'date-picker', loadChildren: () => import('./date-picker/date-picker-demo.module').then(m => m.DejaDatePickerDemoModule), data: { title: 'Date Picker' } },
+    { path: 'date-picker-material', loadChildren: () => import('./date-picker-material/date-picker-material-demo.module').then(m => m.DejaDatePickerMaterialDemoModule), data: { title: 'Date Picker Material' } },
     { path: 'editor', loadChildren: () => import('./editor/editor-demo.module').then(m => m.DejaEditorDemoModule), data: { title: 'Editor' } },
     // { path: 'events', loadChildren: './global-events/global-events-demo.module#DejaGlobalEventsDemoModule', data: { title: 'Events' } },
     { path: 'grid', loadChildren: () => import('./grid/grid-demo.module').then(m => m.DejaGridDemoModule), data: { title: 'Grid' } },

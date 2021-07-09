@@ -13,6 +13,13 @@
         <mat-card-content>
             <div class="flex-layout">
                 <div>
+                    <h3>Without initial hours and minutes (null)</h3>
+                    <div class="flex-layout-center">
+                        <deja-time-picker [ngModel]="date0" (ngModelChange)="date0Changed($event)" mode="fullTime"></deja-time-picker>
+                    </div>
+                    <p>Selected : {{ date0 | date:'HH:mm' }}</p>
+                </div>
+                <div>
                     <h3>With initial hours and minutes (09:05)</h3>
                     <div class="flex-layout-center">
                         <deja-time-picker [ngModel]="date1" (ngModelChange)="date1Changed($event)" mode="fullTime"></deja-time-picker>
