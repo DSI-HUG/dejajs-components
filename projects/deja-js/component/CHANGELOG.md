@@ -1,3 +1,22 @@
+# [12.1.0-next.10](https://github.com/DSI-HUG/dejajs-components/compare/v12.1.0-next.9...v12.1.0-next.10) (2021-07-09)
+
+
+### Bug Fixes
+
+* **date-picker-material:** if null input in time picker, set zero hour and minute ([febf277](https://github.com/DSI-HUG/dejajs-components/commit/febf2770e1a769cb9e809d3d9fcc44db59129bf9))
+* **date-picker-material:** remove cancel button and fix date time range update ([d73e131](https://github.com/DSI-HUG/dejajs-components/commit/d73e13189a6cb1e017377ac6ca4af093540f1fcf))
+* **date-picker-material-demo:** fix model update on direct input modification ([9260d9e](https://github.com/DSI-HUG/dejajs-components/commit/9260d9e028683d7f1dd4a7b4ba4d1fc211a15425))
+* **date-picker-material-demo:** fix review ([7c5f9f2](https://github.com/DSI-HUG/dejajs-components/commit/7c5f9f23b15f2252d11580ee0b8a1750520798f3))
+* **date-picker-material-demo:** fix review ([b52a116](https://github.com/DSI-HUG/dejajs-components/commit/b52a1167abd021206ba316126004601a2485add3))
+* **date-picker-material-demo:** fix selection if click outside the overlay ([ab8cfb6](https://github.com/DSI-HUG/dejajs-components/commit/ab8cfb6d0bfdcdd64cb3a15ebda53de04896f190))
+
+
+### Features
+
+* try to simplify material date time picker demo ([b2c4887](https://github.com/DSI-HUG/dejajs-components/commit/b2c4887bfe7facaea0e3fe86b3dab67a51e6a42c))
+* try to simplify material date time picker demo ([f947419](https://github.com/DSI-HUG/dejajs-components/commit/f947419b797617c73af112642e8650f17f7cdcb6))
+* **date-picker-material:** added demo page for date picker material with timepicker integration ([527c79f](https://github.com/DSI-HUG/dejajs-components/commit/527c79fc9b1a7b9e2e8dc32808f688f420fc807e))
+
 # [12.1.0-next.9](https://github.com/DSI-HUG/dejajs-components/compare/v12.1.0-next.8...v12.1.0-next.9) (2021-07-04)
 
 
