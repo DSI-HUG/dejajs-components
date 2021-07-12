@@ -1,3 +1,10 @@
+# [12.1.0-next.11](https://github.com/DSI-HUG/dejajs-components/compare/v12.1.0-next.10...v12.1.0-next.11) (2021-07-12)
+
+
+### Bug Fixes
+
+* **time-picker:** fix some disabled features and minutes lock ([f0117f6](https://github.com/DSI-HUG/dejajs-components/commit/f0117f6fd9f1fbf0bee5d9c35cd286e93da8b519))
+
 # [12.1.0-next.10](https://github.com/DSI-HUG/dejajs-components/compare/v12.1.0-next.9...v12.1.0-next.10) (2021-07-09)
 
 
