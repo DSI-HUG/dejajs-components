@@ -43,15 +43,14 @@ export class DejaTimePickerDemoComponent {
     public date3 = new Date();
     public date4 = new Date();
     public date5 = new Date();
-    public date6 = new Date(2021, 4, 28, 8, 55, 0);
-    public date7 = new Date();
-    public date8 = new Date(2021, 4, 28, 12, 55, 0);
-    public disable7 = true;
+    public date6 = new Date();
+    public date7 = new Date(2021, 4, 28, 12, 55, 0);
+    public disable6 = true;
     public dateForm: FormGroup;
 
     public constructor(private changeDetectorRef: ChangeDetectorRef, private fb: FormBuilder) {
         this.dateForm = this.fb.group({
-            date8: [this.date8]
+            date7: [this.date7]
         });
     }
 
@@ -101,16 +100,8 @@ export class DejaTimePickerDemoComponent {
     }
 
     public date6Changed(date: Date): void {
-        const clone = new Date(this.date6.getTime());
-        clone.setMinutes(date.getMinutes());
-
-        this.date6 = clone;
-        this.changeDetectorRef.markForCheck();
-    }
-
-    public date7Changed(date: Date): void {
         const clone = new Date(date.getTime());
-        this.date7 = clone;
+        this.date6 = clone;
         this.changeDetectorRef.markForCheck();
     }
 }

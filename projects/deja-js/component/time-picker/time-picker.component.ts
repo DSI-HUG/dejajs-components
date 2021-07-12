@@ -113,6 +113,11 @@ export class DejaTimePickerComponent extends Destroy implements ControlValueAcce
         ).subscribe(minutes => {
             const value = this.value?.getTime();
             const clone = value ? new Date(value) : set(new Date(), { hours: 0, minutes: 0, seconds: 0 });
+            if (minutes < 0) {
+                minutes += 60;
+            } else if (minutes >= 60) {
+                minutes -= 60;
+            }
             clone.setMinutes(minutes);
 
             this.value = clone;
