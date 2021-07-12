@@ -65,32 +65,18 @@
         </mat-card-content>
     </mat-card>
     <mat-card class="demo-card">
-        <mat-toolbar color="primary">Time Picker lock</mat-toolbar>
-        <mat-card-content>
-            <div class="flex-layout">
-                <div>
-                    <h3>Time Picker with hours locked</h3>
-                    <div class="flex-layout-center">
-                        <deja-time-picker [ngModel]="date6" (ngModelChange)="date6Changed($event)" [step]="5" mode="fullTimeWithHoursDisabled"></deja-time-picker>
-                    </div>
-                    <p>Selected date : {{ date6 | date:'HH:mm' }}</p>
-                </div>
-            </div>
-        </mat-card-content>
-    </mat-card>
-    <mat-card class="demo-card">
         <mat-toolbar color="primary">Time Picker disable</mat-toolbar>
         <mat-card-content>
             <div class="flex-layout">
                 <div>
                     <h3>Time Picker disabled</h3>
                     <div class="flex-layout-center">
-                        <deja-time-picker [ngModel]="date7" (ngModelChange)="date7Changed($event)" [disabled]="disable7"></deja-time-picker>
+                        <deja-time-picker [ngModel]="date6" (ngModelChange)="date6Changed($event)" [disabled]="disable6"></deja-time-picker>
                     </div>
                     <p>
-                        <mat-checkbox [(ngModel)]="disable7">Disable time-picker</mat-checkbox>
+                        <mat-checkbox [(ngModel)]="disable6">Disable time-picker</mat-checkbox>
                     </p>
-                    <p>Selected date : {{ date7 | date:'HH:mm' }}</p>
+                    <p>Selected date : {{ date6 | date:'HH:mm' }}</p>
                 </div>
             </div>
         </mat-card-content>
@@ -102,9 +88,9 @@
                 <form [formGroup]="dateForm">
                     <h3>Time Picker form control</h3>
                     <div class="flex-layout-center">
-                        <deja-time-picker formControlName="date8"></deja-time-picker>
+                        <deja-time-picker formControlName="date7"></deja-time-picker>
                     </div>
-                    <p>Selected date : {{ dateForm.controls.date8.value | date:'HH:mm' }}</p>
+                    <p>Selected date : {{ dateForm.controls.date7.value | date:'HH:mm' }}</p>
                 </form>
             </div>
         </mat-card-content>
