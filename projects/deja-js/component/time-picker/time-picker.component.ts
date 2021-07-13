@@ -85,8 +85,8 @@ export class DejaTimePickerComponent extends Destroy implements ControlValueAcce
             debounceTime(10),
             distinctUntilChanged(),
             map(hours => {
-                if (hours instanceof Event) {
-                    hours = parseInt((hours.target as HTMLInputElement).value, 10);
+                if (typeof hours === 'object') {
+                    return parseInt(((hours as Event).target as HTMLInputElement).value, 10);
                 }
                 return hours;
             }),
@@ -104,8 +104,8 @@ export class DejaTimePickerComponent extends Destroy implements ControlValueAcce
             debounceTime(10),
             distinctUntilChanged(),
             map(minutes => {
-                if (minutes instanceof Event) {
-                    minutes = parseInt((minutes.target as HTMLInputElement).value, 10);
+                if (typeof minutes === 'object') {
+                    return parseInt(((minutes as Event).target as HTMLInputElement).value, 10);
                 }
                 return minutes;
             }),
