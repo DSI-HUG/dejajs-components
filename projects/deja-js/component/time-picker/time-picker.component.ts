@@ -86,7 +86,7 @@ export class DejaTimePickerComponent extends Destroy implements ControlValueAcce
             distinctUntilChanged(),
             map(hours => {
                 if (typeof hours === 'object') {
-                    return parseInt(((hours as Event).target as HTMLInputElement).value, 10);
+                    return parseInt((hours.target as HTMLInputElement).value, 10);
                 }
                 return hours;
             }),
@@ -105,7 +105,7 @@ export class DejaTimePickerComponent extends Destroy implements ControlValueAcce
             distinctUntilChanged(),
             map(minutes => {
                 if (typeof minutes === 'object') {
-                    return parseInt(((minutes as Event).target as HTMLInputElement).value, 10);
+                    return parseInt((minutes.target as HTMLInputElement).value, 10);
                 }
                 return minutes;
             }),
