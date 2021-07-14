@@ -1,3 +1,11 @@
+# [12.1.0-next.12](https://github.com/DSI-HUG/dejajs-components/compare/v12.1.0-next.11...v12.1.0-next.12) (2021-07-14)
+
+
+### Bug Fixes
+
+* **time-picker:** fix linting ([cec7503](https://github.com/DSI-HUG/dejajs-components/commit/cec750316a3809d5cb23c12e455dd7a4dbfffe17))
+* **time-picker:** replace instanceof Event test by typeof object ([70693d2](https://github.com/DSI-HUG/dejajs-components/commit/70693d2f8245c72cfca42ebe3a6ff7172a3450be))
+
 # [12.1.0-next.11](https://github.com/DSI-HUG/dejajs-components/compare/v12.1.0-next.10...v12.1.0-next.11) (2021-07-12)
 
 
