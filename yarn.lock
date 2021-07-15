@@ -1395,6 +1395,11 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
+"@fontsource/material-icons@~4.5.0":
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/@fontsource/material-icons/-/material-icons-4.5.0.tgz#8b9e5d84a1f3fac973118c8283b000b352b44d7f"
+  integrity sha512-vFMpnkKwbtJLLHbUDI163QWX9Ox28A6i1vALfAKlpBh54yp8D0cu1/YGyrU5whvaXejLSBuyS7lRwr/TdRNmhA==
+
 "@hug/eslint-config@~3.0.0":
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/@hug/eslint-config/-/eslint-config-3.0.0.tgz#abd7fa30e66b84c0b94da4ea8e2d6676f4fcb77f"
@@ -7228,11 +7233,6 @@ marked@^2.0.0:
   version "2.0.5"
   resolved "https://registry.yarnpkg.com/marked/-/marked-2.0.5.tgz#2d15c759b9497b0e7b5b57f4c2edabe1002ef9e7"
   integrity sha512-yfCEUXmKhBPLOzEC7c+tc4XZdIeTdGoRCZakFMkCxodr7wDXqoapIME4wjcpBPJLNyUnKJ3e8rb8wlAgnLnaDw==
-
-material-icons-font@2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/material-icons-font/-/material-icons-font-2.1.0.tgz#6160e832f65a91b8d4eb3083523465cc0a36a5a1"
-  integrity sha512-Nv36UacYjodGc15HJDehJcfrYFioq5p6sQD7kcpBVoFLdUgTnv/kzM5BamTIi0W/i3BaeouunzfBOkUzjicT3Q==
 
 mdn-data@2.0.14:
   version "2.0.14"

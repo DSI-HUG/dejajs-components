@@ -33,12 +33,7 @@
 @use '../v2/viewport/viewport-theme'as viewport2Theme;
 
 /** Font icons */
-@import '~material-icons-font/sass/variables'; // mandatory and at first place
-@import '~material-icons-font/sass/mixins'; // mandatory and after variables
-// there you can change default variables if they are not good enough for you
-$MaterialIcons_FontPath: "~material-icons-font/fonts"; // for CLI project we change font path to point into package fonts folder
-@import '~material-icons-font/sass/main'; // mandatory main material font definition
-@import '~material-icons-font/sass/Regular'; // mandatory @font-face definition
+@import '~@fontsource/material-icons';
 
 @mixin deja-theme($custom-theme) {
     @include chipsTheme.chips-theme($custom-theme);
