@@ -1,3 +1,10 @@
+# [12.1.0-next.13](https://github.com/DSI-HUG/dejajs-components/compare/v12.1.0-next.12...v12.1.0-next.13) (2021-07-15)
+
+
+### Bug Fixes
+
+* replace material-icons-font lib by standard fontsource lib ([2f9cc5f](https://github.com/DSI-HUG/dejajs-components/commit/2f9cc5fa01e1c8da563ea8b24e420076782c8c67))
+
 # [12.1.0-next.12](https://github.com/DSI-HUG/dejajs-components/compare/v12.1.0-next.11...v12.1.0-next.12) (2021-07-14)
 
 
