@@ -9,13 +9,16 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Rect } from '@deja-js/component/core';
 import { DejaMessageBoxType } from '@deja-js/component/message-box';
-import { IDejaMouseDraggableContext, IDejaMouseDroppableContext, IDropCursorInfos } from '@deja-js/component/mouse-dragdrop';
-import { DejaTile, IDejaTilesAddEvent, IDejaTilesRemoveEvent } from '@deja-js/component/tiles';
+import { DejaTile, IDejaTilesAddEvent, IDejaTilesRemoveEvent, ITileDragDropContext } from '@deja-js/component/tiles';
+import { DropCursorInfos, MouseDraggableContext, MouseDroppableContext } from '@deja-js/component/v2/mouse-dragdrop';
 import { Observable, Subject } from 'rxjs';
 import { defaultIfEmpty, map, reduce, scan, switchMap, take } from 'rxjs/operators';
 
 import { CountriesService, Country } from '../services/countries.service';
 
+interface MouseDraggableInterface extends ITileDragDropContext {
+    country: Country;
+}
 
 @Component({
     encapsulation: ViewEncapsulation.None,
@@ -90,7 +93,7 @@ export class DejaTilesDemoComponent implements OnInit {
             reduce((acc: DejaTile[], cur: DejaTile) => [...acc, cur], []));
     }
 
-    public getDragContext(): IDejaMouseDraggableContext {
+    public getDragContext(): MouseDraggableContext<MouseDraggableInterface> {
         return {
             target: 'deja-tile',
             className: 'deja-tile-cursor',
@@ -103,25 +106,24 @@ export class DejaTilesDemoComponent implements OnInit {
 
                 return {
                     country: country,
-                    // eslint-disable-next-line @typescript-eslint/naming-convention
-                    DejaTile: tile
-                };
+                    tile
+                } as MouseDraggableInterface;
             }
-        } as IDejaMouseDraggableContext;
+        } as MouseDraggableContext<MouseDraggableInterface>;
     }
 
-    public getDropContext(dropArea: HTMLElement): IDejaMouseDroppableContext {
+    public getDropContext(dropArea: HTMLElement): MouseDroppableContext<MouseDraggableInterface> {
         return {
             dragEnter: _dragContext => ({
                 width: 200,
                 height: 60,
                 className: 'country-target-cursor'
-            } as IDropCursorInfos),
+            } as DropCursorInfos),
             drop: dragContext => {
-                const country = dragContext.country as Country;
+                const country = dragContext.country;
                 dropArea.innerText = `The dropped country is ${country.naqme} - the code is: ${country.code}`;
             }
-        } as IDejaMouseDroppableContext;
+        } as MouseDroppableContext<MouseDraggableInterface>;
     }
 
     public onContentAdding(event: IDejaTilesAddEvent): void {

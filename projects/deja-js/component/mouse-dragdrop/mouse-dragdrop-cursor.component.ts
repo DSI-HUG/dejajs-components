@@ -41,10 +41,8 @@ export class DejaMouseDragDropCursorComponent extends Destroy {
             element.style.top = pos ? `${pos.top}px` : '-1000px';
         });
 
-        const cursor$ = this.cursor$;
-
         // Hide
-        cursor$.pipe(
+        this.cursor$.pipe(
             filter(cursor => !cursor),
             tap(cursor => {
                 if (this.currentCursor) {
@@ -65,7 +63,7 @@ export class DejaMouseDragDropCursorComponent extends Destroy {
         });
 
         // Show
-        cursor$.pipe(
+        this.cursor$.pipe(
             filter(cursor => !!cursor),
             tap(cursor => {
                 element.style.display = '';

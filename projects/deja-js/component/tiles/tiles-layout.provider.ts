@@ -9,7 +9,7 @@
 /* eslint-disable rxjs/finnish */
 import { Injectable, Optional } from '@angular/core';
 import { DejaClipboardService, Destroy, Directions, KeyCodes, Position, Rect, Size } from '@deja-js/component/core';
-import { IDragCursorInfos, IDragDropContext } from '@deja-js/component/mouse-dragdrop';
+import { DragCursorInfos } from '@deja-js/component/v2/mouse-dragdrop';
 import { BehaviorSubject, from, fromEvent, merge, Observable, of, Subject, Subscription, timer } from 'rxjs';
 import { debounceTime, delay, filter, map, reduce, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 import { __spread } from 'tslib';
@@ -43,6 +43,10 @@ export interface IDragDropInfos {
     tiles?: Array<DejaTile>;
 }
 
+export interface ITileDragDropContext {
+    tile: DejaTile;
+}
+
 @Injectable()
 export class DejaTilesLayoutProvider extends Destroy {
     public refreshTiles$ = new Subject<IDejaTilesRefreshParams>();
@@ -52,7 +56,7 @@ export class DejaTilesLayoutProvider extends Destroy {
     public dragSelection$ = new Subject<IDragSelection>();
     public dragDropInfos$ = new Subject<IDragDropInfos>();
     public selectionRect$ = new Subject<Rect>();
-    public dragover$ = new Subject<IDragCursorInfos>();
+    public dragover$ = new Subject<DragCursorInfos>();
     public dragleave$ = new Subject();
     public deleteTiles$ = new Subject<Array<DejaTile>>();
     public designMode = false;
@@ -779,12 +783,12 @@ export class DejaTilesLayoutProvider extends Destroy {
     }
 
     // Drag and drop from outside provider
-    public dragEnter(dragContext: IDragDropContext, dragCursor: IDragCursorInfos): boolean {
+    public dragEnter(dragContext: ITileDragDropContext, dragCursor: DragCursorInfos): boolean {
         if (!this.designMode || !this._container) {
             return false;
         }
 
-        const tile = dragContext.DejaTile as DejaTile;
+        const tile = dragContext.tile;
         if (!tile) {
             return false;
         }

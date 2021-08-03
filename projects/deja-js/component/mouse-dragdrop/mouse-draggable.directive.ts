@@ -109,7 +109,6 @@ export class DejaMouseDraggableDirective extends Destroy {
                         // eslint-disable-next-line rxjs/no-unsafe-takeuntil
                         takeUntil(kill$),
                         tap(ev => {
-                            console.log('mouseMoveEvent');
                             if (target && ev.buttons === 1) {
                                 const bounds = new Rect(element.getBoundingClientRect());
                                 const position = new Position(ev.pageX, ev.pageY);
