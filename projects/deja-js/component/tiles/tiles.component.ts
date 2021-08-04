@@ -74,7 +74,7 @@ export class DejaTilesComponent extends Destroy implements AfterViewInit, Contro
      */
     @Input() public tabIndex = 0;
 
-    @ContentChild('tileTemplate')public tileTemplate: TemplateRef<unknown>;
+    @ContentChild('tileTemplate') public tileTemplate: TemplateRef<unknown>;
 
     @ViewChild('tilesContainer', { static: true }) private tilesContainer: ElementRef<HTMLElement>;
 
@@ -356,15 +356,21 @@ export class DejaTilesComponent extends Destroy implements AfterViewInit, Contro
     }
 
     public getDropContext(): MouseDroppableContext<ITileDragDropContext> {
+        let cursorInfo: DropCursorInfos;
+
         return {
-            dragEnter: (dragContext, dragCursor) => this.layoutProvider.dragEnter(dragContext, dragCursor) && {
-                className: 'hidden' // Hide drag cursor
-            } as DropCursorInfos,
+            dragEnter: (dragContext, dragCursor) => {
+                cursorInfo = this.layoutProvider.dragEnter(dragContext, dragCursor) ? {
+                    className: 'hidden' // Hide drag cursor
+                } as DropCursorInfos : null;
+                return cursorInfo;
+            },
             dragOver: (_dragContext, dragCursor) => {
                 this.layoutProvider.dragover$.next(dragCursor);
-                return dragCursor;
+                return cursorInfo;
             },
             dragLeave: _dragContext => {
+                cursorInfo = null;
                 this.layoutProvider.dragleave$.next();
             }
         } as MouseDroppableContext<ITileDragDropContext>;
