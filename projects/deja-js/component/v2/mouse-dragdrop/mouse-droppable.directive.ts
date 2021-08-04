@@ -13,6 +13,7 @@ import { distinctUntilChanged, filter, switchMap, take, takeUntil, tap } from 'r
 
 import { DragCursorInfos, DropCursorInfos, MouseDragDropService } from './mouse-dragdrop.service';
 
+
 @Directive({
     selector: '[mouse-droppable]'
 })
@@ -69,21 +70,21 @@ export class MouseDroppableDirective<T> extends Destroy {
                                 if (!dragContext) {
                                     dragContext = dragDropService.context;
                                     if (this.context.dragEnter) {
-                                        const dropContext$ = this.context.dragEnter(dragContext, dragCursor);
-                                        if (dropContext$) {
-                                            const dropContextObs$ = dropContext$ as Observable<DropCursorInfos>;
-                                            if (dropContextObs$.subscribe) {
+                                        const dropCursor$ = this.context.dragEnter(dragContext, dragCursor);
+                                        if (dropCursor$) {
+                                            const dropCursorObs$ = dropCursor$ as Observable<DropCursorInfos>;
+                                            if (dropCursorObs$.subscribe) {
                                                 // Observable
-                                                return dropContextObs$;
+                                                return dropCursorObs$;
                                             } else {
-                                                return of(dropContext$);
+                                                return of(dropCursor$);
                                             }
                                         }
                                     }
                                 } else if (this.context.dragOver) {
-                                    const overContext = this.context.dragOver(dragContext, dragCursor);
-                                    if (overContext) {
-                                        return of(overContext);
+                                    const dropCursor = this.context.dragOver(dragContext, dragCursor);
+                                    if (dropCursor) {
+                                        return of(dropCursor);
                                     }
                                 }
                             } else if (dragContext) {

@@ -39,8 +39,8 @@ before_script:
 script:
 - npm run build:lib
 - if [ $TRAVIS_PULL_REQUEST != "false" ]; then
-    npm run license-check &&
-    npm run test:lib &&
+    npm run license-check;
+    npm run test:lib;
     npm run lint;
   fi
 env:
