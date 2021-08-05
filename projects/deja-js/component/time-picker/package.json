@@ -2,7 +2,9 @@
     "ngPackage": {
         "lib": {
             "entryFile": "./index.ts",
-            "umdModuleIds": {}
+            "umdModuleIds": {
+                "date-fns": "date-fns"
+            }
         }
     }
 }

@@ -1,3 +1,19 @@
+# [12.2.0-next.3](https://github.com/DSI-HUG/dejajs-components/compare/v12.2.0-next.2...v12.2.0-next.3) (2021-08-04)
+
+
+### Bug Fixes
+
+* **tiles.component:** update to mouse-dragdrop V2 ([3973f2b](https://github.com/DSI-HUG/dejajs-components/commit/3973f2bc045d04f4f88e860e3848cd6a35ac7668))
+
+# [12.2.0-next.2](https://github.com/DSI-HUG/dejajs-components/compare/v12.2.0-next.1...v12.2.0-next.2) (2021-08-04)
+
+
+### Features
+
+* **tiles.component:** update to mouse-dragdrop V2 ([6178ba0](https://github.com/DSI-HUG/dejajs-components/commit/6178ba0e48ce65e851c3b3b5cb59628f66b3eaeb))
+
+# [12.2.0-next.1](https://github.com/DSI-HUG/dejajs-components/compare/v12.1.0...v12.2.0-next.1) (2021-07-15)
+
 # [12.1.0](https://github.com/DSI-HUG/dejajs-components/compare/v12.0.1...v12.1.0) (2021-07-15)
 
 
@@ -66,6 +82,14 @@
 * **v2-numeric-stepper:** create v2 numeric stepper extracted from time picker component ([a9aba41](https://github.com/DSI-HUG/dejajs-components/commit/a9aba416181ea9579f14537031a066f036a5a2e1))
 * **v2-numeric-stepper:** implements matformfieldcontrol ([9f57b7f](https://github.com/DSI-HUG/dejajs-components/commit/9f57b7f4b699f680fb752da449962fc6fd4f7add))
 * **v2-numeric-stepper:** mat form field ([7d77787](https://github.com/DSI-HUG/dejajs-components/commit/7d77787208055ac58e7465570b78828e767ed7a0))
+
+
+# [12.1.0-next.13](https://github.com/DSI-HUG/dejajs-components/compare/v12.1.0-next.12...v12.1.0-next.13) (2021-07-15)
+
+
+### Bug Fixes
+
+* replace material-icons-font lib by standard fontsource lib ([2f9cc5f](https://github.com/DSI-HUG/dejajs-components/commit/2f9cc5fa01e1c8da563ea8b24e420076782c8c67))
 
 # [12.1.0-next.12](https://github.com/DSI-HUG/dejajs-components/compare/v12.1.0-next.11...v12.1.0-next.12) (2021-07-14)
 

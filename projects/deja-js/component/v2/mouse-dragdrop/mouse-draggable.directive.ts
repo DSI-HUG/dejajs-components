@@ -103,7 +103,6 @@ export class MouseDraggableDirective<T> extends Destroy {
                                 // eslint-disable-next-line rxjs/no-unsafe-takeuntil
                                 takeUntil(kill$),
                                 tap(mouseMoveEvent => {
-                                    console.log('mouseMoveEvent');
                                     if (target && mouseMoveEvent.buttons === 1) {
                                         const bounds = new Rect(element.getBoundingClientRect());
                                         const position = new Position(mouseMoveEvent.pageX, mouseMoveEvent.pageY);
