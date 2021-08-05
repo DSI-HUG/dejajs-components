@@ -1,3 +1,15 @@
+# [12.2.0](https://github.com/DSI-HUG/dejajs-components/compare/v12.1.0...v12.2.0) (2021-08-05)
+
+
+### Bug Fixes
+
+* **tiles.component:** update to mouse-dragdrop V2 ([3973f2b](https://github.com/DSI-HUG/dejajs-components/commit/3973f2bc045d04f4f88e860e3848cd6a35ac7668))
+
+
+### Features
+
+* **tiles.component:** update to mouse-dragdrop V2 ([6178ba0](https://github.com/DSI-HUG/dejajs-components/commit/6178ba0e48ce65e851c3b3b5cb59628f66b3eaeb))
+
 # [12.2.0-next.3](https://github.com/DSI-HUG/dejajs-components/compare/v12.2.0-next.2...v12.2.0-next.3) (2021-08-04)
 
 
