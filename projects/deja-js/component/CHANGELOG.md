@@ -1,3 +1,11 @@
+# [10.9.0-develop.4](https://github.com/DSI-HUG/dejajs-components/compare/v10.9.0-develop.3...v10.9.0-develop.4) (2021-08-12)
+
+
+### Features
+
+* **services:** add Lazy Loading and Dialog service ([e0eaf20](https://github.com/DSI-HUG/dejajs-components/commit/e0eaf202863a768a76aa614bea7443fb08774c91))
+* **services:** add licenses ([f473ab1](https://github.com/DSI-HUG/dejajs-components/commit/f473ab141d43ccdaf88c042d6f04b2065c2d5ea1))
+
 # [10.9.0-develop.3](https://github.com/DSI-HUG/dejajs-components/compare/v10.9.0-develop.2...v10.9.0-develop.3) (2021-06-28)
 
 # [10.9.0-develop.2](https://github.com/DSI-HUG/dejajs-components/compare/v10.9.0-develop.1...v10.9.0-develop.2) (2021-06-05)
