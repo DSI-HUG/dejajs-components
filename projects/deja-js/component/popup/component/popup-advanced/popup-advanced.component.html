@@ -1,4 +1,4 @@
-<div class="deja-popup-container" cdkDrag cdkDragRootElement=".cdk-overlay-pane" cdkDragBoundary=".cdk-overlay-container" (cdkDragStarted)="dragstart = true" (cdkDragEnded)="dragstart = false" [cdkDragFreeDragPosition]="dragPosition">
+<div class="deja-popup-container" cdkDrag cdkDragRootElement=".cdk-overlay-pane" cdkDragBoundary=".cdk-overlay-container" (cdkDragStarted)="dragstart = true" (cdkDragEnded)="onCdkDragEnded($event)" [cdkDragFreeDragPosition]="dragPosition">
     <div *ngIf="dragstart" class="dialog-overlay">&nbsp;</div>
 
     <deja-popup-toolbar cdkDragHandle *ngIf="config && config.toolbarType" [config]="config" (actionSelected)="dispatchAction($event)"></deja-popup-toolbar>
