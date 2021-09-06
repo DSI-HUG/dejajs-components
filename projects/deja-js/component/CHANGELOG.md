@@ -1,3 +1,10 @@
+# [10.9.0-develop.5](https://github.com/DSI-HUG/dejajs-components/compare/v10.9.0-develop.4...v10.9.0-develop.5) (2021-09-06)
+
+
+### Bug Fixes
+
+* **popup:** update dialog position on dragEnded (DEJS-1004) ([44b732f](https://github.com/DSI-HUG/dejajs-components/commit/44b732f181389a33116acad919989c1009a6a50b))
+
 # [10.9.0-develop.4](https://github.com/DSI-HUG/dejajs-components/compare/v10.9.0-develop.3...v10.9.0-develop.4) (2021-08-12)
 
 
