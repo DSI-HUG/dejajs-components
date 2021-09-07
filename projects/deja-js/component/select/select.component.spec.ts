@@ -380,7 +380,7 @@ describe('DejaSelectComponent', () => {
                         // Check collapsed items
                         void expect(collapsedItems.length).toBe(0);
                         void expect(collapsed.length).toBe(0);
-                        // Toogle only first
+                        // toggle only first
                         selectInstance.toggleCollapse(0, true);
                         selectInstance.refreshViewPort();
                         fixture.detectChanges();
@@ -390,7 +390,7 @@ describe('DejaSelectComponent', () => {
                         // Check collapsed items
                         void expect(collapsedItems.length).toBe(1);
                         void expect(collapsed.length).toBe(1);
-                        // Clear toogle
+                        // Clear toggle
                         selectInstance.toggleAll(false);
                         selectInstance.refreshViewPort();
                         fixture.detectChanges();

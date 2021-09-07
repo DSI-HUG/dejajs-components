@@ -1,17 +1,17 @@
 :host {
-	position: relative;
-	overflow: auto;
-	margin: 0 !important;
+    position: relative;
+    overflow: auto;
+    margin: 0 !important;
 
-	#tiles {
-		display: block;
-		left: 0;
-		top: 0;
-		width: 100%;
-		height: 100%;
-		position: absolute;
-		padding: 0 !important;
-		margin: 0 !important;
+    #tiles {
+        display: block;
+        left: 0;
+        top: 0;
+        min-width: 100%;
+        min-height: 100%;
+        position: absolute;
+        padding: 0 !important;
+        margin: 0 !important;
 
         &.design {
             deja-tile {
@@ -19,24 +19,24 @@
             }
         }
 
-		#tile:hover {
-			z-index: 200;
-		}
-	}
+        #tile:hover {
+            z-index: 200;
+        }
+    }
 
-	[deja-tile-position] {
-		position: absolute;
-		z-index: 101;
-		background-color: rgba(0, 0, 0, 0.5);
-	}
+    [deja-tile-position] {
+        position: absolute;
+        z-index: 101;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
 
-	&[drag] {
-		background-color: rgba(0, 0, 0, 0.5);
+    &[drag] {
+        background-color: rgba(0, 0, 0, 0.5);
 
-		[deja-tile-position] {
-			transition-property: left, top, width, height;
-			transition-duration: .35s;
-			transition-timing-function: ease;
-		}
-	}
+        [deja-tile-position] {
+            transition-property: left, top, width, height;
+            transition-duration: .35s;
+            transition-timing-function: ease;
+        }
+    }
 }
