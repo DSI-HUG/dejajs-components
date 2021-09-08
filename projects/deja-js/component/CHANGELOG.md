@@ -1,3 +1,10 @@
+# [12.2.0-next.4](https://github.com/DSI-HUG/dejajs-components/compare/v12.2.0-next.3...v12.2.0-next.4) (2021-09-08)
+
+
+### Bug Fixes
+
+* **tiles-component:** fix in case of nested tiles component ([8b21235](https://github.com/DSI-HUG/dejajs-components/commit/8b2123528816a978ae224ded0cae69803478ed23))
+
 # [12.2.0-next.3](https://github.com/DSI-HUG/dejajs-components/compare/v12.2.0-next.2...v12.2.0-next.3) (2021-08-04)
 
 
