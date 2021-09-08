@@ -18,6 +18,7 @@ import { DejaTile } from './tile.class';
 import { IDejaTilesAddedEvent, IDejaTilesAddEvent, IDejaTilesDeletedEvent, IDejaTilesEvent, IDejaTilesRemoveEvent } from './tiles.event';
 import { IDejaTilesRefreshParams } from './tiles-refresh-params.interface';
 
+
 interface ILayoutInfo {
     id: string;
     bounds: Rect;
@@ -105,6 +106,7 @@ export class DejaTilesLayoutProvider extends Destroy {
         this.refreshTiles$.pipe(
             debounceTime(30),
             tap(() => {
+                // Size the container
                 this.container.style.width = '';
                 this.container.style.height = '';
             }),
@@ -117,8 +119,8 @@ export class DejaTilesLayoutProvider extends Destroy {
             if (params?.resetWidth || !this.hundredPercentWith) {
                 this.hundredPercentWith = containerBounds.width;
             }
-            let height = containerBounds.height - 20;
-            let width = containerBounds.width - 20;
+            let height = containerBounds.height;
+            let width = containerBounds.width;
             let maxWidth = 0;
             let maxHeight = 0;
             const tiles = this.tiles || new Array<DejaTile>();
@@ -419,7 +421,6 @@ export class DejaTilesLayoutProvider extends Destroy {
                             this.currentTile = clickedTile;
                             if (this.currentTile) {
                                 this.currentTile.isPressed = true;
-
                                 if (event.ctrlKey) {
                                     // Multi-selection is available in design mode, selection on the mouse up
                                 } else {
@@ -635,6 +636,10 @@ export class DejaTilesLayoutProvider extends Destroy {
             if (tileElement === this.container) {
                 return undefined;
             }
+        }
+
+        if (tileElement?.parentElement !== this.container) {
+            return undefined; // For nested tiles components
         }
 
         return tileElement;

@@ -450,7 +450,7 @@ describe('DejaTreeListComponent', () => {
                     // Check collapsed items
                     void expect(collapsed.length).toBeGreaterThan(0);
                     void expect(collapsedItems.length).toBe(parentItems.length);
-                    // Clear toogle
+                    // Clear toggle
                     treeListInstance.toggleAll(false);
                     treeListInstance.refreshViewPort();
                     fixture.detectChanges();

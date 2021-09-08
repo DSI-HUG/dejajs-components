@@ -363,8 +363,8 @@ export abstract class ItemListBase<T> extends Destroy {
      */
     public toggleCollapse$(index: number, collapsed: boolean): Observable<IItemTree<T>> {
         return this.getItemListService().toggleCollapse$(index, collapsed).pipe(
-            switchMap(toogleResult => this.calcViewList$().pipe(
-                take(1), map(() => toogleResult))
+            switchMap(toggleResult => this.calcViewList$().pipe(
+                take(1), map(() => toggleResult))
             )
         );
     }
