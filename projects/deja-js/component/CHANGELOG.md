@@ -1,9 +1,14 @@
-# [12.2.0-next.4](https://github.com/DSI-HUG/dejajs-components/compare/v12.2.0-next.3...v12.2.0-next.4) (2021-09-08)
+# [12.2.0](https://github.com/DSI-HUG/dejajs-components/compare/v12.1.0...v12.2.0) (2021-08-05)
 
 
 ### Bug Fixes
 
-* **tiles-component:** fix in case of nested tiles component ([8b21235](https://github.com/DSI-HUG/dejajs-components/commit/8b2123528816a978ae224ded0cae69803478ed23))
+* **tiles.component:** update to mouse-dragdrop V2 ([3973f2b](https://github.com/DSI-HUG/dejajs-components/commit/3973f2bc045d04f4f88e860e3848cd6a35ac7668))
+
+
+### Features
+
+* **tiles.component:** update to mouse-dragdrop V2 ([6178ba0](https://github.com/DSI-HUG/dejajs-components/commit/6178ba0e48ce65e851c3b3b5cb59628f66b3eaeb))
 
 # [12.2.0-next.3](https://github.com/DSI-HUG/dejajs-components/compare/v12.2.0-next.2...v12.2.0-next.3) (2021-08-04)
 
