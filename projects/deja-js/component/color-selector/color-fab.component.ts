@@ -35,7 +35,7 @@ export class DejaColorFabComponent extends Destroy {
         this._colorFab = colorFab;
 
         if (colorFab) {
-            const toogleAttribute = (attribute: string, value: BooleanInput): void => {
+            const toggleAttribute = (attribute: string, value: BooleanInput): void => {
                 if (value) {
                     this.element.setAttribute(attribute, value.toString());
                 } else {
@@ -45,7 +45,7 @@ export class DejaColorFabComponent extends Destroy {
 
             colorFab.active$.pipe(
                 takeUntil(this.destroyed$)
-            ).subscribe(value => toogleAttribute('active', value));
+            ).subscribe(value => toggleAttribute('active', value));
 
             combineLatest([colorFab.color$, colorFab.disabled$]).pipe(
                 map(([color, disabled]) => color && disabled ? color.grayScale : color),
