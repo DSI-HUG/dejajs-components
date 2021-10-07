@@ -25,6 +25,8 @@ export * from './destroy/index';
 export * from './keycodes.enum';
 export * from './UUID';
 export * from './date-fns';
+export * from './lazy-loading/index';
+export * from './dialog/index';
 
 if (!document.doctype) {
     console.warn('[DejaJS] Current document does not have a doctype. This may cause some components not to behave as expected.');

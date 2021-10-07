@@ -32,6 +32,7 @@ export class DejaPopupConfig<D> extends MatDialogConfig<D> {
     public data?: D;
     public dialogPanelId: string;
     public fullscreen = false;
+    public availableInTray = true;
     public maxWidth = '100vw';
     public maxHeight = '100vh';
     public padding?: boolean;
