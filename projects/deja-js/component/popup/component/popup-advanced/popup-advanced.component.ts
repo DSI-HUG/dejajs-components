@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Point } from '@angular/cdk/drag-drop';
+import { CdkDragEnd, Point } from '@angular/cdk/drag-drop';
 import { ComponentPortal, Portal } from '@angular/cdk/portal';
 import { AfterViewInit } from '@angular/core';
 import { Component } from '@angular/core';
@@ -104,7 +104,7 @@ export class DejaPopupAdvancedComponent extends DejaPopupBase implements AfterVi
 
     public goFullScreen(): void {
         this.isFullscreen = true;
-        this.dialogRef.updatePosition({ top: '0', left: '0' });
+        this.dragPosition = { x: 0, y: 0 };
         this.dialogRef.updateSize('100vw', '100vh');
     }
 
@@ -116,5 +116,11 @@ export class DejaPopupAdvancedComponent extends DejaPopupBase implements AfterVi
 
         this.dialogRef.updatePosition({ top: `${this.top}px`, left: `${this.left}px` });
         this.dialogRef.updateSize(updatedWidth, updatedHeight);
+    }
+
+    public onCdkDragEnded(cdkDrag: CdkDragEnd): void {
+        this.dragstart = false;
+        this.top += cdkDrag.source.getFreeDragPosition().y;
+        this.left += cdkDrag.source.getFreeDragPosition().x;
     }
 }

@@ -31,6 +31,7 @@ $MaterialIcons_FontPath: "~material-icons-font/fonts"; // for CLI project we cha
 @import '../splitter/splitter-theme';
 @import '../tooltip/tooltip-theme';
 @import '../tree-list/tree-list-theme';
+@import '../v2/numeric-stepper/numeric-stepper-theme';
 @import '../viewport/viewport-theme';
 /* specials themes */
 @import './material/material';
@@ -64,5 +65,6 @@ $MaterialIcons_FontPath: "~material-icons-font/fonts"; // for CLI project we cha
     @include splitter-theme($custom-theme);
     @include tooltip-theme($custom-theme);
     @include tree-list-theme($custom-theme);
+    @include numeric-stepper-2-theme($custom-theme);
     @include viewport-theme($custom-theme);
 }

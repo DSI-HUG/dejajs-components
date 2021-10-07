@@ -56,5 +56,11 @@ Ensuite utiliser le composant comme ceci dans votre template :
     <td>null</td>
     <td>Type du messageBox. Cette propriété stylise le composant.</td>
 </tr>
+<tr>
+    <td>light</td>
+    <td>boolean</td>
+    <td>null / false</td>
+    <td>Affiche la message-box avec un style plus léger</td>
+</tr>
 </tbody>
 </table>
