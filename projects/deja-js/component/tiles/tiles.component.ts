@@ -292,8 +292,8 @@ export class DejaTilesComponent extends Destroy implements AfterViewInit, Contro
         super.ngOnDestroy();
         this.canCopy = false;
         this.canCut = false;
-        this.canDelete = false;
         this.canPaste = false;
+        this.canDelete = false;
     }
 
     public copySelection(): void {
