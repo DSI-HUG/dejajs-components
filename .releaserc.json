@@ -1,6 +1,10 @@
 {
     "branches": [
-        "10.x.x"
+        "master",
+        {
+            "name": "10.x.x",
+            "channel": "10.x.x"
+        }
     ],
     "plugins": [
         [

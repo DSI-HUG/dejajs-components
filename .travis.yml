@@ -18,11 +18,13 @@ node_js:
 - '12'
 branches:
   only:
+  - develop
+  - master
   - 10.x.x
 before_install:
-- if [[ $TRAVIS_COMMIT_MESSAGE =~ "from DSI-HUG/10.x.x" ]]; then 
-    echo "merge from RELEASE, skipping";
-    exit 0; 
+- if [[ $TRAVIS_COMMIT_MESSAGE =~ ("from DSI-HUG/master"|"from DSI-HUG/10.x.x") ]]; then
+    echo "merge from RELEASE branch, skipping";
+    exit 0;
   fi
 - npm install -g yarn
 - rm -rf node_modules
@@ -58,7 +60,7 @@ jobs:
         on:
           repo: DSI-HUG/dejajs-components
           all_branches: true
-          condition: $TRAVIS_BRANCH =~ ^(10.x.x)
+          condition: $TRAVIS_BRANCH =~ ^(master|develop|10.x.x)$
       after_deploy:
       - cd ../../..
       - bash ./scripts/deploy.sh
