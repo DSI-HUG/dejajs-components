@@ -1,3 +1,10 @@
+## [10.9.1](https://github.com/DSI-HUG/dejajs-components/compare/v10.9.0...v10.9.1) (2021-10-22)
+
+
+### Bug Fixes
+
+* just try ci versioning ([c60d3f7](https://github.com/DSI-HUG/dejajs-components/commit/c60d3f784c4b1653260d239f119d3a935f05fea3))
+
 # [10.9.0](https://github.com/DSI-HUG/dejajs-components/compare/v10.8.0...v10.9.0) (2021-10-07)
 
 
