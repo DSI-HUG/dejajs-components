@@ -15,6 +15,9 @@ import { IGroupInfo } from './group-infos';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 
 /** Service de regroupement d'un tableau de modèles */
 @Injectable()
@@ -103,7 +106,7 @@ export class GroupingService {
             }));
     }
 
-    private getTextValue(value: any) {
+    private getTextValue(value: any): string {
         if (!value) {
             return '';
         } else if (value.displayName) {

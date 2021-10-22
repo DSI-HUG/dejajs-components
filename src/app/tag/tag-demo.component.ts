@@ -9,7 +9,7 @@ import { Component } from '@angular/core';
 
 @Component({
     selector: 'tag-demo',
-    templateUrl: 'tag-demo.component.html'
+    templateUrl: './tag-demo.component.html'
 })
 export class DejaTagDemoComponent {
 

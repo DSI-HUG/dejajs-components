@@ -1,0 +1,89 @@
+@use '~@angular/material' as mat;
+@mixin tree-list-2-theme($theme) {
+    $primary: map-get($theme, primary);
+    $warn: map-get($theme, warn);
+    $background: map-get($theme, background);
+    $foreground: map-get($theme, foreground);
+
+    tree-list {
+        &.ng-invalid {
+            #input {
+                .mat-form-field-wrapper {
+                    .mat-form-field-underline {
+                        .mat-form-field-ripple {
+                            background-color: mat.get-color-from-palette($warn);
+                        }
+                    }
+
+                    .mat-form-field-label {
+                        color: mat.get-color-from-palette($warn) !important;
+                    }
+                }
+            }
+        }
+
+        #listheader {
+            border-bottom: solid 1px rgba(mat.get-color-from-palette($primary), 0.8);
+        }
+
+        &[disabled="true"] {
+            .listcontainer {
+                color: mat.get-color-from-palette($foreground, disabled);
+
+                #error-hint {
+                    color: mat.get-color-from-palette($foreground, disabled);
+                }
+
+                div.listitem {
+                    &.selected {
+                        background-color: rgba(0, 0, 0, 0.6);
+                        color: #fff;
+                    }
+                }
+            }
+        }
+
+        &:not([disabled="true"]) {
+            .listcontainer {
+                #error-hint {
+                    color: mat.get-color-from-palette($warn);
+                }
+
+                background-color: mat.get-color-from-palette($background, card);
+
+                &[keynav="false"]:not(.dragover) {
+                    div.listitem:not(.unselectable):hover {
+                        background-color: rgba(0, 0, 0, 0.05);
+
+                        &.current {
+                            background-color: rgba(0, 0, 0, 0.075);
+                        }
+
+                        &.selected {
+                            background-color: rgba(mat.get-color-from-palette($primary), 0.8);
+
+                            &.current {
+                                background-color: rgba(mat.get-color-from-palette($primary), 0.85);
+                            }
+                        }
+                    }
+                }
+
+                div.listitem {
+                    &.current {
+                        background-color: rgba(0, 0, 0, 0.05);
+                    }
+
+                    &.selected {
+                        background-color: rgba(mat.get-color-from-palette($primary), 0.75);
+                        color: #fff;
+
+                        &.current {
+                            background-color: rgba(mat.get-color-from-palette($primary), 0.8);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

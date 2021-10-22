@@ -6,14 +6,13 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Directive } from '@angular/core';
-import { ElementRef } from '@angular/core';
+import { Directive, ElementRef } from '@angular/core';
 
 @Directive({
     selector: 'deja-sidenav-menu-separator, [deja-sidenav-menu-separator]'
 })
 export class DejaSidenavMenuSeparatorDirective {
-    public constructor(el: ElementRef) {
+    public constructor(el: ElementRef<HTMLElement>) {
         Object.assign(el.nativeElement.style, {
             display: 'block',
             background: 'rgba(0, 0, 0, 0.14)',

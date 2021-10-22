@@ -14,7 +14,7 @@ import { DejaConnectionPositionPair } from '@deja-js/component/core';
  */
 export interface ITooltipParams {
     /** Renvoie ou définit l'élement du DOM sur lequel le conteneur déroulant devra s'aligner */
-    ownerElement: ElementRef | HTMLElement;
+    ownerElement: ElementRef<HTMLElement> | HTMLElement;
     positions: DejaConnectionPositionPair | string;
     model: unknown;
 }

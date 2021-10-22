@@ -44,6 +44,6 @@ export class DejaPopupCustomAction extends DejaPopupAction {
     public constructor(
         public portal?: Portal<unknown>
     ) {
-        super(name);
+        super(undefined);
     }
 }

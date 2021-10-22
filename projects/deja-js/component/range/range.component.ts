@@ -7,27 +7,11 @@
  */
 
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
-import { ChangeDetectionStrategy } from '@angular/core';
-import { TemplateRef } from '@angular/core';
-import { ChangeDetectorRef } from '@angular/core';
-import { Component } from '@angular/core';
-import { ContentChild } from '@angular/core';
-import { ElementRef } from '@angular/core';
-import { EventEmitter } from '@angular/core';
-import { HostListener } from '@angular/core';
-import { Input } from '@angular/core';
-import { Optional } from '@angular/core';
-import { Output } from '@angular/core';
-import { Self } from '@angular/core';
-import { ControlValueAccessor } from '@angular/forms';
-import { NgControl } from '@angular/forms';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, HostListener, Input, Optional, Output, Self, TemplateRef } from '@angular/core';
+import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { Destroy } from '@deja-js/component/core';
-import { fromEvent } from 'rxjs';
-import { merge } from 'rxjs';
-import { Observable } from 'rxjs';
-import { take } from 'rxjs/operators';
-import { takeUntil } from 'rxjs/operators';
-import { tap } from 'rxjs/operators';
+import { fromEvent, merge, Observable } from 'rxjs';
+import { take, takeUntil, tap } from 'rxjs/operators';
 import { __spread } from 'tslib';
 
 import { IRange, IRangeEvent, IStepRangeEvent, Range } from './range.interface';
@@ -59,7 +43,7 @@ export class DejaRangeComponent extends Destroy implements ControlValueAccessor 
     private _disabled = false;
     private _ranges: IRange[];
 
-    public constructor(private changeDetectorRef: ChangeDetectorRef, private elementRef: ElementRef, @Self() @Optional() public control: NgControl) {
+    public constructor(private changeDetectorRef: ChangeDetectorRef, private elementRef: ElementRef<HTMLElement>, @Self() @Optional() public control: NgControl) {
         super();
         if (this.control) {
             this.control.valueAccessor = this;
@@ -166,7 +150,7 @@ export class DejaRangeComponent extends Destroy implements ControlValueAccessor 
                     const rightSide = ranges.length - 1 > index ? ranges.slice(index + 1) : [];
 
                     // build new array with new range
-                    let newRanges = __spread(leftSide, [newRange, selected], rightSide);
+                    let newRanges = __spread(leftSide, [newRange, selected], rightSide) as IRange[];
 
                     // step
                     const newRangeIndex = newRanges.indexOf(newRange);

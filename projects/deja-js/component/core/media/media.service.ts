@@ -6,13 +6,8 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Inject } from '@angular/core';
-import { Injectable } from '@angular/core';
-import { InjectionToken } from '@angular/core';
-import { NgZone } from '@angular/core';
-import { OnDestroy } from '@angular/core';
-import { Optional } from '@angular/core';
-import { BehaviorSubject, from, Observable } from 'rxjs';
+import { Inject, Injectable, InjectionToken, NgZone, OnDestroy, Optional } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { distinctUntilChanged, map } from 'rxjs/operators';
 
 export interface MediaQueryDefinition {
@@ -125,7 +120,7 @@ export class MediaService implements OnDestroy {
             }
         });
 
-        this.isMobile$ = from(this.mediaChanged$).pipe(
+        this.isMobile$ = this.mediaChanged$.pipe(
             map(alias => alias === 'xs' || alias === 'sm'),
             distinctUntilChanged()
         );
@@ -139,7 +134,7 @@ export class MediaService implements OnDestroy {
         });
     }
 
-    private onMqlEvent(alias: string, event: MediaQueryListEvent) {
+    private onMqlEvent(alias: string, event: MediaQueryListEvent): void {
         this.zone.run(() => {
             if (event.matches) {
                 this.mediaChanged$.next(alias);

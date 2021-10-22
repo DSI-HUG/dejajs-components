@@ -1,61 +1,79 @@
 /* You can add global styles to this file, and also import other style files */
 
-@import '~@angular/material/theming';
+@use '~@angular/material'as mat;
 
 // use `~@deja-js/component/theming` inside your app
-@import '../projects/deja-js/component/styles/theming';
+@use '../projects/deja-js/component/styles/theming'as dejaTheme;
 
-@import './component/markdown/markdown-theme';
-@import './app/home/home-theme';
+@use './component/markdown/markdown-theme'as markdownTheme;
+@use './app/home/home-theme'as homeTest;
 
 @mixin create-theme($color1, $color2, $dark: false) {
-	@include mat-core(); // Define color scheme
+    @include mat.core(); // Define color scheme
 
-	$primary: mat-palette($color1);
-	$accent: mat-palette($color2);
-	$warn: mat-palette($mat-red); // Create the theme object from colors
-	$theme: mat-light-theme($primary, $accent, $warn); // Include theme styles for core and each component used in the app.
-	@if $dark == true {
-		$theme: mat-dark-theme($primary, $accent, $warn); // Include theme styles for core and each component used in the app.
-	}
+    $primary: mat.define-palette($color1);
+    $accent: mat.define-palette($color2);
+    $warn: mat.define-palette(mat.$red-palette); // Create the theme object from colors
+    $theme: mat.define-light-theme($primary, $accent, $warn); // Include theme styles for core and each component used in the app.
 
-	@include angular-material-theme($theme);
-	@include deja-theme($theme);
-	// @include deja-menu();
-	// @include deja-tree-list-borders();
+    @if $dark==true {
+        $theme: mat.define-dark-theme($primary, $accent, $warn); // Include theme styles for core and each component used in the app.
+    }
 
-	@include markdown-theme($theme);
-	@include home-demo-theme($theme);
+    @include mat.all-component-themes($theme);
+    @include dejaTheme.deja-theme($theme);
+    // @include deja-menu();
+    // @include deja-tree-list-borders();
+
+    @include markdownTheme.markdown-theme($theme);
+    @include homeTest.home-demo-theme($theme);
 }
 
 body {
-	app-root {
-		width: 100%;
-		height: 100%;
-		display: flex;
-		flex-direction: column; // overflow: hidden;
-	}
+    app-root {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column; // overflow: hidden;
+    }
 
-	&[theme="blue"] {
-		@include create-theme($mat-blue, $mat-teal);
-	}
+    &[theme="blue"] {
+        @include create-theme(mat.$blue-palette, mat.$teal-palette);
+    }
 
-	&[theme="pink"] {
-		@include create-theme($mat-pink, $mat-indigo, true);
-	}
+    &[theme="pink"] {
+        @include create-theme(mat.$pink-palette, mat.$indigo-palette, true);
+    }
 
-	&[theme="teal"] {
-		@include create-theme($mat-teal, $mat-green);
-	}
+    &[theme="teal"] {
+        @include create-theme(mat.$teal-palette, mat.$green-palette);
+    }
 
-	&[theme="amber"] {
-		@include create-theme($mat-amber, $mat-orange, true);
-	}
+    &[theme="amber"] {
+        @include create-theme(mat.$amber-palette, mat.$orange-palette, true);
+    }
 
-	[text-ellipsis] {
-		display: block;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		white-space: nowrap;
-	}
+    [text-ellipsis] {
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    /* See : http://stackoverflow.com/questions/826782/how-to-disable-text-selection-highlighting-using-css */
+    .noselect {
+        -webkit-touch-callout: none;
+        /* iOS Safari */
+        -webkit-user-select: none;
+        /* Chrome/Safari/Opera */
+        -khtml-user-select: none;
+        /* Konqueror */
+        -moz-user-select: none;
+        /* Firefox */
+        -ms-user-select: none;
+        /* Internet Explorer/Edge */
+        user-select: none;
+        /* Non-prefixed version, currently
+        not supported by any browser */
+    }
 }

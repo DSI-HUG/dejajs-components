@@ -8,55 +8,15 @@
 
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { BooleanInput, coerceBooleanProperty, coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
-import { AfterContentInit } from '@angular/core';
-import { TemplateRef } from '@angular/core';
-import { AfterViewInit } from '@angular/core';
-import { ChangeDetectionStrategy } from '@angular/core';
-import { ChangeDetectorRef } from '@angular/core';
-import { Component } from '@angular/core';
-import { ContentChild } from '@angular/core';
-import { ContentChildren } from '@angular/core';
-import { DoCheck } from '@angular/core';
-import { ElementRef } from '@angular/core';
-import { EventEmitter } from '@angular/core';
-import { HostBinding } from '@angular/core';
-import { Input } from '@angular/core';
-import { OnDestroy } from '@angular/core';
-import { Optional } from '@angular/core';
-import { Output } from '@angular/core';
-import { Self } from '@angular/core';
-import { ViewChild } from '@angular/core';
-import { ViewEncapsulation } from '@angular/core';
-import { ControlValueAccessor } from '@angular/forms';
-import { FormControl } from '@angular/forms';
-import { FormGroupDirective } from '@angular/forms';
-import { NgControl } from '@angular/forms';
-import { NgForm } from '@angular/forms';
-import { CanDisable } from '@angular/material/core';
-import { CanUpdateErrorState } from '@angular/material/core';
-import { ErrorStateMatcher } from '@angular/material/core';
+import { AfterContentInit, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ContentChildren, DoCheck, ElementRef, EventEmitter, HostBinding, Input, OnDestroy, Optional, Output, Self, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ControlValueAccessor, FormControl, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
+import { CanDisable, CanUpdateErrorState, ErrorStateMatcher } from '@angular/material/core';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { IDejaChipsComponentCloseEvent } from '@deja-js/component/chips';
-import { DejaChildValidatorDirective } from '@deja-js/component/core';
-import { DejaConnectionPositionPair } from '@deja-js/component/core';
-import { DejaItemComponent } from '@deja-js/component/core';
-import { DejaItemEvent } from '@deja-js/component/core';
-import { DejaItemsEvent } from '@deja-js/component/core';
-import { IItemBase } from '@deja-js/component/core';
-import { IItemTree } from '@deja-js/component/core';
-import { ItemListBase } from '@deja-js/component/core';
-import { ItemListService } from '@deja-js/component/core';
-import { IViewListResult } from '@deja-js/component/core';
-import { IViewPort } from '@deja-js/component/core';
-import { KeyCodes } from '@deja-js/component/core';
-import { MediaService } from '@deja-js/component/core';
-import { ViewportMode } from '@deja-js/component/core';
-import { GroupingService } from '@deja-js/component/core';
-import { SortingService } from '@deja-js/component/core';
-import { ViewPortService } from '@deja-js/component/core';
+import { DejaChildValidatorDirective, DejaConnectionPositionPair, DejaItemComponent, DejaItemEvent, DejaItemsEvent, GroupingService, IFindItemResult, IItemBase, IItemTree, ItemListBase, ItemListService, IViewListResult, IViewPort, KeyCodes, MediaService, SortingService, ViewPortService } from '@deja-js/component/core';
 import { DejaOverlayComponent } from '@deja-js/component/overlay';
-import { BehaviorSubject, combineLatest, from, fromEvent, merge, Observable, of, Subject, Subscription, timer } from 'rxjs';
+import { BehaviorSubject, combineLatest, fromEvent, merge, Observable, of, Subject, Subscription, timer } from 'rxjs';
 import { debounce, debounceTime, delay, delayWhen, filter, map, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 
 export type SelectType = 'autocomplete' | 'multiselect' | 'select';
@@ -284,7 +244,7 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
             this.stateChanges.next();
         });
 
-        const setDropDownVisible = (state: boolean) => {
+        const setDropDownVisible = (state: boolean): void => {
             if (state !== this._dropdownVisible) {
                 this._dropdownVisible = state;
                 this.changeDetectorRef.markForCheck();
@@ -315,7 +275,7 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
             });
         }
 
-        from(this.clearFilterExpression$).pipe(
+        this.clearFilterExpression$.pipe(
             debounceTime(750),
             takeUntil(this.destroyed$)
         ).subscribe(() => this.filterExpression = '');
@@ -328,14 +288,14 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
             this.reshowDropDown();
         });
 
-        from(this.storeScrollPosition$).pipe(
+        this.storeScrollPosition$.pipe(
             takeUntil(this.destroyed$)
         ).subscribe(scrollPos => {
             this.viewPort.scrollPosition$.next(scrollPos);
             this.lastScrollPosition = scrollPos;
         });
 
-        from(this.hideDropDown$).pipe(
+        this.hideDropDown$.pipe(
             filter(() => this.dropdownVisible),
             delayWhen(time => timer(time || 0)),
             takeUntil(this.destroyed$)
@@ -346,7 +306,7 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
             this.changeDetectorRef.markForCheck();
         });
 
-        from(this.showDropDown$).pipe(
+        this.showDropDown$.pipe(
             debounceTime(50),
             filter(() => (this.query || '').length >= this.minSearchlength && !this._readonly),
             tap(() => {
@@ -403,7 +363,7 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
             this.overlay.updatePosition();
         });
 
-        from(this.keyboardNavigation$).pipe(
+        this.keyboardNavigation$.pipe(
             tap(() => this._keyboardNavigation = true),
             debounceTime(1000),
             takeUntil(this.destroyed$)
@@ -412,7 +372,7 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
             this.changeDetectorRef.markForCheck();
         });
 
-        from(this.query$).pipe(
+        this.query$.pipe(
             tap(query => this._query = query),
             filter(() => !!this.input),
             delay(1),
@@ -580,7 +540,7 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
      * est suceptible de contenir beaucoup d'éléments.
      */
     @Input()
-    public set viewportMode(mode: ViewportMode) {
+    public set viewportMode(mode: string) {
         this.setViewportMode(mode);
     }
 
@@ -850,7 +810,7 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
         this.changeDetectorRef.markForCheck();
     }
 
-    private get currentItemIndex() {
+    private get currentItemIndex(): number {
         return this.getCurrentItemIndex();
     }
 
@@ -988,7 +948,7 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
             switchMap(event => this.ensureListCaches$().pipe(
                 switchMap(() => {
                     // Set and get current index for keyboard features only
-                    const setCurrentIndex = (index: number, item?: IItemBase<unknown>) => {
+                    const setCurrentIndex = (index: number, item?: IItemBase<unknown>): void => {
                         this.currentItemIndex = index;
                         if (this.dropdownVisible) {
                             this.ensureItemVisible(this.currentItemIndex);
@@ -1136,7 +1096,7 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
                     this.filterListComplete$.next();
                 }
 
-                return of(null);
+                return of(null as IFindItemResult<unknown>);
             }),
             filter(result => result?.index >= 0),
             takeUntil(this.destroyed$)
@@ -1247,7 +1207,7 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
                     return of(null);
                 }
 
-                const isExpandButton = (target: HTMLElement) => target.id === 'expandbtn' || target.parentElement.id === 'expandbtn';
+                const isExpandButton = (target: HTMLElement): boolean => target.id === 'expandbtn' || target.parentElement.id === 'expandbtn';
 
                 if (this.isCollapsible(item) && (isExpandButton(e.target as HTMLElement) || !this.isSelectable(item))) {
                     if (upEvent.button === 0) {
@@ -1280,7 +1240,7 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
         if (item.selected) {
             classNames.push('selected');
         }
-        if (item.selectable === false) {
+        if (!(item.selectable ?? true)) {
             classNames.push('unselectable');
         }
         if (item.depth === this._depthMax && item.odd) {
@@ -1383,7 +1343,7 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
         super.ensureItemVisible(item);
     }
 
-    private onModelChange(items?: IItemBase<unknown>[] | IItemBase<unknown>) {
+    private onModelChange(items?: IItemBase<unknown>[] | IItemBase<unknown>): void {
         let outputEmitter = null;
 
         let output = null;
@@ -1429,7 +1389,7 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
         }
     }
 
-    private select(item: IItemBase<unknown>, hideDropDown?: boolean) {
+    private select(item: IItemBase<unknown>, hideDropDown?: boolean): void {
         if (!this.isSelectable(item)) {
             return;
         }
@@ -1460,12 +1420,12 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
         }
 
         this.htmlInputElement.focus();
-        if (hideDropDown !== false) {
+        if (hideDropDown ?? true) {
             this.hideDropDown();
         }
     }
 
-    private reshowDropDown() {
+    private reshowDropDown(): void {
         if (!this.dropdownVisible) {
             return this.showDropDown();
         }
@@ -1500,7 +1460,7 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
         return undefined;
     }
 
-    private ensureSelection() {
+    private ensureSelection(): void {
         if (this._multiSelect) {
             // Do nothing yet
         } else {

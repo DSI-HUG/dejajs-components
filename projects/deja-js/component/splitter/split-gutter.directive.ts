@@ -7,10 +7,7 @@
  */
 
 import { BooleanInput, coerceBooleanProperty, coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
-import { Directive } from '@angular/core';
-import { ElementRef } from '@angular/core';
-import { Input } from '@angular/core';
-import { Renderer2 } from '@angular/core';
+import { Directive, ElementRef, Input, Renderer2 } from '@angular/core';
 
 /**
  * Separator for the spltter component
@@ -71,8 +68,8 @@ export class SplitGutterDirective {
         private renderer: Renderer2) {
     }
 
-    private refreshStyle() {
-        const state = this._disabled === true ? 'disabled' : this._direction;
+    private refreshStyle(): void {
+        const state = this._disabled ? 'disabled' : this._direction;
 
         this.setStyle('cursor', this.getCursor(state));
         this.setStyle('background-image', `url("${this.getImage(state)}")`);
@@ -83,11 +80,11 @@ export class SplitGutterDirective {
         }
     }
 
-    private setStyle(key: string, value: unknown) {
+    private setStyle(key: string, value: unknown): void {
         void (value === null || value === undefined ? this.renderer.removeStyle(this.elementRef.nativeElement, key) : this.renderer.setStyle(this.elementRef.nativeElement, key, value));
     }
 
-    private getCursor(state: string) {
+    private getCursor(state: string): string {
         switch (state) {
             case 'disabled':
                 return 'default';
@@ -100,13 +97,14 @@ export class SplitGutterDirective {
         }
     }
 
-    private getImage(state: string) {
+    private getImage(state: string): string {
         switch (state) {
             case 'disabled':
                 return '';
             case 'vertical':
                 return 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAFCAMAAABl/6zIAAAABlBMVEUAAADMzMzIT8AyAAAAAXRSTlMAQObYZgAAABRJREFUeAFjYGRkwIMJSeMHlBkOABP7AEGzSuPKAAAAAElFTkSuQmCC';
             case 'horizontal':
+                // eslint-disable-next-line no-secrets/no-secrets
                 return 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==';
             default:
                 return null;

@@ -95,7 +95,7 @@ describe('DejaBoldQueryComponent', () => {
         comp.regexpOption = 'i';
         comp.highlightClassName = 'customClass';
         fixture.detectChanges();
-        const divEl = fixture.debugElement.nativeElement.querySelector('div');
+        const divEl = (fixture.debugElement.nativeElement as HTMLElement).querySelector('div');
         void expect(divEl.innerHTML).toContain('<span class="customClass">');
         /*
                 fixture.whenStable().then(()=> {

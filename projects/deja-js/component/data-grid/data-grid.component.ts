@@ -7,36 +7,12 @@
  */
 
 import { BooleanInput, coerceBooleanProperty, coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
-import { ChangeDetectionStrategy } from '@angular/core';
-import { TemplateRef } from '@angular/core';
-import { ChangeDetectorRef } from '@angular/core';
-import { Component } from '@angular/core';
-import { ContentChild } from '@angular/core';
-import { ElementRef } from '@angular/core';
-import { EventEmitter } from '@angular/core';
-import { Input } from '@angular/core';
-import { Optional } from '@angular/core';
-import { Output } from '@angular/core';
-import { ViewChild } from '@angular/core';
-import { ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, Input, Optional, Output, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { IDejaChipsComponentCloseEvent } from '@deja-js/component/chips';
-import { DejaClipboardService } from '@deja-js/component/core';
-import { Destroy } from '@deja-js/component/core';
-import { GroupingService } from '@deja-js/component/core';
-import { IGroupInfo } from '@deja-js/component/core';
-import { IItemBase } from '@deja-js/component/core';
-import { IItemTree } from '@deja-js/component/core';
-import { ISortInfos } from '@deja-js/component/core';
-import { ItemListService } from '@deja-js/component/core';
-import { IViewListResult } from '@deja-js/component/core';
-import { IViewPort } from '@deja-js/component/core';
-import { KeyCodes } from '@deja-js/component/core';
-import { SortingService } from '@deja-js/component/core';
-import { ViewPortService } from '@deja-js/component/core';
-import { ViewportMode } from '@deja-js/component/core';
+import { DejaClipboardService, Destroy, GroupingService, IGroupInfo, IItemBase, IItemTree, ISortInfos, ItemListService, IViewListResult, IViewPort, KeyCodes, SortingService, ViewPortService } from '@deja-js/component/core';
 import { IDejaDragEvent } from '@deja-js/component/dragdrop';
 import { DejaTreeListComponent, DejaTreeListScrollEvent } from '@deja-js/component/tree-list';
-import { combineLatest, from, fromEvent, Observable, ReplaySubject, Subject, timer } from 'rxjs';
+import { combineLatest, fromEvent, Observable, ReplaySubject, Subject, timer } from 'rxjs';
 import { debounceTime, filter, map, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 
 import { IDejaGridColumn, IDejaGridColumnEvent, IDejaGridColumnLayoutEvent, IDejaGridColumnSizeEvent } from './data-grid-column/data-grid-column';
@@ -71,7 +47,7 @@ export class DejaGridComponent extends Destroy {
      * Attention, une désactivation du viewport dégrade considérablement les performances de la liste et ne doit pas être activée si la liste
      * est suceptible de contenir beaucoup d'éléments.
      */
-    @Input() public viewportMode: ViewportMode = 'fixed';
+    @Input() public viewportMode = 'fixed';
     /** Champ utilisé pour la liste des enfants d'un parent */
     @Input() public childrenField: string;
     /** Définit le champ à utiliser comme valeur d'affichage. */
@@ -491,7 +467,7 @@ export class DejaGridComponent extends Destroy {
 
         this.clearColumnLayout();
 
-        const group$ = (groupInfos: IGroupInfo[]) => this.treeListComponent.group$(groupInfos).pipe(
+        const group$ = (groupInfos: IGroupInfo[]): Observable<IGroupInfo[]> => this.treeListComponent.group$(groupInfos).pipe(
             map(() => groupInfos)
         );
 
@@ -525,13 +501,13 @@ export class DejaGridComponent extends Destroy {
             this.changeDetectorRef.markForCheck();
         });
 
-        from(this.columns$).pipe(
+        this.columns$.pipe(
             tap(columns => this._columns = columns),
             debounceTime(1),
             takeUntil(this.destroyed$)
         ).subscribe(() => this.calcColumnsLayout());
 
-        from(this.printColumnLayout$).pipe(
+        this.printColumnLayout$.pipe(
             debounceTime(1000),
             takeUntil(this.destroyed$)
         ).subscribe(() => {
@@ -541,7 +517,7 @@ export class DejaGridComponent extends Destroy {
             console.log('');
         });
 
-        from(this.disableUserSelection$).pipe(
+        this.disableUserSelection$.pipe(
             tap(() => element.setAttribute('disableselection', '')),
             debounceTime(1000),
             takeUntil(this.destroyed$)
@@ -557,7 +533,7 @@ export class DejaGridComponent extends Destroy {
         keyDown$.pipe(
             takeUntil(this.destroyed$)
         ).subscribe(event => {
-            const find = (index: number, backward: boolean) => {
+            const find = (index: number, backward: boolean): IDejaGridColumn => {
                 if (backward) {
                     if (index === -1) {
                         index = this.columns.length;
@@ -717,11 +693,11 @@ export class DejaGridComponent extends Destroy {
     }
 
     public onColumnHeaderClicked(event: IDejaGridColumnEvent): void {
-        if (this.treeListComponent && !this.sortable || event.column.sortable === false) {
+        if (this.treeListComponent && !this.sortable || !(event.column.sortable ?? true)) {
             return;
         }
 
-        const hideSpinner = () => {
+        const hideSpinner = (): void => {
             event.column.sorting = false;
             this.changeDetectorRef.markForCheck();
             this.header.refresh();
@@ -737,7 +713,7 @@ export class DejaGridComponent extends Destroy {
         ).subscribe(() => {
             hideSpinner();
             this.sortChanged.emit(this.treeListComponent.sortInfos);
-        }, error => {
+        }, (error: string) => {
             hideSpinner();
             throw error.toString();
         });
@@ -832,7 +808,7 @@ export class DejaGridComponent extends Destroy {
 
         if (!this._columns || !this._columns.length) {
             if (rows?.length) {
-                const searchFirstLastLevelRow = (items: IItemTree<unknown>[]) => items.find(row => {
+                const searchFirstLastLevelRow = (items: IItemTree<unknown>[]): IItemTree<unknown> => items.find(row => {
                     if (row.$items) {
                         const srow: IItemTree<unknown> = searchFirstLastLevelRow(row.$items);
                         if (srow) {
@@ -885,7 +861,7 @@ export class DejaGridComponent extends Destroy {
         // Reset width
         this._columns.forEach(column => delete column.w);
 
-        const calcColumnsWidth = () => {
+        const calcColumnsWidth = (): number => {
             // Taille totale des colonnes visibles en pixel
             let totalFixedWidth = 0;
 
@@ -967,7 +943,7 @@ export class DejaGridComponent extends Destroy {
         this._columnLayout.refresh$.next();
     }
 
-    private ensureSizingVisible(column: IDejaGridColumn) {
+    private ensureSizingVisible(column: IDejaGridColumn): void {
         if (column === undefined || !this.columns || this.columns.length === 0 || this._noHorizontalScroll) {
             return;
         }
@@ -991,7 +967,7 @@ export class DejaGridComponent extends Destroy {
         }
     }
 
-    private clearColumnLayout() {
+    private clearColumnLayout(): void {
         this._columnLayout.scrollLeft = 0;
         this._columnLayout.vpAfterWidth = 0;
         this._columnLayout.vpBeforeWidth = 0;

@@ -21,9 +21,9 @@ branches:
   - develop
   - master
 before_install:
-- if [[ $TRAVIS_COMMIT_MESSAGE =~ "from DSI-HUG/master" ]]; then 
-    echo "merge from MASTER, skipping";
-    exit 0; 
+- if [[ $TRAVIS_COMMIT_MESSAGE =~ "from DSI-HUG/master" ]]; then
+    echo "merge from RELEASE, skipping";
+    exit 0;
   fi
 - npm install -g yarn
 - rm -rf node_modules

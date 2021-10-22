@@ -7,17 +7,8 @@
  */
 
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
-import { Component } from '@angular/core';
-import { ContentChild } from '@angular/core';
-import { EventEmitter } from '@angular/core';
-import { HostBinding } from '@angular/core';
-import { Input } from '@angular/core';
-import { Optional } from '@angular/core';
-import { Output } from '@angular/core';
-import { Self } from '@angular/core';
-import { TemplateRef } from '@angular/core';
-import { ControlValueAccessor } from '@angular/forms';
-import { NgControl } from '@angular/forms';
+import { Component, ContentChild, EventEmitter, HostBinding, Input, Optional, Output, Self, TemplateRef } from '@angular/core';
+import { ControlValueAccessor, NgControl } from '@angular/forms';
 
 import { IDejaChipsComponentCloseEvent } from './chips-close.event';
 
@@ -131,17 +122,21 @@ export class DejaChipsComponent implements ControlValueAccessor {
     public getTextValue(value: any): string {
         if (!value) {
             return '';
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         } else if (this.textField && value.model && value.model[this.textField] !== undefined) {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access
             return value.model[this.textField];
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         } else if (this.textField && value[this.textField] !== undefined) {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access
             return value[this.textField];
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         } else if (value.displayName) {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
             return typeof value.displayName === 'string' ? value.displayName : value.displayName();
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         } else if (typeof value.toString === 'function') {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
             return value.toString();
         } else {
             return '';

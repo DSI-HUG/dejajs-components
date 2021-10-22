@@ -12,7 +12,7 @@ export class MockElementRef extends ElementRef {
     public constructor() {
         super(null);
         this.nativeElement = {
-            getBoundingClientRect: () => ({ top: 0, left: 0 })
+            getBoundingClientRect: (): { top: number; left: number } => ({ top: 0, left: 0 })
         };
     }
 }

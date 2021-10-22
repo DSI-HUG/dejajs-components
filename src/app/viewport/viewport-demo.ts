@@ -6,8 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Component } from '@angular/core';
-import { ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 import { IViewPortItem } from '@deja-js/component/core';
 import { DejaViewPortComponent } from '@deja-js/component/viewport';
 import { Observable } from 'rxjs';
@@ -18,7 +17,8 @@ import { NewsService } from '../services/news.service';
 @Component({
     selector: 'deja-viewport-demo',
     styleUrls: ['./viewport-demo.scss'],
-    templateUrl: './viewport-demo.html'
+    templateUrl: './viewport-demo.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DejaViewPortDemoComponent {
     @ViewChild('viewport') private viewport: DejaViewPortComponent;

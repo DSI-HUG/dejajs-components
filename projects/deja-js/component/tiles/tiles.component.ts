@@ -7,33 +7,16 @@
  */
 
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
-import { AfterViewInit } from '@angular/core';
-import { TemplateRef } from '@angular/core';
-import { ChangeDetectionStrategy } from '@angular/core';
-import { ChangeDetectorRef } from '@angular/core';
-import { Component } from '@angular/core';
-import { ContentChild } from '@angular/core';
-import { ElementRef } from '@angular/core';
-import { EventEmitter } from '@angular/core';
-import { Input } from '@angular/core';
-import { OnDestroy } from '@angular/core';
-import { Optional } from '@angular/core';
-import { Output } from '@angular/core';
-import { Self } from '@angular/core';
-import { ViewChild } from '@angular/core';
-import { ControlValueAccessor } from '@angular/forms';
-import { NgControl } from '@angular/forms';
-import { Destroy } from '@deja-js/component/core';
-import { KeyCodes } from '@deja-js/component/core';
-import { Position } from '@deja-js/component/core';
-import { Rect } from '@deja-js/component/core';
-import { IDejaMouseDroppableContext, IDropCursorInfos } from '@deja-js/component/mouse-dragdrop';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, Input, OnDestroy, Optional, Output, Self, TemplateRef, ViewChild } from '@angular/core';
+import { ControlValueAccessor, NgControl } from '@angular/forms';
+import { Destroy, KeyCodes, Position, Rect } from '@deja-js/component/core';
+import { DropCursorInfos, MouseDroppableContext } from '@deja-js/component/v2/mouse-dragdrop';
 import { from, fromEvent, Observable, Subject, Subscription } from 'rxjs';
 import { debounceTime, filter, takeUntil } from 'rxjs/operators';
 
 import { DejaTile } from './tile.class';
 import { IDejaTilesAddedEvent, IDejaTilesAddEvent, IDejaTilesDeletedEvent, IDejaTilesEvent, IDejaTilesRemoveEvent } from './tiles.event';
-import { DejaTilesLayoutProvider } from './tiles-layout.provider';
+import { DejaTilesLayoutProvider, ITileDragDropContext } from './tiles-layout.provider';
 import { IDejaTilesRefreshParams } from './tiles-refresh-params.interface';
 
 @Component({
@@ -91,9 +74,9 @@ export class DejaTilesComponent extends Destroy implements AfterViewInit, Contro
      */
     @Input() public tabIndex = 0;
 
-    @ContentChild('tileTemplate')public tileTemplate: TemplateRef<unknown>;
+    @ContentChild('tileTemplate') public tileTemplate: TemplateRef<unknown>;
 
-    @ViewChild('tilesContainer', { static: true }) private tilesContainer: ElementRef;
+    @ViewChild('tilesContainer', { static: true }) private tilesContainer: ElementRef<HTMLElement>;
 
     private _models = [] as DejaTile[];
     private delete$sub: Subscription;
@@ -343,7 +326,7 @@ export class DejaTilesComponent extends Destroy implements AfterViewInit, Contro
     }
 
     public hitTest(pageX: number, pageY: number): DejaTile {
-        const containerElement = this.tilesContainer.nativeElement as HTMLElement;
+        const containerElement = this.tilesContainer.nativeElement;
         const containerBounds = containerElement.getBoundingClientRect();
 
         const x = pageX - containerBounds.left;
@@ -358,7 +341,7 @@ export class DejaTilesComponent extends Destroy implements AfterViewInit, Contro
         }
 
         // Check if we drag on a tile
-        const containerElement = this.tilesContainer.nativeElement as HTMLElement;
+        const containerElement = this.tilesContainer.nativeElement;
         const containerBounds = containerElement.getBoundingClientRect();
 
         const x = pageX ? (pageX - containerBounds.left) : 0;
@@ -372,18 +355,25 @@ export class DejaTilesComponent extends Destroy implements AfterViewInit, Contro
         this.layoutProvider.moveTile(id, bounds);
     }
 
-    public getDropContext(): IDejaMouseDroppableContext {
+    public getDropContext(): MouseDroppableContext<ITileDragDropContext> {
+        let cursorInfo: DropCursorInfos;
+
         return {
-            dragEnter: (dragContext, dragCursor) => this.layoutProvider.dragEnter(dragContext, dragCursor) && {
-                className: 'hidden' // Hide drag cursor
-            } as IDropCursorInfos,
+            dragEnter: (dragContext, dragCursor) => {
+                cursorInfo = this.layoutProvider.dragEnter(dragContext, dragCursor) ? {
+                    className: 'hidden' // Hide drag cursor
+                } as DropCursorInfos : null;
+                return cursorInfo;
+            },
             dragOver: (_dragContext, dragCursor) => {
                 this.layoutProvider.dragover$.next(dragCursor);
+                return cursorInfo;
             },
             dragLeave: _dragContext => {
+                cursorInfo = null;
                 this.layoutProvider.dragleave$.next();
             }
-        } as IDejaMouseDroppableContext;
+        } as MouseDroppableContext<ITileDragDropContext>;
     }
 
     public onTileClosed(tile: DejaTile): void {

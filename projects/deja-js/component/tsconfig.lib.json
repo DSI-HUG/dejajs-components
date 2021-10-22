@@ -2,15 +2,16 @@
     "extends": "../../../tsconfig.json",
     "compilerOptions": {
         "outDir": "../../../out-tsc/lib",
+        "declarationMap": true,
         "target": "es2015",
         "declaration": true,
         "inlineSources": true,
         "lib": [
             "dom",
-            "es2018"
+            "es2020"
         ],
         "types": [
-            "../../../node_modules/@types/ckeditor"
+            "ckeditor"
         ]
     },
     "angularCompilerOptions": {

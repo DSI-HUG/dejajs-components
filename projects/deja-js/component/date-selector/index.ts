@@ -11,8 +11,6 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MomentDateAdapter } from '@angular/material-moment-adapter';
-import { DejaCircularPickerModule } from '@deja-js/component/circular-picker';
 import { DejaTimePickerModule } from '@deja-js/component/time-picker';
 
 import { DejaDateSelectorComponent } from './date-selector.component';
@@ -21,15 +19,11 @@ import { DejaDateSelectorComponent } from './date-selector.component';
     declarations: [DejaDateSelectorComponent],
     exports: [DejaDateSelectorComponent],
     imports: [
-        DejaCircularPickerModule,
         DejaTimePickerModule,
         CommonModule,
         FormsModule,
         MatButtonModule,
         MatIconModule
-    ],
-    providers: [
-        MomentDateAdapter
     ]
 })
 export class DejaDateSelectorModule { }

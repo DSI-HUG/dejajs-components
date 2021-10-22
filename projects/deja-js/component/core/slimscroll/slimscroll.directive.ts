@@ -11,14 +11,7 @@
 */
 
 /* eslint-disable @typescript-eslint/unbound-method */
-import { Directive } from '@angular/core';
-import { ElementRef } from '@angular/core';
-import { HostListener } from '@angular/core';
-import { Input } from '@angular/core';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { Renderer2 } from '@angular/core';
-import { RendererFactory2 } from '@angular/core';
+import { Directive, ElementRef, HostListener, Input, OnDestroy, OnInit, Renderer2, RendererFactory2 } from '@angular/core';
 import { interval, Subscription, timer } from 'rxjs';
 import { filter, take, takeUntil } from 'rxjs/operators';
 
@@ -154,7 +147,7 @@ export class DejaSlimScrollDirective extends Destroy implements OnInit, OnDestro
 
     public constructor(
         rendererFactory: RendererFactory2,
-        elementRef: ElementRef
+        elementRef: ElementRef<HTMLElement>
     ) {
         super();
 
@@ -162,6 +155,7 @@ export class DejaSlimScrollDirective extends Destroy implements OnInit, OnDestro
         this._me = elementRef.nativeElement;
         this._options = { ...defaults };
 
+        /* eslint-disable @typescript-eslint/no-unsafe-assignment */
         this.showBar = this.showBar.bind(this);
         this.hideBar = this.hideBar.bind(this);
         this.onWheel = this.onWheel.bind(this);
@@ -169,6 +163,7 @@ export class DejaSlimScrollDirective extends Destroy implements OnInit, OnDestro
         this.barMouseUp = this.barMouseUp.bind(this);
         this.barMouseDown = this.barMouseDown.bind(this);
         this.railMouseDown = this.railMouseDown.bind(this);
+        /* eslint-enable @typescript-eslint/no-unsafe-assignment */
     }
 
     @HostListener('window:resize', ['$event'])
@@ -362,7 +357,7 @@ export class DejaSlimScrollDirective extends Destroy implements OnInit, OnDestro
         this.hideBar();
     }
 
-    private init() {
+    private init(): void {
         // ensure we are not binding it again
         if (this._bar && this._rail) {
             this.refresh();
@@ -371,7 +366,7 @@ export class DejaSlimScrollDirective extends Destroy implements OnInit, OnDestro
         }
     }
 
-    private trackPanelHeightChanged = () => {
+    private trackPanelHeightChanged = (): void => {
         this._previousHeight = this._me.scrollHeight;
 
         interval(1000).pipe(
@@ -402,7 +397,7 @@ export class DejaSlimScrollDirective extends Destroy implements OnInit, OnDestro
         return this.hasParentClass(e.parentElement, className);
     }
 
-    private onWheel(e: WheelEvent) {
+    private onWheel(e: WheelEvent): void {
         // use mouse wheel only when mouse is over
         if (!this._isOverPanel) {
             return;
@@ -431,7 +426,7 @@ export class DejaSlimScrollDirective extends Destroy implements OnInit, OnDestro
         }
     }
 
-    private attachWheel(target: Window) {
+    private attachWheel(target: Window): void {
         if (window.addEventListener) {
             target.addEventListener('DOMMouseScroll', this.onWheel, false);
             target.addEventListener('mousewheel', this.onWheel, false);
@@ -440,7 +435,7 @@ export class DejaSlimScrollDirective extends Destroy implements OnInit, OnDestro
         }
     }
 
-    private showBar() {
+    private showBar(): void {
         // recalculate bar height
         this.getBarHeight();
         if (this._queueHide) {
@@ -468,7 +463,7 @@ export class DejaSlimScrollDirective extends Destroy implements OnInit, OnDestro
         this._renderer.setStyle(this._rail, 'opacity', this._options.railOpacity.toString());
     }
 
-    private hideBar() {
+    private hideBar(): void {
         // only hide when options allow it
         if (!this._options.alwaysVisible && !(this._options.disableFadeOut && this._isOverPanel) && !this._isOverBar && !this._isDragg) {
             this._queueHide = timer(1000).pipe(
@@ -482,7 +477,7 @@ export class DejaSlimScrollDirective extends Destroy implements OnInit, OnDestro
         }
     }
 
-    private getBarHeight() {
+    private getBarHeight(): void {
         // calculate scrollbar height and make sure it is not too small
         this._barHeight = Math.max(this._me.offsetHeight / (this._me.scrollHeight === 0 ? 1 : this._me.scrollHeight) * this._me.offsetHeight, this._minBarHeight);
         this._renderer.setStyle(this._bar, 'height', `${this._barHeight}px`);
@@ -492,7 +487,7 @@ export class DejaSlimScrollDirective extends Destroy implements OnInit, OnDestro
         this._renderer.setStyle(this._bar, 'display', display);
     }
 
-    private refresh() {
+    private refresh(): void {
         this.getBarHeight();
 
         // Pass height: auto to an existing slimscroll object to force a resize after contents have changed
@@ -510,7 +505,7 @@ export class DejaSlimScrollDirective extends Destroy implements OnInit, OnDestro
 
     }
 
-    private railMouseDown(event: MouseEvent) {
+    private railMouseDown(event: MouseEvent): void {
         const clientRects = this._rail.getBoundingClientRect();
         const elementOffsetTop = clientRects.top + window.scrollY;
         const moveTo = event.pageY - elementOffsetTop - (this._barHeight / 2);
@@ -520,7 +515,7 @@ export class DejaSlimScrollDirective extends Destroy implements OnInit, OnDestro
         this.scrollContent(scrollTo, false, true);
     }
 
-    private barMouseMove(event: MouseEvent) {
+    private barMouseMove(event: MouseEvent): void {
         const currTop = this._startBarTop + event.pageY - this._barMouseDownPageY;
         this._renderer.setStyle(this._bar, 'top', `${(currTop >= 0 ? currTop : 0)}px`);
         const position = this._bar.getClientRects()[0];
@@ -530,7 +525,7 @@ export class DejaSlimScrollDirective extends Destroy implements OnInit, OnDestro
         }
     }
 
-    private barMouseUp() {
+    private barMouseUp(): void {
         this._isDragg = false;
 
         // return normal text selection
@@ -546,7 +541,7 @@ export class DejaSlimScrollDirective extends Destroy implements OnInit, OnDestro
         document.removeEventListener('mouseup', this.barMouseUp, false);
     }
 
-    private barMouseDown(e: MouseEvent) {
+    private barMouseDown(e: MouseEvent): false {
         this._isDragg = true;
 
         // disable text selection
@@ -565,7 +560,7 @@ export class DejaSlimScrollDirective extends Destroy implements OnInit, OnDestro
         return false;
     }
 
-    private setup() {
+    private setup(): void {
         // check whether it changes in content
         this.trackPanelHeightChanged();
 

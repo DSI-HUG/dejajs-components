@@ -1,2 +1,2 @@
-<ng-template [ngTemplateOutlet]="template" [ngTemplateOutletContext]="{ $implicit: tile, designMode: designMode }"></ng-template>
+<ng-template [ngTemplateOutlet]="template" [ngTemplateOutletContext]="{ $implicit: tile }"></ng-template>
 <mat-progress-spinner *ngIf="tile && tile.isPending" mode="indeterminate" [diameter]="progressDiameter" class="accent"></mat-progress-spinner>

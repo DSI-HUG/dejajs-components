@@ -6,6 +6,10 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+
 import { Injectable } from '@angular/core';
 
 /**
@@ -17,14 +21,14 @@ import { Injectable } from '@angular/core';
 export class MonacoEditorService {
 
     private _loading: boolean;
-    private _loader: Promise<unknown>;
+    private _loader: Promise<void>;
 
     /**
      * Load the Monaco Editor Library
      *
      * @return Resolved promise when the library is loaded
      */
-    public initMonacoLib(): Promise<unknown> {
+    public initMonacoLib(): Promise<void> {
         if (!this._loading) {
             this.init();
         }
@@ -32,8 +36,8 @@ export class MonacoEditorService {
         return this._loader;
     }
 
-    private init() {
-        this._loader = new Promise(resolve => {
+    private init(): void {
+        this._loader = new Promise<void>(resolve => {
             this._loading = true;
             const baseElement = document.getElementsByTagName('base')[0] || {} as HTMLBaseElement;
             const baseHref = baseElement.href;
@@ -41,8 +45,9 @@ export class MonacoEditorService {
             const wnd = <any>window;
             const basePath = wnd.MONACOEDITOR_BASEPATH || `${baseHref}assets/monaco/vs`;
 
-            const onGotAmdLoader = () => {
+            const onGotAmdLoader = (): void => {
                 // Load monaco
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-call
                 wnd.require.config({ paths: { vs: basePath } });
                 wnd.require(['vs/editor/editor.main'], () => {
                     resolve();
@@ -53,7 +58,7 @@ export class MonacoEditorService {
             if (!wnd.require && !wnd.monaco) {
                 const loaderScript = document.createElement('script');
                 loaderScript.type = 'text/javascript';
-                loaderScript.src = `${basePath}/loader.js`;
+                loaderScript.src = `${basePath as string}/loader.js`;
                 loaderScript.addEventListener('load', onGotAmdLoader);
                 document.body.appendChild(loaderScript);
             } else {

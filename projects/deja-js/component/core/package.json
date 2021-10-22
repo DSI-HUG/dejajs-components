@@ -3,8 +3,14 @@
         "lib": {
             "entryFile": "./index.ts",
             "umdModuleIds": {
-                "lodash": "lodash"
+                "lodash-es": "lodash-es",
+                "date-fns": "date-fns",
+                "date-fns/locale": "date-fns/locale"
             }
         }
+    },
+    "peerDependencies": {
+        "lodash-es": "^4.17.20",
+        "date-fns": "~2.16.1"
     }
 }

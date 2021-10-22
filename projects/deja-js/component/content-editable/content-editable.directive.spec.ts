@@ -6,8 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Component } from '@angular/core';
-import { DebugElement } from '@angular/core';
+import { Component, DebugElement } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -58,7 +57,7 @@ describe('DejaEditableDirective', () => {
 
     it('should able to pass in edition programatically', waitForAsync(() => {
         const element = editableDebugElement.nativeElement as HTMLElement;
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment
         const privateAccessInstance = editableInstance as any;
 
         void expect(editableInstance.editMode).toBeFalsy();
@@ -74,12 +73,14 @@ describe('DejaEditableDirective', () => {
         fixture.detectChanges();
 
         void expect(editableInstance.inEdition).toBeFalsy();
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         void expect(privateAccessInstance.disabled).toBeTruthy();
 
         editableInstance.inEdition = 'true';
         fixture.detectChanges();
 
         void expect(editableInstance.inEdition).toBeFalsy();
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         void expect(privateAccessInstance.disabled).toBeTruthy();
 
         editableInstance.disabled = 'false';

@@ -77,7 +77,7 @@ describe('DejaMessageBoxComponent', () => {
             component.title = 'Delete order';
             fixture.detectChanges();
 
-            const el = fixture.debugElement.query(By.css('mat-card-title > span')).nativeElement;
+            const el = fixture.debugElement.query(By.css('mat-card-title > span')).nativeElement as HTMLElement;
             void expect(el.innerHTML).toEqual('Delete order');
         });
 
@@ -87,7 +87,7 @@ describe('DejaMessageBoxComponent', () => {
             component.horizontal = true;
             fixture.detectChanges();
 
-            const el = fixture.debugElement.query(By.css('mat-card-content > h2')).nativeElement;
+            const el = fixture.debugElement.query(By.css('mat-card-content > h2')).nativeElement as HTMLElement;
             void expect(el.innerHTML).toEqual('Delete order');
         });
     });
@@ -97,7 +97,7 @@ describe('DejaMessageBoxComponent', () => {
             component.icon = 'randomIcon';
             fixture.detectChanges();
 
-            const el = fixture.debugElement.query(By.css('mat-card-title > mat-icon')).nativeElement;
+            const el = fixture.debugElement.query(By.css('mat-card-title > mat-icon')).nativeElement as HTMLElement;
             void expect(el.innerHTML).toEqual('randomIcon');
         });
 
@@ -111,8 +111,8 @@ describe('DejaMessageBoxComponent', () => {
     describe('input actions', () => {
         it('should display a button for each action in mat-card-actions', () => {
             component.actions = [
-                { text: 'Yes', type: 'info', action: () => undefined as void },
-                { text: 'No', type: 'warn', action: () => undefined as void }
+                { text: 'Yes', type: 'info', action: (): void => undefined as void },
+                { text: 'No', type: 'warn', action: (): void => undefined as void }
             ];
             fixture.detectChanges();
 
@@ -122,11 +122,11 @@ describe('DejaMessageBoxComponent', () => {
 
         it('should display a button with class with-icon if action has an icon and a text', () => {
             component.actions = [
-                { text: 'Yes', type: 'info', action: () => undefined as void, icon: 'randomIcon' }
+                { text: 'Yes', type: 'info', action: (): void => undefined as void, icon: 'randomIcon' }
             ];
             fixture.detectChanges();
 
-            const el = fixture.debugElement.query(By.css('mat-card-actions > span > button')).nativeElement;
+            const el = fixture.debugElement.query(By.css('mat-card-actions > span > button')).nativeElement as HTMLElement;
             void expect(el.className).toContain('with-icon');
         });
 
@@ -140,7 +140,7 @@ describe('DejaMessageBoxComponent', () => {
                 done();
             });
             fixture.detectChanges();
-            const closeButtonEl = fixture.debugElement.query(By.css('button.close')).nativeElement;
+            const closeButtonEl = fixture.debugElement.query(By.css('button.close')).nativeElement as HTMLElement;
             closeButtonEl.click();
         });
     });

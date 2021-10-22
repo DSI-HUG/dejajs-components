@@ -56,8 +56,8 @@ class DejaTooltipContainerComponent {
     }
 }
 
-const sendMouseEvent = (element: EventTarget, type: string, pageX: number, pageY: number, buttons = 0) => {
-    const eventInit = () => ({
+const sendMouseEvent = (element: EventTarget, type: string, pageX: number, pageY: number, buttons = 0): void => {
+    const eventInit = (): MouseEventInit => ({
         bubbles: true,
         cancelable: (type !== 'mousemove'),
         view: document.defaultView,

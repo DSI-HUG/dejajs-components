@@ -6,17 +6,9 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
-import { ChangeDetectionStrategy } from '@angular/core';
-import { TemplateRef } from '@angular/core';
-import { ChangeDetectorRef } from '@angular/core';
-import { Component } from '@angular/core';
-import { ElementRef } from '@angular/core';
-import { EventEmitter } from '@angular/core';
-import { Input } from '@angular/core';
-import { Output } from '@angular/core';
+import { BooleanInput } from '@angular/cdk/coercion';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, Output, TemplateRef } from '@angular/core';
 import { Destroy } from '@deja-js/component/core';
-import { from } from 'rxjs';
 import { debounceTime, delay, filter, take, takeUntil, tap } from 'rxjs/operators';
 
 import { DejaTile } from './tile.class';
@@ -38,16 +30,6 @@ export class DejaTileComponent extends Destroy {
 
     private element: HTMLElement;
     private _tile: DejaTile;
-    private _designMode: boolean;
-
-    @Input()
-    public set designMode(value: BooleanInput) {
-        this._designMode = coerceBooleanProperty(value);
-    }
-
-    public get designMode(): BooleanInput {
-        return this._designMode;
-    }
 
     public constructor(el: ElementRef, private changeDetectorRef: ChangeDetectorRef) {
         super();
@@ -60,7 +42,7 @@ export class DejaTileComponent extends Destroy {
         this._tile = tile;
 
         if (tile) {
-            const toogleAttribute = (attribute: string, value: BooleanInput) => {
+            const toggleAttribute = (attribute: string, value: BooleanInput): void => {
                 if (value) {
                     this.element.setAttribute(attribute, value.toString());
                 } else {
@@ -73,7 +55,7 @@ export class DejaTileComponent extends Destroy {
                 this.changeDetectorRef.markForCheck();
             }
 
-            from(tile.pixelBounds$).pipe(
+            tile.pixelBounds$.pipe(
                 filter(bounds => !!bounds),
                 take(1),
                 filter(() => tile.fading),
@@ -88,7 +70,7 @@ export class DejaTileComponent extends Destroy {
                 this.changeDetectorRef.markForCheck();
             });
 
-            from(tile.pixelBounds$).pipe(
+            tile.pixelBounds$.pipe(
                 filter(bounds => !!bounds),
                 takeUntil(this.destroyed$)
             ).subscribe(bounds => {
@@ -103,41 +85,41 @@ export class DejaTileComponent extends Destroy {
                 this.changeDetectorRef.markForCheck();
             });
 
-            from(tile.pressed$).pipe(
-                tap(value => toogleAttribute('pressed', value)),
+            tile.pressed$.pipe(
+                tap(value => toggleAttribute('pressed', value)),
                 takeUntil(this.destroyed$)
             ).subscribe(() => this.changeDetectorRef.markForCheck());
 
-            from(tile.selected$).pipe(
-                tap(value => toogleAttribute('selected', value)),
+            tile.selected$.pipe(
+                tap(value => toggleAttribute('selected', value)),
                 takeUntil(this.destroyed$)
             ).subscribe(() => this.changeDetectorRef.markForCheck());
 
-            from(tile.dragging$).pipe(
-                tap(value => toogleAttribute('drag', value)),
+            tile.dragging$.pipe(
+                tap(value => toggleAttribute('drag', value)),
                 takeUntil(this.destroyed$)
             ).subscribe(() => this.changeDetectorRef.markForCheck());
 
-            from(tile.dropping$).pipe(
-                tap(value => toogleAttribute('drop', value)),
+            tile.dropping$.pipe(
+                tap(value => toggleAttribute('drop', value)),
                 takeUntil(this.destroyed$)
             ).subscribe(() => this.changeDetectorRef.markForCheck());
 
-            from(tile.cutted$).pipe(
-                tap(value => toogleAttribute('cutted', value)),
+            tile.cutted$.pipe(
+                tap(value => toggleAttribute('cutted', value)),
                 takeUntil(this.destroyed$)
             ).subscribe(() => this.changeDetectorRef.markForCheck());
 
-            from(tile.deleted$).pipe(
+            tile.deleted$.pipe(
                 tap(() => this.element.remove()),
                 takeUntil(this.destroyed$)
             ).subscribe(() => this.changeDetectorRef.markForCheck());
 
-            const tooogleHide$ = from(tile.hidden$).pipe(
-                tap(value => toogleAttribute('hidden', value ? '1' : '2')));
+            const toggleHide$ = tile.hidden$.pipe(
+                tap(value => toggleAttribute('hidden', value ? '1' : '2')));
 
             // Hide
-            tooogleHide$.pipe(
+            toggleHide$.pipe(
                 debounceTime(1000),
                 filter(value => value),
                 tap(() => this.element.setAttribute('hidden', '0')),
@@ -145,7 +127,7 @@ export class DejaTileComponent extends Destroy {
             ).subscribe(() => this.changeDetectorRef.markForCheck());
 
             // Show
-            tooogleHide$.pipe(
+            toggleHide$.pipe(
                 debounceTime(1),
                 filter(value => !value),
                 tap(() => this.element.removeAttribute('hidden')),
@@ -153,7 +135,7 @@ export class DejaTileComponent extends Destroy {
             ).subscribe(() => this.changeDetectorRef.markForCheck());
 
             // Refresh
-            from(tile.refresh$).pipe(
+            tile.refresh$.pipe(
                 debounceTime(1),
                 takeUntil(this.destroyed$)
             ).subscribe(() => this.changeDetectorRef.markForCheck());

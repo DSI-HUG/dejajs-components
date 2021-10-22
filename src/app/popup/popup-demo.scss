@@ -1,38 +1,45 @@
-@import '~@angular/material/theming';
 :host {
     #button-container {
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
         line-height: 3rem;
+
         div {
             padding-right: 1rem;
         }
     }
+
     #demo {
         .h1 {
             margin-top: 2rem;
         }
+
         &.demo-card {
             margin: 16px;
+
             mat-card-content {
                 padding: 16px;
                 display: flex;
                 flex-direction: column;
             }
         }
+
         &.demo-basic {
             padding: 0;
         }
+
         &.demo-full-width {
             width: 100%;
         }
+
         &.demo-icons {
             font-size: 100%;
             height: inherit;
             vertical-align: top;
             width: inherit;
         }
+
         #flight {
             display: flex;
             align-items: center;
@@ -41,6 +48,7 @@
 }
 
 .template-button-container {
+
     button,
     .mat-icon {
         width: 18px;

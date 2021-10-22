@@ -182,7 +182,7 @@ export class Color {
             r = g = b = l; // achromatic
         } else {
 
-            const hue2rgb = (p: number, q: number, t: number) => {
+            const hue2rgb = (p: number, q: number, t: number): number => {
                 if (t < 0) {
                     t += 1;
                 }
@@ -324,7 +324,7 @@ export class Color {
     }
 
     public toHex(): string {
-        const toHex = (d: number) => {
+        const toHex = (d: number): string => {
             const s = Number(d).toString(16);
             return `0${s}`.slice(-2).toUpperCase();
         };

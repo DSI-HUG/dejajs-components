@@ -6,13 +6,9 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Directive } from '@angular/core';
-import { ElementRef } from '@angular/core';
-import { Input } from '@angular/core';
-import { Destroy } from '@deja-js/component/core';
-import { Position } from '@deja-js/component/core';
-import { Rect } from '@deja-js/component/core';
-import { from, Observable, of } from 'rxjs';
+import { Directive, ElementRef, Input } from '@angular/core';
+import { Destroy, Position, Rect } from '@deja-js/component/core';
+import { Observable, of } from 'rxjs';
 import { distinctUntilChanged, filter, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 
 import { IDragCursorInfos } from './mouse-drag-cursor-infos.interface';
@@ -41,11 +37,11 @@ export class DejaMouseDroppableDirective extends Destroy {
 
         const element = elementRef.nativeElement as HTMLElement;
 
-        const dragging$ = from(dragDropService.dragging$).pipe(
+        const dragging$ = dragDropService.dragging$.pipe(
             distinctUntilChanged()
         );
 
-        const drop$ = from(dragDropService.dragCursor$).pipe(
+        const drop$ = dragDropService.dragCursor$.pipe(
             filter(value => !!value),
             switchMap(dragCursor => dragging$.pipe(
                 filter(value => !value),
@@ -65,7 +61,7 @@ export class DejaMouseDroppableDirective extends Destroy {
             filter(value => value),
             switchMap(() =>
                 // console.log(`Drag ${!!this._dragContext}`)
-                from(dragDropService.dragCursor$).pipe(
+                dragDropService.dragCursor$.pipe(
                     // eslint-disable-next-line rxjs/no-unsafe-takeuntil
                     takeUntil(drop$),
                     switchMap(dragCursor => {

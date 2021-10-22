@@ -6,8 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { DebugElement } from '@angular/core';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { DebugElement, NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -100,13 +99,13 @@ describe('DejaNumericStepperComponent', () => {
         });
 
         it('should substract 1 on click substract', waitForAsync(() => {
-            steppers.children[0].nativeElement.click();
+            (steppers.children[0].nativeElement as HTMLElement).click();
             void expect(comp.value).toEqual(0.2);
             void expect(comp.value).not.toEqual(0.19999999999999996);
         }));
 
         it('should add 1 on click add', waitForAsync(() => {
-            steppers.children[1].nativeElement.click();
+            (steppers.children[1].nativeElement as HTMLElement).click();
             void expect(comp.value).toEqual(2.2);
         }));
     });

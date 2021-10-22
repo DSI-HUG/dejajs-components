@@ -6,9 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Component } from '@angular/core';
-import { EventEmitter } from '@angular/core';
-import { OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit } from '@angular/core';
 import { MaterialColors } from '@deja-js/component/core';
 import { from, interval, Observable } from 'rxjs';
 import { defaultIfEmpty, filter, map, scan } from 'rxjs/operators';
@@ -56,29 +54,29 @@ export class DejaSnackbarDemoComponent implements OnInit {
             filter(type => type === 'danger'),
             map(() => new Message('Danger snackbar')),
             scan((acc, curr) => [...acc, curr], [] as Message[]),
-            defaultIfEmpty([]));
+            defaultIfEmpty([] as Message[]));
 
         this.warnings$ = from(this.push).pipe(
             filter(type => type === 'warning'),
             map(() => new Message('Warning snackbar')),
             scan((acc, curr) => [...acc, curr], [] as Message[]),
-            defaultIfEmpty([]));
+            defaultIfEmpty([] as Message[]));
 
         this.successes$ = from(this.push).pipe(
             filter(type => type === 'success'),
             map(() => new Message('Success snackbar')),
             scan((acc, curr) => [...acc, curr], [] as Message[]),
-            defaultIfEmpty([]));
+            defaultIfEmpty([] as Message[]));
 
         this.infos$ = from(this.push).pipe(
             filter(type => type === 'info'),
             map(() => new Message('Info snackbar')),
             scan((acc, curr) => [...acc, curr], [] as Message[]),
-            defaultIfEmpty([]));
+            defaultIfEmpty([] as Message[]));
 
         this.messages$ = interval(2000).pipe(
             map(() => new Message('Server push snackbar')),
             scan((acc, curr) => [...acc, curr], [] as Message[]),
-            defaultIfEmpty([]));
+            defaultIfEmpty([] as Message[]));
     }
 }

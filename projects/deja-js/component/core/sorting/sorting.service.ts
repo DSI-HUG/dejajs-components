@@ -8,8 +8,11 @@
 
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+
 import { Injectable } from '@angular/core';
-import { sortBy } from 'lodash';
+import { sortBy } from 'lodash-es';
 import { Observable, of } from 'rxjs';
 import { map, reduce, switchMap } from 'rxjs/operators';
 
@@ -20,6 +23,10 @@ export type SortOrder = 'ascending' | 'descending';
 /** Classe de tri d'une liste plate ou hierarchique */
 @Injectable()
 export class SortingService {
+    public constructor() {
+        console.warn('@deja-js/component/core/SortingService is deprecated, and will be removed in a further version. Please use @deja-js/component/v2/tem-list/SortingService instead.');
+    }
+
     /** Trie les éléments de la liste plate spécifiée en fonction du modèle de tri spécifié. Peut être surchargé pour implémenter un tri asynchrone
      * @param list Liste à trier.
      * @param sortInfos Modèle de tri à appliquer.

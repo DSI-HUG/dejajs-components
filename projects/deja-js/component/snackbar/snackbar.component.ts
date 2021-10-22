@@ -6,17 +6,9 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { AfterViewInit } from '@angular/core';
-import { Component } from '@angular/core';
-import { ElementRef } from '@angular/core';
-import { EventEmitter } from '@angular/core';
-import { HostListener } from '@angular/core';
-import { Input } from '@angular/core';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { Output } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Destroy } from '@deja-js/component/core';
-import { from, Subject, Subscription, timer } from 'rxjs';
+import { Subject, Subscription, timer } from 'rxjs';
 import { debounce, delay, take, takeUntil, tap } from 'rxjs/operators';
 
 interface IAnimation {
@@ -147,7 +139,7 @@ export class DejaSnackbarComponent extends Destroy implements OnInit, AfterViewI
      * @param elementRef
      * @param renderer
      */
-    public constructor(private elementRef: ElementRef) {
+    public constructor(private elementRef: ElementRef<HTMLElement>) {
         super();
 
         if (!DejaSnackbarComponent.INSTANCES) {
@@ -156,15 +148,15 @@ export class DejaSnackbarComponent extends Destroy implements OnInit, AfterViewI
 
         DejaSnackbarComponent.INSTANCES.push(this);
 
-        const applyParams = (styles: CSSStyleDeclaration) => {
+        const applyParams = (styles: CSSStyleDeclaration): void => {
             Object.keys(styles)
                 .forEach(key => {
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any,  @typescript-eslint/no-unsafe-assignment,  @typescript-eslint/no-unsafe-member-access
                     (<any> this.host.style)[key] = (<any>styles)[key];
                 });
         };
 
-        this.animate$sub = from(this.animate$).pipe(
+        this.animate$sub = this.animate$.pipe(
             tap(animation => applyParams(animation.before)),
             delay(1),
             tap(animation => {
@@ -223,7 +215,7 @@ export class DejaSnackbarComponent extends Destroy implements OnInit, AfterViewI
      * afterviewInit hook
      */
     public ngAfterViewInit(): void {
-        this.host = this.elementRef.nativeElement as HTMLElement;
+        this.host = this.elementRef.nativeElement;
 
         if (!this.outerContainerElement) {
             // Set default outer container if none specified
@@ -298,7 +290,7 @@ export class DejaSnackbarComponent extends Destroy implements OnInit, AfterViewI
      *
      * @return cumulated height of all snackbars, precedent instance height, width and height of the innerContainer
      */
-    private computePosition() {
+    private computePosition(): { innerContainerWidth: number; innerContainerHeight: number; precedentInstanceHeight: number; computedHeight: number } {
         // Inner container
         const innerContainerElementBounds = this.host.getBoundingClientRect();
         const innerContainerWidth = innerContainerElementBounds.width;
@@ -316,7 +308,7 @@ export class DejaSnackbarComponent extends Destroy implements OnInit, AfterViewI
             const precedentInstance = instancesInSameZone[instancesInSameZone.length - 1];
 
             if (precedentInstance) {
-                const innerContainerElement = precedentInstance.elementRef.nativeElement as HTMLElement;
+                const innerContainerElement = precedentInstance.elementRef.nativeElement;
                 precedentInstanceHeight = innerContainerElement.getBoundingClientRect().height;
             }
         }
@@ -324,7 +316,7 @@ export class DejaSnackbarComponent extends Destroy implements OnInit, AfterViewI
         // computed height of inner containers, sharing the same outer container and the same anchor
         const computedHeight = instancesInSameZone
             .map((instance: DejaSnackbarComponent) => {
-                const innerContainerElement = instance.elementRef.nativeElement as HTMLElement;
+                const innerContainerElement = instance.elementRef.nativeElement;
                 return innerContainerElement.getBoundingClientRect().height;
             })
             .reduce((acc, curr) => {
@@ -404,7 +396,7 @@ export class DejaSnackbarComponent extends Destroy implements OnInit, AfterViewI
      *
      * @param height
      */
-    private launchAdaptAnimation(height: number) {
+    private launchAdaptAnimation(height: number): void {
 
         let direction = 1;
         if (this._alignments.top) {
@@ -432,7 +424,7 @@ export class DejaSnackbarComponent extends Destroy implements OnInit, AfterViewI
     /**
      * launch enter animation (snackbar instanciation trigger this method)
      */
-    private launchEnterAnimation() {
+    private launchEnterAnimation(): void {
         let direction = -1;
         if (this._alignments.top) {
             direction = 1;
@@ -456,7 +448,7 @@ export class DejaSnackbarComponent extends Destroy implements OnInit, AfterViewI
     /**
      * launch leave animation (snackbar lifetime flow trigger this animation)
      */
-    private launchLeaveAnimation() {
+    private launchLeaveAnimation(): void {
         this.animate$.next({
             before: {
                 opacity: '1'

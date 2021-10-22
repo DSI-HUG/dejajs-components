@@ -15,9 +15,9 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { DejaMessageBoxModule } from '@deja-js/component/message-box';
-import { DejaMouseDragDropModule } from '@deja-js/component/mouse-dragdrop';
 import { DejaSnackbarModule } from '@deja-js/component/snackbar';
 import { DejaTilesModule } from '@deja-js/component/tiles';
+import { MouseDragDropModule } from '@deja-js/component/v2/mouse-dragdrop';
 
 import { DejaMarkdownModule } from '../../component/markdown/index';
 import { DejaTilesDemoComponent } from './tiles-demo';
@@ -37,7 +37,7 @@ import { routing } from './tiles-demo.routes';
         DejaTilesModule,
         DejaMarkdownModule,
         DejaSnackbarModule,
-        DejaMouseDragDropModule,
+        MouseDragDropModule,
         DejaMessageBoxModule,
         routing
     ],

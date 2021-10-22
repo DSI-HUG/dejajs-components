@@ -7,8 +7,7 @@
  */
 
 import { ComponentType } from '@angular/cdk/portal';
-import { Injectable } from '@angular/core';
-import { TemplateRef } from '@angular/core';
+import { Injectable, TemplateRef } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -32,7 +31,7 @@ export class DejaPopupService extends MatDialog {
     private _dialogCom$: BehaviorSubject<DejaPopupAction>;
     public get dejaPopupCom$(): BehaviorSubject<DejaPopupAction> {
         if (!this._dialogCom$) {
-            this._dialogCom$ = new BehaviorSubject(null);
+            this._dialogCom$ = new BehaviorSubject<DejaPopupAction>(null);
         }
         return this._dialogCom$;
     }

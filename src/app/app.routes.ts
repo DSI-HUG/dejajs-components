@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 /*
  *  @license
  *  Copyright Hôpitaux Universitaires de Genève. All Rights Reserved.
@@ -19,6 +20,7 @@ const routes: Routes = [
     // { path: 'combo-list', loadChildren: './combo-list/combo-list-demo.module#DejaComboListDemoModule', data: { title: 'Combo List' } },
     { path: 'contenteditableselector', loadChildren: () => import('./content-editable/content-editable-demo.module').then(m => m.DejaContentEditableDemoModule), data: { title: 'Content Editable' } },
     { path: 'date-picker', loadChildren: () => import('./date-picker/date-picker-demo.module').then(m => m.DejaDatePickerDemoModule), data: { title: 'Date Picker' } },
+    { path: 'date-picker-material', loadChildren: () => import('./date-picker-material/date-picker-material-demo.module').then(m => m.DejaDatePickerMaterialDemoModule), data: { title: 'Date Picker Material' } },
     { path: 'editor', loadChildren: () => import('./editor/editor-demo.module').then(m => m.DejaEditorDemoModule), data: { title: 'Editor' } },
     // { path: 'events', loadChildren: './global-events/global-events-demo.module#DejaGlobalEventsDemoModule', data: { title: 'Events' } },
     { path: 'grid', loadChildren: () => import('./grid/grid-demo.module').then(m => m.DejaGridDemoModule), data: { title: 'Grid' } },
@@ -41,6 +43,9 @@ const routes: Routes = [
     { path: 'tree-list', loadChildren: () => import('./tree-list/tree-list-demo.module').then(m => m.DejaTreeListDemoModule), data: { title: 'Tree List' } },
     { path: 'v2-numeric-stepper', loadChildren: () => import('./v2/numeric-stepper/numeric-stepper-demo.module').then(m => m.DejaNumericStepperDemoModule), data: { title: 'Numeric Stepper V2' } },
     { path: 'viewport', loadChildren: () => import('./viewport/viewport-demo.module').then(m => m.DejaViewPortDemoModule), data: { title: 'Viewport' } },
+    { path: 'monaco-editor-v2', loadChildren: () => import('./v2/monaco-editor/monaco-editor-demo.module').then(m => m.MonacoEditorDemoModule), data: { title: 'Monaco Editor V2' } },
+    { path: 'tree-list-v2', loadChildren: () => import('./v2/tree-list/tree-list-demo.module').then(m => m.TreeListDemoModule), data: { title: 'Tree List V2' } },
+    { path: 'viewport-v2', loadChildren: () => import('./v2/viewport/viewport-demo.module').then(m => m.ViewPortDemoModule), data: { title: 'Viewport V2' } },
     { path: '**', redirectTo: 'home', pathMatch: 'prefix' }
 ];
 
@@ -48,4 +53,4 @@ export const appRoutingProviders: Route[] = [
 
 ];
 
-export const routing: ModuleWithProviders<Route> = RouterModule.forRoot(routes);
+export const routing: ModuleWithProviders<Route> = RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' });

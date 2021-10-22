@@ -1,32 +1,32 @@
-@import '~@angular/material/theming';
-
 @mixin buttons-theme($theme) {
 
-	[mat-menu-item].with-icon,
-	[mat-raised-button].with-icon {
-		&:before {
-			content: attr(data-icon);
-			font-family: 'Material Icons';
-			left: 0;
-			position: absolute;
-			text-align: center;
-		}
-	}
+    [mat-menu-item].with-icon,
+    [mat-raised-button].with-icon {
+        &:before {
+            content: attr(data-icon);
+            font-family: 'Material Icons';
+            left: 0;
+            position: absolute;
+            text-align: center;
+        }
+    }
 
-	[mat-menu-item].with-icon {
-		padding-left: 3rem;
-		&:before {
-			width: 3rem;
-			font-size: 130%;
-			opacity: 0.85;
-		}
-	}
+    [mat-menu-item].with-icon {
+        padding-left: 3rem;
 
-	[mat-raised-button].with-icon {
-		padding-left: 2rem;
-		&:before {
-			width: 2rem;
-		}
-	}
+        &:before {
+            width: 3rem;
+            font-size: 130%;
+            opacity: 0.85;
+        }
+    }
+
+    [mat-raised-button].with-icon {
+        padding-left: 2rem;
+
+        &:before {
+            width: 2rem;
+        }
+    }
 
 }

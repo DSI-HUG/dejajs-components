@@ -34,7 +34,7 @@ describe('DejaDialogComponent', () => {
 
     it('should not emit closed event if click inside the dialog', () => {
         const spy = spyOn(component.closed, 'emit').and.callThrough();
-        fixture.debugElement.query(By.css('.dialog')).nativeElement.click();
+        (fixture.debugElement.query(By.css('.dialog')).nativeElement as HTMLElement).click();
         void expect(spy).not.toHaveBeenCalled();
     });
 
@@ -44,7 +44,7 @@ describe('DejaDialogComponent', () => {
         const event = {
             target: {},
             // eslint-disable-next-line @typescript-eslint/no-empty-function
-            preventDefault: () => {}
+            preventDefault: (): void => {}
         };
 
         component.close(event as MouseEvent);

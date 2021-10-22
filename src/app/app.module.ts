@@ -16,10 +16,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { DejaMaterialColorsModule } from '@deja-js/component/core';
-import { DejaSlimScrollModule } from '@deja-js/component/core';
-import { DejaTextMetricsModule } from '@deja-js/component/core';
-import { IconModule } from '@deja-js/component/core';
+import { DejaMaterialColorsModule, DejaSlimScrollModule, DejaTextMetricsModule, IconModule } from '@deja-js/component/core';
 import { DejaSidenavModule } from '@deja-js/component/sidenav';
 
 import { AppComponent } from './app.component';

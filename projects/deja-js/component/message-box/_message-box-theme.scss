@@ -1,14 +1,15 @@
+@use '~@angular/material' as mat;
 @mixin messageBoxStandard($palette) {
-    background-color: mat-color($palette, 500);
-    color: mat-contrast($palette, 900);
-    box-shadow: 0 4px 20px 0 rgba(0, 0, 0, .14), 0 7px 10px -5px rgba(mat-color($palette), .4);
+    background-color: mat.get-color-from-palette($palette, 500);
+    color: mat.get-contrast-color-from-palette($palette, 900);
+    box-shadow: 0 4px 20px 0 rgba(0, 0, 0, .14), 0 7px 10px -5px rgba(mat.get-color-from-palette($palette), .4);
 
     mat-icon {
-        color: mat-contrast($palette, 900);
+        color: mat.get-contrast-color-from-palette($palette, 900);
     }
 
     >.mat-card-actions {
-        background-color: mat-color($palette, 700);
+        background-color: mat.get-color-from-palette($palette, 700);
     }
 
     button {
@@ -18,17 +19,17 @@
 
 
 @mixin messageBoxLight($palette) {
-    background-color: mat-color($palette, 50);
-    color: mat-color($palette, 700);
+    background-color: mat.get-color-from-palette($palette, 50);
+    color: mat.get-color-from-palette($palette, 700);
     box-shadow: none;
 
     mat-icon {
-        color: mat-color($palette, 700);
+        color: mat.get-color-from-palette($palette, 700);
     }
 
     >.mat-card-actions {
-        color: mat-color($palette, 900);
-        background-color: mat-color($palette, 100);
+        color: mat.get-color-from-palette($palette, 900);
+        background-color: mat.get-color-from-palette($palette, 100);
 
         button {
             background-color: transparent;
@@ -41,8 +42,8 @@
     $warn: map-get($theme, warn);
     $background: map-get($theme, background);
     $foreground: map-get($theme, foreground);
-    $warning: mat-palette($mat-orange);
-    $success: mat-palette($mat-green);
+    $warning: mat.define-palette(mat.$orange-palette);
+    $success: mat.define-palette(mat.$green-palette);
 
 
     deja-message-box {
@@ -107,15 +108,15 @@
             >.mat-card-actions {
                 button {
                     &.mat-success[mat-icon-button]:not([disabled]) {
-                        color: mat-color($success) !important;
+                        color: mat.get-color-from-palette($success) !important;
                     }
 
                     &.mat-warn[mat-icon-button]:not([disabled]) {
-                        color: mat-color($warning) !important;
+                        color: mat.get-color-from-palette($warning) !important;
                     }
 
                     &.mat-danger[mat-icon-button]:not([disabled]) {
-                        color: mat-color($warn) !important;
+                        color: mat.get-color-from-palette($warn) !important;
                     }
                 }
             }

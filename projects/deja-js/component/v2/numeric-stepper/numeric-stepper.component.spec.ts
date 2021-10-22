@@ -52,8 +52,8 @@ describe('DejaNumericStepperComponent', () => {
 
         fixture = TestBed.createComponent(DejaNumericStepperContainerComponent);
         const numericStepperDebugElement = fixture.debugElement.query(By.directive(DejaNumericStepperComponent));
-        containerComponent = fixture.debugElement.componentInstance;
-        component = numericStepperDebugElement.componentInstance;
+        containerComponent = fixture.debugElement.componentInstance as DejaNumericStepperContainerComponent;
+        component = numericStepperDebugElement.componentInstance as DejaNumericStepperComponent;
         fixture.detectChanges();
     }));
 

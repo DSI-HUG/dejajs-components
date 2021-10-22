@@ -6,12 +6,8 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Directive } from '@angular/core';
-import { ElementRef } from '@angular/core';
-import { Input } from '@angular/core';
-import { Destroy } from '@deja-js/component/core';
-import { Position } from '@deja-js/component/core';
-import { Rect } from '@deja-js/component/core';
+import { Directive, ElementRef, Input } from '@angular/core';
+import { Destroy, Position, Rect } from '@deja-js/component/core';
 import { fromEvent, merge, Observable, of, Subject } from 'rxjs';
 import { filter, map, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 
@@ -54,7 +50,7 @@ export class DejaMouseDraggableDirective extends Destroy {
                 switchMap(event => {
                     let target: HTMLElement;
 
-                    const match = (el: HTMLElement) => el.tagName === this.context.target.toUpperCase() || el.id === this.context.target.substr(1) || el.hasAttribute(this.context.target.substring(1, this.context.target.length - 1));
+                    const match = (el: HTMLElement): boolean => el.tagName === this.context.target.toUpperCase() || el.id === this.context.target.substr(1) || el.hasAttribute(this.context.target.substring(1, this.context.target.length - 1));
 
                     if (this.context) {
                         if (this.context.target) {
@@ -68,8 +64,10 @@ export class DejaMouseDraggableDirective extends Destroy {
                         }
 
                         if (target && this.context.dragStart) {
+                            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                             const dragContext = this.context.dragStart(target);
                             if (dragContext) {
+                                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
                                 if (dragContext.subscribe) {
                                     const context$ = dragContext as Observable<IDragDropContext>;
                                     // Observable
@@ -81,13 +79,14 @@ export class DejaMouseDraggableDirective extends Destroy {
                                         })
                                     );
                                 } else {
+                                    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                                     dragDropService.context = dragContext;
                                     return of(target);
                                 }
                             }
                         }
                     }
-                    return of(null);
+                    return of(null as HTMLElement);
                 }),
                 filter(target => !!target), // Start Drag if target is defined
                 switchMap(target => {
@@ -110,7 +109,6 @@ export class DejaMouseDraggableDirective extends Destroy {
                         // eslint-disable-next-line rxjs/no-unsafe-takeuntil
                         takeUntil(kill$),
                         tap(ev => {
-                            console.log('mouseMoveEvent');
                             if (target && ev.buttons === 1) {
                                 const bounds = new Rect(element.getBoundingClientRect());
                                 const position = new Position(ev.pageX, ev.pageY);

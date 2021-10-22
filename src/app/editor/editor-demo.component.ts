@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /*
  *  @license
  *  Copyright Hôpitaux Universitaires de Genève. All Rights Reserved.
@@ -6,9 +7,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Component } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { DejaEditorComponent } from '@deja-js/component/editor';
 
 @Component({
@@ -30,7 +29,7 @@ export class DejaEditorDemoComponent implements OnInit {
         // https://docs.ckeditor.com/ckeditor4/latest/api/CKEDITOR_config.html
         this.editorConfig.extraPlugins = 'colorbutton,autogrow';
         this.editorConfig.on = {
-            instanceReady: function() {
+            instanceReady: function(): void {
                 this.dataProcessor.writer.indentationChars = '';
                 this.dataProcessor.writer.lineBreakChars = '';
             }

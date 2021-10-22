@@ -7,23 +7,9 @@
  */
 
 import { coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
-import { ChangeDetectionStrategy } from '@angular/core';
-import { TemplateRef } from '@angular/core';
-import { ChangeDetectorRef } from '@angular/core';
-import { Component } from '@angular/core';
-import { ContentChild } from '@angular/core';
-import { ElementRef } from '@angular/core';
-import { HostBinding } from '@angular/core';
-import { Input } from '@angular/core';
-import { ViewChild } from '@angular/core';
-import { Destroy } from '@deja-js/component/core';
-import { IViewPort } from '@deja-js/component/core';
-import { IViewPortItem } from '@deja-js/component/core';
-import { IViewPortRefreshParams } from '@deja-js/component/core';
-import { ViewportDirection } from '@deja-js/component/core';
-import { ViewportMode } from '@deja-js/component/core';
-import { ViewPortService } from '@deja-js/component/core';
-import { BehaviorSubject, from, fromEvent, interval, merge, Observable, of, Subject, timer } from 'rxjs';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, HostBinding, Input, TemplateRef, ViewChild } from '@angular/core';
+import { Destroy, IViewPort, IViewPortItem, IViewPortRefreshParams, ViewPortService } from '@deja-js/component/core';
+import { BehaviorSubject, fromEvent, interval, merge, Observable, of, Subject, timer } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
 
 export type DejaViewPortScrollStyleType = 'scrollbar' | 'buttons';
@@ -119,7 +105,7 @@ export class DejaViewPortComponent extends Destroy {
      * horizontal: The item are displayed horizontally
      */
     @Input()
-    public set direction(value: ViewportDirection) {
+    public set direction(value: string) {
         this.viewPort.direction$.next(value);
         this._isHorizontal = value === 'horizontal';
         this.changeDetectorRef.markForCheck();
@@ -181,16 +167,18 @@ export class DejaViewPortComponent extends Destroy {
      * auto: Seul les éléments visibles sont rendus. La taille des éléments est calculée automatiquement (performances --)
      */
     @Input()
-    public set viewportMode(mode: ViewportMode) {
+    public set viewportMode(mode: string) {
         this.viewPort.mode$.next(mode);
     }
 
-    public get viewportMode(): ViewportMode {
+    public get viewportMode(): string {
         return this.viewPort.mode;
     }
 
     public constructor(private changeDetectorRef: ChangeDetectorRef, private viewPort: ViewPortService) {
         super();
+
+        console.warn('@deja-js/component/viewport is deprecated, and will be removed in a further version. Please use @deja-js/component/v2/viewport instead.');
 
         fromEvent(window, 'resize').pipe(
             debounceTime(5),
@@ -201,7 +189,7 @@ export class DejaViewPortComponent extends Destroy {
             this.changeDetectorRef.markForCheck();
         });
 
-        const scroll = (vp: IViewPort) => {
+        const scroll = (vp: IViewPort): void => {
             if (vp) {
                 if (!this.hasButtons) {
                     if (this.element) {
@@ -268,7 +256,7 @@ export class DejaViewPortComponent extends Destroy {
             takeUntil(this.destroyed$)
         ).subscribe(scroll);
 
-        const mouseWheel$ = () => {
+        const mouseWheel$ = (): Observable<number> => {
             const mouseWheelEvent$ = fromEvent(this.element, 'mousewheel') as Observable<MouseWheelEvent>;
             return mouseWheelEvent$.pipe(
                 map(event => {
@@ -279,11 +267,11 @@ export class DejaViewPortComponent extends Destroy {
             );
         };
 
-        const downButton$ = from(this.downButton$).pipe(
+        const downButton$ = this.downButton$.pipe(
             distinctUntilChanged()
         );
 
-        const upButton$ = from(this.upButton$).pipe(
+        const upButton$ = this.upButton$.pipe(
             distinctUntilChanged()
         );
 
@@ -292,12 +280,12 @@ export class DejaViewPortComponent extends Destroy {
             takeUntil(this.destroyed$)
         ).subscribe(scrollPos => this.scrollPos = scrollPos);
 
-        const autoScroll$ = (event: MouseEvent, sign: number) => timer(750).pipe(
+        const autoScroll$ = (event: MouseEvent, sign: number): Observable<number> => timer(750).pipe(
             switchMap(() => interval(50)),
             tap(() => this.scrollPos += sign * (event.ctrlKey ? this.clientSize : this.buttonsStep * 2))
         );
 
-        const initButton$ = (button: HTMLElement) => {
+        const initButton$ = (button: HTMLElement): Observable<number> => {
             const sign = button.id === 'down' ? 1 : -1;
             const mouseUpEvent$ = fromEvent(button, 'mouseup') as Observable<MouseEvent>;
             const mouseLeaveEvent$ = fromEvent(button, 'mouseleave') as Observable<MouseEvent>;

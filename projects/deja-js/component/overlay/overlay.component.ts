@@ -8,18 +8,8 @@
 
 import { BooleanInput, coerceBooleanProperty, coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
 import { CdkConnectedOverlay, CdkOverlayOrigin, OverlayContainer } from '@angular/cdk/overlay';
-import { ChangeDetectionStrategy } from '@angular/core';
-import { ChangeDetectorRef } from '@angular/core';
-import { Component } from '@angular/core';
-import { ElementRef } from '@angular/core';
-import { EventEmitter } from '@angular/core';
-import { Input } from '@angular/core';
-import { Output } from '@angular/core';
-import { ViewChild } from '@angular/core';
-import { ViewEncapsulation } from '@angular/core';
-import { DejaConnectionPositionPair } from '@deja-js/component/core';
-import { Destroy } from '@deja-js/component/core';
-import { MediaService } from '@deja-js/component/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, Output, ViewChild, ViewEncapsulation } from '@angular/core';
+import { DejaConnectionPositionPair, Destroy, MediaService } from '@deja-js/component/core';
 import { timer } from 'rxjs';
 import { take, takeUntil, takeWhile } from 'rxjs/operators';
 
@@ -220,7 +210,7 @@ export class DejaOverlayComponent extends Destroy {
         this.changeDetectorRef.markForCheck();
     }
 
-    private updateOriginOverlay() {
+    private updateOriginOverlay(): void {
         this.overlayOrigin = new CdkOverlayOrigin(new ElementRef((this.isMobile && document.body) || this._ownerElement || this.elementRef.nativeElement));
     }
 }
