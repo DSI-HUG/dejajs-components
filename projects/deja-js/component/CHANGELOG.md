@@ -1,3 +1,16 @@
+# [12.4.0-develop.1](https://github.com/DSI-HUG/dejajs-components/compare/v12.3.0...v12.4.0-develop.1) (2021-10-22)
+
+
+### Bug Fixes
+
+* **popup:** update dialog position on dragEnded (DEJS-1004) ([44b732f](https://github.com/DSI-HUG/dejajs-components/commit/44b732f181389a33116acad919989c1009a6a50b))
+
+
+### Features
+
+* **services:** add Lazy Loading and Dialog service ([e0eaf20](https://github.com/DSI-HUG/dejajs-components/commit/e0eaf202863a768a76aa614bea7443fb08774c91))
+* **services:** add licenses ([f473ab1](https://github.com/DSI-HUG/dejajs-components/commit/f473ab141d43ccdaf88c042d6f04b2065c2d5ea1))
+
 # [12.4.0-next.1](https://github.com/DSI-HUG/dejajs-components/compare/v12.3.0...v12.4.0-next.1) (2021-10-07)
 
 
