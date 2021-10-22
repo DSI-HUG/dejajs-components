@@ -1,45 +1,49 @@
-@import '~@angular/material/theming';
-
+@use '~@angular/material' as mat;
 @mixin circular-picker-theme($theme) {
-	$primary: map-get($theme, primary);
-	$background: map-get($theme, background);
-	$foreground: map-get($theme, foreground);
+    $primary: map-get($theme, primary);
+    $background: map-get($theme, background);
+    $foreground: map-get($theme, foreground);
 
-	.circular-picker {
-		border: 1px solid mat-color($background, status-bar);
-		background-color: mat-color($background, status-bar);
+    .circular-picker {
+        border: 1px solid mat.get-color-from-palette($background, status-bar);
+        background-color: mat.get-color-from-palette($background, status-bar);
 
-		&.disabled {
-			.value {
-				&:hover {
-					background-color: transparent;
-					color: initial;
-					cursor: not-allowed;
-				}
-			}
-			.cursor-container {
-				.cursor {
-					background-color: mat-color($foreground, disabled);
-				}
-				.cursorHand {
-					background-color: mat-color($foreground, disabled);
-				}
-			}
-		}
-		.value {
-			&:hover {
-				background-color: mat-color($primary);
-				color: mat-color($primary, default-contrast);
-			}
-		}
-		.cursor-container {
-			.cursor {
-				background-color: mat-color($primary);
-				color: mat-color($primary, default-contrast);
-			}
-			.cursorHand {
-				background-color: mat-color($primary);
-			}
-		}
-	}
+        &.disabled {
+            .value {
+                &:hover {
+                    background-color: transparent;
+                    color: initial;
+                    cursor: not-allowed;
+                }
+            }
+
+            .cursor-container {
+                .cursor {
+                    background-color: mat.get-color-from-palette($foreground, disabled);
+                }
+
+                .cursorHand {
+                    background-color: mat.get-color-from-palette($foreground, disabled);
+                }
+            }
+        }
+
+        .value {
+            &:hover {
+                background-color: mat.get-color-from-palette($primary);
+                color: mat.get-color-from-palette($primary, default-contrast);
+            }
+        }
+
+        .cursor-container {
+            .cursor {
+                background-color: mat.get-color-from-palette($primary);
+                color: mat.get-color-from-palette($primary, default-contrast);
+            }
+
+            .cursorHand {
+                background-color: mat.get-color-from-palette($primary);
+            }
+        }
+    }
 }

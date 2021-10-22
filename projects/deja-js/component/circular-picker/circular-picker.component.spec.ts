@@ -63,7 +63,7 @@ describe('DejaCircularPickerComponent', () => {
         fixture.detectChanges();
 
         const values = fixture.debugElement.query(By.css('.circular-picker > .cursor-container > .cursor > span'));
-        void expect(values.nativeElement.innerHTML).toEqual('3');
+        void expect((values.nativeElement as HTMLElement).innerHTML).toEqual('3');
     });
 
     it('should update the cursor position on mouse event', done => {
@@ -76,8 +76,8 @@ describe('DejaCircularPickerComponent', () => {
             const cursorElement = fixture.debugElement.query(By.css('.circular-picker > .cursor-container > .cursor > span')).nativeElement as HTMLSpanElement;
             const valueElement = fixture.debugElement.query(By.css('.circular-picker > [value="9"]')).nativeElement as HTMLSpanElement;
 
-            const sendMouseEvent = (element: EventTarget, type: string, x: number, y: number, buttons = 0) => {
-                const eventInit = () => ({
+            const sendMouseEvent = (element: EventTarget, type: string, x: number, y: number, buttons = 0): void => {
+                const eventInit = (): MouseEventInit => ({
                     bubbles: true,
                     cancelable: (type !== 'mousemove'),
                     view: document.defaultView,
@@ -123,10 +123,10 @@ describe('DejaCircularPickerComponent', () => {
                 tap(() => {
                     sendMouseEvent(htmlElement.ownerDocument, 'mousemove', valueBounds.left + 1, valueBounds.top + 1, 0);
                     void expect(component.value).toEqual(9);
-                }))
-                .subscribe(() => {
-                    done();
-                });
+                })
+            ).subscribe(() => {
+                done();
+            });
         });
     });
 });

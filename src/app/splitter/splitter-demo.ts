@@ -11,9 +11,9 @@ import { Component } from '@angular/core';
 @Component({
     selector: 'deja-splitter-demo',
     styleUrls: [
-        'splitter-demo.scss'
+        './splitter-demo.scss'
     ],
-    templateUrl: 'splitter-demo.html'
+    templateUrl: './splitter-demo.html'
 })
 export class DejaSplitterDemoComponent {
     public tabIndex = 1;

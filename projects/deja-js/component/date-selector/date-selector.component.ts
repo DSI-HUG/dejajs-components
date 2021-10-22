@@ -10,9 +10,9 @@
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnInit, Optional, Output, Self, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
-import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { Destroy, KeyCodes } from '@deja-js/component/core';
-import { from, fromEvent, merge, Subject } from 'rxjs';
+import { format } from 'date-fns';
+import { fromEvent, merge, Subject } from 'rxjs';
 import { debounceTime, filter, takeUntil, tap } from 'rxjs/operators';
 
 import { IDateSelectorItem } from './date-selector-item.model';
@@ -90,7 +90,7 @@ export class DejaDateSelectorComponent extends Destroy implements OnInit, Contro
     public set layout(value: DateComponentLayout | string) {
         if (value) {
             if (typeof value === 'string') {
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
                 this.layoutId = (<any>DateComponentLayout)[value];
                 if (!this.layoutId) {
                     throw new Error('Invalid type for DateComponentLayout');
@@ -151,7 +151,7 @@ export class DejaDateSelectorComponent extends Destroy implements OnInit, Contro
         return this._disabled;
     }
 
-    public constructor(elementRef: ElementRef, private changeDetectorRef: ChangeDetectorRef, private momentDateAdapter: MomentDateAdapter, @Self() @Optional() public _control: NgControl) {
+    public constructor(elementRef: ElementRef, private changeDetectorRef: ChangeDetectorRef, @Self() @Optional() public _control: NgControl) {
         super();
 
         const element = elementRef.nativeElement as HTMLElement;
@@ -159,6 +159,14 @@ export class DejaDateSelectorComponent extends Destroy implements OnInit, Contro
         if (this._control) {
             this._control.valueAccessor = this;
         }
+
+        fromEvent(element, 'mousedown').pipe(
+            takeUntil(this.destroyed$)
+        ).subscribe(event => {
+            event.stopPropagation();
+            event.preventDefault();
+            return false;
+        });
 
         fromEvent(element, 'click').pipe(
             takeUntil(this.destroyed$)
@@ -185,7 +193,7 @@ export class DejaDateSelectorComponent extends Destroy implements OnInit, Contro
             this.changeDetectorRef.markForCheck();
         });
 
-        from(this._keyboardNavigation$).pipe(
+        this._keyboardNavigation$.pipe(
             filter(value => value),
             tap(value => this._keyboardNavigation = value),
             debounceTime(2000),
@@ -301,7 +309,7 @@ export class DejaDateSelectorComponent extends Destroy implements OnInit, Contro
         // Du coup on ajoute une ligne vide quand c'est nécessaire
         if (days.length < 42) {
             const x = 42 - days.length;
-            this._emptyDays = new Array(x);
+            this._emptyDays = new Array<number>(x);
         } else {
             this._emptyDays = null;
         }
@@ -414,7 +422,7 @@ export class DejaDateSelectorComponent extends Destroy implements OnInit, Contro
                 sb.push(`${hours.slice(-2)}:${minutes.slice(-2)}`);
             }
         } else {
-            sb.push((this.displayedDate && this.format && this.momentDateAdapter.deserialize(this.displayedDate)?.format(this.format)) || this.displayedDate?.toLocaleDateString());
+            sb.push((this.displayedDate && this.format && format(this.displayedDate, this.format)) || this.displayedDate?.toLocaleDateString());
         }
 
         return sb.join('&nbsp;&nbsp;');
@@ -423,7 +431,7 @@ export class DejaDateSelectorComponent extends Destroy implements OnInit, Contro
     public onTouchedCallback = (): void => undefined;
     public onChangeCallback = (_a?: unknown): void => undefined;
 
-    private bind() {
+    private bind(): void {
         const month = this._displayedDate.getMonth();
         const year = this._displayedDate.getFullYear();
 

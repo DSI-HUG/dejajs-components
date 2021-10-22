@@ -7,14 +7,7 @@
  */
 
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
-import { Component } from '@angular/core';
-import { ContentChild } from '@angular/core';
-import { EventEmitter } from '@angular/core';
-import { Input } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { Output } from '@angular/core';
-import { TemplateRef } from '@angular/core';
-import { ViewEncapsulation } from '@angular/core';
+import { Component, ContentChild, EventEmitter, Input, OnInit, Output, TemplateRef, ViewEncapsulation } from '@angular/core';
 
 export type DejaMessageBoxType = 'info' | 'primary' | 'success' | 'warn' | 'danger';
 

@@ -6,11 +6,8 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unsafe-return */
 import { coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
-import { ChangeDetectorRef } from '@angular/core';
-import { EventEmitter } from '@angular/core';
+import { ChangeDetectorRef, EventEmitter } from '@angular/core';
 import { from, Observable, of, Subscription, timer } from 'rxjs';
 import { filter, map, reduce, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 
@@ -22,7 +19,7 @@ import { SortingService } from '../sorting/sorting.service';
 import { IItemBase } from './item-base';
 import { IFindItemResult, IParentListInfoResult, ItemListService, IViewListResult } from './item-list.service';
 import { IItemTree } from './item-tree';
-import { IViewPort, IViewPortRefreshParams, ViewportMode, ViewPortService } from './viewport.service';
+import { IViewPort, IViewPortRefreshParams, ViewPortService } from './viewport.service';
 
 /** Classe de base pour tous les composants à listes (deja-treelist, deja-select, deja-grid) */
 export abstract class ItemListBase<T> extends Destroy {
@@ -77,7 +74,7 @@ export abstract class ItemListBase<T> extends Destroy {
 
         viewPort.viewPort$.pipe(
             switchMap((viewPortResult: IViewPort) => {
-                let next$: Observable<number> = of(null);
+                let next$: Observable<number> = of<number>(null);
 
                 delete this._hintLabel;
                 if (viewPort.mode === 'disabled') {
@@ -286,7 +283,7 @@ export abstract class ItemListBase<T> extends Destroy {
      *
      * @param mode Mode du viewport (sans viewport, avec un viewport tailles des rows fixes ou dynamiques)
      */
-    public setViewportMode(mode: ViewportMode): void {
+    public setViewportMode(mode: string): void {
         this.viewPort.mode$.next(mode);
     }
 
@@ -348,7 +345,7 @@ export abstract class ItemListBase<T> extends Destroy {
         this.allCollapsed = (collapsed !== undefined) ? collapsed : !this.allCollapsed;
         if (this.viewPort.mode === 'disabled') {
             return from(this._itemList).pipe(
-                filter((item: IItemTree<T>) => item.$items && item.depth === 0 && item.collapsible !== false),
+                filter((item: IItemTree<T>) => item.$items && item.depth === 0 && (item.collapsible ?? true)),
                 switchMap((_item: IItemTree<T>, index: number) => this.toggleCollapse$(index + this.vpStartRow, this.allCollapsed)),
                 reduce((acc, item) => {
                     acc.push(item);
@@ -366,8 +363,8 @@ export abstract class ItemListBase<T> extends Destroy {
      */
     public toggleCollapse$(index: number, collapsed: boolean): Observable<IItemTree<T>> {
         return this.getItemListService().toggleCollapse$(index, collapsed).pipe(
-            switchMap(toogleResult => this.calcViewList$().pipe(
-                take(1), map(() => toogleResult))
+            switchMap(toggleResult => this.calcViewList$().pipe(
+                take(1), map(() => toggleResult))
             )
         );
     }
@@ -507,7 +504,7 @@ export abstract class ItemListBase<T> extends Destroy {
             this._itemListService.hideSelected = this._hideSelected;
             this._itemListService.childrenField = this._childrenField;
             this._itemListService.valueField = this._valueField;
-            this.waiter$sub = from(this._itemListService.waiter$).pipe(
+            this.waiter$sub = this._itemListService.waiter$.pipe(
                 takeUntil(this.destroyed$)
             ).subscribe(status => {
                 this._waiter = status;
@@ -662,7 +659,7 @@ export abstract class ItemListBase<T> extends Destroy {
      * @return True si l'élément peut être réduit.
      */
     protected isCollapsible(item: IItemTree<T>): boolean {
-        return item?.$items && item.collapsible !== false;
+        return item?.$items && (item.collapsible ?? true);
     }
 
     /** Définit si l'élément spécifié est selectionable.
@@ -670,7 +667,7 @@ export abstract class ItemListBase<T> extends Destroy {
      * @return True si l'élément est selectionable.
      */
     protected isSelectable(item: IItemBase<T>): boolean {
-        return item && item.selectable !== false;
+        return item && (item.selectable ?? true);
     }
 
     /** Définit le champ à utiliser comme valeur d'affichage.
@@ -776,7 +773,7 @@ export abstract class ItemListBase<T> extends Destroy {
     }
 
     protected ensureListCaches$(): Observable<IViewListResult<T>> {
-        return this._itemListService.hasCache ? of(null) : this.getViewList$();
+        return this._itemListService.hasCache ? of(null as IViewListResult<T>) : this.getViewList$();
     }
 
     /** Calcul la position de la scrollbar pour que l'élément spécifié soit dans la zone visible. */
@@ -784,6 +781,10 @@ export abstract class ItemListBase<T> extends Destroy {
         this.viewPort.ensureItem$.next(item);
     }
 
+    /* eslint-disable @typescript-eslint/no-explicit-any */
+    /* eslint-disable @typescript-eslint/no-unsafe-return */
+    /* eslint-disable @typescript-eslint/no-unsafe-assignment */
+    /* eslint-disable @typescript-eslint/no-unsafe-member-access */
     // eslint-disable-next-line @typescript-eslint/naming-convention
     protected mapToIItemBase(modls: any[], selected?: boolean): IItemBase<T>[] {
         const m = modls || [];
@@ -825,13 +826,14 @@ export abstract class ItemListBase<T> extends Destroy {
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     protected getVirtualSelectedEntities(value: any): unknown | unknown[] {
-        const dic = (v: any) => {
+        const dic = (v: any): any => {
             if (typeof v === 'string') {
                 v = v.trim();
             }
             const model = {};
             const textField = this.getTextField();
             const valueField = this.getValueField();
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-call
             (<any>model)[textField] = v.toString();
             (<any>model)[valueField] = v;
             return model;
@@ -840,6 +842,7 @@ export abstract class ItemListBase<T> extends Destroy {
         if (value) {
             const modelType = typeof value;
             if (modelType === 'string' || modelType === 'number') {
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-call
                 value = this._multiSelect ? value.split(',').map(dic) : dic(value);
             } else if (value instanceof Array && value.length) {
                 const type = typeof value[0];

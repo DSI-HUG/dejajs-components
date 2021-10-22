@@ -142,7 +142,7 @@ export class DejaPopupConfig<D> extends MatDialogConfig<D> {
         return undefined;
     }
 
-    private createIds() {
+    private createIds(): void {
         // Generate an ID if null or empty
         if (!this.id) {
             this.id = `deja-popup-${++DejaPopupConfig.dialogCount}`;

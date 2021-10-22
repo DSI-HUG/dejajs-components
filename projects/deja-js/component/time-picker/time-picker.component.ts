@@ -7,9 +7,10 @@
  */
 
 import { BooleanInput, coerceBooleanProperty, coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, Optional, Self, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Optional, Output, Self, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { Destroy } from '@deja-js/component/core';
+import { set } from 'date-fns';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, takeUntil } from 'rxjs/operators';
 
@@ -26,9 +27,19 @@ export type TimePickerDisplayMode = 'fullTime' | 'fullTimeWithHoursDisabled' | '
     encapsulation: ViewEncapsulation.None
 })
 export class DejaTimePickerComponent extends Destroy implements ControlValueAccessor {
+    @Output() public readonly timeChange = new EventEmitter<Date>();
 
     /** Display mode for the time-picker */
     @Input() public mode: TimePickerDisplayMode = 'fullTime';
+
+    @Input()
+    public set time(value: Date) {
+        this.writeValue(value);
+    }
+
+    public get time(): Date {
+        return this.value;
+    }
 
     /** Step of the arrows */
     @Input()
@@ -74,14 +85,15 @@ export class DejaTimePickerComponent extends Destroy implements ControlValueAcce
             debounceTime(10),
             distinctUntilChanged(),
             map(hours => {
-                if (hours instanceof Event) {
-                    hours = parseInt((hours.target as HTMLInputElement).value, 10);
+                if (typeof hours === 'object') {
+                    return parseInt((hours.target as HTMLInputElement).value, 10);
                 }
                 return hours;
             }),
             takeUntil(this.destroyed$)
         ).subscribe(hours => {
-            const clone = new Date(this.value.getTime());
+            const value = this.value?.getTime();
+            const clone = value ? new Date(value) : set(new Date(), { hours: 0, minutes: 0, seconds: 0 });
             clone.setHours(hours);
 
             this.value = clone;
@@ -92,14 +104,20 @@ export class DejaTimePickerComponent extends Destroy implements ControlValueAcce
             debounceTime(10),
             distinctUntilChanged(),
             map(minutes => {
-                if (minutes instanceof Event) {
-                    minutes = parseInt((minutes.target as HTMLInputElement).value, 10);
+                if (typeof minutes === 'object') {
+                    return parseInt((minutes.target as HTMLInputElement).value, 10);
                 }
                 return minutes;
             }),
             takeUntil(this.destroyed$)
         ).subscribe(minutes => {
-            const clone = new Date(this.value.getTime());
+            const value = this.value?.getTime();
+            const clone = value ? new Date(value) : set(new Date(), { hours: 0, minutes: 0, seconds: 0 });
+            if (minutes < 0) {
+                minutes += 60;
+            } else if (minutes >= 60) {
+                minutes -= 60;
+            }
             clone.setMinutes(minutes);
 
             this.value = clone;
@@ -113,6 +131,7 @@ export class DejaTimePickerComponent extends Destroy implements ControlValueAcce
         if (v !== this._value) {
             this.writeValue(v);
             this.onChangeCallback(v);
+            this.timeChange.emit(v);
         }
     }
 
@@ -123,9 +142,8 @@ export class DejaTimePickerComponent extends Destroy implements ControlValueAcce
 
     /** From ControlValueAccessor interface */
     public writeValue(value: Date): void {
-        if (value && value !== this._value) {
-            const clone = new Date(value.getTime());
-            this._value = clone;
+        if ((value || null) !== (this._value || null)) {
+            this._value = value ? new Date(value.getTime()) : set(new Date(), { hours: 0, minutes: 0, seconds: 0 });
             this.changeDetectorRef.markForCheck();
         }
     }

@@ -50,7 +50,7 @@ export class DejaGridColumnsLayoutInfos {
                 this.totalFixedWidth += width.value;
             }
 
-            if (typeof column.responsive === 'number' || column.responsive === true) {
+            if (typeof column.responsive === 'number' || column.responsive) {
                 this.responsiveColumns.push(column);
             }
 

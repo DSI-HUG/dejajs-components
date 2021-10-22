@@ -10,14 +10,15 @@
             "prefix": "app",
             "schematics": {
                 "@schematics/angular:component": {
-                    "styleext": "scss"
+                    "style": "scss",
+                    "flat": false,
+                    "changeDetection": "OnPush"
                 }
             },
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:browser",
                     "options": {
-                        "aot": true,
                         "outputPath": "dist/deja-js/component",
                         "index": "src/index.html",
                         "main": "src/main.ts",
@@ -46,12 +47,16 @@
                             "src/styles.scss"
                         ],
                         "allowedCommonJsDependencies": [
-                            "lodash",
                             "showdown",
-                            "ckeditor",
-                            "angular2-text-mask"
+                            "ckeditor"
                         ],
-                        "scripts": []
+                        "scripts": [],
+                        "vendorChunk": true,
+                        "extractLicenses": false,
+                        "buildOptimizer": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true
                     },
                     "configurations": {
                         "production": {
@@ -62,9 +67,7 @@
                             "optimization": true,
                             "outputHashing": "all",
                             "sourceMap": false,
-                            "extractCss": true,
                             "namedChunks": false,
-                            "aot": true,
                             "extractLicenses": true,
                             "vendorChunk": false,
                             "buildOptimizer": true,
@@ -119,15 +122,9 @@
                     }
                 },
                 "lint": {
-                    "builder": "@angular-devkit/build-angular:tslint",
+                    "builder": "@angular-eslint/builder:lint",
                     "options": {
-                        "tsConfig": [
-                            "src/tsconfig.app.json",
-                            "src/tsconfig.spec.json"
-                        ],
-                        "exclude": [
-                            "**/node_modules/**"
-                        ]
+                        "lintFilePatterns": ["src/**/*.js", "src/**/*.ts", "src/**/*.component.html"]
                     }
                 }
             }
@@ -147,15 +144,6 @@
                         "production": {
                             "devServerTarget": "dejajs-component:serve:production"
                         }
-                    }
-                },
-                "lint": {
-                    "builder": "@angular-devkit/build-angular:tslint",
-                    "options": {
-                        "tsConfig": "e2e/tsconfig.e2e.json",
-                        "exclude": [
-                            "**/node_modules/**"
-                        ]
                     }
                 }
             }
@@ -187,15 +175,9 @@
                     }
                 },
                 "lint": {
-                    "builder": "@angular-devkit/build-angular:tslint",
+                    "builder": "@angular-eslint/builder:lint",
                     "options": {
-                        "tsConfig": [
-                            "projects/deja-js/component/tsconfig.lib.json",
-                            "projects/deja-js/component/tsconfig.spec.json"
-                        ],
-                        "exclude": [
-                            "**/node_modules/**"
-                        ]
+                        "lintFilePatterns": ["projects/deja-js/component/**/*.js", "projects/deja-js/component/**/*.ts", "projects/deja-js/component/**/*.component.html"]
                     }
                 }
             }

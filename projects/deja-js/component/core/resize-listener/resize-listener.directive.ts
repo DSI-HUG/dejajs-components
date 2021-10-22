@@ -6,11 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Directive } from '@angular/core';
-import { ElementRef } from '@angular/core';
-import { EventEmitter } from '@angular/core';
-import { OnDestroy } from '@angular/core';
-import { Output } from '@angular/core';
+import { Directive, ElementRef, EventEmitter, OnDestroy, Output } from '@angular/core';
 
 @Directive({
     selector: '[resize-listener]'
@@ -46,7 +42,7 @@ export class DejaResizeListenerDirective implements OnDestroy {
             this.element.style.position = 'relative';
         }
 
-        const getElementSize = (e: HTMLElement) => {
+        const getElementSize = (e: HTMLElement): { width: number; height: number } => {
             if (!e.getBoundingClientRect) {
                 return {
                     width: e.offsetWidth,
@@ -66,7 +62,7 @@ export class DejaResizeListenerDirective implements OnDestroy {
         let lastWidth = size.width;
         let lastHeight = size.height;
 
-        const reset = () => {
+        const reset = (): void => {
             // set display to block, necessary otherwise hidden elements won't ever work
             const invisible = this.element.offsetWidth === 0 && this.element.offsetHeight === 0;
             const saveDisplay = invisible && this.element.style.display;
@@ -83,13 +79,13 @@ export class DejaResizeListenerDirective implements OnDestroy {
             }
         };
 
-        const onScroll = () => {
+        const onScroll = (): void => {
 
             const s = getElementSize(this.element);
             const newWidth = s.width;
             const newHeight = s.height;
 
-            const onResized = () => {
+            const onResized = (): void => {
                 rafId = 0;
 
                 if (newWidth === lastWidth && newHeight === lastHeight) {

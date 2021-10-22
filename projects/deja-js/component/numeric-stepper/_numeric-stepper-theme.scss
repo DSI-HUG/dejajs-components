@@ -1,11 +1,10 @@
-@import '~@angular/material/theming';
-
+@use '~@angular/material' as mat;
 @mixin numeric-stepper-theme($theme) {
     $warn: map-get($theme, warn);
 
     deja-numeric-stepper {
         .off-limits {
-            color: mat-color($warn);
+            color: mat.get-color-from-palette($warn);
         }
-    } 
+    }
 }

@@ -8,9 +8,8 @@
 
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+import { MAT_DATE_FORMATS } from '@angular/material/core';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
-import { MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter } from '@angular/material-moment-adapter';
 
 export const myFormats = {
     parse: {
@@ -32,32 +31,26 @@ export const myFormats = {
     templateUrl: './time-picker-demo.html',
     encapsulation: ViewEncapsulation.None,
     providers: [
-        {
-            provide: DateAdapter,
-            useClass: MomentDateAdapter,
-            deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS]
-        },
         { provide: MAT_DATE_FORMATS, useValue: myFormats }
     ]
 })
 export class DejaTimePickerDemoComponent {
     public tabIndex = 1;
 
-    public date0 = new Date();
+    public date0: Date = null;
     public date1 = new Date(2021, 4, 6, 9, 5, 0);
     public date2 = new Date();
     public date3 = new Date();
     public date4 = new Date();
     public date5 = new Date();
-    public date6 = new Date(2021, 4, 28, 8, 55, 0);
-    public date7 = new Date();
-    public date8 = new Date(2021, 4, 28, 12, 55, 0);
-    public disable7 = true;
+    public date6 = new Date();
+    public date7 = new Date(2021, 4, 28, 12, 55, 0);
+    public disable6 = true;
     public dateForm: FormGroup;
 
     public constructor(private changeDetectorRef: ChangeDetectorRef, private fb: FormBuilder) {
         this.dateForm = this.fb.group({
-            date8: [this.date8]
+            date7: [this.date7]
         });
     }
 
@@ -107,16 +100,8 @@ export class DejaTimePickerDemoComponent {
     }
 
     public date6Changed(date: Date): void {
-        const clone = new Date(this.date6.getTime());
-        clone.setMinutes(date.getMinutes());
-
-        this.date6 = clone;
-        this.changeDetectorRef.markForCheck();
-    }
-
-    public date7Changed(date: Date): void {
         const clone = new Date(date.getTime());
-        this.date7 = clone;
+        this.date6 = clone;
         this.changeDetectorRef.markForCheck();
     }
 }

@@ -6,8 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Component } from '@angular/core';
-import { Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 import { ISortInfos } from './sort-infos.model';
 

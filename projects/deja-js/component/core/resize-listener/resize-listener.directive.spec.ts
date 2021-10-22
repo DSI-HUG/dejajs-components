@@ -7,10 +7,7 @@
  */
 
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { EventEmitter } from '@angular/core';
-import { Output } from '@angular/core';
-import { ViewEncapsulation } from '@angular/core';
+import { Component, EventEmitter, Output, ViewEncapsulation } from '@angular/core';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -58,7 +55,7 @@ describe('DejaResizeListenerDirective', () => {
         const fixture = TestBed.createComponent(ResizeListenerContainerComponent);
         fixture.detectChanges();
         const debugElement = fixture.debugElement.query(By.directive(DejaResizeListenerDirective));
-        const instance = debugElement.componentInstance;
+        const instance = debugElement.componentInstance as DejaResizeListenerDirective;
         void expect(instance).toBeTruthy();
     }));
 

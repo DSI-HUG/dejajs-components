@@ -7,18 +7,10 @@
  */
 
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
-import { Directive } from '@angular/core';
-import { ElementRef } from '@angular/core';
-import { HostBinding } from '@angular/core';
-import { Input } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { Optional } from '@angular/core';
-import { Self } from '@angular/core';
-import { ControlValueAccessor } from '@angular/forms';
-import { NgControl } from '@angular/forms';
-import { Destroy } from '@deja-js/component/core';
-import { KeyCodes } from '@deja-js/component/core';
-import { BehaviorSubject, from, fromEvent, Observable, timer } from 'rxjs';
+import { Directive, ElementRef, HostBinding, Input, OnInit, Optional, Self } from '@angular/core';
+import { ControlValueAccessor, NgControl } from '@angular/forms';
+import { Destroy, KeyCodes } from '@deja-js/component/core';
+import { BehaviorSubject, fromEvent, Observable, timer } from 'rxjs';
 import { distinctUntilChanged, filter, map, switchMap, take, takeUntil } from 'rxjs/operators';
 
 @Directive({
@@ -59,10 +51,10 @@ export class DejaEditableDirective extends Destroy implements ControlValueAccess
             return undefined;
         });
 
-        const inEdition$ = from(this.edit$).pipe(
+        const inEdition$ = this.edit$.pipe(
             distinctUntilChanged(),
             map(([value, selectOnFocus]) => {
-                if (selectOnFocus !== false) {
+                if (selectOnFocus ?? true) {
                     timer(10).pipe(
                         take(1),
                         takeUntil(this.destroyed$)
@@ -251,7 +243,7 @@ export class DejaEditableDirective extends Destroy implements ControlValueAccess
     public onTouchedCallback = (): void => undefined;
     public onChangeCallback = (_a?: unknown): void => undefined;
 
-    private isChildElement(element: HTMLElement) {
+    private isChildElement(element: HTMLElement): boolean {
         let parentElement = element;
 
         // eslint-disable-next-line no-loops/no-loops
@@ -262,7 +254,7 @@ export class DejaEditableDirective extends Destroy implements ControlValueAccess
         return parentElement === this.element;
     }
 
-    private refreshView() {
+    private refreshView(): void {
         if (!this.model) {
             return;
         }

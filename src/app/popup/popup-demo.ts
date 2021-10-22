@@ -7,15 +7,9 @@
  */
 
 import { ComponentPortal, PortalInjector, TemplatePortal } from '@angular/cdk/portal';
-import { ChangeDetectorRef } from '@angular/core';
-import { Component } from '@angular/core';
-import { Injector } from '@angular/core';
-import { TemplateRef } from '@angular/core';
-import { ViewChild } from '@angular/core';
-import { ViewContainerRef } from '@angular/core';
+import { ChangeDetectorRef, Component, Injector, TemplateRef, ViewChild, ViewContainerRef } from '@angular/core';
 import { DialogPosition } from '@angular/material/dialog';
-import { Color } from '@deja-js/component/core';
-import { Destroy } from '@deja-js/component/core';
+import { Color, Destroy } from '@deja-js/component/core';
 import { DejaMessageBoxAction, DejaMessageBoxType } from '@deja-js/component/message-box';
 import { DejaPopupAction, DejaPopupButton, DejaPopupConfig, DejaPopupCustomAction, DejaPopupReponse, DejaPopupService } from '@deja-js/component/popup';
 import { filter, map, takeUntil } from 'rxjs/operators';
@@ -27,8 +21,8 @@ import { PopupDemoButtonComponent, PopupDemoButtonComponentData } from './popup-
 
 @Component({
     selector: 'popup-demo',
-    styleUrls: ['popup-demo.scss'],
-    templateUrl: 'popup-demo.html'
+    styleUrls: ['./popup-demo.scss'],
+    templateUrl: './popup-demo.html'
 })
 export class DejaPopupDemoComponent extends Destroy {
     @ViewChild('templateButton')
@@ -269,7 +263,7 @@ export class DejaPopupDemoComponent extends Destroy {
         this.changeDetectorRef.markForCheck();
     }
 
-    private createInjector<T>(data: T) {
+    private createInjector<T>(data: T): PortalInjector {
         const injectorTokens = new WeakMap();
         injectorTokens.set(CONTAINER_DATA, data);
         return new PortalInjector(this.injector, injectorTokens);

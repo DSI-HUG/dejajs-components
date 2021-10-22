@@ -7,22 +7,9 @@
  */
 
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
-import { ChangeDetectionStrategy } from '@angular/core';
-import { ChangeDetectorRef } from '@angular/core';
-import { Component } from '@angular/core';
-import { ElementRef } from '@angular/core';
-import { EventEmitter } from '@angular/core';
-import { HostBinding } from '@angular/core';
-import { Input } from '@angular/core';
-import { Optional } from '@angular/core';
-import { Output } from '@angular/core';
-import { Self } from '@angular/core';
-import { ViewChild } from '@angular/core';
-import { ViewEncapsulation } from '@angular/core';
-import { ControlValueAccessor } from '@angular/forms';
-import { NgControl } from '@angular/forms';
-import { Color } from '@deja-js/component/core';
-import { DejaConnectionPositionPair } from '@deja-js/component/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostBinding, Input, Optional, Output, Self, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ControlValueAccessor, NgControl } from '@angular/forms';
+import { Color, DejaConnectionPositionPair } from '@deja-js/component/core';
 import { DejaOverlayComponent } from '@deja-js/component/overlay';
 
 @Component({
@@ -77,7 +64,7 @@ export class DejaColorPickerComponent implements ControlValueAccessor {
         return this._positions;
     }
 
-    public constructor(elementRef: ElementRef, @Self() @Optional() public control: NgControl, private changeDetectorRef: ChangeDetectorRef) {
+    public constructor(elementRef: ElementRef<HTMLElement>, @Self() @Optional() public control: NgControl, private changeDetectorRef: ChangeDetectorRef) {
         if (this.control) {
             this.control.valueAccessor = this;
         }

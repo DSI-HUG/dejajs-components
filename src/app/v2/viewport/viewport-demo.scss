@@ -1,0 +1,95 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+
+    .mat-tab-group{
+        flex: 0 0 auto;
+    }
+
+    .demo-card {
+        flex: 1 1 auto;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+
+        .mat-toolbar {
+            flex: 0 0 auto;
+        }
+
+        .mat-card-content {
+            flex: 1 1 auto;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+
+            .viewPortTitle {
+                flex: 0 0 auto;
+            }
+
+            .viewPortOptions {
+                flex: 0 0 auto;
+                display: flex;
+                align-items: center;
+                justify-content: flex-start;
+
+                .mat-checkbox {
+                    padding: 0.5rem;
+                }
+                
+                .viewPortEnsureIndex,
+                .viewPortEnsureScrollPos {
+                    display: flex;
+                    align-items: center;
+                    justify-content: flex-start;
+                    padding-left: 2rem;
+
+                    .flex3r {
+                        flex: 0 0 3rem;
+                        overflow: hidden;
+                    }
+                }
+            }
+
+            viewport {
+                padding-top: 1rem;
+                flex: 1 1 100%;
+
+                .listitem {
+                    box-shadow: inset 1px 0 0 #aaa, inset -1px 0 0 #aaa, inset 0 -1px 0 #aaa;
+
+                    &:first-child {
+                        box-shadow: inset 1px 0 0 #aaa, inset -1px 0 0 #aaa, inset 0 -1px 0 #aaa, inset 0 1px 0 #aaa;
+                    }
+                }
+
+                &[horizontal="true"] {
+                    .listitem {
+                        box-shadow: inset -1px 0 0 #aaa, inset 0 -1px 0 #aaa, inset 0 1px 0 #aaa;
+
+                        &:first-child {
+                            box-shadow: inset 1px 0 0 #aaa, inset -1px 0 0 #aaa, inset 0 -1px 0 #aaa, inset 0 1px 0 #aaa;
+                        }
+
+                        .news {
+                            max-width: 45rem;
+                            display: block;
+
+                            .logo {
+                                max-width: 20rem !important;
+                            }
+
+                            .text {
+                                flex: 0 1 25rem !important;
+
+                                .footer {
+                                    flex-direction: column !important;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -52,7 +52,7 @@ describe('DejaTimePickerComponent', () => {
 
         fixture = TestBed.createComponent(DejaTimePickerContainerComponent);
         component = fixture.debugElement.query(By.directive(DejaTimePickerComponent)).componentInstance as DejaTimePickerComponent;
-        containerComponent = fixture.debugElement.componentInstance;
+        containerComponent = fixture.debugElement.componentInstance as DejaTimePickerContainerComponent;
         fixture.detectChanges();
     }));
 

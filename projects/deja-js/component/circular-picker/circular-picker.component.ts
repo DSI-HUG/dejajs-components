@@ -339,7 +339,7 @@ export class DejaCircularPickerComponent extends Destroy implements OnInit, Cont
         return (circleSegmentIndex * config.stepAngle * this.clockwiseFactor) + config.range.beginOffset;
     }
 
-    private bind() {
+    private bind(): void {
         this._circularValues = [];
         this.configs.forEach((config: IConfig, configNumber: number) => {
             // eslint-disable-next-line no-loops/no-loops
@@ -355,7 +355,7 @@ export class DejaCircularPickerComponent extends Destroy implements OnInit, Cont
         });
     }
 
-    private updateCursor() {
+    private updateCursor(): void {
         if (!this._circularValues || !this._circularValues.length) {
             return;
         }

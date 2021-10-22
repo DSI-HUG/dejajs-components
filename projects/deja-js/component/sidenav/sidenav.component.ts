@@ -7,18 +7,9 @@
  */
 
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
-import { ChangeDetectorRef } from '@angular/core';
-import { Component } from '@angular/core';
-import { Input } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { ViewEncapsulation } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { ActivatedRouteSnapshot } from '@angular/router';
-import { NavigationEnd } from '@angular/router';
-import { Router } from '@angular/router';
-import { Destroy } from '@deja-js/component/core';
-import { MediaService } from '@deja-js/component/core';
-import { from } from 'rxjs';
+import { ChangeDetectorRef, Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { ActivatedRoute, ActivatedRouteSnapshot, NavigationEnd, Router } from '@angular/router';
+import { Destroy, MediaService } from '@deja-js/component/core';
 import { filter, map, mergeMap, takeUntil } from 'rxjs/operators';
 
 import { DejaSidenavService } from './sidenav.service';
@@ -54,7 +45,7 @@ export class DejaSidenavComponent extends Destroy implements OnInit {
     ) {
         super();
 
-        from(this.mediaService.mediaChanged$).pipe(
+        this.mediaService.mediaChanged$.pipe(
             takeUntil(this.destroyed$)
         ).subscribe(alias => {
             this.sidenavService.hidden = alias === 'xs';
@@ -66,7 +57,7 @@ export class DejaSidenavComponent extends Destroy implements OnInit {
 
     public ngOnInit(): void {
         // Initialize
-        this.title = this.getActivatedRouteLastChild().data.title;
+        this.title = this.getActivatedRouteLastChild().data.title as string;
 
         // Listen for future route changes
         this.router.events.pipe(
@@ -83,7 +74,7 @@ export class DejaSidenavComponent extends Destroy implements OnInit {
             mergeMap(route => route.data),
             takeUntil(this.destroyed$)
         ).subscribe(event => {
-            this.title = event.title;
+            this.title = event.title as string;
         });
     }
 

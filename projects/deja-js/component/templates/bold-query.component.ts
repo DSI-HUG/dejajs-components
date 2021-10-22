@@ -6,9 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Component } from '@angular/core';
-import { Input } from '@angular/core';
-import { ViewEncapsulation } from '@angular/core';
+import { Component, Input, ViewEncapsulation } from '@angular/core';
 import { Diacritics } from '@deja-js/component/core';
 import { RegExpUtils } from '@deja-js/component/core/util';
 
@@ -100,7 +98,7 @@ export class DejaBoldQueryComponent {
         this.refresh();
     }
 
-    private refresh() {
+    private refresh(): void {
         if (this._value && this._query && this._query.length > 0) {
             const regexpPattern = this._atTheBeginningOfWordOnly ? (`\\b${RegExpUtils.escapeRegExp(this._query)}`) : RegExpUtils.escapeRegExp(this._query);
             const sc = new RegExp(regexpPattern, this._regexpOptions);

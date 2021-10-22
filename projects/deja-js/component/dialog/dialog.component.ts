@@ -5,14 +5,8 @@
  *  Use of this source code is governed by an Apache-2.0 license that can be
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
-import { Component } from '@angular/core';
-import { ContentChild } from '@angular/core';
-import { ElementRef } from '@angular/core';
-import { EventEmitter } from '@angular/core';
-import { HostListener } from '@angular/core';
-import { Output } from '@angular/core';
-import { Destroy } from '@deja-js/component/core';
-import { KeyCodes } from '@deja-js/component/core';
+import { Component, ContentChild, ElementRef, EventEmitter, HostListener, Output } from '@angular/core';
+import { Destroy, KeyCodes } from '@deja-js/component/core';
 import { fromEvent } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 

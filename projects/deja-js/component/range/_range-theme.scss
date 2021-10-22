@@ -1,5 +1,4 @@
-@import '~@angular/material/theming';
-
+@use '~@angular/material' as mat;
 @mixin range-theme($theme) {
     $primary: map-get($theme, primary);
 
@@ -7,40 +6,48 @@
         .separator {
             .default-separator {
                 .default-separator-item {
-                    background: mat-color($primary, A400);
+                    background: mat.get-color-from-palette($primary, A400);
                 }
             }
         }
+
         @-webkit-keyframes selected {
             from {
-                border-bottom: 0px solid mat-color($primary);
+                border-bottom: 0px solid mat.get-color-from-palette($primary);
             }
+
             to {
-                border-bottom: 2px solid mat-color($primary);
+                border-bottom: 2px solid mat.get-color-from-palette($primary);
             }
         }
+
         @keyframes selected {
             from {
-                border-bottom: 0px solid mat-color($primary);
+                border-bottom: 0px solid mat.get-color-from-palette($primary);
             }
+
             to {
-                border-bottom: 2px solid mat-color($primary);
+                border-bottom: 2px solid mat.get-color-from-palette($primary);
             }
         }
+
         @-webkit-keyframes not-selected {
             from {
-                border-bottom: 2px solid mat-color($primary);
+                border-bottom: 2px solid mat.get-color-from-palette($primary);
             }
+
             to {
-                border-bottom: 0px solid mat-color($primary);
+                border-bottom: 0px solid mat.get-color-from-palette($primary);
             }
         }
+
         @keyframes not-selected {
             from {
-                border-bottom: 2px solid mat-color($primary);
+                border-bottom: 2px solid mat.get-color-from-palette($primary);
             }
+
             to {
-                border-bottom: 0px solid mat-color($primary);
+                border-bottom: 0px solid mat.get-color-from-palette($primary);
             }
         }
     }

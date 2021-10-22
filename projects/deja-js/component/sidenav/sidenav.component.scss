@@ -1,4 +1,5 @@
-@import '~@angular/material/theming';
+@use '~@angular/material'as mat;
+
 deja-sidenav {
     $large-sidenav-width: 320px;
     $small-sidenav-width: 280px;
@@ -6,28 +7,35 @@ deja-sidenav {
     display: flex;
     flex: 1 1 100%;
     height: 100%;
+
     .header {
         flex: 0 0 auto;
     }
+
     @mixin sidebar-light() {
         .mat-sidenav {
             transform: translate3d(calc(-100% + #{ $light-sidenav-width }), 0, 0);
             visibility: visible !important;
+
             .header {
                 padding: 0 8px;
                 justify-content: flex-end;
+
                 .header-icon,
                 .header-text {
                     display: none;
                 }
             }
+
             deja-sidenav-menu {
                 .mat-list-item {
                     .mat-list-item-content {
                         justify-content: flex-end;
+
                         .mat-list-icon {
                             padding: 0;
                         }
+
                         .mat-list-text {
                             display: none;
                         }
@@ -35,20 +43,25 @@ deja-sidenav {
                 }
             }
         }
+
         .mat-drawer-content {
             margin-left: $light-sidenav-width !important;
         }
     }
+
     @mixin sidebar-hidden() {
         .mat-sidenav {
             width: $small-sidenav-width;
+
             .mat-toolbar {
                 border-right: none;
             }
         }
+
         .mat-drawer-content {
             .mat-toolbar {
                 padding: 0 8px;
+
                 .menu-btn {
                     margin-right: 8px;
                     display: block !important;
@@ -56,34 +69,44 @@ deja-sidenav {
             }
         }
     }
+
     .mat-drawer-container {
         height: 100%;
         flex: 1 1 100%;
+
         &.sidenav-light {
             @include sidebar-light;
         }
+
         &.sidenav-hidden {
             @include sidebar-hidden;
         }
+
         .mat-sidenav {
             overflow: visible;
             width: $large-sidenav-width;
+
             .mat-drawer-inner-container {
                 display: flex;
                 flex-direction: column;
             }
+
             .header {
                 padding-right: 8px;
                 font-size: 14px;
+
                 .header-icon {
                     padding: 4px;
                 }
+
                 .header-text {
                     margin-left: 32px;
                     flex: 1 1 auto;
                 }
             }
+
             deja-sidenav-menu {
+
                 // overflow-y: auto;
                 .mat-list-item {
                     .mat-list-item-content {
@@ -93,33 +116,41 @@ deja-sidenav {
                         }
                     }
                 }
+
                 .mat-divider {
                     margin: 0.7rem 0;
                 }
             }
         }
+
         .mat-drawer-content {
             display: flex;
             flex-direction: column;
             height: 100%;
+
             >div {
                 overflow: hidden;
                 height: 100%;
             }
+
             .mat-toolbar {
-                @include mat-elevation(3);
+                @include mat.elevation(3);
                 -webkit-font-smoothing: antialiased;
                 padding-right: 8px;
                 flex: 0 0 auto;
+
                 .menu-title {
                     flex: 1 1 auto;
                 }
+
                 .menu-btn {
                     display: none;
                 }
             }
+
             deja-sidenav-content {
                 overflow-y: auto;
+
                 >* {
                     overflow-x: hidden;
                     overflow-y: auto;

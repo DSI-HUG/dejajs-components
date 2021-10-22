@@ -6,13 +6,8 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Directive } from '@angular/core';
-import { ElementRef } from '@angular/core';
-import { EventEmitter } from '@angular/core';
-import { Input } from '@angular/core';
-import { Output } from '@angular/core';
-import { DejaConnectionPositionPair } from '@deja-js/component/core';
-import { Destroy } from '@deja-js/component/core';
+import { Directive, ElementRef, EventEmitter, Input, Output } from '@angular/core';
+import { DejaConnectionPositionPair, Destroy } from '@deja-js/component/core';
 import { fromEvent, of } from 'rxjs';
 import { delay, switchMap, takeUntil } from 'rxjs/operators';
 

@@ -28,12 +28,12 @@
         <mat-checkbox [(ngModel)]="designMode">Design Mode</mat-checkbox>
     </mat-card-content>
     <mat-card-content>
-        <span #dropArea id="droparea" [deja-mouse-droppable]="getDropContext(dropArea)">
+        <span #dropArea id="droparea" [mouse-droppable]="getDropContext(dropArea)">
             Drop Area
         </span>
     </mat-card-content>
     <mat-card-content>
-        <deja-tiles #tiles1 id="tiles1" [models]="tiles1$ | async" [deja-mouse-draggable]="getDragContext()" (contentAdding)="onContentAdding($event)" (contentRemoving)="onContentRemoving($event)" maxwidth="100%" tileminwidth="5%" tileminheight="5%" tilemaxheight="50%" tilemaxwidth="50%">
+        <deja-tiles #tiles1 id="tiles1" [models]="tiles1$ | async" [mouse-draggable]="getDragContext()" (contentAdding)="onContentAdding($event)" (contentRemoving)="onContentRemoving($event)" maxwidth="100%" tileminwidth="5%" tileminheight="5%" tilemaxheight="50%" tilemaxwidth="50%">
             <ng-template #tileTemplate let-tile let-pressed="pressed" let-selected="selected">
                 <div class="tile-content noselect" [style.background-color]="tile.color">{{ tile.templateModel.naqme }} ({{ tile.templateModel.code }})
                     <span id="selected">Selected</span>
@@ -54,4 +54,4 @@
     </mat-card-content>
 </mat-card>
 
-<deja-mouse-dragdrop-cursor></deja-mouse-dragdrop-cursor>
+<mouse-dragdrop-cursor></mouse-dragdrop-cursor>

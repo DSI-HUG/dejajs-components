@@ -1,0 +1,13 @@
+{
+    "ngPackage": {
+        "lib": {
+            "entryFile": "./index.ts",
+            "umdModuleIds": {
+                "lodash-es": "lodash-es"
+            }
+        }
+    },
+    "peerDependencies": {
+        "lodash-es": "^4.17.20"
+    }
+}

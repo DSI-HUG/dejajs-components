@@ -3,9 +3,13 @@
         "lib": {
             "entryFile": "./index.ts",
             "umdModuleIds": {
-                "angular2-text-mask": "angular2-text-mask",
-                "@angular/material-moment-adapter": "@angular/material-moment-adapter"
+                "ngx-mask": "ngx-mask",
+                "date-fns": "date-fns",
+                "date-fns/locale": "date-fns/locale"
             }
         }
+    },
+    "peerDependencies": {
+        "ngx-mask": "11.1.4"
     }
 }

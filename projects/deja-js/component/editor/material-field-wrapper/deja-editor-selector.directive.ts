@@ -7,19 +7,9 @@
  */
 
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { Directive } from '@angular/core';
-import { DoCheck } from '@angular/core';
-import { ElementRef } from '@angular/core';
-import { Host } from '@angular/core';
-import { HostBinding } from '@angular/core';
-import { Input } from '@angular/core';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { Optional } from '@angular/core';
-import { Self } from '@angular/core';
+import { Directive, DoCheck, ElementRef, Host, HostBinding, Input, OnDestroy, OnInit, Optional, Self } from '@angular/core';
 import { FormGroupDirective, NgControl, NgForm } from '@angular/forms';
-import { CanUpdateErrorState } from '@angular/material/core';
-import { ErrorStateMatcher } from '@angular/material/core';
+import { CanUpdateErrorState, ErrorStateMatcher } from '@angular/material/core';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { _MatInputMixinBase } from '@deja-js/component/core/util';
 import { Subject } from 'rxjs';
@@ -100,7 +90,7 @@ export class DejaEditorSelectorDirective extends _MatInputMixinBase implements M
         @Optional() parentForm: NgForm,
         @Optional() parentFormGroup: FormGroupDirective,
         defaultErrorStateMatcher: ErrorStateMatcher,
-        @Host() private hostElement: ElementRef
+        @Host() private hostElement: ElementRef<HTMLElement>
     ) {
         super(
             defaultErrorStateMatcher,
@@ -162,19 +152,19 @@ export class DejaEditorSelectorDirective extends _MatInputMixinBase implements M
         }
     }
 
-    private attachPlaceholder() {
+    private attachPlaceholder(): void {
         if (this._placeholder && !this._placeholder.parentElement) {
             this.hostElement.nativeElement.appendChild(this._placeholder);
         }
     }
 
-    private detachPlaceholder() {
+    private detachPlaceholder(): void {
         if (this._placeholder?.parentElement) {
             this._placeholder.remove();
         }
     }
 
-    private generatePlaceholder() {
+    private generatePlaceholder(): void {
         if (this.placeholder) {
             this._placeholder = document.createElement('div');
             this._placeholder.style.position = 'absolute';

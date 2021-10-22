@@ -7,7 +7,7 @@
  */
 
 import { ChangeDetectorRef, Component } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Destroy } from '@deja-js/component/core';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, takeUntil } from 'rxjs/operators';
@@ -28,6 +28,8 @@ export class DejaNumericStepperDemoComponent extends Destroy {
     public value4 = 1;
     public value5 = 1;
     public value6 = 1;
+    public value6min = 0;
+    public value6max = 20;
 
     public numberForm: FormGroup;
     public onInput1Change$ = new Subject<Event>();
@@ -40,7 +42,7 @@ export class DejaNumericStepperDemoComponent extends Destroy {
 
         this.numberForm = this.fb.group({
             numberValue3: [this.value3, numberValidator],
-            numberValue4: [this.value4, numberValidator],
+            numberValue4: [this.value4, [Validators.required, numberValidator]],
             numberValue5: [this.value5, numberValidator],
             numberValue6: [this.value6, numberValidator]
         });
@@ -69,6 +71,7 @@ export class DejaNumericStepperDemoComponent extends Destroy {
     }
 
     public changeValue6(step: number): void {
-        this.numberForm.controls.numberValue6.setValue(+this.numberForm.controls.numberValue6.value + step);
+        const value = Math.max(Math.min(+this.numberForm.controls.numberValue6.value + step, this.value6max), this.value6min);
+        this.numberForm.controls.numberValue6.setValue(value);
     }
 }

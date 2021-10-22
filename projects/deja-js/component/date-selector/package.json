@@ -3,7 +3,7 @@
         "lib": {
             "entryFile": "./index.ts",
             "umdModuleIds": {
-                "@angular/material-moment-adapter": "@angular/material-moment-adapter"
+                "date-fns": "date-fns"
             }
         }
     }

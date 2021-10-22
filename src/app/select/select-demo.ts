@@ -6,16 +6,11 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { ChangeDetectorRef } from '@angular/core';
-import { Component } from '@angular/core';
-import { ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { Destroy } from '@deja-js/component/core';
-import { IItemBase } from '@deja-js/component/core';
-import { IItemTree } from '@deja-js/component/core';
-import { IViewPortItem } from '@deja-js/component/core';
+import { Destroy, IItemBase, IItemTree, IViewPortItem } from '@deja-js/component/core';
 import { DejaSelectComponent } from '@deja-js/component/select';
-import { from, Observable, of, Subject, Subscription } from 'rxjs';
+import { Observable, of, Subject, Subscription } from 'rxjs';
 import { delay, map, take, takeUntil, tap } from 'rxjs/operators';
 
 import { News } from '../common/news.model';
@@ -85,7 +80,7 @@ export class SelectDemoComponent extends Destroy {
     public constructor(private changeDetectorRef: ChangeDetectorRef, private countriesService: CountriesService, public countriesListService: CountriesListService, newsService: NewsService, private fb: FormBuilder) {
         super();
 
-        this.multiselectModel = JSON.parse('[{"naqme":"ÅlandIslands","code":"AX","displayName":"ÅlandIslands","depth":0,"odd":true,"selected":true},{"naqme":"AmericanSamoa","code":"AS","displayName":"AmericanSamoa","depth":0,"odd":false,"selected":true},{"naqme":"Argentina","code":"AR","displayName":"Argentina","depth":0,"odd":false,"selected":true},{"naqme":"ChristmasIsland","code":"CX","displayName":"ChristmasIsland","depth":0,"odd":false,"selected":true},{"naqme":"Egypt","code":"EG","displayName":"Egypt","depth":0,"odd":true,"selected":true},{"naqme":"Dominica","code":"DM","displayName":"Dominica","depth":0,"odd":false,"selected":true}]');
+        this.multiselectModel = JSON.parse('[{"naqme":"ÅlandIslands","code":"AX","displayName":"ÅlandIslands","depth":0,"odd":true,"selected":true},{"naqme":"AmericanSamoa","code":"AS","displayName":"AmericanSamoa","depth":0,"odd":false,"selected":true},{"naqme":"Argentina","code":"AR","displayName":"Argentina","depth":0,"odd":false,"selected":true},{"naqme":"ChristmasIsland","code":"CX","displayName":"ChristmasIsland","depth":0,"odd":false,"selected":true},{"naqme":"Egypt","code":"EG","displayName":"Egypt","depth":0,"odd":true,"selected":true},{"naqme":"Dominica","code":"DM","displayName":"Dominica","depth":0,"odd":false,"selected":true}]') as unknown[];
         this.news$ = newsService.getNews$(50);
         this.bigNews$ = newsService.getNews$(10000);
         this.bigCountries$ = countriesService.getCountries$(null, 100000);
@@ -120,7 +115,7 @@ export class SelectDemoComponent extends Destroy {
             delay(1),
             takeUntil(this.destroyed$)
         ).subscribe(() => {
-            this.multiselectModel = JSON.parse('[{"naqme":"ÅlandIslands","code":"AX","displayName":"ÅlandIslands","depth":0,"odd":true,"selected":true},{"naqme":"AmericanSamoa","code":"AS","displayName":"AmericanSamoa","depth":0,"odd":false,"selected":true},{"naqme":"Argentina","code":"AR","displayName":"Argentina","depth":0,"odd":false,"selected":true},{"naqme":"ChristmasIsland","code":"CX","displayName":"ChristmasIsland","depth":0,"odd":false,"selected":true},{"naqme":"Egypt","code":"EG","displayName":"Egypt","depth":0,"odd":true,"selected":true},{"naqme":"Dominica","code":"DM","displayName":"Dominica","depth":0,"odd":false,"selected":true}]');
+            this.multiselectModel = JSON.parse('[{"naqme":"ÅlandIslands","code":"AX","displayName":"ÅlandIslands","depth":0,"odd":true,"selected":true},{"naqme":"AmericanSamoa","code":"AS","displayName":"AmericanSamoa","depth":0,"odd":false,"selected":true},{"naqme":"Argentina","code":"AR","displayName":"Argentina","depth":0,"odd":false,"selected":true},{"naqme":"ChristmasIsland","code":"CX","displayName":"ChristmasIsland","depth":0,"odd":false,"selected":true},{"naqme":"Egypt","code":"EG","displayName":"Egypt","depth":0,"odd":true,"selected":true},{"naqme":"Dominica","code":"DM","displayName":"Dominica","depth":0,"odd":false,"selected":true}]') as unknown[];
         });
 
         this.countries.pipe(
@@ -181,7 +176,7 @@ export class SelectDemoComponent extends Destroy {
     }
 
     public loadingItems(): (_query: string | RegExp, _selectedItems: IItemBase<unknown>[]) => Observable<Country[]> {
-        return (_query: string | RegExp, _selectedItems: IItemBase<unknown>[]) => {
+        return (_query: string | RegExp, _selectedItems: IItemBase<unknown>[]): Observable<Country[]> => {
             this.onDemandSelect.waiter = true;
             this.onDemandPlaceHolder = 'loading...';
             return this.countriesService.getCountries$().pipe(
@@ -194,14 +189,14 @@ export class SelectDemoComponent extends Destroy {
     }
 
     public collapsingItems(): (item: IItemBase<unknown>) => Observable<IItemBase<unknown>> {
-        return (item: IItemBase<unknown>) => {
+        return (item: IItemBase<unknown>): Observable<IItemBase<unknown>> => {
             const country = item as ICountryGroup;
             return country.loaded ? of(item) : this.confirmDialog()(item);
         };
     }
 
     public expandingItems(): (item: IItemBase<unknown>) => Observable<unknown> {
-        return (item: IItemBase<unknown>) => {
+        return (item: IItemBase<unknown>): Observable<unknown> => {
             const group = item as ICountryGroup;
             if (group.loaded) {
                 return of(item);
@@ -227,13 +222,13 @@ export class SelectDemoComponent extends Destroy {
 
     public confirmDialogWithPromise(): (item: IItemBase<unknown>) => Promise<IItemBase<unknown>> {
         // eslint-disable-next-line rxjs/no-topromise
-        return (item: IItemBase<unknown>) => this.confirmDialog()(item).toPromise();
+        return (item: IItemBase<unknown>): Promise<IItemBase<unknown>> => this.confirmDialog()(item).toPromise();
     }
 
     public confirmDialog(): (item: IItemBase<unknown>) => Observable<IItemBase<unknown>> {
-        return (item: IItemBase<unknown>) => {
+        return (item: IItemBase<unknown>): Observable<IItemBase<unknown>> => {
             this.dialogVisible = true;
-            return from(this.dialogResponse$).pipe(
+            return this.dialogResponse$.pipe(
                 take(1),
                 map(response => {
                     this.dialogVisible = false;

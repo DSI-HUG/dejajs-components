@@ -26,18 +26,18 @@ export class DejaMessageBoxDemoComponent {
 
     public actions = [
         {
-            action: () => {
+            action: (): void => {
                 this.dialogTitle = '<b>I am a deja-dialog !</b><br/> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut sit amet felis id nisl maximus interdum. Morbi mollis sapien sapien. Vivamus lacinia elementum eros';
             },
             text: 'Cliquez moi pour ouvrir une deja-dialog',
             type: 'primary'
         },
         {
-            action: () => alert('test action'),
+            action: (): void => alert('test action'),
             text: 'test sans icon'
         },
         {
-            action: () => alert('test action'),
+            action: (): void => alert('test action'),
             type: 'danger'
         }
     ] as DejaMessageBoxAction[];

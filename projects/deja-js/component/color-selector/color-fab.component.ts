@@ -6,11 +6,9 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 import { BooleanInput } from '@angular/cdk/coercion';
-import { Component } from '@angular/core';
-import { ElementRef } from '@angular/core';
-import { Input } from '@angular/core';
+import { Component, ElementRef, Input } from '@angular/core';
 import { Destroy } from '@deja-js/component/core';
-import { combineLatest, from } from 'rxjs';
+import { combineLatest } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 
 import { DejaColorFab } from './color-fab.class';
@@ -37,7 +35,7 @@ export class DejaColorFabComponent extends Destroy {
         this._colorFab = colorFab;
 
         if (colorFab) {
-            const toogleAttribute = (attribute: string, value: BooleanInput) => {
+            const toggleAttribute = (attribute: string, value: BooleanInput): void => {
                 if (value) {
                     this.element.setAttribute(attribute, value.toString());
                 } else {
@@ -45,9 +43,9 @@ export class DejaColorFabComponent extends Destroy {
                 }
             };
 
-            from(colorFab.active$).pipe(
+            colorFab.active$.pipe(
                 takeUntil(this.destroyed$)
-            ).subscribe(value => toogleAttribute('active', value));
+            ).subscribe(value => toggleAttribute('active', value));
 
             combineLatest([colorFab.color$, colorFab.disabled$]).pipe(
                 map(([color, disabled]) => color && disabled ? color.grayScale : color),
