@@ -1,4 +1,4 @@
-# Faire une release de @deja-js/component >= 10.x.x
+# Faire une release de @deja-js/component >= 12.x.x
 
 Les releases de @deja-js/component se font automatiquement sur Travis. 
 

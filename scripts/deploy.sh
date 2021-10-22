@@ -11,7 +11,7 @@ fi
 # Run our compile script and deploy demo directory into the GH-PAGES branch
 npm run build
 rm -rf node_modules/gh-pages/.cache
-node_modules/.bin/gh-pages -d dist/dejajs-component --repo https://rtrompier:${GITHUB_TOKEN}@github.com/DSI-HUG/dejajs-components.git
+node_modules/.bin/gh-pages -d dist/demo --repo https://rtrompier:${GITHUB_TOKEN}@github.com/DSI-HUG/dejajs-components.git
 
 # Deploy doc directory into the GH-PAGES branch
 rm -rf node_modules/gh-pages/.cache
