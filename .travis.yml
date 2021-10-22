@@ -20,9 +20,11 @@ branches:
   only:
   - develop
   - master
+  - next/13.x.x
+  - release/13.x.x
 before_install:
-- if [[ $TRAVIS_COMMIT_MESSAGE =~ "from DSI-HUG/master" ]]; then
-    echo "merge from RELEASE, skipping";
+- if [[ $TRAVIS_COMMIT_MESSAGE =~ ("from DSI-HUG/master"|"from DSI-HUG/release/13.x.x") ]]; then
+    echo "merge from RELEASE branch, skipping";
     exit 0;
   fi
 - npm install -g yarn
@@ -59,7 +61,7 @@ jobs:
         on:
           repo: DSI-HUG/dejajs-components
           all_branches: true
-          condition: $TRAVIS_BRANCH =~ ^(master|develop)
+          condition: $TRAVIS_BRANCH =~ ^(master|develop|next/13.x.x|release/13.x.x)$
       after_deploy:
       - cd ../../..
       - bash ./scripts/deploy.sh
