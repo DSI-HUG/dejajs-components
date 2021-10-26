@@ -7,8 +7,7 @@
  */
 import { Directive, ElementRef, HostBinding, Input, Optional } from '@angular/core';
 import { DejaClipboardService, Destroy, UUID } from '@deja-js/component/core';
-import { fromEvent } from 'rxjs';
-import { filter, switchMap, take, takeUntil } from 'rxjs/operators';
+import { filter, fromEvent, switchMap, take, takeUntil } from 'rxjs';
 
 @Directive({
     selector: '[deja-draggable]'
@@ -37,9 +36,9 @@ export class DejaDraggableDirective extends Destroy {
 
         const element = elementRef.nativeElement as HTMLElement;
 
-        fromEvent(element, 'dragstart').pipe(
+        fromEvent<DragEvent>(element, 'dragstart').pipe(
             filter(() => !!this.context),
-            switchMap((event: DragEvent) => {
+            switchMap(event => {
                 if (!clipboardService) {
                     throw new Error('To use the DejaDraggableDirective, please import and provide the DejaClipboardService in your application.');
                 }
@@ -74,12 +73,12 @@ export class DejaDraggableDirective extends Destroy {
                     }
                 }
 
-                return fromEvent(element, 'dragend').pipe(
+                return fromEvent<DragEvent>(element, 'dragend').pipe(
                     take(1)
                 );
             }),
             takeUntil(this.destroyed$)
-        ).subscribe((evt: DragEvent) => {
+        ).subscribe(evt => {
             // console.log('dragend');
             const dragEndInfos = this.clipboardService.get(this.draginfokey) as Record<string, unknown>;
             const obj = dragEndInfos?.[this.objectKey];
@@ -114,6 +113,6 @@ export interface IDejaDragEvent extends DragEvent {
 
 export interface IDejaDragContext {
     object?: unknown;
-    dragstartcallback?(event: IDejaDragEvent): void;
-    dragendcallback?(event: IDejaDragEvent): void;
+    dragstartcallback?: (event: IDejaDragEvent) => void;
+    dragendcallback?: (event: IDejaDragEvent) => void;
 }

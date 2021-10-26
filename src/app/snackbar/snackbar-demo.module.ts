@@ -26,15 +26,15 @@ import { routing } from './snackbar-demo.routes';
     exports: [DejaSnackbarDemoComponent],
     imports: [
         CommonModule,
-        FormsModule,
-        MatButtonModule,
-        MatIconModule,
-        MatCardModule,
-        MatTabsModule,
-        MatToolbarModule,
-        DejaSnackbarModule,
         DejaMarkdownModule,
         DejaMessageBoxModule,
+        DejaSnackbarModule,
+        FormsModule,
+        MatButtonModule,
+        MatCardModule,
+        MatIconModule,
+        MatTabsModule,
+        MatToolbarModule,
         routing
     ],
     providers: [

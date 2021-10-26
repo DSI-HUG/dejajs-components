@@ -12,8 +12,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Even
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { Destroy, KeyCodes } from '@deja-js/component/core';
 import { format } from 'date-fns';
-import { fromEvent, merge, Subject } from 'rxjs';
-import { debounceTime, filter, takeUntil, tap } from 'rxjs/operators';
+import { debounceTime, filter, fromEvent, mergeWith, Subject, takeUntil, tap } from 'rxjs';
 
 import { IDateSelectorItem } from './date-selector-item.model';
 
@@ -160,7 +159,7 @@ export class DejaDateSelectorComponent extends Destroy implements OnInit, Contro
             this._control.valueAccessor = this;
         }
 
-        fromEvent(element, 'mousedown').pipe(
+        fromEvent<MouseEvent>(element, 'mousedown').pipe(
             takeUntil(this.destroyed$)
         ).subscribe(event => {
             event.stopPropagation();
@@ -168,7 +167,7 @@ export class DejaDateSelectorComponent extends Destroy implements OnInit, Contro
             return false;
         });
 
-        fromEvent(element, 'click').pipe(
+        fromEvent<Event>(element, 'click').pipe(
             takeUntil(this.destroyed$)
         ).subscribe(event => {
             const target = event.target as HTMLElement;
@@ -185,7 +184,8 @@ export class DejaDateSelectorComponent extends Destroy implements OnInit, Contro
             }
         });
 
-        merge(this._keyboardNavigation$, fromEvent(element, 'mouseleave'), fromEvent(element, 'click')).pipe(
+        this._keyboardNavigation$.pipe(
+            mergeWith(fromEvent<MouseEvent>(element, 'mouseleave'), fromEvent<Event>(element, 'click')),
             filter(() => this._keyboardNavigation),
             takeUntil(this.destroyed$)
         ).subscribe(() => {

@@ -29,18 +29,18 @@ import { routing } from './viewport-demo.routes';
     exports: [ViewPortDemoComponent],
     imports: [
         CommonModule,
+        DejaMarkdownModule,
         FormsModule,
-        MatInputModule,
         MatButtonModule,
-        MatCheckboxModule,
         MatCardModule,
+        MatCheckboxModule,
+        MatIconModule,
+        MatInputModule,
         MatTabsModule,
         MatToolbarModule,
-        MatIconModule,
-        ViewPortModule,
-        DejaMarkdownModule,
         NewsCardModule,
-        routing
+        routing,
+        ViewPortModule
     ],
     providers: [
     ]

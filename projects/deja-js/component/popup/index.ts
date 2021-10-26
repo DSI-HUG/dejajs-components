@@ -27,36 +27,36 @@ import { DejaPopupService } from './service/popup.service';
 
 @NgModule({
     declarations: [
-        DejaPopupComponent,
-        DejaPopupToolbarComponent,
+        DejaPopupActionsComponent,
         DejaPopupAdvancedComponent,
-        DejaPopupTrayComponent,
-        DejaPopupContentComponent,
-        DejaPopupComponent,
         DejaPopupBoxComponent,
-        DejaPopupActionsComponent
-    ],
-    entryComponents: [DejaPopupComponent, DejaPopupAdvancedComponent, DejaPopupActionsComponent],
-    exports: [
         DejaPopupComponent,
-        DejaPopupToolbarComponent,
-        DejaPopupAdvancedComponent,
-        DejaPopupTrayComponent,
+        DejaPopupComponent,
         DejaPopupContentComponent,
+        DejaPopupToolbarComponent,
+        DejaPopupTrayComponent
+    ],
+    entryComponents: [DejaPopupActionsComponent, DejaPopupAdvancedComponent, DejaPopupComponent],
+    exports: [
+        DejaPopupActionsComponent,
+        DejaPopupAdvancedComponent,
         DejaPopupComponent,
-        PortalModule,
-        DejaPopupActionsComponent
+        DejaPopupComponent,
+        DejaPopupContentComponent,
+        DejaPopupToolbarComponent,
+        DejaPopupTrayComponent,
+        PortalModule
     ],
     imports: [
         CommonModule,
-        MatIconModule,
-        MatButtonModule,
-        MatToolbarModule,
-        MatDialogModule,
-        MatTooltipModule,
         DejaOverlayModule,
-        PortalModule,
-        DragDropModule
+        DragDropModule,
+        MatButtonModule,
+        MatDialogModule,
+        MatIconModule,
+        MatToolbarModule,
+        MatTooltipModule,
+        PortalModule
     ],
     providers: [DejaPopupService]
 })

@@ -9,8 +9,7 @@
 import { coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, HostBinding, Input, TemplateRef, ViewChild } from '@angular/core';
 import { Destroy, IViewPort, IViewPortItem, IViewPortRefreshParams, ViewPortService } from '@deja-js/component/core';
-import { BehaviorSubject, fromEvent, interval, merge, Observable, of, Subject, timer } from 'rxjs';
-import { debounceTime, distinctUntilChanged, filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { BehaviorSubject, debounceTime, distinctUntilChanged, filter, fromEvent, interval, map, mergeWith, Observable, of, Subject, switchMap, takeUntil, tap, timer } from 'rxjs';
 
 export type DejaViewPortScrollStyleType = 'scrollbar' | 'buttons';
 
@@ -131,7 +130,7 @@ export class DejaViewPortComponent extends Destroy {
     public set wrapperElement(element: ElementRef) {
         this.element = element.nativeElement as HTMLElement;
         this.viewPort.element$.next(this.element);
-        fromEvent(this.element, 'scroll').pipe(
+        fromEvent<Event>(this.element, 'scroll').pipe(
             map(event => event.target as HTMLElement),
             map(target => Math.round(this._isHorizontal ? target.scrollLeft : target.scrollTop)),
             takeUntil(this.destroyed$)
@@ -180,7 +179,7 @@ export class DejaViewPortComponent extends Destroy {
 
         console.warn('@deja-js/component/viewport is deprecated, and will be removed in a further version. Please use @deja-js/component/v2/viewport instead.');
 
-        fromEvent(window, 'resize').pipe(
+        fromEvent<Event>(window, 'resize').pipe(
             debounceTime(5),
             takeUntil(this.destroyed$)
         ).subscribe(() => {
@@ -257,7 +256,7 @@ export class DejaViewPortComponent extends Destroy {
         ).subscribe(scroll);
 
         const mouseWheel$ = (): Observable<number> => {
-            const mouseWheelEvent$ = fromEvent(this.element, 'mousewheel') as Observable<MouseWheelEvent>;
+            const mouseWheelEvent$ = fromEvent<WheelEvent>(this.element, 'mousewheel');
             return mouseWheelEvent$.pipe(
                 map(event => {
                     event.stopPropagation();
@@ -287,13 +286,14 @@ export class DejaViewPortComponent extends Destroy {
 
         const initButton$ = (button: HTMLElement): Observable<number> => {
             const sign = button.id === 'down' ? 1 : -1;
-            const mouseUpEvent$ = fromEvent(button, 'mouseup') as Observable<MouseEvent>;
-            const mouseLeaveEvent$ = fromEvent(button, 'mouseleave') as Observable<MouseEvent>;
-            const mouseup$ = merge(mouseUpEvent$, mouseLeaveEvent$).pipe(
+            const mouseUpEvent$ = fromEvent<MouseEvent>(button, 'mouseup');
+            const mouseLeaveEvent$ = fromEvent<MouseEvent>(button, 'mouseleave');
+            const mouseup$ = mouseUpEvent$.pipe(
+                mergeWith(mouseLeaveEvent$),
                 tap(upEvent => this.scrollPos += sign * (upEvent.ctrlKey ? this.clientSize : this.buttonsStep))
             );
 
-            const mouseDownEvent$ = fromEvent(button, 'mousedown') as Observable<MouseEvent>;
+            const mouseDownEvent$ = fromEvent<MouseEvent>(button, 'mousedown');
             return mouseDownEvent$.pipe(
                 tap(event => this.scrollPos += sign * (event.ctrlKey ? this.clientSize : this.buttonsStep * 2)),
                 switchMap(event => autoScroll$(event, sign).pipe(
@@ -314,7 +314,8 @@ export class DejaViewPortComponent extends Destroy {
             takeUntil(this.destroyed$)
         ).subscribe();
 
-        merge(downButton$, upButton$).pipe(
+        downButton$.pipe(
+            mergeWith(upButton$),
             debounceTime(10),
             filter(needToRefresh => !!needToRefresh),
             takeUntil(this.destroyed$)

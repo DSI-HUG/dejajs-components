@@ -26,15 +26,15 @@ import { routing } from './date-picker-demo.routes';
     exports: [DejaDatePickerDemoComponent],
     imports: [
         CommonModule,
-        FormsModule,
-        MatFormFieldModule,
-        MatCardModule,
-        MatCheckboxModule,
-        MatTabsModule,
-        MatToolbarModule,
         DejaDatePickerModule,
         DejaDateSelectorModule,
         DejaMarkdownModule,
+        FormsModule,
+        MatCardModule,
+        MatCheckboxModule,
+        MatFormFieldModule,
+        MatTabsModule,
+        MatToolbarModule,
         routing
     ],
     providers: [

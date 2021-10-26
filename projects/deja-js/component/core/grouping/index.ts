@@ -13,8 +13,8 @@ import { GroupingService } from './grouping.service';
 
 @NgModule({
     providers: [
-        SortingService,
-        GroupingService
+        GroupingService,
+        SortingService
     ]
 })
 export class GroupingModule { }

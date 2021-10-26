@@ -12,8 +12,7 @@ import { Item, SortInfos, SortingService } from '@deja-js/component/v2/item-list
 import { DropCursorInfos, MouseDraggableContext, MouseDroppableContext } from '@deja-js/component/v2/mouse-dragdrop';
 import { TreeListComponent } from '@deja-js/component/v2/tree-list';
 import { ViewPortItem } from '@deja-js/component/v2/viewport';
-import { BehaviorSubject, combineLatest, Observable, of, range, Subject, Subscription } from 'rxjs';
-import { delay, filter, groupBy, map, mergeMap, reduce, shareReplay, switchMap, take, takeUntil, tap, toArray, withLatestFrom } from 'rxjs/operators';
+import { BehaviorSubject, combineLatestWith, delay, filter, groupBy, map, mergeMap, Observable, of, range, reduce, shareReplay, Subject, Subscription, switchMap, take, takeUntil, tap, toArray, withLatestFrom } from 'rxjs';
 
 import { News } from '../../common/news.model';
 import { cheeseValidator } from '../../select/validators';
@@ -173,7 +172,8 @@ export class TreeListDemoComponent extends Destroy {
             shareReplay({ bufferSize: 1, refCount: false })
         );
 
-        this.sortedCountries$ = combineLatest([this.countries$, this.sortInfos$]).pipe(
+        this.sortedCountries$ = this.countries$.pipe(
+            combineLatestWith(this.sortInfos$),
             map(([countries, sortInfos]) => sortingService.sort(countries, sortInfos)),
             shareReplay({ bufferSize: 1, refCount: false })
         );

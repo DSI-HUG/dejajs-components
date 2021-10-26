@@ -13,8 +13,7 @@ import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MediaService } from '@deja-js/component/core';
-import { of, timer } from 'rxjs';
-import { delay } from 'rxjs/operators';
+import { delay, of, timer } from 'rxjs';
 
 import { MockMediaService } from '../overlay/test/MockMediaService';
 import { DejaTooltipModule } from './index';

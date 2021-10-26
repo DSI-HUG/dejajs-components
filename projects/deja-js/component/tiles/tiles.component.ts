@@ -11,8 +11,7 @@ import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, C
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { Destroy, KeyCodes, Position, Rect } from '@deja-js/component/core';
 import { DropCursorInfos, MouseDroppableContext } from '@deja-js/component/v2/mouse-dragdrop';
-import { from, fromEvent, Observable, Subject, Subscription } from 'rxjs';
-import { debounceTime, filter, takeUntil } from 'rxjs/operators';
+import { debounceTime, filter, from, fromEvent, Observable, Subject, Subscription, takeUntil } from 'rxjs';
 
 import { DejaTile } from './tile.class';
 import { IDejaTilesAddedEvent, IDejaTilesAddEvent, IDejaTilesDeletedEvent, IDejaTilesEvent, IDejaTilesRemoveEvent } from './tiles.event';
@@ -136,9 +135,9 @@ export class DejaTilesComponent extends Destroy implements AfterViewInit, Contro
             takeUntil(this.destroyed$)
         ).subscribe(event => this.layoutCompleted.emit(event));
 
-        this.keyup$ = fromEvent(element.ownerDocument, 'keyup') as Observable<KeyboardEvent>;
+        this.keyup$ = fromEvent<KeyboardEvent>(element.ownerDocument, 'keyup');
 
-        fromEvent(window, 'resize').pipe(
+        fromEvent<Event>(window, 'resize').pipe(
             debounceTime(5),
             takeUntil(this.destroyed$)
         ).subscribe(() => this.refresh({ resetWidth: true }));

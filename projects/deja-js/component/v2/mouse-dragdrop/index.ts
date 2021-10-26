@@ -15,17 +15,17 @@ import { MouseDroppableDirective } from './mouse-droppable.directive';
 
 @NgModule({
     declarations: [
+        MouseDragDropCursorComponent,
         MouseDraggableDirective,
-        MouseDroppableDirective,
-        MouseDragDropCursorComponent
+        MouseDroppableDirective
     ],
     imports: [
         MatIconModule
     ],
     exports: [
+        MouseDragDropCursorComponent,
         MouseDraggableDirective,
-        MouseDroppableDirective,
-        MouseDragDropCursorComponent
+        MouseDroppableDirective
     ],
     providers: []
 })

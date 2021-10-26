@@ -12,8 +12,7 @@ import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { DejaChildValidatorDirective, Destroy, KeyCodes } from '@deja-js/component/core';
 import { Item, ItemComponent, ItemEvent, ItemService } from '@deja-js/component/v2/item-list';
 import { ViewPort, ViewPortComponent, ViewPortItemClassEvent, ViewPortMode } from '@deja-js/component/v2/viewport';
-import { BehaviorSubject, combineLatest, fromEvent, merge, Observable, of, ReplaySubject, Subject, timer } from 'rxjs';
-import { delay, filter, map, switchMap, takeUntil, tap, withLatestFrom } from 'rxjs/operators';
+import { BehaviorSubject, combineLatestWith, delay, filter, fromEvent, map, mergeWith, Observable, of, ReplaySubject, Subject, switchMap, takeUntil, tap, timer, withLatestFrom } from 'rxjs';
 
 export type NgModelType = 'item' | 'model' | 'value';
 
@@ -363,7 +362,8 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
             switchMap(viewPortComponent => viewPortComponent.viewPort$)
         );
 
-        this.viewPort$ = combineLatest([viewPort$, this.reloadViewPort$]).pipe(
+        this.viewPort$ = viewPort$.pipe(
+            combineLatestWith(this.reloadViewPort$),
             map(([viewPort]) => viewPort)
         );
 
@@ -444,7 +444,8 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
             tap(modelType => this._ngModelType = modelType)
         );
 
-        combineLatest([this.writeValue$, this.multiSelect$, modelType$]).pipe(
+        this.writeValue$.pipe(
+            combineLatestWith(this.multiSelect$, modelType$),
             takeUntil(this.destroyed$)
         ).subscribe(([value, multiSelect, modelType]) => {
             if (!value) {
@@ -557,7 +558,9 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
                             }
                         }),
                         delay(300),
-                        tap(() => this.lastClickedItem = undefined)
+                        tap(() => {
+                            this.lastClickedItem = undefined;
+                        })
                     );
                 })
             )),
@@ -578,7 +581,8 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
             switchMap(listElement => fromEvent<KeyboardEvent>(listElement, 'keydown'))
         );
 
-        merge(listKeyDownEvent$, inputKeyDownEvents$).pipe(
+        listKeyDownEvent$.pipe(
+            mergeWith(inputKeyDownEvents$),
             filter(() => !this.disabled),
             filter(event => {
                 const keyCode = event.code;
@@ -745,7 +749,9 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
                 if (inputElement) {
                     const inputKeyup$ = fromEvent<KeyboardEvent>(inputElement, 'keyup');
                     const inputDrop$ = fromEvent<KeyboardEvent>(inputElement, 'drop');
-                    return merge(inputKeyup$, inputDrop$);
+                    return inputKeyup$.pipe(
+                        mergeWith(inputDrop$)
+                    );
                 }
                 return of(null as KeyboardEvent);
             }),
@@ -756,7 +762,8 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
             switchMap(listElement => fromEvent<KeyboardEvent>(listElement, 'keyup'))
         );
 
-        merge(listKeyboardEvent$, inputKeyboardEvents$).pipe(
+        listKeyboardEvent$.pipe(
+            mergeWith(inputKeyboardEvents$),
             filter(() => !this.disabled),
             filter(event => {
                 const keyCode = event.code;

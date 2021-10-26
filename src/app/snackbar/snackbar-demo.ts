@@ -8,8 +8,7 @@
 
 import { Component, EventEmitter, OnInit } from '@angular/core';
 import { MaterialColors } from '@deja-js/component/core';
-import { from, interval, Observable } from 'rxjs';
-import { defaultIfEmpty, filter, map, scan } from 'rxjs/operators';
+import { defaultIfEmpty, filter, from, interval, map, Observable, scan } from 'rxjs';
 
 import { Message } from './message.class';
 

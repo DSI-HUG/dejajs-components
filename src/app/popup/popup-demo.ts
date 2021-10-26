@@ -12,7 +12,7 @@ import { DialogPosition } from '@angular/material/dialog';
 import { Color, Destroy } from '@deja-js/component/core';
 import { DejaMessageBoxAction, DejaMessageBoxType } from '@deja-js/component/message-box';
 import { DejaPopupAction, DejaPopupButton, DejaPopupConfig, DejaPopupCustomAction, DejaPopupReponse, DejaPopupService } from '@deja-js/component/popup';
-import { filter, map, takeUntil } from 'rxjs/operators';
+import { filter, map, takeUntil } from 'rxjs';
 
 import { DummyComponent } from './dummy/dummy.component';
 import { DejaPopupCustomDemoComponent } from './popup-custom.component';

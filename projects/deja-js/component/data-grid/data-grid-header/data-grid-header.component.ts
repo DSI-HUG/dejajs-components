@@ -10,11 +10,11 @@ import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, Input, Optional, Output, TemplateRef } from '@angular/core';
 import { DejaClipboardService, Destroy, ISortInfos } from '@deja-js/component/core';
 import { IDejaDragContext, IDejaDragEvent, IDejaDropContext, IDejaDropEvent } from '@deja-js/component/dragdrop';
-import { fromEvent, merge, Observable, of, Subject } from 'rxjs';
-import { catchError, filter, switchMap, take, takeUntil, tap, timeout } from 'rxjs/operators';
+import { catchError, filter, fromEvent, mergeWith, of, Subject, switchMap, take, takeUntil, tap, timeout } from 'rxjs';
 
 import { IDejaGridColumn, IDejaGridColumnEvent, IDejaGridColumnLayoutEvent, IDejaGridColumnSizeEvent } from '../data-grid-column/data-grid-column';
 import { IDejaGridColumnLayout } from '../data-grid-column/data-grid-column-layout';
+
 
 @Component({
     selector: 'deja-grid-header',
@@ -128,13 +128,13 @@ export class DejaGridHeaderComponent extends Destroy {
 
         const element = elementRef.nativeElement as HTMLElement;
 
-        const mouseDownEvent$ = fromEvent(element, 'mousedown') as Observable<MouseEvent>;
+        const mouseDownEvent$ = fromEvent<MouseEvent>(element, 'mousedown');
         mouseDownEvent$.pipe(
             filter(downEvent => downEvent.buttons === 1),
             switchMap(downEvent => {
                 const target = downEvent.target as HTMLElement;
                 const column = this.getColumnFromHtmlElement(downEvent.target as HTMLElement);
-                const mouseUpEvent$ = fromEvent(element.ownerDocument, 'mouseup') as Observable<MouseEvent>;
+                const mouseUpEvent$ = fromEvent<MouseEvent>(element.ownerDocument, 'mouseup');
 
                 if (target.hasAttribute('separator')) {
                     if (this.columnsSizable && column.sizeable) {
@@ -142,7 +142,7 @@ export class DejaGridHeaderComponent extends Destroy {
                         this._sizedColumn = column;
                         const sizedOrigin = downEvent.screenX;
 
-                        const kill$ = new Subject();
+                        const kill$ = new Subject<void>();
 
                         const mouseUp$ = mouseUpEvent$.pipe(
                             take(1),
@@ -156,7 +156,7 @@ export class DejaGridHeaderComponent extends Destroy {
                             })
                         );
 
-                        const mouseMoveEvent$ = fromEvent(element.ownerDocument, 'mousemove') as Observable<MouseEvent>;
+                        const mouseMoveEvent$ = fromEvent<MouseEvent>(element.ownerDocument, 'mousemove');
                         const mouseMove$ = mouseMoveEvent$.pipe(
                             // eslint-disable-next-line rxjs/no-unsafe-takeuntil
                             takeUntil(mouseUpEvent$),
@@ -179,7 +179,9 @@ export class DejaGridHeaderComponent extends Destroy {
                         );
 
                         downEvent.stopPropagation();
-                        return merge(mouseUp$, mouseMove$);
+                        return mouseUp$.pipe(
+                            mergeWith(mouseMove$)
+                        );
                     }
                 } else {
                     const clickedColumn = column;

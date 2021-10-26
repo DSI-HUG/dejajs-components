@@ -12,7 +12,7 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 
 import { cloneDeep } from 'lodash-es';
-import { take } from 'rxjs/operators';
+import { take } from 'rxjs';
 
 import { ISortInfos } from '../sorting/sort-infos.model';
 import { IGroupInfo } from './group-infos';

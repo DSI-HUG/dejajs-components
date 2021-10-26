@@ -32,21 +32,21 @@ import { PeopleService } from './services/people.service';
         AppComponent
     ],
     imports: [
-        FormsModule,
-        BrowserModule,
         BrowserAnimationsModule,
+        BrowserModule,
+        DejaMaterialColorsModule,
+        DejaSidenavModule,
+        DejaSlimScrollModule,
+        DejaTextMetricsModule,
+        FormsModule,
         HttpClientModule,
+        IconModule,
         MatButtonModule,
         MatButtonToggleModule,
         MatIconModule,
         MatListModule,
         MatMenuModule,
-        DejaMaterialColorsModule,
-        DejaSlimScrollModule,
-        DejaSidenavModule,
-        IconModule,
-        routing,
-        DejaTextMetricsModule
+        routing
     ],
     providers: [
         CountriesListService,

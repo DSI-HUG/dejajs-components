@@ -19,8 +19,8 @@ export class DejaTile {
     public selected$ = new BehaviorSubject<boolean>(false);
     public hidden$ = new ReplaySubject<boolean>(1);
     public pixelBounds$ = new BehaviorSubject<Rect>(null);
-    public deleted$ = new Subject();
-    public refresh$ = new Subject();
+    public deleted$ = new Subject<void>();
+    public refresh$ = new Subject<void>();
     public isTemporary = false;
 
     private _id: string;

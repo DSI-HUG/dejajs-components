@@ -15,7 +15,7 @@ export interface DejaMessageBoxAction {
     text?: string;
     type?: DejaMessageBoxType;
     icon?: string;
-    action(): unknown;
+    action: () => unknown;
 }
 
 @Component({

@@ -25,22 +25,22 @@ import { DejaDatePickerMaterialDemoComponent } from './date-picker-material-demo
 import { routing } from './date-picker-material-demo.routes';
 
 @NgModule({
-    declarations: [DejaDatePickerMaterialDemoComponent, CustomDateFormatDirective, CustomDateTimeFormatDirective],
+    declarations: [CustomDateFormatDirective, CustomDateTimeFormatDirective, DejaDatePickerMaterialDemoComponent],
     exports: [DejaDatePickerMaterialDemoComponent],
     imports: [
         CommonModule,
+        DejaMarkdownModule,
+        DejaTimePickerModule,
+        MatButtonModule,
+        MatCardModule,
         MatDatepickerModule,
         MatFormFieldModule,
-        MatCardModule,
         MatInputModule,
         MatNativeDateModule,
         MatTabsModule,
         MatToolbarModule,
-        DejaMarkdownModule,
-        DejaTimePickerModule,
-        routing,
         ReactiveFormsModule,
-        MatButtonModule
+        routing
     ],
     providers: [
     ]

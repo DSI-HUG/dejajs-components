@@ -11,8 +11,7 @@ import { AfterContentInit, AfterViewInit, ChangeDetectionStrategy, ChangeDetecto
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { DejaChildValidatorDirective, DejaClipboardService, DejaItemComponent, DejaItemEvent, DejaItemsEvent, GroupingService, IFindItemResult, IItemBase, IItemTree, ItemListBase, ItemListService, IViewListResult, IViewPort, KeyCodes, Position, Rect, SortingService, ViewPortService } from '@deja-js/component/core';
 import { IDejaDragContext, IDejaDragEvent, IDejaDropContext } from '@deja-js/component/dragdrop';
-import { BehaviorSubject, combineLatest, fromEvent, merge, Observable, of, Subject, Subscription, timer } from 'rxjs';
-import { debounceTime, filter, map, switchMap, take, takeUntil, tap } from 'rxjs/operators';
+import { BehaviorSubject, combineLatestWith, debounceTime, filter, fromEvent, map, mergeWith, Observable, of, Subject, Subscription, switchMap, take, takeUntil, tap, timer } from 'rxjs';
 
 import { DejaTreeListScrollEvent } from './tree-list-scroll-event';
 
@@ -90,14 +89,14 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
     private hasLoadingEvent = false;
     private _modelIsValue = false;
 
-    private keyboardNavigation$ = new Subject();
+    private keyboardNavigation$ = new Subject<void>();
 
     private mouseUp$sub: Subscription;
 
     private clearFilterExpression$ = new BehaviorSubject<void>(null);
     private writeValue$ = new Subject<unknown[] | unknown>();
     private selectItems$ = new Subject<unknown[] | unknown>();
-    private contentInitialized$ = new Subject();
+    private contentInitialized$ = new Subject<boolean>();
 
     /** Définit la longueur minimale de caractères dans le champ de recherche avant que la recherche ou le filtrage soient effectués */
     // eslint-disable-next-line @angular-eslint/no-input-rename
@@ -133,7 +132,7 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
             this.changeDetectorRef.markForCheck();
         });
 
-        fromEvent(window, 'resize').pipe(
+        fromEvent<Event>(window, 'resize').pipe(
             debounceTime(5),
             takeUntil(this.destroyed$)
         ).subscribe(() => {
@@ -152,7 +151,8 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
             takeUntil(this.destroyed$)
         ).subscribe();
 
-        const selectItems$ = combineLatest([this.selectItems$, this.contentInitialized$]).pipe(
+        const selectItems$ = this.selectItems$.pipe(
+            combineLatestWith(this.contentInitialized$),
             map(([value]) => value),
             // eslint-disable-next-line @typescript-eslint/no-unsafe-return
             map(value => this.getVirtualSelectedEntities(value)),
@@ -160,7 +160,8 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
             map(value => (value instanceof Array && value) || (value && [value]) || [] as unknown[]),
             tap(values => super.setSelectedItems(values)));
 
-        const selectModels$ = combineLatest([this.writeValue$, this.contentInitialized$]).pipe(
+        const selectModels$ = this.writeValue$.pipe(
+            combineLatestWith(this.contentInitialized$),
             map(([value]) => {
                 if (this.modelIsValue === undefined) {
                     if (value instanceof Array) {
@@ -181,7 +182,8 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
             map(value => this.getVirtualSelectedEntities(value)),
             tap(value => super.setSelectedModels(!value || this._multiSelect || value instanceof Array ? value as unknown[] : [value])));
 
-        merge(selectModels$, selectItems$).pipe(
+        selectModels$.pipe(
+            mergeWith(selectItems$),
             takeUntil(this.destroyed$)
         ).subscribe(() => {
             super.getItemListService().ensureSelection();
@@ -679,8 +681,8 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
             ).subscribe();
         }
 
-        fromEvent(this.listElement, 'scroll').pipe(
-            map((event: Event) => {
+        fromEvent<Event>(this.listElement, 'scroll').pipe(
+            map(event => {
                 const target = event.target as HTMLElement;
                 const e = {
                     originalEvent: event,
@@ -696,8 +698,10 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
 
         let keyDown$ = fromEvent<KeyboardEvent>(this.listElement, 'keydown');
         if (this.input) {
-            const inputKeyDown$ = fromEvent(this.input.nativeElement, 'keydown');
-            keyDown$ = merge(keyDown$, inputKeyDown$) as Observable<KeyboardEvent>;
+            const inputKeyDown$ = fromEvent<KeyboardEvent>(this.input.nativeElement, 'keydown');
+            keyDown$ = keyDown$.pipe(
+                mergeWith(inputKeyDown$)
+            );
         }
 
         keyDown$.pipe(
@@ -862,9 +866,11 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
 
         let keyUp$ = fromEvent<KeyboardEvent>(this.listElement, 'keyup');
         if (this.input) {
-            const inputKeyup$ = fromEvent(this.input.nativeElement, 'keyup');
-            const inputDrop$ = fromEvent(this.input.nativeElement, 'drop');
-            keyUp$ = merge(keyUp$, inputKeyup$, inputDrop$) as Observable<KeyboardEvent>;
+            const inputKeyup$ = fromEvent<KeyboardEvent>(this.input.nativeElement, 'keyup');
+            const inputDrop$ = fromEvent<KeyboardEvent>(this.input.nativeElement, 'drop');
+            keyUp$ = keyUp$.pipe(
+                mergeWith(inputKeyup$, inputDrop$)
+            );
         }
 
         // Ensure list cache
@@ -967,10 +973,10 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
             }
         }
 
-        this.mouseUp$sub = fromEvent(this.listElement, 'mouseup').pipe(
+        this.mouseUp$sub = fromEvent<MouseEvent>(this.listElement, 'mouseup').pipe(
             take(1),
             filter(() => !this.disabled),
-            switchMap((upevt: MouseEvent) => {
+            switchMap(upevt => {
                 // Because .take(1)
                 this.mouseUp$sub = undefined;
 

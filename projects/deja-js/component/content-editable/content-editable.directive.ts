@@ -10,8 +10,7 @@ import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Directive, ElementRef, HostBinding, Input, OnInit, Optional, Self } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { Destroy, KeyCodes } from '@deja-js/component/core';
-import { BehaviorSubject, fromEvent, Observable, timer } from 'rxjs';
-import { distinctUntilChanged, filter, map, switchMap, take, takeUntil } from 'rxjs/operators';
+import { BehaviorSubject, distinctUntilChanged, filter, fromEvent, map, switchMap, take, takeUntil, timer } from 'rxjs';
 
 @Directive({
     selector: '[deja-editable]'
@@ -36,7 +35,7 @@ export class DejaEditableDirective extends Destroy implements ControlValueAccess
 
         this.element = elementRef.nativeElement as HTMLElement;
 
-        const mouseDownEvent$ = fromEvent(this.element, 'mousedown') as Observable<MouseEvent>;
+        const mouseDownEvent$ = fromEvent<MouseEvent>(this.element, 'mousedown');
         mouseDownEvent$.pipe(
             takeUntil(this.destroyed$)
         ).subscribe(e => {
@@ -79,10 +78,10 @@ export class DejaEditableDirective extends Destroy implements ControlValueAccess
             filter(value => !value)
         );
 
-        const mouseDown$ = fromEvent(this.element.ownerDocument, 'mousedown').pipe(
+        const mouseDown$ = fromEvent<MouseEvent>(this.element.ownerDocument, 'mousedown').pipe(
             filter(event => !this.isChildElement(event.target as HTMLElement)),
             takeUntil(kill$)
-        ) as Observable<MouseEvent>;
+        );
 
         inEdition$.pipe(
             filter(value => value),
@@ -97,9 +96,9 @@ export class DejaEditableDirective extends Destroy implements ControlValueAccess
             this.inEdition = false;
         });
 
-        const keyDown$ = fromEvent(this.element, 'keydown').pipe(
+        const keyDown$ = fromEvent<KeyboardEvent>(this.element, 'keydown').pipe(
             takeUntil(kill$)
-        ) as Observable<KeyboardEvent>;
+        );
 
         inEdition$.pipe(
             filter(value => value),

@@ -28,16 +28,16 @@ import { DejaTreeListComponent } from './tree-list.component';
     ],
     imports: [
         CommonModule,
+        DejaChildValidatorModule,
+        DejaDragDropModule,
+        DejaItemModule,
+        DejaListLoaderModule,
+        DejaTextMetricsModule,
         FormsModule,
         MatButtonModule,
-        MatInputModule,
         MatCheckboxModule,
         MatIconModule,
-        DejaChildValidatorModule,
-        DejaListLoaderModule,
-        DejaDragDropModule,
-        DejaTextMetricsModule,
-        DejaItemModule
+        MatInputModule
     ]
 })
 export class DejaTreeListModule { }

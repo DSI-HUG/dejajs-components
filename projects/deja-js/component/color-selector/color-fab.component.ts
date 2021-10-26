@@ -8,8 +8,7 @@
 import { BooleanInput } from '@angular/cdk/coercion';
 import { Component, ElementRef, Input } from '@angular/core';
 import { Destroy } from '@deja-js/component/core';
-import { combineLatest } from 'rxjs';
-import { map, takeUntil } from 'rxjs/operators';
+import { combineLatestWith, map, takeUntil } from 'rxjs';
 
 import { DejaColorFab } from './color-fab.class';
 
@@ -47,7 +46,8 @@ export class DejaColorFabComponent extends Destroy {
                 takeUntil(this.destroyed$)
             ).subscribe(value => toggleAttribute('active', value));
 
-            combineLatest([colorFab.color$, colorFab.disabled$]).pipe(
+            colorFab.color$.pipe(
+                combineLatestWith(colorFab.disabled$),
                 map(([color, disabled]) => color && disabled ? color.grayScale : color),
                 takeUntil(this.destroyed$)
             ).subscribe(color => this.element.style.backgroundColor = color ? color.toHex() : '');

@@ -8,8 +8,7 @@
 
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { timer } from 'rxjs';
-import { delay, take, tap } from 'rxjs/operators';
+import { delay, take, tap, timer } from 'rxjs';
 
 import { DejaCircularPickerModule } from '.';
 import { DejaCircularPickerComponent, ICircularRange } from './circular-picker.component';

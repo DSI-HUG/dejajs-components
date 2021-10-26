@@ -14,8 +14,7 @@ import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DejaConnectionPositionPair, DejaItemModule, GroupingService, IItemBase, IItemTree, ISortInfos, ItemListService, IViewPort, KeyCodes, SortingService, ViewPortService } from '@deja-js/component/core';
-import { from, Observable, of, timer } from 'rxjs';
-import { debounceTime, delay, filter, take, tap } from 'rxjs/operators';
+import { debounceTime, delay, filter, from, Observable, of, take, tap, timer } from 'rxjs';
 
 import { DejaSelectModule } from './index';
 import { DejaSelectComponent } from './select.component';

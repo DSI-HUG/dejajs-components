@@ -8,8 +8,7 @@
 
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { BehaviorSubject, concat, from, iif, Observable, of, Subscriber } from 'rxjs';
-import { filter, map, reduce, switchMap, tap } from 'rxjs/operators';
+import { BehaviorSubject, concat, filter, from, iif, map, Observable, of, reduce, Subscriber, switchMap, tap } from 'rxjs';
 
 import { Diacritics } from '../diacritics/diacritics';
 import { IGroupInfo } from '../grouping/group-infos';

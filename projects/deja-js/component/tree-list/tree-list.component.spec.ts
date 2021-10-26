@@ -15,8 +15,7 @@ import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DejaItemModule, GroupingService, IItemBase, IItemTree, ISortInfos, ItemListService, KeyCodes, SortingService, ViewPortService } from '@deja-js/component/core';
-import { Observable, timer } from 'rxjs';
-import { debounceTime, delay, filter, take, tap } from 'rxjs/operators';
+import { debounceTime, delay, filter, Observable, take, tap, timer } from 'rxjs';
 
 import { IViewPort } from '../core';
 import { DejaTreeListModule } from './index';
@@ -599,7 +598,7 @@ describe('DejaTreeListByModelContainerComponent', () => {
 
         observeModelViewPort$(fixture).pipe(
             debounceTime(100),
-            tap(() => void expect(treeListInstance.keyboardNavigation()).toBeTruthy()),
+            tap(() => expect(treeListInstance.keyboardNavigation()).toBeTruthy()),
             delay(1000)
         ).subscribe(() => {
             void expect(treeListInstance.keyboardNavigation()).toBeFalsy();

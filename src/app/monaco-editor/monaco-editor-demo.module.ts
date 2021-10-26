@@ -28,16 +28,16 @@ const routes: Routes = [
 
 @NgModule({
     imports: [
-        DejaMonacoEditorModule,
         CommonModule,
+        DejaMarkdownModule,
+        DejaMonacoEditorModule,
+        DejaSplitterModule,
         FormsModule,
         MatCardModule,
         MatCheckboxModule,
         MatSelectModule,
         MatTabsModule,
         MatToolbarModule,
-        DejaSplitterModule,
-        DejaMarkdownModule,
         RouterModule.forChild(routes)
     ],
     declarations: [DejaMonacoEditorDemoComponent],

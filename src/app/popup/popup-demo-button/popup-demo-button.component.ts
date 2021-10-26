@@ -14,7 +14,7 @@ export interface PopupDemoButtonComponentData {
     iconName: string;
     iconTooltip?: string;
     buttonColor?: ThemePalette;
-    onClickEvent?(event: MouseEvent, instance: PopupDemoButtonComponent): void;
+    onClickEvent?: (event: MouseEvent, instance: PopupDemoButtonComponent) => void;
 }
 
 @Component({

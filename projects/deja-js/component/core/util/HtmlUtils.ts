@@ -9,7 +9,7 @@
 export class HtmlUtils {
 
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    public static getEncodedURIComponent(jsonObjParameters: Record<string, string |number | boolean>): string {
+    public static getEncodedURIComponent(jsonObjParameters: Record<string, string | number | boolean>): string {
         if (jsonObjParameters) {
             const params: string[] = [];
             // eslint-disable-next-line no-loops/no-loops

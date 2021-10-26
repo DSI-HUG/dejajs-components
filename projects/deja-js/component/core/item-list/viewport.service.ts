@@ -9,8 +9,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { NumberInput } from '@angular/cdk/coercion';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, combineLatest, Observable, of, ReplaySubject, timer } from 'rxjs';
-import { debounceTime, distinctUntilChanged, filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { BehaviorSubject, combineLatestWith, debounceTime, distinctUntilChanged, filter, map, Observable, of, ReplaySubject, switchMap, takeUntil, tap, timer } from 'rxjs';
 
 import { Destroy } from '../destroy/destroy';
 
@@ -431,7 +430,8 @@ export class ViewPortService extends Destroy {
         // .do(() => consoleLog('items'));
 
         // Ensure item visible by index or instance
-        this.ensureParams$ = combineLatest([this.ensureItem$, items$]).pipe(
+        this.ensureParams$ = this.ensureItem$.pipe(
+            combineLatestWith(items$),
             map(([ensureItem, items]) => {
                 this.ignoreScrollCount = 0;
                 const ensureParams = {} as IEnsureParams;
@@ -523,23 +523,20 @@ export class ViewPortService extends Destroy {
         // .do(() => consoleLog(`element`));
 
         // Reset items size when direction change in auto mode
-        combineLatest([direction$, items$, mode$, this.deleteSizeCache$]).pipe(
+        direction$.pipe(
+            combineLatestWith(items$, mode$, this.deleteSizeCache$),
             filter(([_direction, items, mode]) => items?.length && mode === 'auto'),
             switchMap(([_direction, items]) => items),
             takeUntil(this.destroyed$)
         ).subscribe(item => item.size = undefined);
 
         // Calc view port observable
-        const cl1$ = combineLatest([element$, items$, refresh$, this.ensureParams$]);
-        const cl2$ = combineLatest([direction$, mode$, itemsSize$, maxSize$]);
-        const cl3$ = combineLatest([cl1$, cl2$]).pipe(
-            debounceTime(1)
-        );
-
-        combineLatest([cl3$, scrollPos$]).pipe(
-            filter(([[[element]]]) => !!element),
-            switchMap(([[[element, items, _refresh, ensureParams], [_direction, _mode, itemDefaultSize, maxSize]], _scrollPos]) => {
-                // consoleLog(`combineLatest ${ensureParams && ensureParams.index}`);
+        element$.pipe(
+            combineLatestWith(items$, refresh$, this.ensureParams$, direction$, mode$, itemsSize$, maxSize$),
+            debounceTime(1),
+            combineLatestWith(scrollPos$),
+            filter(([[element]]) => !!element),
+            switchMap(([[element, items, _refresh, ensureParams, _direction, _mode, itemDefaultSize, maxSize], _scrollPos]) => {
                 if (!itemDefaultSize) {
                     itemDefaultSize = ViewPortService.itemDefaultSize;
                 }

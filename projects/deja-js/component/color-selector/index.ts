@@ -16,13 +16,13 @@ import { DejaColorFabComponent } from './color-fab.component';
 import { DejaColorSelectorComponent } from './color-selector.component';
 
 @NgModule({
-    declarations: [DejaColorSelectorComponent, DejaColorFabComponent],
-    exports: [DejaColorSelectorComponent, DejaColorFabComponent],
+    declarations: [DejaColorFabComponent, DejaColorSelectorComponent],
+    exports: [DejaColorFabComponent, DejaColorSelectorComponent],
     imports: [
         CommonModule,
         FormsModule,
-        MatIconModule,
-        MatButtonModule
+        MatButtonModule,
+        MatIconModule
     ]
 })
 export class DejaColorSelectorModule { }

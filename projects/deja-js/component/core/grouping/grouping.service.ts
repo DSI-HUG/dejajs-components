@@ -6,8 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 import { Injectable } from '@angular/core';
-import { from, Observable, of } from 'rxjs';
-import { map, reduce, switchMap, tap } from 'rxjs/operators';
+import { from, map, Observable, of, reduce, switchMap, tap } from 'rxjs';
 
 import { IItemTree } from '../item-list/item-tree';
 import { SortingService } from '../sorting/sorting.service';

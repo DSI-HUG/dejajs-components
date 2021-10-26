@@ -9,8 +9,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostBinding, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { MatInput } from '@angular/material/input';
 import { Destroy, KeyCodes } from '@deja-js/component/core';
-import { combineLatest, fromEvent, Subject, timer } from 'rxjs';
-import { debounceTime, delay, filter, map, shareReplay, switchMap, takeUntil, tap, withLatestFrom } from 'rxjs/operators';
+import { combineLatestWith, debounceTime, delay, filter, fromEvent, map, shareReplay, Subject, switchMap, takeUntil, tap, timer, withLatestFrom } from 'rxjs';
 
 export type DejaNumericStepperLayout = 'vertical' | 'horizontal' | 'horizontal-inlay';
 
@@ -50,7 +49,7 @@ export class DejaNumericStepperComponent extends Destroy implements OnInit {
     public disableDown = false;
     public clickArrow$ = new Subject<boolean>();
 
-    private validateArrows$ = new Subject();
+    private validateArrows$ = new Subject<void>();
 
     public constructor(
         private elementRef: ElementRef<HTMLElement>,
@@ -151,7 +150,8 @@ export class DejaNumericStepperComponent extends Destroy implements OnInit {
             return false;
         });
 
-        combineLatest([inputElement$, this.validateArrows$]).pipe(
+        inputElement$.pipe(
+            combineLatestWith(this.validateArrows$),
             debounceTime(1),
             filter(([inputElement]) => !!inputElement),
             takeUntil(this.destroyed$)

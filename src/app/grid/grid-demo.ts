@@ -13,8 +13,7 @@ import { Destroy, GroupingService, IGroupInfo, IItemTree, IViewPortItem } from '
 import { DejaGridComponent, IDejaGridColumn, IDejaGridColumnSizeEvent, IDejaGridRow } from '@deja-js/component/data-grid';
 import { IDejaDragContext, IDejaDropContext, IDejaDropEvent } from '@deja-js/component/dragdrop';
 import { cloneDeep } from 'lodash-es';
-import { Observable, of, Subject, Subscription } from 'rxjs';
-import { debounceTime, delay, map, reduce, switchMap, take, takeUntil, tap } from 'rxjs/operators';
+import { debounceTime, delay, map, Observable, of, reduce, Subject, Subscription, switchMap, take, takeUntil, tap } from 'rxjs';
 
 import { News } from '../common/news.model';
 import { NewsService } from '../services/news.service';
@@ -71,7 +70,7 @@ export class DejaGridDemoComponent extends Destroy {
     public groupedByEyesColorPeople$: Observable<Person[]>;
     public groupedByColorPeople: {
         items: Person[];
-        toString(): string;
+        toString: () => string;
     }[];
 
     public onDemandGroupedPeople: IPeopleGroup[];

@@ -7,7 +7,7 @@
  */
 
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import { take } from 'rxjs/operators';
+import { take } from 'rxjs';
 
 import { ISortInfos } from './sort-infos.model';
 import { SortingService } from './sorting.service';

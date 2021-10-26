@@ -7,8 +7,7 @@
  */
 
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, range, Subject } from 'rxjs';
-import { delay, filter, map, switchMap, take, takeUntil, toArray } from 'rxjs/operators';
+import { BehaviorSubject, delay, filter, map, Observable, range, Subject, switchMap, take, takeUntil, toArray } from 'rxjs';
 
 import { Destroy } from '../destroy/destroy';
 
@@ -19,7 +18,7 @@ import { Destroy } from '../destroy/destroy';
 @Injectable()
 export class DejaTextMetricsService extends Destroy {
     private canvas: HTMLCanvasElement;
-    private element$: Subject<HTMLElement> = new Subject();
+    private element$ = new Subject<HTMLElement>();
     private computedStyles: CSSStyleDeclaration;
     private charSize$ = new BehaviorSubject<number[]>(null);
 

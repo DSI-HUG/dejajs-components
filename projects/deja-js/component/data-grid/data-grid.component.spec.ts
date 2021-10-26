@@ -13,8 +13,7 @@ import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { GroupingService, IItemBase, ItemListService, IViewPort, KeyCodes, SortingService, ViewPortService } from '@deja-js/component/core';
 import { cloneDeep } from 'lodash-es';
-import { from, Observable, timer } from 'rxjs';
-import { debounceTime, delay, filter, take, tap } from 'rxjs/operators';
+import { debounceTime, delay, filter, from, Observable, take, tap, timer } from 'rxjs';
 
 import { DejaGridComponent } from './data-grid.component';
 import { IDejaGridColumn, IDejaGridColumnLayoutEvent } from './data-grid-column/data-grid-column';

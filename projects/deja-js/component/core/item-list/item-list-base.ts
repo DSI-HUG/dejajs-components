@@ -8,8 +8,7 @@
 
 import { coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
 import { ChangeDetectorRef, EventEmitter } from '@angular/core';
-import { from, Observable, of, Subscription, timer } from 'rxjs';
-import { filter, map, reduce, switchMap, take, takeUntil, tap } from 'rxjs/operators';
+import { filter, from, map, Observable, of, reduce, Subscription, switchMap, take, takeUntil, tap, timer } from 'rxjs';
 
 import { Destroy } from '../destroy/destroy';
 import { IGroupInfo } from '../grouping/group-infos';

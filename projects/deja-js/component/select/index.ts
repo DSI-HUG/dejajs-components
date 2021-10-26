@@ -27,15 +27,15 @@ import { DejaSelectComponent } from './select.component';
     ],
     imports: [
         CommonModule,
-        FormsModule,
-        MediaModule,
-        DejaOverlayModule,
-        MatIconModule,
-        MatInputModule,
         DejaChildValidatorModule,
         DejaChipsModule,
         DejaItemModule,
-        DejaListLoaderModule
+        DejaListLoaderModule,
+        DejaOverlayModule,
+        FormsModule,
+        MatIconModule,
+        MatInputModule,
+        MediaModule
     ]
 })
 export class DejaSelectModule { }

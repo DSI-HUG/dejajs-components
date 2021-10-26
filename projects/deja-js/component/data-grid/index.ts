@@ -24,26 +24,26 @@ import { DejaGridRowComponent } from './data-grid-row/data-grid-row.component';
 @NgModule({
     declarations: [
         DejaGridComponent,
-        DejaGridRowComponent,
-        DejaGridParentRowComponent,
+        DejaGridGroupAreaComponent,
         DejaGridHeaderComponent,
-        DejaGridGroupAreaComponent
+        DejaGridParentRowComponent,
+        DejaGridRowComponent
     ],
     exports: [
         DejaGridComponent,
-        DejaGridRowComponent,
-        DejaGridParentRowComponent,
+        DejaGridGroupAreaComponent,
         DejaGridHeaderComponent,
-        DejaGridGroupAreaComponent
+        DejaGridParentRowComponent,
+        DejaGridRowComponent
     ],
     imports: [
         CommonModule,
-        FormsModule,
-        MatIconModule,
-        DejaTreeListModule,
+        DejaChipsModule,
         DejaDragDropModule,
         DejaSortingModule,
-        DejaChipsModule
+        DejaTreeListModule,
+        FormsModule,
+        MatIconModule
     ]
 })
 export class DejaGridModule {}

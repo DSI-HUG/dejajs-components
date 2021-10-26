@@ -17,8 +17,7 @@ import { DejaChildValidatorDirective, DejaConnectionPositionPair, formatWithLoca
 import { _MatInputMixinBase } from '@deja-js/component/core/util';
 import { DateComponentLayout, DaysOfWeek, DejaDateSelectorComponent } from '@deja-js/component/date-selector';
 import { add, isValid, parse, startOfToday } from 'date-fns';
-import { combineLatest, fromEvent, merge, Observable, ReplaySubject, Subject, timer } from 'rxjs';
-import { delay, filter, map, switchMap, take, takeUntil, tap } from 'rxjs/operators';
+import { combineLatestWith, delay, filter, fromEvent, map, mergeWith, ReplaySubject, Subject, switchMap, take, takeUntil, tap, timer } from 'rxjs';
 
 import { formatToMask, formatToPattern, formatToUnitOfTime } from './format-to-mask';
 import { Pattern } from './models/pattern.model';
@@ -167,7 +166,7 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
 
     public formatChanged$ = new Subject<string>();
 
-    protected destroyed$ = new Subject();
+    protected destroyed$ = new Subject<void>();
 
     private _allowFreeEntry = false;
 
@@ -180,7 +179,7 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
     private _format: string;
     private inputElement$ = new ReplaySubject<HTMLInputElement>(1);
     private inputElement: HTMLInputElement;
-    private focus$ = new Subject();
+    private focus$ = new Subject<void>();
     private _showDropDown = false;
     private _positions = DejaConnectionPositionPair.default;
 
@@ -231,6 +230,9 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
         private breakpointObserver: BreakpointObserver
     ) {
         super(_defaultErrorStateMatcher, _parentForm, _parentFormGroup, ngControl);
+
+        console.warn('@deja-js/component/date-picker is deprecated, and will be removed in a further version. Please use mat-datepicker instead. Look at the mat-datepicker demo page of @deja-js/component for implementation.');
+
         if (this.ngControl) {
             this.ngControl.valueAccessor = this;
         }
@@ -268,11 +270,12 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
         ).subscribe(() => this.inputElement.setSelectionRange(0, 0));
 
         const keydown$ = this.inputElement$.pipe(
-            switchMap(element => fromEvent(element, 'keydown'))
-        ) as Observable<KeyboardEvent>;
+            switchMap(element => fromEvent<KeyboardEvent>(element, 'keydown'))
+        );
 
         const cursorChanged$ = this.inputElement$.pipe(
-            switchMap(element => merge(fromEvent(element, 'mouseup'), fromEvent(element, 'focus'), fromEvent(element, 'keyup')).pipe(
+            switchMap(element => fromEvent<MouseEvent>(element, 'mouseup').pipe(
+                mergeWith(fromEvent<Event>(element, 'focus'), fromEvent<KeyboardEvent>(element, 'keyup')),
                 map(() => element.selectionStart)
             ))
         );
@@ -322,7 +325,8 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
             }
         });
 
-        const valueUpdated$ = combineLatest([this.formatChanged$, this.dateChanged$]).pipe(
+        const valueUpdated$ = this.formatChanged$.pipe(
+            combineLatestWith(this.dateChanged$),
             tap(([dateFormat]) => {
                 // eslint-disable-next-line @typescript-eslint/prefer-regexp-exec
                 const array = dateFormat.match(DejaDatePickerComponent.formattingTokens);
@@ -367,7 +371,8 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
             }
         });
 
-        combineLatest([this.inputElement$, this.focus$]).pipe(
+        this.inputElement$.pipe(
+            combineLatestWith(this.focus$),
             takeUntil(this.destroyed$)
         ).subscribe(([element]) => element.focus());
     }

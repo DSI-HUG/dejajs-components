@@ -215,6 +215,9 @@ export class DejaNumericStepperComponent extends _MatInputMixinBase implements C
         _defaultErrorStateMatcher: ErrorStateMatcher
     ) {
         super(_defaultErrorStateMatcher, _parentForm, _parentFormGroup, ngControl);
+
+        console.warn('@deja-js/component/numeric-stepper is deprecated, and will be removed in a further version. Please use @deja-js/component/v2/numeric-stepper instead.');
+
         if (this.ngControl) {
             this.ngControl.valueAccessor = this;
         }

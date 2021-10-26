@@ -25,16 +25,16 @@ import { routing } from './numeric-stepper-demo.routes';
     exports: [DejaNumericStepperDemoComponent],
     imports: [
         CommonModule,
+        DejaMarkdownModule,
+        DejaNumericStepperModule,
         FormsModule,
+        MatButtonModule,
         MatCardModule,
+        MatFormFieldModule,
         MatTabsModule,
         MatToolbarModule,
-        MatFormFieldModule,
-        DejaNumericStepperModule,
-        DejaMarkdownModule,
-        routing,
-        MatButtonModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        routing
     ],
     providers: [
     ]

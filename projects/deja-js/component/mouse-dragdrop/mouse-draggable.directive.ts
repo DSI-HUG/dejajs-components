@@ -8,8 +8,7 @@
 
 import { Directive, ElementRef, Input } from '@angular/core';
 import { Destroy, Position, Rect } from '@deja-js/component/core';
-import { fromEvent, merge, Observable, of, Subject } from 'rxjs';
-import { filter, map, switchMap, take, takeUntil, tap } from 'rxjs/operators';
+import { filter, fromEvent, map, mergeWith, Observable, of, Subject, switchMap, take, takeUntil, tap } from 'rxjs';
 
 import { IDragCursorInfos } from './mouse-drag-cursor-infos.interface';
 import { DejaMouseDragDropService } from './mouse-dragdrop.service';
@@ -35,11 +34,11 @@ export class DejaMouseDraggableDirective extends Destroy {
 
         const element = elementRef.nativeElement as HTMLElement;
 
-        const mouseLeaveEvent$ = fromEvent(element, 'mouseleave') as Observable<MouseEvent>;
-        const mouseEnterEvent$ = fromEvent(element, 'mouseenter') as Observable<MouseEvent>;
-        const mouseUpEvent$ = fromEvent(element.ownerDocument, 'mouseup') as Observable<MouseEvent>;
-        const mouseDownEvent$ = fromEvent(element, 'mousedown') as Observable<MouseEvent>;
-        const mouseMoveEvent$ = fromEvent(element.ownerDocument, 'mousemove') as Observable<MouseEvent>;
+        const mouseLeaveEvent$ = fromEvent<MouseEvent>(element, 'mouseleave');
+        const mouseEnterEvent$ = fromEvent<MouseEvent>(element, 'mouseenter');
+        const mouseUpEvent$ = fromEvent<MouseEvent>(element.ownerDocument, 'mouseup');
+        const mouseDownEvent$ = fromEvent<MouseEvent>(element, 'mousedown');
+        const mouseMoveEvent$ = fromEvent<MouseEvent>(element.ownerDocument, 'mousemove');
 
         mouseEnterEvent$.pipe(
             filter(() => !dragDropService.isDragging),
@@ -92,13 +91,14 @@ export class DejaMouseDraggableDirective extends Destroy {
                 switchMap(target => {
                     dragDropService.dragging$.next(true);
 
-                    const moveUp$ = new Subject();
+                    const moveUp$ = new Subject<void>();
 
                     const enterWhileNotDragDropEvent$ = mouseEnterEvent$.pipe(
                         filter(event => event.buttons !== 1 && dragDropService.isDragging)
                     );
 
-                    const kill$ = merge(mouseUpEvent$, enterWhileNotDragDropEvent$, moveUp$).pipe(
+                    const kill$ = mouseUpEvent$.pipe(
+                        mergeWith(enterWhileNotDragDropEvent$, moveUp$),
                         take(1),
                         tap(() => {
                             dragDropService.dragCursor$.next(null);
@@ -144,5 +144,5 @@ export interface IDejaMouseDraggableContext {
     target?: string; // Tagname or #id or [attribute]
     className?: string;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    dragStart?(element: HTMLElement): any; // Return object or observable<object>
+    dragStart?: (element: HTMLElement) => any; // Return object or observable<object>
 }

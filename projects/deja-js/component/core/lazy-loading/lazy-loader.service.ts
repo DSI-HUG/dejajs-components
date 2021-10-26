@@ -8,8 +8,7 @@
 
 import { ComponentType } from '@angular/cdk/portal';
 import { Compiler, Injectable, Injector, NgModuleRef, Type } from '@angular/core';
-import { from, Observable } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { from, map, Observable, switchMap } from 'rxjs';
 
 export abstract class AbstractLazyModule<Component> {
     public constructor(

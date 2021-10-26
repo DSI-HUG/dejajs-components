@@ -14,8 +14,7 @@ import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Rect } from '@deja-js/component/core';
-import { from, Observable } from 'rxjs';
-import { debounceTime, delay, map, take, tap } from 'rxjs/operators';
+import { debounceTime, delay, from, map, Observable, take, tap } from 'rxjs';
 import { __spread } from 'tslib';
 
 import { DejaTilesModule } from './index';
@@ -151,7 +150,7 @@ describe('DejaTilesComponent', () => {
             providers: [
                 {
                     provide: OverlayContainer,
-                    useFactory: (): { getContainerElement(): HTMLElement } => {
+                    useFactory: (): { getContainerElement: () => HTMLElement } => {
                         overlayContainerElement = document.createElement('div');
                         return { getContainerElement: (): HTMLElement => overlayContainerElement };
                     }

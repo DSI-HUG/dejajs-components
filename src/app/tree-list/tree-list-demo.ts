@@ -11,8 +11,7 @@ import { Destroy, GroupingService, IItemBase, IItemTree, IViewPortItem } from '@
 import { IDejaDragEvent } from '@deja-js/component/dragdrop';
 import { IDejaMouseDraggableContext, IDejaMouseDroppableContext, IDropCursorInfos } from '@deja-js/component/mouse-dragdrop';
 import { DejaTreeListComponent } from '@deja-js/component/tree-list';
-import { Observable, of, Subject, Subscription } from 'rxjs';
-import { delay, map, switchMap, take, takeUntil, tap, toArray } from 'rxjs/operators';
+import { delay, map, Observable, of, Subject, Subscription, switchMap, take, takeUntil, tap, toArray } from 'rxjs';
 
 import { News } from '../common/news.model';
 import { cheeseValidator } from '../select/validators';

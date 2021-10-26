@@ -8,8 +8,7 @@
 
 import { Directive, ElementRef, Input } from '@angular/core';
 import { Destroy, Position, Rect } from '@deja-js/component/core';
-import { Observable, of } from 'rxjs';
-import { distinctUntilChanged, filter, switchMap, take, takeUntil, tap } from 'rxjs/operators';
+import { distinctUntilChanged, filter, Observable, of, switchMap, take, takeUntil, tap } from 'rxjs';
 
 import { DragCursorInfos, DropCursorInfos, MouseDragDropService } from './mouse-dragdrop.service';
 
@@ -77,7 +76,7 @@ export class MouseDroppableDirective<T> extends Destroy {
                                                 // Observable
                                                 return dropCursorObs$;
                                             } else {
-                                                return of(dropCursor$);
+                                                return of(dropCursor$ as DropCursorInfos);
                                             }
                                         }
                                     }
@@ -96,7 +95,7 @@ export class MouseDroppableDirective<T> extends Destroy {
                             }
                         }
 
-                        return of(null);
+                        return of(null as DropCursorInfos);
                     })
                 )
             ),
@@ -108,8 +107,8 @@ export class MouseDroppableDirective<T> extends Destroy {
 
 export interface MouseDroppableContext<T> {
     // eslint-disable-next-line rxjs/finnish
-    dragEnter?(dragContext$: T, dragCursor: DragCursorInfos): DropCursorInfos | Observable<DropCursorInfos>; // Return object or observable<object>
-    dragOver?(dragContext$: T, dragCursor: DragCursorInfos): DropCursorInfos;
-    dragLeave?(dragContext$: T): void;
-    drop?(dragContext$: T, dragCursor: DragCursorInfos): void;
+    dragEnter?: (dragContext$: T, dragCursor: DragCursorInfos) => DropCursorInfos | Observable<DropCursorInfos>; // Return object or observable<object>
+    dragOver?: (dragContext$: T, dragCursor: DragCursorInfos) => DropCursorInfos;
+    dragLeave?: (dragContext$: T) => void;
+    drop?: (dragContext$: T, dragCursor: DragCursorInfos) => void;
 }

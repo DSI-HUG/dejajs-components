@@ -8,8 +8,7 @@
 
 import { Component, ElementRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Destroy, Position } from '@deja-js/component/core';
-import { BehaviorSubject, combineLatest } from 'rxjs';
-import { delay, filter, takeUntil, tap } from 'rxjs/operators';
+import { BehaviorSubject, combineLatestWith, delay, filter, takeUntil, tap } from 'rxjs';
 
 import { DragCursorInfos, MouseDragDropService } from './mouse-dragdrop.service';
 
@@ -94,7 +93,8 @@ export class MouseDragDropCursorComponent extends Destroy {
             }
         });
 
-        combineLatest([this.dragDropService.dragCursor$, this.dragDropService.dropCursor$]).pipe(
+        this.dragDropService.dragCursor$.pipe(
+            combineLatestWith(this.dragDropService.dropCursor$),
             takeUntil(this.destroyed$)
         ).subscribe(([dragCursor, dropCursor]) => {
             const cursor = (dragCursor || dropCursor) && {

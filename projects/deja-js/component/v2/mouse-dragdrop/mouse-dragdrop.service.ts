@@ -11,8 +11,7 @@
  */
 import { Injectable } from '@angular/core';
 import { Destroy, Position } from '@deja-js/component/core';
-import { BehaviorSubject } from 'rxjs';
-import { filter, takeUntil, tap } from 'rxjs/operators';
+import { BehaviorSubject, filter, takeUntil, tap } from 'rxjs';
 
 export interface DropCursorInfos {
     html?: string;

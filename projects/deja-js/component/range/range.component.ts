@@ -10,11 +10,11 @@ import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, HostListener, Input, Optional, Output, Self, TemplateRef } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { Destroy } from '@deja-js/component/core';
-import { fromEvent, merge, Observable } from 'rxjs';
-import { take, takeUntil, tap } from 'rxjs/operators';
+import { fromEvent, mergeWith, take, takeUntil, tap } from 'rxjs';
 import { __spread } from 'tslib';
 
 import { IRange, IRangeEvent, IStepRangeEvent, Range } from './range.interface';
+
 
 @Component({
     selector: 'deja-range',
@@ -226,9 +226,10 @@ export class DejaRangeComponent extends Destroy implements ControlValueAccessor 
                 parentElement = parentElement.parentElement;
             }
 
-            const up$ = fromEvent(document, 'mouseup');
-            const leave$ = fromEvent(document.body, 'mouseleave');
-            const kill$ = merge(up$, leave$).pipe(
+            const up$ = fromEvent<MouseEvent>(document, 'mouseup');
+            const leave$ = fromEvent<MouseEvent>(document.body, 'mouseleave');
+            const kill$ = up$.pipe(
+                mergeWith(leave$),
                 take(1),
                 tap(() => {
                     const host = this.elementRef.nativeElement.firstElementChild as HTMLElement;
@@ -237,9 +238,11 @@ export class DejaRangeComponent extends Destroy implements ControlValueAccessor 
                     this._onChangeCallback(this._ranges);
                 }));
 
-            const move$ = fromEvent(document, 'mousemove') as Observable<MouseEvent>;
+            const move$ = fromEvent<MouseEvent>(document, 'mousemove');
             move$.pipe(
-                takeUntil(merge(this.destroyed$, kill$))
+                takeUntil(this.destroyed$.pipe(
+                    mergeWith(kill$)
+                ))
             ).subscribe(event => {
                 const x = event.pageX;
                 const xDifference = -(xStart - x);

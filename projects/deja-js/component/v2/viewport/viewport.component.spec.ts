@@ -12,8 +12,7 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { Observable } from 'rxjs';
-import { debounceTime, delay, filter, take, tap } from 'rxjs/operators';
+import { debounceTime, delay, filter, Observable, take, tap } from 'rxjs';
 
 import { ViewPortModule } from './index';
 import { ViewPortComponent } from './viewport.component';

@@ -11,8 +11,7 @@ import { Injectable } from '@angular/core';
 import { Color, MaterialColors, UUID } from '@deja-js/component/core';
 import { JsonProperty, ObjectMapper } from 'json-object-mapper';
 import { cloneDeep } from 'lodash-es';
-import { Observable } from 'rxjs';
-import { map, shareReplay } from 'rxjs/operators';
+import { map, Observable, shareReplay } from 'rxjs';
 
 export class Friend {
     public id: number = void 0;
