@@ -21,7 +21,7 @@ const matDateFormats: MatDateFormats = {
 
 export class CustomDateAdapter extends NativeDateAdapter {
     parse(value: string): Date | null {
-        return parse(value, dateTimeFormat, startOfToday());
+        return parse(value, dateFormat, startOfToday());
     }
 
     format(date: Date, displayFormat: string): string {

@@ -12,7 +12,7 @@ import { Destroy, KeyCodes } from '@deja-js/component/core';
 import { combineLatest, fromEvent, Subject, timer } from 'rxjs';
 import { debounceTime, delay, filter, map, shareReplay, switchMap, takeUntil, tap, withLatestFrom } from 'rxjs/operators';
 
-export type DejaNumericStepperLayout = 'vertical' | 'horizontal';
+export type DejaNumericStepperLayout = 'vertical' | 'horizontal' | 'horizontal-inlay';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -108,6 +108,14 @@ export class DejaNumericStepperComponent extends Destroy implements OnInit {
                         this.topShadow = this.topUp = this.topDown = inputBounds.top - bounds.top + (inputBounds.height - this.heightShadow) / 2;
                         this.leftDown = this.leftShadow = formFieldBounds.left - bounds.left - 28;
                         this.leftUp = formFieldBounds.right - bounds.left;
+                        this.width = 32;
+                        this.widthShadow = this.leftUp - this.leftDown + 32;
+
+                    } else if (this.layout === 'horizontal-inlay') {
+                        this.heightShadow = this.height = Math.min(48, formFieldBounds.height);
+                        this.topShadow = this.topUp = this.topDown = inputBounds.top - bounds.top + (inputBounds.height - this.heightShadow) / 2;
+                        this.leftDown = this.leftShadow = formFieldBounds.left - bounds.left;
+                        this.leftUp = formFieldBounds.right - bounds.left - 28;
                         this.width = 32;
                         this.widthShadow = this.leftUp - this.leftDown + 32;
 
