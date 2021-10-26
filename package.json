@@ -29,8 +29,9 @@
         "release": "semantic-release --no-ci",
         "release:ci": "semantic-release",
         "postinstall": "ngcc && node ./husky.js",
-        "analyze": "ng build --statsJson=true && webpack-bundle-analyzer --port 8989 ../../webapp/osabeditor-dist/stats.json",
-        "analyze:prod": "ng build --prod=true --statsJson=true && webpack-bundle-analyzer --port 8989 ../../webapp/osabeditor-dist/stats.json",
+        "stats": "webpack-bundle-analyzer ./dist/demo/stats.json",
+        "analyze": "ng build --statsJson=true && webpack-bundle-analyzer --port 8989 ./dist/demo/stats.json",
+        "analyze:prod": "ng build --prod=true --statsJson=true && webpack-bundle-analyzer --port 8989 ./dist/demo/stats.json",
         "commit": "git-cz"
     },
     "dependencies": {
