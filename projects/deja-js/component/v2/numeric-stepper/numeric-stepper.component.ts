@@ -105,7 +105,7 @@ export class DejaNumericStepperComponent extends Destroy implements OnInit {
 
                     if (this.layout === 'horizontal') {
                         this.heightShadow = this.height = Math.min(48, formFieldBounds.height);
-                        this.topShadow = this.topUp = this.topDown = inputBounds.top - bounds.top + (inputBounds.height - this.heightShadow) / 2 - 1;
+                        this.topShadow = this.topUp = this.topDown = inputBounds.top - bounds.top + (inputBounds.height - this.heightShadow) / 2 - 2;
                         this.leftDown = this.leftShadow = formFieldBounds.left - bounds.left - 28;
                         this.leftUp = formFieldBounds.right - bounds.left;
                         this.width = 32;
@@ -113,7 +113,7 @@ export class DejaNumericStepperComponent extends Destroy implements OnInit {
 
                     } else if (this.layout === 'horizontal-inlay') {
                         this.heightShadow = this.height = Math.min(48, formFieldBounds.height);
-                        this.topShadow = this.topUp = this.topDown = inputBounds.top - bounds.top + (inputBounds.height - this.heightShadow) / 2 - 1;
+                        this.topShadow = this.topUp = this.topDown = inputBounds.top - bounds.top + (inputBounds.height - this.heightShadow) / 2 - 2;
                         this.leftDown = this.leftShadow = formFieldBounds.left - bounds.left;
                         this.leftUp = formFieldBounds.right - bounds.left - 28;
                         this.width = 32;
