@@ -1,3 +1,17 @@
+# [12.6.0](https://github.com/DSI-HUG/dejajs-components/compare/v12.5.0...v12.6.0) (2021-10-26)
+
+
+### Features
+
+* **numeric-stepper:** add inlay horizontal layout ([aaef262](https://github.com/DSI-HUG/dejajs-components/commit/aaef262aa175c6c50959f03ceddf26dbb6bfa6a5))
+
+# [12.6.0-develop.1](https://github.com/DSI-HUG/dejajs-components/compare/v12.5.0...v12.6.0-develop.1) (2021-10-26)
+
+
+### Features
+
+* **numeric-stepper:** add inlay horizontal layout ([aaef262](https://github.com/DSI-HUG/dejajs-components/commit/aaef262aa175c6c50959f03ceddf26dbb6bfa6a5))
+
 # [12.5.0](https://github.com/DSI-HUG/dejajs-components/compare/v12.4.0...v12.5.0) (2021-10-22)
 
 # [12.5.0-develop.1](https://github.com/DSI-HUG/dejajs-components/compare/v12.4.0...v12.5.0-develop.1) (2021-10-22)
