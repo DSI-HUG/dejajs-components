@@ -1,3 +1,10 @@
+## [12.6.1-develop.1](https://github.com/DSI-HUG/dejajs-components/compare/v12.6.0...v12.6.1-develop.1) (2021-10-27)
+
+
+### Bug Fixes
+
+* **numeric-stepper:** fix arrow alignment ([d4ab1b1](https://github.com/DSI-HUG/dejajs-components/commit/d4ab1b1ff335bcd5798800e8380980ec351bc768))
+
 # [12.6.0](https://github.com/DSI-HUG/dejajs-components/compare/v12.5.0...v12.6.0) (2021-10-26)
 
 
