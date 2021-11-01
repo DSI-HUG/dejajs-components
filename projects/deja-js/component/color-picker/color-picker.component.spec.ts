@@ -8,7 +8,7 @@
 
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { Color, MaterialColors } from '@deja-js/component/core';
+import { Color, MaterialColorService } from '@deja-js/component/core';
 
 import { DejaColorPickerComponent, DejaColorPickerModule } from './index';
 
@@ -34,7 +34,7 @@ describe('DejaColorPicker', () => {
     }));
 
     it('should have background-color null if no value specified', () => {
-        component.colors = new MaterialColors().colors;
+        component.colors = new MaterialColorService().colors;
         fixture.detectChanges();
 
         const el = fixture.debugElement.query(By.css('button'));
@@ -43,7 +43,7 @@ describe('DejaColorPicker', () => {
     });
 
     it('should have background-color if value specified', () => {
-        component.colors = new MaterialColors().colors;
+        component.colors = new MaterialColorService().colors;
         const expectedColorHex = '#FFA012';
         const expectedColorRgb = 'rgb(255, 160, 18)';
         component.value = Color.fromHex(expectedColorHex);

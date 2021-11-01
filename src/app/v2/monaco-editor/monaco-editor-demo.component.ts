@@ -14,7 +14,6 @@ import { takeUntil } from 'rxjs';
 import { MonacoEditorDemoService } from './monaco-editor-demo.service';
 
 @Component({
-    providers: [MonacoEditorDemoService],
     selector: 'monaco-editor-demo',
     templateUrl: './monaco-editor-demo.component.html',
     styleUrls: ['./monaco-editor-demo.component.scss']

@@ -8,7 +8,7 @@
 
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Color, MaterialColors, UUID } from '@deja-js/component/core';
+import { Color, MaterialColorService, UUID } from '@deja-js/component/core';
 import { JsonProperty, ObjectMapper } from 'json-object-mapper';
 import { cloneDeep } from 'lodash-es';
 import { map, Observable, shareReplay } from 'rxjs';
@@ -50,12 +50,14 @@ export class Person {
     public favoriteFruit: string = void 0;
 }
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class PeopleService {
     private peopleDic = {} as { [code: string]: Person };
     private materialColors: Color[];
 
-    public constructor(private httpClient: HttpClient, materialColors: MaterialColors) {
+    public constructor(private httpClient: HttpClient, materialColors: MaterialColorService) {
         this.materialColors = materialColors.getPalet('700');
     }
 

@@ -19,7 +19,9 @@ import { IGroupInfo } from './group-infos';
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 
 /** Service de regroupement d'un tableau de modèles */
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class GroupingService {
     /** Groupe les éléments de la liste hierarchique spécifiée à partir du niveau spécifié, et en fonction du modèle de groupe spécifié
      * @param tree Liste à trier.

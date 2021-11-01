@@ -8,7 +8,7 @@
 
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { Color, MaterialColors } from '@deja-js/component/core';
+import { Color, MaterialColorService } from '@deja-js/component/core';
 import { timer } from 'rxjs';
 
 import { DejaColorFab } from './color-fab.class';
@@ -36,14 +36,14 @@ describe('DejaColorSelector', () => {
     }));
 
     it('should have background-color undefined if no value specified', () => {
-        component.colors = new MaterialColors().colors;
+        component.colors = new MaterialColorService().colors;
         fixture.detectChanges();
 
         void expect(component.value).toBeUndefined();
     });
 
     it('should have background-color if value specified', done => {
-        component.colors = new MaterialColors().colors;
+        component.colors = new MaterialColorService().colors;
         component.value = Color.fromHex('#FFA012');
         fixture.detectChanges();
 
@@ -55,7 +55,7 @@ describe('DejaColorSelector', () => {
     });
 
     it('should be disabled if disabled is specified', done => {
-        component.colors = new MaterialColors().colors;
+        component.colors = new MaterialColorService().colors;
         component.disabled = true;
         fixture.detectChanges();
 
@@ -76,7 +76,7 @@ describe('DejaColorSelector', () => {
     });
 
     it('should be reset to specified color', done => {
-        component.colors = new MaterialColors().colors;
+        component.colors = new MaterialColorService().colors;
         component.resetcolor = '#FFCC80';
         component.value = Color.fromHex('#FFA012');
         fixture.detectChanges();
@@ -97,7 +97,7 @@ describe('DejaColorSelector', () => {
     });
 
     it('should be able to highligth the correct color', done => {
-        component.colors = new MaterialColors().colors;
+        component.colors = new MaterialColorService().colors;
 
         const sendMouseEvent = (element: EventTarget, type: string, x: number, y: number, buttons = 0): void => {
             const dragDropContainerElement = fixture.nativeElement as HTMLElement;
@@ -140,7 +140,7 @@ describe('DejaColorSelector', () => {
     });
 
     it('should be able to select the correct color', done => {
-        component.colors = new MaterialColors().colors;
+        component.colors = new MaterialColorService().colors;
 
         fixture.detectChanges();
         return fixture.whenRenderingDone().then(() => {

@@ -8,7 +8,7 @@
 
 import { Component } from '@angular/core';
 import { IColorEvent } from '@deja-js/component/color-selector';
-import { Color, MaterialColors } from '@deja-js/component/core';
+import { Color, MaterialColorService } from '@deja-js/component/core';
 
 @Component({
     selector: 'deja-color-selector-demo',
@@ -22,7 +22,7 @@ export class DejaColorSelectorDemoComponent {
     public invalidColor = Color.fromHex('#D02D06');
     public hoveredColor: Color;
 
-    public constructor(public materialColors: MaterialColors) { }
+    public constructor(public materialColors: MaterialColorService) { }
 
     public onColorPickerHover(event: IColorEvent): void {
         this.hoveredColor = event.color;

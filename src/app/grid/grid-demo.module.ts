@@ -14,7 +14,6 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { GroupingService } from '@deja-js/component/core';
 import { DejaGridModule } from '@deja-js/component/data-grid';
 import { DejaDialogModule } from '@deja-js/component/dialog';
 import { DejaDragDropModule } from '@deja-js/component/dragdrop';
@@ -43,9 +42,6 @@ import { routing } from './grid-demo.routes';
         MatTabsModule,
         MatToolbarModule,
         routing
-    ],
-    providers: [
-        GroupingService
     ]
 })
 export class DejaGridDemoModule { }
