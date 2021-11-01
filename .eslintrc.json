@@ -3,12 +3,12 @@
     "extends": [
         "@hug/eslint-config/recommended"
     ],
-    "overrides": [
-        {
-            "files": ["src/**/*.ts"],
-            "rules": {
-                "@angular-eslint/prefer-on-push-component-change-detection": "off"
-            }
+    "overrides": [{
+        "files": ["src/**/*.ts"],
+        "plugins": ["deprecation"],
+        "rules": {
+            "@angular-eslint/prefer-on-push-component-change-detection": "off",
+            "deprecation/deprecation": "warn"
         }
-    ]
+    }]
 }

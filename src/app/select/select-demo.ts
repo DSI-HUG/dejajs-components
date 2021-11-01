@@ -220,11 +220,6 @@ export class SelectDemoComponent extends Destroy {
         };
     }
 
-    public confirmDialogWithPromise(): (item: IItemBase<unknown>) => Promise<IItemBase<unknown>> {
-        // eslint-disable-next-line rxjs/no-topromise
-        return (item: IItemBase<unknown>): Promise<IItemBase<unknown>> => this.confirmDialog()(item).toPromise();
-    }
-
     public confirmDialog(): (item: IItemBase<unknown>) => Observable<IItemBase<unknown>> {
         return (item: IItemBase<unknown>): Observable<IItemBase<unknown>> => {
             this.dialogVisible = true;

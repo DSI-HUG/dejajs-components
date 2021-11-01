@@ -6,8 +6,8 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { ComponentPortal, PortalInjector, TemplatePortal } from '@angular/cdk/portal';
-import { ChangeDetectorRef, Component, InjectionToken, Injector, TemplateRef, ViewChild, ViewContainerRef } from '@angular/core';
+import { TemplatePortal } from '@angular/cdk/portal';
+import { ChangeDetectorRef, Component, TemplateRef, ViewChild, ViewContainerRef } from '@angular/core';
 import { DialogPosition } from '@angular/material/dialog';
 import { Color, Destroy } from '@deja-js/component/core';
 import { DejaMessageBoxAction, DejaMessageBoxType } from '@deja-js/component/message-box';
@@ -16,9 +16,7 @@ import { filter, map, takeUntil } from 'rxjs';
 
 import { DummyComponent } from './dummy/dummy.component';
 import { DejaPopupCustomDemoComponent } from './popup-custom.component';
-import { PopupDemoButtonComponent, PopupDemoButtonComponentData } from './popup-demo-button/popup-demo-button.component';
 
-const containerData = new InjectionToken<unknown>('CONTAINER_DATA');
 
 @Component({
     selector: 'popup-demo',
@@ -43,8 +41,7 @@ export class DejaPopupDemoComponent extends Destroy {
     public constructor(
         public dejaPopupService: DejaPopupService,
         protected changeDetectorRef: ChangeDetectorRef,
-        private viewContainerRef: ViewContainerRef,
-        private injector: Injector
+        private viewContainerRef: ViewContainerRef
     ) {
         super();
         this.dejaPopupService.dejaPopupCom$.pipe(
@@ -206,19 +203,7 @@ export class DejaPopupDemoComponent extends Destroy {
         config.toolbarIconName = 'photo_camera';
         config.toolbarColor = 'accent';
 
-        const dummyButtonPortalData: PopupDemoButtonComponentData = {
-            iconName: 'star_outline',
-            iconTooltip: 'Component portal',
-            onClickEvent: (_event, instance) => {
-                this.showMessage('Click on Component portal button!', 'success');
-                const starred = instance.data.iconName === 'star';
-                instance.data.iconName = starred ? 'star_outline' : 'star';
-                instance.data.buttonColor = starred ? null : 'warn';
-            }
-        };
-        const demoButtonPortal = new ComponentPortal(PopupDemoButtonComponent, null, this.createInjector(dummyButtonPortalData));
         config.toolbarActions = [
-            new DejaPopupCustomAction(demoButtonPortal),
             new DejaPopupCustomAction(new TemplatePortal(this._templateButton, this.viewContainerRef)),
             new DejaPopupButton('account', 'User', 'account_circle', false),
             new DejaPopupButton('view', 'Show', 'visibility', false)
@@ -262,11 +247,5 @@ export class DejaPopupDemoComponent extends Destroy {
         this.message.type = type;
         this.openGate = true;
         this.changeDetectorRef.markForCheck();
-    }
-
-    private createInjector<T>(data: T): PortalInjector {
-        const injectorTokens = new WeakMap();
-        injectorTokens.set(containerData, data);
-        return new PortalInjector(this.injector, injectorTokens);
     }
 }

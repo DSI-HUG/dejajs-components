@@ -139,7 +139,7 @@ export class TreeListDemoComponent extends Destroy {
                 item.size = rand;
                 return item;
             }),
-            groupBy(p => p.size, p => p),
+            groupBy(p => p.size, { element: p => p }),
             mergeMap(group$ => group$.pipe(reduce((item, child) => {
                 if (!item.items) {
                     item.label = child.label;
@@ -445,7 +445,7 @@ export class TreeListDemoComponent extends Destroy {
             } as DropCursorInfos),
             drop: country => {
                 if (country) {
-                    dropArea.innerText = `The dropped country is ${country.naqme} - the code is: ${country.code}`;
+                    dropArea.innerText = `The dropped country is ${country.naqme} - the code is: ${country.code} `;
                 }
             }
         } as MouseDroppableContext<Country>;

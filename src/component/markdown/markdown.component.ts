@@ -44,10 +44,13 @@ export class DejaMarkdownComponent extends Destroy implements AfterViewChecked {
         });
         this.httpClient.get(url, { observe: 'body', headers: headers, responseType: 'text' }).pipe(
             takeUntil(this.destroyed$)
-        ).subscribe(object => {
-            this.value = object.toString();
-        }, (error: {message: string}) => {
-            this.value = `${error.message}`;
+        ).subscribe({
+            next: object => {
+                this.value = object.toString();
+            },
+            error: (error: { message: string }) => {
+                this.value = `${error.message}`;
+            }
         });
     }
 

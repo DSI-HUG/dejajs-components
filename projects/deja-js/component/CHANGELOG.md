@@ -1,3 +1,4 @@
+
 # [12.6.0](https://github.com/DSI-HUG/dejajs-components/compare/v12.5.0...v12.6.0) (2021-10-26)
 
 
