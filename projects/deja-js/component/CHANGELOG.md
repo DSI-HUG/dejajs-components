@@ -1,3 +1,23 @@
+# [13.0.0-next.1](https://github.com/DSI-HUG/dejajs-components/compare/v12.6.0...v13.0.0-next.1) (2021-11-01)
+
+
+### Bug Fixes
+
+* fix bundle analyzer commands [skip ci] ([d253746](https://github.com/DSI-HUG/dejajs-components/commit/d253746f3309217dbba64b38aee7ced3ce426ac2))
+* update to rxjs 7 [skip ci] ([789e63c](https://github.com/DSI-HUG/dejajs-components/commit/789e63cb5dc3fd93b8e8f08dccd4a58260e31e4b))
+
+
+* refactor!: finish version 13 ([132c8db](https://github.com/DSI-HUG/dejajs-components/commit/132c8dbd2f3c404484f5cba3bc6fb9ef51bfbba6))
+
+
+### Features
+
+* husky 7 [skip ci] ([febfc85](https://github.com/DSI-HUG/dejajs-components/commit/febfc8568f2f605fcb0ab8534849fd91d34d25dc))
+
+
+### BREAKING CHANGES
+
+* init dejajs version 13
 
 # [12.6.0](https://github.com/DSI-HUG/dejajs-components/compare/v12.5.0...v12.6.0) (2021-10-26)
 
