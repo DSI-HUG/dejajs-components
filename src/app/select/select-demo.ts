@@ -19,6 +19,7 @@ import { NewsService } from '../services/news.service';
 import { cheeseValidator } from './validators';
 
 @Component({
+    providers: [CountriesListService],
     selector: 'deja-select-demo',
     styleUrls: ['./select-demo.scss'],
     templateUrl: './select-demo.html'

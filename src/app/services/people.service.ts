@@ -50,7 +50,9 @@ export class Person {
     public favoriteFruit: string = void 0;
 }
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class PeopleService {
     private peopleDic = {} as { [code: string]: Person };
     private materialColors: Color[];

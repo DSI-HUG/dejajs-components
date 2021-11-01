@@ -17,13 +17,15 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { DejaSortingModule, GroupingService } from '@deja-js/component/core';
+import { DejaSortingModule } from '@deja-js/component/core';
 import { DejaDialogModule } from '@deja-js/component/dialog';
 import { DejaMessageBoxModule } from '@deja-js/component/message-box';
 import { ItemModule } from '@deja-js/component/v2/item-list';
 import { MouseDragDropModule } from '@deja-js/component/v2/mouse-dragdrop';
 import { DejaNumericStepperModule } from '@deja-js/component/v2/numeric-stepper';
 import { TreeListModule } from '@deja-js/component/v2/tree-list';
+
+import { FoldersService } from 'src/app/services/folders.service';
 
 import { DejaMarkdownModule } from '../../../component/markdown/index';
 import { NewsCardModule } from '../../common/news-card.module';
@@ -61,7 +63,7 @@ import { routing } from './tree-list-demo.routes';
         TreeListModule
     ],
     providers: [
-        GroupingService
+        FoldersService
     ]
 })
 export class TreeListDemoModule { }

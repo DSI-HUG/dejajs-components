@@ -37,6 +37,7 @@ interface ViewPortInfo {
 }
 
 @Component({
+    providers: [CountriesListService],
     encapsulation: ViewEncapsulation.None,
     selector: 'tree-list-demo',
     styleUrls: ['./tree-list-demo.scss'],

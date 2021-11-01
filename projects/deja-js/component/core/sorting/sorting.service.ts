@@ -20,7 +20,9 @@ import { ISortInfos } from './sort-infos.model';
 export type SortOrder = 'ascending' | 'descending';
 
 /** Classe de tri d'une liste plate ou hierarchique */
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class SortingService {
     public constructor() {
         console.warn('@deja-js/component/core/SortingService is deprecated, and will be removed in a further version. Please use @deja-js/component/v2/tem-list/SortingService instead.');

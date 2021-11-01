@@ -20,7 +20,9 @@ export class Country {
     public equals: (item: Country) => boolean;
 }
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class CountriesService {
     private countriesDic = {} as { [code: string]: Country };
     private materialColors: Color[];

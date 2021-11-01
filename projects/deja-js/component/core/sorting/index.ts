@@ -10,7 +10,6 @@ import { NgModule } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 
 import { DejaSortIndicatorComponent } from './sort-indicator.component';
-import { SortingService } from './sorting.service';
 
 @NgModule({
     declarations: [
@@ -21,9 +20,6 @@ import { SortingService } from './sorting.service';
     ],
     exports: [
         DejaSortIndicatorComponent
-    ],
-    providers: [
-        SortingService
     ]
 })
 export class DejaSortingModule { }

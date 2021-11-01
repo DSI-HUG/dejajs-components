@@ -16,16 +16,11 @@ import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { DejaMaterialColorsModule, DejaSlimScrollModule, DejaTextMetricsModule, IconModule } from '@deja-js/component/core';
+import { DejaMaterialColorsModule, DejaSlimScrollModule, DejaTextMetricsModule } from '@deja-js/component/core';
 import { DejaSidenavModule } from '@deja-js/component/sidenav';
 
 import { AppComponent } from './app.component';
 import { routing } from './app.routes';
-import { CountriesService } from './services/countries.service';
-import { CountriesListService } from './services/countries-list.service';
-import { FoldersService } from './services/folders.service';
-import { NewsService } from './services/news.service';
-import { PeopleService } from './services/people.service';
 
 @NgModule({
     declarations: [
@@ -40,20 +35,12 @@ import { PeopleService } from './services/people.service';
         DejaTextMetricsModule,
         FormsModule,
         HttpClientModule,
-        IconModule,
         MatButtonModule,
         MatButtonToggleModule,
         MatIconModule,
         MatListModule,
         MatMenuModule,
         routing
-    ],
-    providers: [
-        CountriesListService,
-        CountriesService,
-        FoldersService,
-        NewsService,
-        PeopleService
     ],
     bootstrap: [AppComponent]
 })
