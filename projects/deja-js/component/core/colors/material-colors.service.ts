@@ -14,7 +14,7 @@ import { MaterialColor } from './material-color';
 @Injectable({
     providedIn: 'root'
 })
-export class MaterialColors {
+export class MaterialColorService {
     private _colors: MaterialColor[];
     private palettes: {
         [subColorName: string]: Color[];

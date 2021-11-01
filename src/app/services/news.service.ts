@@ -15,7 +15,9 @@ import { map, Observable, shareReplay, switchMap } from 'rxjs';
 import { News, NewsArticles, NewsSource, NewsSources } from '../common/news.model';
 
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class NewsService {
     public constructor(private httpClient: HttpClient) { }
 
