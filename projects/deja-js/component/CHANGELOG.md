@@ -1,3 +1,10 @@
+# [13.0.0-next.2](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.1...v13.0.0-next.2) (2021-11-02)
+
+
+### Bug Fixes
+
+* replace some deprecated code ([9362270](https://github.com/DSI-HUG/dejajs-components/commit/9362270ce2069444045fd5df5c2549b36f2f7d9e))
+
 # [13.0.0-next.1](https://github.com/DSI-HUG/dejajs-components/compare/v12.6.0...v13.0.0-next.1) (2021-11-01)
 
 
