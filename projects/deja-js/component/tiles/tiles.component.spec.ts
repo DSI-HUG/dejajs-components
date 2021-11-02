@@ -15,7 +15,6 @@ import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Rect } from '@deja-js/component/core';
 import { debounceTime, delay, from, map, Observable, take, tap } from 'rxjs';
-import { __spread } from 'tslib';
 
 import { DejaTilesModule } from './index';
 import { DejaTile } from './tile.class';
@@ -222,7 +221,7 @@ describe('DejaTilesComponent', () => {
 
         tilesContainerInstance.tiles.unshift(tile);
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        tilesContainerInstance.tiles = __spread(tilesContainerInstance.tiles);
+        tilesContainerInstance.tiles = [...tilesContainerInstance.tiles];
         fixture.detectChanges();
 
         return fixture.whenStable().then(() => {

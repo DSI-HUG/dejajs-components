@@ -411,7 +411,7 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
                     this.onTouchedCallback();
                     this.raiseChangeCallback = false;
 
-                    if (this.selectedChange.observers.length > 0) {
+                    if (this.selectedChange.observed) {
                         const selectedModels = this.selectedModels;
                         this.selectedChange.next({
                             item: selectedItems[0],
@@ -715,7 +715,7 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
                             this.ensureItemVisible(this.currentItem);
 
                         } else if (this.currentItem.isSelectable) {
-                            if (this.itemEnter.observers.length > 0) {
+                            if (this.itemEnter.observed) {
                                 this.itemEnter.next({
                                     item: this.currentItem,
                                     items: [this.currentItem],

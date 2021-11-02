@@ -168,7 +168,7 @@ export class DejaNumericStepperComponent extends Destroy implements OnInit {
         });
 
         const step = (inputElement: HTMLInputElement, event: 'increment' | 'decrement', fn: 'stepUp' | 'stepDown'): void => {
-            if (this[event].observers.length > 0) {
+            if (this[event].observed) {
                 this[event].emit();
             } else {
                 if (inputElement?.type !== 'number') {

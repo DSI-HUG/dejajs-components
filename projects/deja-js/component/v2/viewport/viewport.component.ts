@@ -298,7 +298,7 @@ export class ViewPortComponent<T> extends Destroy {
 
     public getItemClassName(item: ViewPortItem<T>): string {
         const classes = ['listitem'];
-        if (this.itemClass.observers.length > 0) {
+        if (this.itemClass.observed) {
             this.itemClass.next({
                 item,
                 classes
