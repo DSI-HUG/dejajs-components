@@ -11,7 +11,6 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, El
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { Destroy } from '@deja-js/component/core';
 import { fromEvent, mergeWith, take, takeUntil, tap } from 'rxjs';
-import { __spread } from 'tslib';
 
 import { IRange, IRangeEvent, IStepRangeEvent, Range } from './range.interface';
 
@@ -150,7 +149,7 @@ export class DejaRangeComponent extends Destroy implements ControlValueAccessor 
                     const rightSide = ranges.length - 1 > index ? ranges.slice(index + 1) : [];
 
                     // build new array with new range
-                    let newRanges = __spread(leftSide, [newRange, selected], rightSide) as IRange[];
+                    let newRanges = [...leftSide, newRange, selected, ...rightSide];
 
                     // step
                     const newRangeIndex = newRanges.indexOf(newRange);

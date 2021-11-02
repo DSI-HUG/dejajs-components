@@ -11,7 +11,6 @@ import { Injectable, Optional } from '@angular/core';
 import { DejaClipboardService, Destroy, Directions, KeyCodes, Position, Rect, Size } from '@deja-js/component/core';
 import { DragCursorInfos } from '@deja-js/component/v2/mouse-dragdrop';
 import { BehaviorSubject, debounceTime, delay, filter, from, fromEvent, map, mergeWith, of, reduce, Subject, Subscription, switchMap, take, takeUntil, tap, timer } from 'rxjs';
-import { __spread } from 'tslib';
 
 import { DejaTile } from './tile.class';
 import { IDejaTilesAddedEvent, IDejaTilesAddEvent, IDejaTilesDeletedEvent, IDejaTilesEvent, IDejaTilesRemoveEvent } from './tiles.event';
@@ -1096,7 +1095,7 @@ export class DejaTilesLayoutProvider extends Destroy {
                 tap(tile => tile.isHidden = true),
                 delay(1000),
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-                reduce((acc, cur) => __spread(acc, [cur]), new Array<DejaTile>()),
+                reduce((acc, cur) => [...acc, cur], new Array<DejaTile>()),
                 take(1),
                 takeUntil(this.destroyed$)
             ).subscribe(tiles => this.deleteTiles(tiles));
