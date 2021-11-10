@@ -1,3 +1,10 @@
+## [12.6.1-develop.3](https://github.com/DSI-HUG/dejajs-components/compare/v12.6.1-develop.2...v12.6.1-develop.3) (2021-11-10)
+
+
+### Bug Fixes
+
+* **popup-tray:** avoid NPE on dialog without componentInstance ([542d994](https://github.com/DSI-HUG/dejajs-components/commit/542d9943e08cd627d704b3c2c7d3a4c55faa17e7))
+
 ## [12.6.1-develop.2](https://github.com/DSI-HUG/dejajs-components/compare/v12.6.1-develop.1...v12.6.1-develop.2) (2021-10-27)
 
 
