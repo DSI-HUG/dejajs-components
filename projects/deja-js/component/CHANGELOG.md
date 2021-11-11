@@ -1,3 +1,10 @@
+## [10.9.2](https://github.com/DSI-HUG/dejajs-components/compare/v10.9.1...v10.9.2) (2021-11-11)
+
+
+### Bug Fixes
+
+* **popup-tray:** avoid NPE on dialog without componentInstance ([31f2e9d](https://github.com/DSI-HUG/dejajs-components/commit/31f2e9d81eaa35ad1a61c3e5dbd244415a2f2a6d))
+
 ## [10.9.1](https://github.com/DSI-HUG/dejajs-components/compare/v10.9.0...v10.9.1) (2021-10-22)
 
 
