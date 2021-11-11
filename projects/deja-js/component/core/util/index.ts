@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-export * from './HtmlUtils';
-export * from './RegExpUtils';
-export * from './DateUtils';
+export * from './html-utils';
+export * from './reg-exp-utils';
+export * from './date-utils';
 export * from './input-mixin';

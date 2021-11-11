@@ -79,7 +79,7 @@ describe('DejaTimePickerComponent', () => {
 
         fixture.detectChanges();
 
-        return fixture.whenRenderingDone().then(() => {
+        void fixture.whenRenderingDone().then(() => {
             timer(200).subscribe(() => {
                 void expect(hoursInputElement.value).toEqual('10');
                 void expect(minutesInputElement.value).toEqual('55');

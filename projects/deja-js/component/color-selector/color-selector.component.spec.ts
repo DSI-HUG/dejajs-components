@@ -47,7 +47,7 @@ describe('DejaColorSelector', () => {
         component.value = Color.fromHex('#FFA012');
         fixture.detectChanges();
 
-        return fixture.whenRenderingDone().then(() => {
+        void fixture.whenRenderingDone().then(() => {
             const color = component.value;
             void expect(color?.toHex()).toEqual('#FFA012');
             done();
@@ -59,7 +59,7 @@ describe('DejaColorSelector', () => {
         component.disabled = true;
         fixture.detectChanges();
 
-        return fixture.whenRenderingDone().then(() => {
+        void fixture.whenRenderingDone().then(() => {
             void expect(component.disabled).toBeTruthy();
             const elements = fixture.debugElement.queryAll(By.css('deja-color-fab'));
             elements.forEach(el => {
@@ -81,7 +81,7 @@ describe('DejaColorSelector', () => {
         component.value = Color.fromHex('#FFA012');
         fixture.detectChanges();
 
-        return fixture.whenRenderingDone().then(() => {
+        void fixture.whenRenderingDone().then(() => {
             const color = component.value;
             void expect(color?.toHex()).toEqual('#FFA012');
 
@@ -121,7 +121,7 @@ describe('DejaColorSelector', () => {
         };
 
         fixture.detectChanges();
-        return fixture.whenRenderingDone().then(() => {
+        void fixture.whenRenderingDone().then(() => {
             const elements = fixture.debugElement.queryAll(By.css('deja-color-fab'));
             sendMouseEvent(elements[8].nativeElement, 'mousemove', 5, 5);
 
@@ -143,7 +143,7 @@ describe('DejaColorSelector', () => {
         component.colors = new MaterialColorService().colors;
 
         fixture.detectChanges();
-        return fixture.whenRenderingDone().then(() => {
+        void fixture.whenRenderingDone().then(() => {
             const elements = fixture.debugElement.queryAll(By.css('deja-color-fab'));
             (elements[8].nativeElement as HTMLElement).click();
 

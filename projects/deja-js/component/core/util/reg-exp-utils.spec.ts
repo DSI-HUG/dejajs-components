@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { RegExpUtils } from './RegExpUtils';
+import { RegExpUtils } from './reg-exp-utils';
 
 describe('RegExpUtils', () => {
 

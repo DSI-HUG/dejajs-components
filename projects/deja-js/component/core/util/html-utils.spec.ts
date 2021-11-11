@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { HtmlUtils } from './HtmlUtils';
+import { HtmlUtils } from './html-utils';
 
 describe('HtmlUtils', () => {
 

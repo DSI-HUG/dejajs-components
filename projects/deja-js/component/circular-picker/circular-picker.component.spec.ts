@@ -70,7 +70,7 @@ describe('DejaCircularPickerComponent', () => {
         component.value = 3;
         fixture.detectChanges();
 
-        return fixture.whenStable().then(() => {
+        void fixture.whenStable().then(() => {
             const htmlElement = fixture.debugElement.nativeElement as HTMLElement;
             const cursorElement = fixture.debugElement.query(By.css('.circular-picker > .cursor-container > .cursor > span')).nativeElement as HTMLSpanElement;
             const valueElement = fixture.debugElement.query(By.css('.circular-picker > [value="9"]')).nativeElement as HTMLSpanElement;

@@ -139,7 +139,7 @@ describe('DejaTooltipComponent', () => {
         const fixture = TestBed.createComponent(DejaTooltipContainerComponent);
         fixture.detectChanges();
 
-        return fixture.whenRenderingDone().then(() => {
+        void fixture.whenRenderingDone().then(() => {
             const containerComponent = fixture.componentInstance;
             containerComponent.toolTipModel = DejaTooltipContainerComponent.TOOLTIPMODEL2$;
             fixture.detectChanges();

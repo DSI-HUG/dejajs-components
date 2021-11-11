@@ -500,7 +500,7 @@ describe('DejaSelectByModelContainerComponent', () => {
         const fixture = TestBed.createComponent(DejaSelectByModelContainerComponent);
         fixture.detectChanges();
 
-        return fixture.whenStable().then(() => {
+        void fixture.whenStable().then(() => {
             fixture.detectChanges();
 
             let selectedChips = fixture.debugElement.queryAll(By.css('deja-select > deja-chips > span.chips-item > #close-button'));
@@ -527,7 +527,7 @@ describe('DejaSelectByModelContainerComponent', () => {
 
         fixture.detectChanges();
 
-        return fixture.whenStable().then(() => {
+        void fixture.whenStable().then(() => {
             fixture.detectChanges();
             void expect(selectInstance.selectedItems.length).toBe(3, '1');
             void expect(selectInstance.selectedModels.length).toBe(3, '2');
@@ -554,7 +554,7 @@ describe('DejaSelectByModelContainerComponent', () => {
 
         fixture.detectChanges();
 
-        return fixture.whenStable().then(() => {
+        void fixture.whenStable().then(() => {
             selectInstance.type = 'select';
             fixture.detectChanges();
 
@@ -616,7 +616,7 @@ describe('DejaSelectByOptionsContainerComponent', () => {
 
         fixture.detectChanges();
 
-        return fixture.whenStable().then(() => {
+        void fixture.whenStable().then(() => {
             from(selectInstance.dropDownVisibleChange).subscribe(() => fixture.detectChanges());
 
             viewPortService.viewPortResult$.pipe(
@@ -647,7 +647,7 @@ describe('DejaSelectByOptionsContainerComponent', () => {
         const sl = selectInstance as any;
         fixture.detectChanges();
 
-        return fixture.whenStable().then(() => {
+        void fixture.whenStable().then(() => {
             observeOptionsViewPort$(fixture).pipe(
                 debounceTime(100),
                 take(1)
@@ -692,7 +692,7 @@ describe('DejaSelectByOptionsContainerComponent', () => {
 
         fixture.detectChanges();
 
-        return fixture.whenStable().then(() => {
+        void fixture.whenStable().then(() => {
             observeOptionsViewPort$(fixture).pipe(
                 debounceTime(100)
             ).subscribe(vp => {
@@ -861,7 +861,7 @@ describe('DejaSelectByOptionsContainerComponent', () => {
 
         fixture.detectChanges();
 
-        return fixture.whenStable().then(() => {
+        void fixture.whenStable().then(() => {
             observeOptionsViewPort$(fixture).pipe(
                 debounceTime(10),
                 take(1)
