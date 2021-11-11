@@ -1,3 +1,11 @@
+# [13.0.0-next.4](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.3...v13.0.0-next.4) (2021-11-11)
+
+
+### Bug Fixes
+
+* peer dependencies ([2c8f198](https://github.com/DSI-HUG/dejajs-components/commit/2c8f19831cbe530e05ff7aefa91bb7c632f545a0))
+* try to fix theming import from another project ([3dc76de](https://github.com/DSI-HUG/dejajs-components/commit/3dc76de3a88a03aaf19ed36a8f07ccc4c771fe02))
+
 # [13.0.0-next.3](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.2...v13.0.0-next.3) (2021-11-11)
 
 # [13.0.0-next.2](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.1...v13.0.0-next.2) (2021-11-02)
