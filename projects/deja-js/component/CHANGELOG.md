@@ -1,3 +1,10 @@
+# [13.0.0-next.5](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.4...v13.0.0-next.5) (2021-11-12)
+
+
+### Bug Fixes
+
+* sass exports ([11a2841](https://github.com/DSI-HUG/dejajs-components/commit/11a28416a69e2dbf0e9df9da8cbf81e5111fe6ad))
+
 # [13.0.0-next.4](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.3...v13.0.0-next.4) (2021-11-11)
 
 
