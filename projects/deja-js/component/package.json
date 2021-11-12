@@ -22,7 +22,7 @@
             "sass": "./styles/theming.scss"
         },
         "./backdrop": {
-            "sass": "./styles/mixins/backdrop.scss"
+            "sass": "./styles/mixins/_backdrop.scss"
         }
     },
     "peerDependencies": {
