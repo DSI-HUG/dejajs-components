@@ -20,6 +20,9 @@
     "exports": {
         "./theming": {
             "sass": "./styles/theming.scss"
+        },
+        "./backdrop": {
+            "sass": "./styles/mixins/backdrop.scss"
         }
     },
     "peerDependencies": {
