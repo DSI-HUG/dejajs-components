@@ -18,7 +18,6 @@ export * from './slimscroll/index';
 export * from './sorting/index';
 export * from './validation/index';
 export * from './date-fns';
-export * from './dialog/index';
 
 if (!document.doctype) {
     console.warn('[DejaJS] Current document does not have a doctype. This may cause some components not to behave as expected.');
