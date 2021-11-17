@@ -6,4 +6,9 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-export * from './diacritics';
+import { Color } from './color';
+
+export class MaterialColor extends Color {
+    public name: string;
+    public subColors = [] as MaterialColor[];
+}

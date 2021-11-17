@@ -9,7 +9,9 @@
 import { BooleanInput, coerceBooleanProperty, coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
 import { AfterContentInit, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ContentChildren, ElementRef, EventEmitter, HostBinding, Input, Optional, Output, Self, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
-import { DejaChildValidatorDirective, DejaClipboardService, DejaItemComponent, DejaItemEvent, DejaItemsEvent, GroupingService, IFindItemResult, IItemBase, IItemTree, ItemListBase, ItemListService, IViewListResult, IViewPort, KeyCodes, Position, Rect, SortingService, ViewPortService } from '@deja-js/component/core';
+import { DejaChildValidatorDirective, DejaClipboardService, DejaItemComponent, DejaItemEvent, DejaItemsEvent, GroupingService, IFindItemResult, IItemBase, IItemTree, ItemListBase, ItemListService, IViewListResult, IViewPort, SortingService, ViewPortService } from '@deja-js/component/core';
+import { Position, Rect } from '@deja-js/component/core/graphics';
+import { KeyCodes } from '@deja-js/component/core/text';
 import { IDejaDragContext, IDejaDragEvent, IDejaDropContext } from '@deja-js/component/dragdrop';
 import { BehaviorSubject, combineLatestWith, debounceTime, filter, fromEvent, map, mergeWith, Observable, of, Subject, Subscription, switchMap, take, takeUntil, tap, timer } from 'rxjs';
 

@@ -6,5 +6,4 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-export * from './material-color';
-export * from './material-colors.service';
+export * from './id.service';

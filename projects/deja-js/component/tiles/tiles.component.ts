@@ -9,7 +9,9 @@
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, Input, OnDestroy, Optional, Output, Self, TemplateRef, ViewChild } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
-import { Destroy, KeyCodes, Position, Rect } from '@deja-js/component/core';
+import { Destroy } from '@deja-js/component/core/destroy';
+import { Position, Rect } from '@deja-js/component/core/graphics';
+import { KeyCodes } from '@deja-js/component/core/text';
 import { DropCursorInfos, MouseDroppableContext } from '@deja-js/component/v2/mouse-dragdrop';
 import { debounceTime, filter, from, fromEvent, Observable, Subject, Subscription, takeUntil } from 'rxjs';
 

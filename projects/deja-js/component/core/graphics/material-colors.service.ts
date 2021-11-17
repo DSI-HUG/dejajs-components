@@ -8,7 +8,7 @@
 
 import { Injectable } from '@angular/core';
 
-import { Color } from '../graphics/color';
+import { Color } from './color';
 import { MaterialColor } from './material-color';
 
 @Injectable({

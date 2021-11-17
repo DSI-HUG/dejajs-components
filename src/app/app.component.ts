@@ -7,7 +7,9 @@
  */
 
 import { ChangeDetectionStrategy, Component, ElementRef, ViewEncapsulation } from '@angular/core';
-import { DejaTextMetricsService, Destroy, IconService } from '@deja-js/component/core';
+import { IconService } from '@deja-js/component/core';
+import { Destroy } from '@deja-js/component/core/destroy';
+import { DejaTextMetricsService } from '@deja-js/component/core/text';
 import { BehaviorSubject, takeUntil } from 'rxjs';
 
 @Component({

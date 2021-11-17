@@ -13,7 +13,8 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { DejaConnectionPositionPair, DejaItemModule, GroupingService, IItemBase, IItemTree, ISortInfos, ItemListService, IViewPort, KeyCodes, SortingService, ViewPortService } from '@deja-js/component/core';
+import { DejaConnectionPositionPair, DejaItemModule, GroupingService, IItemBase, IItemTree, ISortInfos, ItemListService, IViewPort, SortingService, ViewPortService } from '@deja-js/component/core';
+import { KeyCodes } from '@deja-js/component/core/text';
 import { debounceTime, delay, filter, from, Observable, of, take, tap, timer } from 'rxjs';
 
 import { DejaSelectModule } from './index';

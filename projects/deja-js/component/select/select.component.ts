@@ -14,7 +14,8 @@ import { CanDisable, CanUpdateErrorState, ErrorStateMatcher } from '@angular/mat
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { IDejaChipsComponentCloseEvent } from '@deja-js/component/chips';
-import { DejaChildValidatorDirective, DejaConnectionPositionPair, DejaItemComponent, DejaItemEvent, DejaItemsEvent, GroupingService, IFindItemResult, IItemBase, IItemTree, ItemListBase, ItemListService, IViewListResult, IViewPort, KeyCodes, MediaService, SortingService, ViewPortService } from '@deja-js/component/core';
+import { DejaChildValidatorDirective, DejaConnectionPositionPair, DejaItemComponent, DejaItemEvent, DejaItemsEvent, GroupingService, IFindItemResult, IItemBase, IItemTree, ItemListBase, ItemListService, IViewListResult, IViewPort, MediaService, SortingService, ViewPortService } from '@deja-js/component/core';
+import { KeyCodes } from '@deja-js/component/core/text';
 import { DejaOverlayComponent } from '@deja-js/component/overlay';
 import { BehaviorSubject, combineLatestWith, debounce, debounceTime, delay, delayWhen, filter, fromEvent, map, mergeWith, Observable, of, Subject, Subscription, switchMap, take, takeUntil, tap, timer } from 'rxjs';
 

@@ -9,7 +9,7 @@
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Component, ElementRef, EventEmitter, Input, OnDestroy, Optional, Output, Self } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
-import { Color, MaterialColor } from '@deja-js/component/core';
+import { Color, MaterialColor } from '@deja-js/component/core/graphics';
 import { BehaviorSubject, combineLatestWith, debounce, debounceTime, delay, distinctUntilChanged, filter, fromEvent, map, mergeWith, Observable, Subject, take, takeUntil, tap, timer } from 'rxjs';
 
 import { DejaColorFab } from './color-fab.class';

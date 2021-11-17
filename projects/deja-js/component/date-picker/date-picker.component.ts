@@ -13,7 +13,8 @@ import { AfterContentInit, ChangeDetectionStrategy, ChangeDetectorRef, Component
 import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
 import { CanUpdateErrorState, ErrorStateMatcher } from '@angular/material/core';
 import { MatFormFieldControl } from '@angular/material/form-field';
-import { DejaChildValidatorDirective, DejaConnectionPositionPair, formatWithLocale, KeyCodes } from '@deja-js/component/core';
+import { DejaChildValidatorDirective, DejaConnectionPositionPair, formatWithLocale } from '@deja-js/component/core';
+import { KeyCodes } from '@deja-js/component/core/text';
 import { _MatInputMixinBase } from '@deja-js/component/core/util';
 import { DateComponentLayout, DaysOfWeek, DejaDateSelectorComponent } from '@deja-js/component/date-selector';
 import { add, isValid, parse, startOfToday } from 'date-fns';

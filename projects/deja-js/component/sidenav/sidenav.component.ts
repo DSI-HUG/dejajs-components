@@ -9,7 +9,8 @@
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 import { ChangeDetectorRef, Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, ActivatedRouteSnapshot, NavigationEnd, Router } from '@angular/router';
-import { Destroy, MediaService } from '@deja-js/component/core';
+import { MediaService } from '@deja-js/component/core';
+import { Destroy } from '@deja-js/component/core/destroy';
 import { filter, map, mergeMap, takeUntil } from 'rxjs';
 
 import { DejaSidenavService } from './sidenav.service';
