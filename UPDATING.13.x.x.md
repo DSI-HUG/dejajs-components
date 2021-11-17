@@ -6,17 +6,18 @@
 * IconService
 
 ## Les classes et fichiers suivants ont été renommés
-* core/UUID est maintenant core/id/IdService
-* core/Destroy est maintenant core/destroy/Destroy
-* core/MaterialColors est maintenant core/graphics/MaterialColorService
-* core/MaterialColor est maintenant core/graphics/MaterialColor
-* core/position est maintenant core/graphics/position
-* core/rect est maintenant core/graphics/rect
-* core/circle est maintenant core/graphics/circle
-* core/directions est maintenant core/graphics/directions
-* core/size est maintenant core/graphics/size
-* core/unit-value est maintenant core/graphics/unit-value
-* core/color est maintenant core/graphics/color
-* core/Diacritics est maintenant core/text/DiacriticService
-* core/KeyCodes est maintenant core/text/KeyCodes
-* core/TextMetricService est maintenant core/text/TextMetricService
+* core/UUID est maintenant dans core/id
+* core/Destroy est maintenant dans core/destroy
+* core/MaterialColors est maintenant dans core/graphics
+* core/MaterialColor est maintenant dans core/graphics
+* core/position est maintenant dans core/graphics
+* core/rect est maintenant dans core/graphics
+* core/circle est maintenant dans core/graphics
+* core/directions est maintenant dans core/graphics
+* core/size est maintenant dans core/graphics
+* core/unit-value est maintenant dans core/graphics
+* core/color est maintenant dans core/graphics
+* core/Diacritics est maintenant dans core/text
+* core/KeyCodes est maintenant dans core/text
+* core/TextMetricService est maintenant dans core/text
+* core/LazyLoaderService  est maintenant dans core/lazy-loading

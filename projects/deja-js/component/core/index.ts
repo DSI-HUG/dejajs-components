@@ -18,7 +18,6 @@ export * from './slimscroll/index';
 export * from './sorting/index';
 export * from './validation/index';
 export * from './date-fns';
-export * from './lazy-loading/index';
 export * from './dialog/index';
 
 if (!document.doctype) {
