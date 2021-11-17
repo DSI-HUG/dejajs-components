@@ -1,3 +1,11 @@
+# [13.0.0-next.8](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.7...v13.0.0-next.8) (2021-11-17)
+
+
+### Bug Fixes
+
+* fix lazy-loader service ([11f805c](https://github.com/DSI-HUG/dejajs-components/commit/11f805c0fad77a2c87fe9778939a33349a96eb5c))
+* fix lazy-loader service ([a89888d](https://github.com/DSI-HUG/dejajs-components/commit/a89888d12a9669ea3a2c948621b340cd3a3a16a5))
+
 # [13.0.0-next.7](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.6...v13.0.0-next.7) (2021-11-17)
 
 # [13.0.0-next.6](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.5...v13.0.0-next.6) (2021-11-12)
