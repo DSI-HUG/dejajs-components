@@ -8,7 +8,7 @@
 
 import { BooleanInput } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, Output, TemplateRef } from '@angular/core';
-import { Destroy } from '@deja-js/component/core';
+import { Destroy } from '@deja-js/component/core/destroy';
 import { debounceTime, delay, filter, take, takeUntil, tap } from 'rxjs';
 
 import { DejaTile } from './tile.class';

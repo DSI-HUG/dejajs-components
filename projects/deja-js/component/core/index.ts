@@ -7,10 +7,7 @@
  */
 
 export * from './clipboard/index';
-export * from './colors/index';
-export * from './diacritics/index';
 export * from './events/index';
-export * from './graphics/index';
 export * from './grouping/index';
 export * from './icon-service/index';
 export * from './item-list/index';
@@ -19,11 +16,7 @@ export * from './overlay/index';
 export * from './resize-listener/index';
 export * from './slimscroll/index';
 export * from './sorting/index';
-export * from './text-metrics/index';
 export * from './validation/index';
-export * from './destroy/index';
-export * from './keycodes.enum';
-export * from './UUID';
 export * from './date-fns';
 export * from './lazy-loading/index';
 export * from './dialog/index';

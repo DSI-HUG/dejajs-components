@@ -7,7 +7,8 @@
  */
 
 import { Directive, ElementRef, Input } from '@angular/core';
-import { Destroy, Position, Rect } from '@deja-js/component/core';
+import { Destroy } from '@deja-js/component/core/destroy';
+import { Position, Rect } from '@deja-js/component/core/graphics';
 import { distinctUntilChanged, filter, Observable, of, switchMap, take, takeUntil, tap } from 'rxjs';
 
 import { IDragCursorInfos } from './mouse-drag-cursor-infos.interface';

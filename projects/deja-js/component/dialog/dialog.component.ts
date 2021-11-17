@@ -6,7 +6,8 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 import { Component, ContentChild, ElementRef, EventEmitter, HostListener, Output } from '@angular/core';
-import { Destroy, KeyCodes } from '@deja-js/component/core';
+import { Destroy } from '@deja-js/component/core/destroy';
+import { KeyCodes } from '@deja-js/component/core/text';
 import { filter, fromEvent, takeUntil } from 'rxjs';
 
 /**

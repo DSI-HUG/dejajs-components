@@ -6,16 +6,13 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Injectable } from '@angular/core';
+import { Destroy } from '@deja-js/component/core/destroy';
 import { BehaviorSubject, delay, filter, map, Observable, range, Subject, switchMap, take, takeUntil, toArray } from 'rxjs';
-
-import { Destroy } from '../destroy/destroy';
 
 
 /**
  * Service to measure the theorical size of a text inside a container
  */
-@Injectable()
 export class DejaTextMetricsService extends Destroy {
     private canvas: HTMLCanvasElement;
     private element$ = new Subject<HTMLElement>();
@@ -104,7 +101,8 @@ export class DejaTextMetricsService extends Destroy {
                     Math.floor(parseInt(this.computedStyles.fontSize.replace('px', ''), 10) * 1.5);
 
                 return lineHeight * +numberOfLines;
-            }));
+            })
+        );
     }
 
     /**
@@ -150,6 +148,7 @@ export class DejaTextMetricsService extends Destroy {
                 }
 
                 return numberOfLines;
-            }));
+            })
+        );
     }
 }

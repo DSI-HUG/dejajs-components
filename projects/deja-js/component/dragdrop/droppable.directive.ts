@@ -8,7 +8,8 @@
 
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Directive, ElementRef, HostBinding, Input, Optional } from '@angular/core';
-import { DejaClipboardService, Destroy } from '@deja-js/component/core';
+import { DejaClipboardService } from '@deja-js/component/core';
+import { Destroy } from '@deja-js/component/core/destroy';
 import { filter, fromEvent, mergeWith, switchMap, take, takeUntil, tap } from 'rxjs';
 
 import { IDejaDragEvent } from './draggable.directive';

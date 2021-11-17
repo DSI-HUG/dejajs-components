@@ -7,7 +7,8 @@
  */
 import { ChangeDetectorRef, Component, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { Destroy, GroupingService } from '@deja-js/component/core';
+import { GroupingService } from '@deja-js/component/core';
+import { Destroy } from '@deja-js/component/core/destroy';
 import { Item, SortInfos, SortingService } from '@deja-js/component/v2/item-list';
 import { DropCursorInfos, MouseDraggableContext, MouseDroppableContext } from '@deja-js/component/v2/mouse-dragdrop';
 import { TreeListComponent } from '@deja-js/component/v2/tree-list';

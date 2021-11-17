@@ -7,7 +7,7 @@
  */
 import { BooleanInput } from '@angular/cdk/coercion';
 import { Component, ElementRef, Input } from '@angular/core';
-import { Destroy } from '@deja-js/component/core';
+import { Destroy } from '@deja-js/component/core/destroy';
 import { combineLatestWith, map, takeUntil } from 'rxjs';
 
 import { DejaColorFab } from './color-fab.class';

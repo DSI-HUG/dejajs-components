@@ -7,7 +7,8 @@
  */
 
 import { Component, ElementRef, ViewChild, ViewEncapsulation } from '@angular/core';
-import { Destroy, Position } from '@deja-js/component/core';
+import { Destroy } from '@deja-js/component/core/destroy';
+import { Position } from '@deja-js/component/core/graphics';
 import { BehaviorSubject, combineLatestWith, delay, filter, takeUntil, tap } from 'rxjs';
 
 import { DragCursorInfos, MouseDragDropService } from './mouse-dragdrop.service';

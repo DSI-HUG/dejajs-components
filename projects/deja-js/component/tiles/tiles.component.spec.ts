@@ -13,7 +13,7 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { Rect } from '@deja-js/component/core';
+import { Rect } from '@deja-js/component/core/graphics';
 import { debounceTime, delay, from, map, Observable, take, tap } from 'rxjs';
 
 import { DejaTilesModule } from './index';

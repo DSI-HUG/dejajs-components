@@ -10,7 +10,8 @@
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnInit, Optional, Output, Self, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
-import { Destroy, KeyCodes } from '@deja-js/component/core';
+import { Destroy } from '@deja-js/component/core/destroy';
+import { KeyCodes } from '@deja-js/component/core/text';
 import { format } from 'date-fns';
 import { debounceTime, filter, fromEvent, mergeWith, Subject, takeUntil, tap } from 'rxjs';
 

@@ -8,9 +8,9 @@
 
 import { Component, Type } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
+import { Destroy } from '@deja-js/component/core/destroy';
 import { debounceTime, Observable, Subject, switchMap, take, takeUntil } from 'rxjs';
 
-import { Destroy } from '../destroy/destroy';
 import { AbstractLazyModule, LazyLoaderService } from '../lazy-loading/lazy-loader.service';
 
 export abstract class DialogService<ReturnType, DataType> extends Destroy {

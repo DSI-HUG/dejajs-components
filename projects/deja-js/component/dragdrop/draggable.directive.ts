@@ -6,7 +6,9 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 import { Directive, ElementRef, HostBinding, Input, Optional } from '@angular/core';
-import { DejaClipboardService, Destroy, UUID } from '@deja-js/component/core';
+import { DejaClipboardService } from '@deja-js/component/core';
+import { Destroy } from '@deja-js/component/core/destroy';
+import { IdService } from '@deja-js/component/core/id';
 import { filter, fromEvent, switchMap, take, takeUntil } from 'rxjs';
 
 @Directive({
@@ -31,7 +33,7 @@ export class DejaDraggableDirective extends Destroy {
         return this._context;
     }
 
-    public constructor(elementRef: ElementRef, @Optional() private clipboardService: DejaClipboardService) {
+    public constructor(elementRef: ElementRef, @Optional() private clipboardService: DejaClipboardService, idService: IdService) {
         super();
 
         const element = elementRef.nativeElement as HTMLElement;
@@ -45,7 +47,7 @@ export class DejaDraggableDirective extends Destroy {
 
                 // console.log('dragstart');
                 const dragInfos = {} as Record<string, unknown>;
-                this.dragdropid = new UUID().toString();
+                this.dragdropid = idService.generate();
                 dragInfos[this.uuidKey] = this.dragdropid;
 
                 const object = this.context?.object || element;

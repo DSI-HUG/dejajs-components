@@ -7,7 +7,7 @@
  */
 
 import { Component, Input, ViewEncapsulation } from '@angular/core';
-import { Diacritics } from '@deja-js/component/core';
+import { DiacriticService } from '@deja-js/component/core/text';
 import { RegExpUtils } from '@deja-js/component/core/util';
 
 @Component({
@@ -38,7 +38,7 @@ export class DejaBoldQueryComponent {
      *
      */
     public set query(value: string) {
-        value = Diacritics.remove(value);
+        value = this.diacriticService.remove(value);
         if (this._query !== value) {
             this._query = value;
             this.refresh();
@@ -98,12 +98,14 @@ export class DejaBoldQueryComponent {
         this.refresh();
     }
 
+    public constructor(private diacriticService: DiacriticService) {}
+
     private refresh(): void {
         if (this._value && this._query && this._query.length > 0) {
             const regexpPattern = this._atTheBeginningOfWordOnly ? (`\\b${RegExpUtils.escapeRegExp(this._query)}`) : RegExpUtils.escapeRegExp(this._query);
             const sc = new RegExp(regexpPattern, this._regexpOptions);
             const value = this._value.toString();
-            const search = Diacritics.remove(value);
+            const search = this.diacriticService.remove(value);
             const splitted = search.split(sc);
             let position = 0;
             const queryLength = this._query.length;

@@ -8,7 +8,7 @@
 
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
-import { Destroy } from '@deja-js/component/core';
+import { Destroy } from '@deja-js/component/core/destroy';
 import { IDisposable } from 'monaco-editor';
 import { debounceTime, Subject, takeUntil, tap } from 'rxjs';
 

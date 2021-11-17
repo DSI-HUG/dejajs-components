@@ -8,9 +8,10 @@
 
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Color, MaterialColorService, UUID } from '@deja-js/component/core';
+import { Color, MaterialColorService } from '@deja-js/component/core/graphics';
 import { JsonProperty, ObjectMapper } from 'json-object-mapper';
 import { cloneDeep } from 'lodash-es';
+import { IdService } from 'projects/deja-js/component/core/id';
 import { map, Observable, shareReplay } from 'rxjs';
 
 export class Friend {
@@ -57,7 +58,7 @@ export class PeopleService {
     private peopleDic = {} as { [code: string]: Person };
     private materialColors: Color[];
 
-    public constructor(private httpClient: HttpClient, materialColors: MaterialColorService) {
+    public constructor(private httpClient: HttpClient, materialColors: MaterialColorService, private idService: IdService) {
         this.materialColors = materialColors.getPalet('700');
     }
 
@@ -100,7 +101,7 @@ export class PeopleService {
                     while (recordCount > 0) {
                         const clonedPeople = people.map(person => cloneDeep(person));
                         returnPeople = returnPeople.concat(clonedPeople.map(person => {
-                            person.guid = (new UUID()).toString();
+                            person.guid = this.idService.generate();
                             return person;
                         }));
                         recordCount -= people.length;

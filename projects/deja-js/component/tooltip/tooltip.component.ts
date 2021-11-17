@@ -7,7 +7,9 @@
  */
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Component, ContentChild, ElementRef, EventEmitter, Input, OnInit, Output, TemplateRef, ViewEncapsulation } from '@angular/core';
-import { DejaConnectionPositionPair, Destroy, Position, Rect } from '@deja-js/component/core';
+import { DejaConnectionPositionPair } from '@deja-js/component/core';
+import { Destroy } from '@deja-js/component/core/destroy';
+import { Position, Rect } from '@deja-js/component/core/graphics';
 import { debounceTime, delay, filter, from, fromEvent, map, Observable, takeUntil, tap } from 'rxjs';
 
 import { DejaTooltipService } from './tooltip.service';

@@ -8,7 +8,10 @@
 
 /* eslint-disable rxjs/finnish */
 import { Injectable, Optional } from '@angular/core';
-import { DejaClipboardService, Destroy, Directions, KeyCodes, Position, Rect, Size } from '@deja-js/component/core';
+import { DejaClipboardService } from '@deja-js/component/core';
+import { Destroy } from '@deja-js/component/core/destroy';
+import { Directions, Position, Rect, Size } from '@deja-js/component/core/graphics';
+import { KeyCodes } from '@deja-js/component/core/text';
 import { DragCursorInfos } from '@deja-js/component/v2/mouse-dragdrop';
 import { BehaviorSubject, debounceTime, delay, filter, from, fromEvent, map, mergeWith, of, reduce, Subject, Subscription, switchMap, take, takeUntil, tap, timer } from 'rxjs';
 

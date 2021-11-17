@@ -12,7 +12,8 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DoCheck, Element
 import { ControlValueAccessor, FormControl, FormGroupDirective, NgControl, NgForm, ValidationErrors, Validator, ValidatorFn } from '@angular/forms';
 import { CanUpdateErrorState, ErrorStateMatcher } from '@angular/material/core';
 import { MatFormFieldControl } from '@angular/material/form-field';
-import { DejaChildValidatorDirective, DejaTextMetricsService } from '@deja-js/component/core';
+import { DejaChildValidatorDirective } from '@deja-js/component/core';
+import { DejaTextMetricsService } from '@deja-js/component/core/text';
 import { _MatInputMixinBase } from '@deja-js/component/core/util';
 import { Subject } from 'rxjs';
 

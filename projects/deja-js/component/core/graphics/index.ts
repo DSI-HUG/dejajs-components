@@ -13,3 +13,5 @@ export * from './directions';
 export * from './size';
 export * from './unit-value';
 export * from './color';
+export * from './material-color';
+export * from './material-colors.service';

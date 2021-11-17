@@ -9,7 +9,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Injectable } from '@angular/core';
-import { Diacritics } from '@deja-js/component/core';
+import { DiacriticService } from '@deja-js/component/core/text';
 import { BehaviorSubject, combineLatestWith, filter, map, mergeWith, Observable, of, ReplaySubject, shareReplay, startWith, switchMap, take, tap } from 'rxjs';
 
 import { Item } from './item';
@@ -49,7 +49,7 @@ export class ItemService<T> {
 
     private previousQuery: string;
 
-    public constructor() {
+    public constructor(private diacriticService: DiacriticService) {
 
         const itemsFromOptions$ = this.options$.pipe(
             map(options => {
@@ -156,7 +156,7 @@ export class ItemService<T> {
                 if (query) {
                     if (typeof query === 'string') {
                         try {
-                            query = Diacritics.remove(query);
+                            query = this.diacriticService.remove(query);
                             const escapedQuery = escapeChars(query);
                             regExp = new RegExp(escapedQuery, 'i');
                         } catch (exc) {
@@ -448,7 +448,7 @@ export class ItemService<T> {
     protected itemMatch(item: Item<T>, searchField: string, regExp: RegExp): boolean {
         const indexedItem = item as IndexedItem<T>;
         const value = (searchField && indexedItem[searchField] as string) ?? item.label;
-        return value && regExp.test(Diacritics.remove(value));
+        return value && regExp.test(this.diacriticService.remove(value));
     }
 
     protected parentItemMatch(item: Item<T>, previousItem: Item<T>, _searchField: string, _regExp: RegExp): boolean {

@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Rect } from '@deja-js/component/core';
+import { Rect } from '@deja-js/component/core/graphics';
 
 export interface IDejaTilesRefreshParams {
     resetWidth?: boolean;
