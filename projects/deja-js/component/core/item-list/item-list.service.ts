@@ -8,7 +8,7 @@
 
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { DiacriticService } from '@deja-js/component/core/text';
+import { DiacriticService } from '@deja-js/component/core';
 import { BehaviorSubject, concat, filter, from, iif, map, Observable, of, reduce, Subscriber, switchMap, tap } from 'rxjs';
 
 import { IGroupInfo } from './grouping/group-infos';

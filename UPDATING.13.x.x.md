@@ -17,12 +17,7 @@
 * core/size est maintenant dans core/graphics
 * core/unit-value est maintenant dans core/graphics
 * core/color est maintenant dans core/graphics
-* core/Diacritics est maintenant dans core/text
-* core/KeyCodes est maintenant dans core/text
-* core/TextMetricService est maintenant dans core/text
-* core/LazyLoaderService est maintenant dans core/lazy-loading
 * core/DialogService est maintenant dans core/lazy-loading
-* core/DejaConnectionPositionPair est maintenant dans core/overlay
 * core/viewport.service est maintenant dans core/item-list
 * core/item-base est maintenant dans core/item-list
 * core/item-tree est maintenant dans core/item-list
@@ -37,4 +32,5 @@
 * core/group-infos est maintenant dans core/item-list
 * core/group-parent est maintenant dans core/item-list
 * core/grouping.service est maintenant dans core/item-list
-* core/input-mixin est maintenant dans core/forms
+* component/message-box/DejaMessageBoxType est maintenant dans core
+* component/message-box/DejaMessageBoxAction est maintenant dans core

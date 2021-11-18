@@ -17,6 +17,4 @@ import { DejaTextMetricsService } from './text-metrics.service';
 })
 export class DejaTextMetricsModule { }
 
-export * from './diacritic.service';
-export * from './keycodes.enum';
 export * from './text-metrics.service';

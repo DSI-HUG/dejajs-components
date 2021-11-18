@@ -14,8 +14,8 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { KeyCodes } from '@deja-js/component/core';
 import { DejaItemModule, GroupingService, IItemBase, IItemTree, ISortInfos, ItemListService, IViewPort, SortingService, ViewPortService } from '@deja-js/component/core/item-list';
-import { KeyCodes } from '@deja-js/component/core/text';
 import { debounceTime, delay, filter, Observable, take, tap, timer } from 'rxjs';
 
 import { DejaTreeListModule } from './index';

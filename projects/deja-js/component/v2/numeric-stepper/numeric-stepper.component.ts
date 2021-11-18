@@ -8,8 +8,7 @@
 
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostBinding, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { MatInput } from '@angular/material/input';
-import { Destroy } from '@deja-js/component/core';
-import { KeyCodes } from '@deja-js/component/core/text';
+import { Destroy, KeyCodes } from '@deja-js/component/core';
 import { combineLatestWith, debounceTime, delay, filter, fromEvent, map, shareReplay, Subject, switchMap, takeUntil, tap, timer, withLatestFrom } from 'rxjs';
 
 export type DejaNumericStepperLayout = 'vertical' | 'horizontal' | 'horizontal-inlay';

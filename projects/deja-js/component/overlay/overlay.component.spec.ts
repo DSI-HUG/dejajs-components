@@ -9,8 +9,7 @@
 import { Component, NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { MediaService } from '@deja-js/component/core';
-import { DejaConnectionPositionPair } from '@deja-js/component/core/overlay';
+import { DejaConnectionPositionPair, MediaService } from '@deja-js/component/core';
 
 import { DejaOverlayModule } from './index';
 import { DejaOverlayComponent } from './overlay.component';
@@ -20,7 +19,7 @@ import { MockMediaService } from './test/MockMediaService';
     selector: 'DejaOverlayContainerComponent',
     template: '<deja-overlay>Overlay content</deja-overlay>'
 })
-class DejaOverlayContainerComponent {}
+class DejaOverlayContainerComponent { }
 
 describe('DejaOverlayComponent', () => {
 

@@ -8,7 +8,7 @@
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Component, HostBinding, Input, Optional, Self } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
-import { KeyCodes } from '@deja-js/component/core/text';
+import { KeyCodes } from '@deja-js/component/core';
 
 /**
  * Deja Tag Component for Angular

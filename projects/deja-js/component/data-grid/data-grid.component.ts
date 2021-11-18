@@ -9,9 +9,8 @@
 import { BooleanInput, coerceBooleanProperty, coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, Input, Optional, Output, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { IDejaChipsComponentCloseEvent } from '@deja-js/component/chips';
-import { DejaClipboardService, Destroy } from '@deja-js/component/core';
+import { DejaClipboardService, Destroy, KeyCodes } from '@deja-js/component/core';
 import { GroupingService, IGroupInfo, IItemBase, IItemTree, ISortInfos, ItemListService, IViewListResult, IViewPort, SortingService, ViewPortService } from '@deja-js/component/core/item-list';
-import { KeyCodes } from '@deja-js/component/core/text';
 import { IDejaDragEvent } from '@deja-js/component/dragdrop';
 import { DejaTreeListComponent, DejaTreeListScrollEvent } from '@deja-js/component/tree-list';
 import { combineLatestWith, debounceTime, filter, fromEvent, map, Observable, ReplaySubject, Subject, switchMap, take, takeUntil, tap, timer } from 'rxjs';

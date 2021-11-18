@@ -9,8 +9,7 @@
 import { BooleanInput, coerceBooleanProperty, coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ContentChildren, ElementRef, EventEmitter, HostBinding, Input, Optional, Output, Self, SkipSelf, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
-import { DejaChildValidatorDirective, Destroy } from '@deja-js/component/core';
-import { KeyCodes } from '@deja-js/component/core/text';
+import { DejaChildValidatorDirective, Destroy, KeyCodes } from '@deja-js/component/core';
 import { Item, ItemComponent, ItemEvent, ItemService } from '@deja-js/component/v2/item-list';
 import { ViewPort, ViewPortComponent, ViewPortItemClassEvent, ViewPortMode } from '@deja-js/component/v2/viewport';
 import { BehaviorSubject, combineLatestWith, delay, filter, fromEvent, map, mergeWith, Observable, of, ReplaySubject, Subject, switchMap, takeUntil, tap, timer, withLatestFrom } from 'rxjs';
@@ -373,7 +372,7 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
             switchMap(viewPortComponent => viewPortComponent.itemClass),
             takeUntil(this.destroyed$)
         ).subscribe((itemClassEvent: ViewPortItemClassEvent<T>) => {
-            const item = itemClassEvent.item as Item<T>;
+            const item = itemClassEvent.item as unknown as Item<T>;
             if (item?.selected) {
                 itemClassEvent.classes.push('selected');
             }
@@ -498,7 +497,7 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
 
                     const isExpandButton = (el: HTMLElement): boolean => el.hasAttribute('expandbtn') || el.parentElement.hasAttribute('expandbtn');
 
-                    const clickedItem = viewPort.visibleItems[itemIndex - viewPort.startIndex] as Item<T>;
+                    const clickedItem = viewPort.visibleItems[itemIndex - viewPort.startIndex] as unknown as Item<T>;
 
                     if ((!isExpandButton(target) || !clickedItem.isCollapsible) && clickedItem.isSelectable && (!event.ctrlKey || !this.multiSelect) && (event.button === 0 || !clickedItem.selected)) {
                         if (event.shiftKey && this.multiSelect) {
@@ -521,7 +520,7 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
                                 return;
                             }
 
-                            const upItem = viewPort.visibleItems[upIndex - viewPort.startIndex] as Item<T>;
+                            const upItem = viewPort.visibleItems[upIndex - viewPort.startIndex] as unknown as Item<T>;
                             if (clickedItem && upItem !== clickedItem) {
                                 return;
                             }
@@ -607,7 +606,7 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
 
             // Set current item from index for keyboard features only
             const setCurrentIndex = (index: number): void => {
-                this.currentItem = viewPort.items[index] as Item<T>;
+                this.currentItem = viewPort.items[index] as unknown as Item<T>;
                 this.ensureItemVisible(this.currentItem);
                 this.viewPortComponent.reloadViewPort();
             };
@@ -625,7 +624,7 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
                     this.viewPortComponent.reloadViewPort();
                 } else if (!event.ctrlKey) {
                     this.raiseChangeCallback = true;
-                    this.selectedItem = viewPort.items[nextIndex] as Item<T>;
+                    this.selectedItem = viewPort.items[nextIndex] as unknown as Item<T>;
                     setCurrentIndex(nextIndex);
                 } else {
                     setCurrentIndex(nextIndex);
@@ -645,7 +644,7 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
                     } else if (!event.ctrlKey) {
                         // Select first element
                         this.raiseChangeCallback = true;
-                        this.selectedItem = viewPort.items[0] as Item<T>;
+                        this.selectedItem = viewPort.items[0] as unknown as Item<T>;
                     }
                     setCurrentIndex(0);
                     this.keyboardStartIndex = 0;
@@ -659,7 +658,7 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
                     } else if (!event.ctrlKey) {
                         // Select last element
                         this.raiseChangeCallback = true;
-                        this.selectedItem = viewPort.items[viewPort.items.length - 1] as Item<T>;
+                        this.selectedItem = viewPort.items[viewPort.items.length - 1] as unknown as Item<T>;
                     }
                     setCurrentIndex(viewPort.items.length - 1);
                     this.keyboardStartIndex = viewPort.items.length - 1;
@@ -786,7 +785,7 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
                             // Just turn the number of items max
                             return viewPort.items.some(() => {
                                 // That the real index and item in the loop
-                                const item = viewPort.items[nextIndex] as Item<T>;
+                                const item = viewPort.items[nextIndex] as unknown as Item<T>;
                                 if (item?.isSelectable) {
                                     if (rg.test(item.label)) {
                                         // Found, set current item
