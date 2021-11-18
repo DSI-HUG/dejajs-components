@@ -14,7 +14,9 @@ import { CanDisable, CanUpdateErrorState, ErrorStateMatcher } from '@angular/mat
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { IDejaChipsComponentCloseEvent } from '@deja-js/component/chips';
-import { DejaChildValidatorDirective, DejaConnectionPositionPair, DejaItemComponent, DejaItemEvent, DejaItemsEvent, GroupingService, IFindItemResult, IItemBase, IItemTree, ItemListBase, ItemListService, IViewListResult, IViewPort, MediaService, SortingService, ViewPortService } from '@deja-js/component/core';
+import { DejaChildValidatorDirective, MediaService } from '@deja-js/component/core';
+import { DejaItemComponent, DejaItemEvent, DejaItemsEvent, GroupingService, IFindItemResult, IItemBase, IItemTree, ItemListBase, ItemListService, IViewListResult, IViewPort, SortingService, ViewPortService } from '@deja-js/component/core/item-list';
+import { DejaConnectionPositionPair } from '@deja-js/component/core/overlay';
 import { KeyCodes } from '@deja-js/component/core/text';
 import { DejaOverlayComponent } from '@deja-js/component/overlay';
 import { BehaviorSubject, combineLatestWith, debounce, debounceTime, delay, delayWhen, filter, fromEvent, map, mergeWith, Observable, of, Subject, Subscription, switchMap, take, takeUntil, tap, timer } from 'rxjs';
@@ -1019,10 +1021,11 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
 
                         case KeyCodes.Space:
                             if (this.dropdownVisible) {
-                                const item = this._itemList[this.currentItemIndex - this.vpStartRow] as IItemTree<unknown>;
+                                const item = this._itemList[this.currentItemIndex - this.vpStartRow];
                                 if (this.isCollapsible(item)) {
                                     this.keyboardNavigation$.next();
-                                    return this.toggleCollapse$(this.currentItemIndex, !item.collapsed).pipe(
+                                    const treeItem = item as unknown as IItemTree<unknown>;
+                                    return this.toggleCollapse$(this.currentItemIndex, !treeItem.collapsed).pipe(
                                         map(() => false)
                                     );
                                 }
@@ -1207,7 +1210,7 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
                     return of(null);
                 }
 
-                const item = this._itemList[itemIndex - this.vpStartRow] as IItemTree<unknown>;
+                const item = this._itemList[itemIndex - this.vpStartRow];
                 if (!item || upEvent.button !== 0) {
                     // Right click menu
                     return of(null);
@@ -1217,7 +1220,8 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
 
                 if (this.isCollapsible(item) && (isExpandButton(e.target as HTMLElement) || !this.isSelectable(item))) {
                     if (upEvent.button === 0) {
-                        return this.toggleCollapse$(itemIndex, !item.collapsed);
+                        const treeItem = item as unknown as IItemTree<unknown>;
+                        return this.toggleCollapse$(itemIndex, !treeItem.collapsed);
                     }
                 } else if (!item.selected) {
                     this.select(item);

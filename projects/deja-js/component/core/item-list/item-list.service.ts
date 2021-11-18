@@ -11,12 +11,12 @@
 import { DiacriticService } from '@deja-js/component/core/text';
 import { BehaviorSubject, concat, filter, from, iif, map, Observable, of, reduce, Subscriber, switchMap, tap } from 'rxjs';
 
-import { IGroupInfo } from '../grouping/group-infos';
-import { GroupingService } from '../grouping/grouping.service';
-import { ISortInfos } from '../sorting/sort-infos.model';
-import { SortingService } from '../sorting/sorting.service';
+import { IGroupInfo } from './grouping/group-infos';
+import { GroupingService } from './grouping/grouping.service';
 import { IItemBase } from './item-base';
 import { IItemTree } from './item-tree';
+import { ISortInfos } from './sorting/sort-infos.model';
+import { SortingService } from './sorting/sorting.service';
 
 
 /** Service de gestion des listes (deja-treelist, deja-select et deja-grid).

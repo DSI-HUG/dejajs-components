@@ -11,7 +11,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { DejaChipsModule } from '@deja-js/component/chips';
-import { DejaSortingModule } from '@deja-js/component/core';
+import { DejaSortingModule } from '@deja-js/component/core/item-list';
 import { DejaDragDropModule } from '@deja-js/component/dragdrop';
 import { DejaTreeListModule } from '@deja-js/component/tree-list';
 

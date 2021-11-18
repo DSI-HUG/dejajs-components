@@ -12,8 +12,9 @@
 
 /* eslint-disable @typescript-eslint/unbound-method */
 import { Directive, ElementRef, HostListener, Input, OnDestroy, OnInit, Renderer2, RendererFactory2 } from '@angular/core';
-import { Destroy } from '@deja-js/component/core/destroy';
 import { filter, interval, Subscription, take, takeUntil, timer } from 'rxjs';
+
+import { Destroy } from '../destroy/destroy';
 
 interface SlimScrollOptions {
     // width in pixels of the visible scroll area

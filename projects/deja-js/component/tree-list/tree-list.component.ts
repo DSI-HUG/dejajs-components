@@ -9,8 +9,9 @@
 import { BooleanInput, coerceBooleanProperty, coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
 import { AfterContentInit, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ContentChildren, ElementRef, EventEmitter, HostBinding, Input, Optional, Output, Self, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
-import { DejaChildValidatorDirective, DejaClipboardService, DejaItemComponent, DejaItemEvent, DejaItemsEvent, GroupingService, IFindItemResult, IItemBase, IItemTree, ItemListBase, ItemListService, IViewListResult, IViewPort, SortingService, ViewPortService } from '@deja-js/component/core';
+import { DejaChildValidatorDirective, DejaClipboardService } from '@deja-js/component/core';
 import { Position, Rect } from '@deja-js/component/core/graphics';
+import { DejaItemComponent, DejaItemEvent, DejaItemsEvent, GroupingService, IFindItemResult, IItemBase, IItemTree, ItemListBase, ItemListService, IViewListResult, IViewPort, SortingService, ViewPortService } from '@deja-js/component/core/item-list';
 import { KeyCodes } from '@deja-js/component/core/text';
 import { IDejaDragContext, IDejaDragEvent, IDejaDropContext } from '@deja-js/component/dragdrop';
 import { BehaviorSubject, combineLatestWith, debounceTime, filter, fromEvent, map, mergeWith, Observable, of, Subject, Subscription, switchMap, take, takeUntil, tap, timer } from 'rxjs';
@@ -1003,7 +1004,7 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
                 }
 
                 if (this.isCollapsible(upItem) && (isExpandButton(upTarget) || !this.isSelectable(upItem))) {
-                    const treeItem = upItem as IItemTree<unknown>;
+                    const treeItem = upItem as unknown as IItemTree<unknown>;
                     return this.toggleCollapse$(upIndex, !treeItem.collapsed).pipe(
                         map(() => upIndex)
                     );

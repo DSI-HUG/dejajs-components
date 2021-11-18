@@ -7,7 +7,7 @@
  */
 
 import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
-import { IViewPortItem } from '@deja-js/component/core';
+import { IViewPortItem } from '@deja-js/component/core/item-list';
 import { DejaViewPortComponent } from '@deja-js/component/viewport';
 import { Observable } from 'rxjs';
 

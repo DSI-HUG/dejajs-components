@@ -15,7 +15,7 @@
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, forwardRef, Input, NgZone, OnChanges, OnDestroy, Output, SimpleChanges, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { Destroy } from '@deja-js/component/core/destroy';
+import { Destroy } from '@deja-js/component/core';
 import { cloneDeep } from 'lodash-es';
 import { delay, first, from, Subscription, take, takeUntil, tap, timer } from 'rxjs';
 

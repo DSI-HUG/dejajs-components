@@ -12,7 +12,8 @@ import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { DejaChipsModule } from '@deja-js/component/chips';
-import { DejaChildValidatorModule, DejaItemModule, MediaModule } from '@deja-js/component/core';
+import { DejaChildValidatorModule, MediaModule } from '@deja-js/component/core';
+import { DejaItemModule } from '@deja-js/component/core/item-list';
 import { DejaListLoaderModule } from '@deja-js/component/loaders';
 import { DejaOverlayModule } from '@deja-js/component/overlay';
 

@@ -17,7 +17,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { DejaSortingModule } from '@deja-js/component/core';
+import { DejaSortingModule } from '@deja-js/component/core/item-list';
 import { DejaDialogModule } from '@deja-js/component/dialog';
 import { DejaMessageBoxModule } from '@deja-js/component/message-box';
 import { ItemModule } from '@deja-js/component/v2/item-list';

@@ -7,8 +7,8 @@
  */
 
 import { Component, Input, ViewEncapsulation } from '@angular/core';
+import { RegExpUtils } from '@deja-js/component/core';
 import { DiacriticService } from '@deja-js/component/core/text';
-import { RegExpUtils } from '@deja-js/component/core/util';
 
 @Component({
     encapsulation: ViewEncapsulation.None,
@@ -98,7 +98,7 @@ export class DejaBoldQueryComponent {
         this.refresh();
     }
 
-    public constructor(private diacriticService: DiacriticService) {}
+    public constructor(private diacriticService: DiacriticService) { }
 
     private refresh(): void {
         if (this._value && this._query && this._query.length > 0) {
