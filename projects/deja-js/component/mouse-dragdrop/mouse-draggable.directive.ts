@@ -7,7 +7,7 @@
  */
 
 import { Directive, ElementRef, Input } from '@angular/core';
-import { Destroy } from '@deja-js/component/core/destroy';
+import { Destroy } from '@deja-js/component/core';
 import { Position, Rect } from '@deja-js/component/core/graphics';
 import { filter, fromEvent, map, mergeWith, Observable, of, Subject, switchMap, take, takeUntil, tap } from 'rxjs';
 

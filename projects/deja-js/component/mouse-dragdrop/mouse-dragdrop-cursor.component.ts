@@ -7,7 +7,7 @@
  */
 
 import { Component, ElementRef, ViewChild, ViewEncapsulation } from '@angular/core';
-import { Destroy } from '@deja-js/component/core/destroy';
+import { Destroy } from '@deja-js/component/core';
 import { Position } from '@deja-js/component/core/graphics';
 import { BehaviorSubject, combineLatestWith, delay, filter, takeUntil, tap } from 'rxjs';
 

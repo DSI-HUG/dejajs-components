@@ -7,8 +7,8 @@
  */
 
 import { Directive, ElementRef, EventEmitter, Input, Output } from '@angular/core';
-import { DejaConnectionPositionPair } from '@deja-js/component/core';
-import { Destroy } from '@deja-js/component/core/destroy';
+import { Destroy } from '@deja-js/component/core';
+import { DejaConnectionPositionPair } from '@deja-js/component/core/overlay';
 import { delay, fromEvent, of, switchMap, takeUntil } from 'rxjs';
 
 import { DejaTooltipService } from './tooltip.service';

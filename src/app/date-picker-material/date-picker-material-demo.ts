@@ -8,7 +8,7 @@
 
 import { Component, ViewEncapsulation } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
-import { Destroy } from '@deja-js/component/core/destroy';
+import { Destroy } from '@deja-js/component/core';
 import { IFormBuilder, IFormGroup } from '@rxweb/types';
 import { debounceTime, takeUntil } from 'rxjs';
 

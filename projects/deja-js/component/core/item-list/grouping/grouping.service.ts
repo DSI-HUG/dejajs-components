@@ -8,7 +8,7 @@
 import { Injectable } from '@angular/core';
 import { from, map, Observable, of, reduce, switchMap, tap } from 'rxjs';
 
-import { IItemTree } from '../item-list/item-tree';
+import { IItemTree } from '../item-tree';
 import { SortingService } from '../sorting/sorting.service';
 import { IGroupInfo } from './group-infos';
 

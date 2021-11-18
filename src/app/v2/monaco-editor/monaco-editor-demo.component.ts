@@ -7,7 +7,7 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { Destroy } from '@deja-js/component/core/destroy';
+import { Destroy } from '@deja-js/component/core';
 import { Language } from '@deja-js/component/v2/monaco-editor';
 import { takeUntil } from 'rxjs';
 

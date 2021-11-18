@@ -8,7 +8,7 @@
 
 import { BooleanInput, coerceBooleanProperty, coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, Component, ContentChild, ElementRef, EventEmitter, HostBinding, Input, Output, QueryList, TemplateRef, ViewChild, ViewChildren } from '@angular/core';
-import { Destroy } from '@deja-js/component/core/destroy';
+import { Destroy } from '@deja-js/component/core';
 import { BehaviorSubject, combineLatestWith, debounceTime, distinctUntilChanged, filter, from, fromEvent, interval, map, mergeMap, mergeWith, Observable, Subject, switchMap, takeUntil, tap, timer, withLatestFrom } from 'rxjs';
 
 import { ViewPort, ViewPortDirection, ViewPortItem, ViewPortMode, ViewPortService } from './viewport.service';

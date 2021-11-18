@@ -10,6 +10,7 @@ export * from './position';
 export * from './rect';
 export * from './circle';
 export * from './directions';
+export * from './icon.service';
 export * from './size';
 export * from './unit-value';
 export * from './color';

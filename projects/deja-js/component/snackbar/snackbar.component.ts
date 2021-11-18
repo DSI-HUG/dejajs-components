@@ -7,7 +7,7 @@
  */
 
 import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { Destroy } from '@deja-js/component/core/destroy';
+import { Destroy } from '@deja-js/component/core';
 import { debounce, delay, Subject, Subscription, take, takeUntil, tap, timer } from 'rxjs';
 
 interface IAnimation {

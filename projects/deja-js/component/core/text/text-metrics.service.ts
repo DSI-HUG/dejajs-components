@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Destroy } from '@deja-js/component/core/destroy';
+import { Destroy } from '@deja-js/component/core';
 import { BehaviorSubject, delay, filter, map, Observable, range, Subject, switchMap, take, takeUntil, toArray } from 'rxjs';
 
 

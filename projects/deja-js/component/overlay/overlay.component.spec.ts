@@ -9,7 +9,8 @@
 import { Component, NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { DejaConnectionPositionPair, MediaService } from '@deja-js/component/core';
+import { MediaService } from '@deja-js/component/core';
+import { DejaConnectionPositionPair } from '@deja-js/component/core/overlay';
 
 import { DejaOverlayModule } from './index';
 import { DejaOverlayComponent } from './overlay.component';
