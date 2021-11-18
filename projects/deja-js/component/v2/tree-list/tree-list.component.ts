@@ -9,8 +9,7 @@
 import { BooleanInput, coerceBooleanProperty, coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ContentChildren, ElementRef, EventEmitter, HostBinding, Input, Optional, Output, Self, SkipSelf, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
-import { DejaChildValidatorDirective } from '@deja-js/component/core';
-import { Destroy } from '@deja-js/component/core/destroy';
+import { DejaChildValidatorDirective, Destroy } from '@deja-js/component/core';
 import { KeyCodes } from '@deja-js/component/core/text';
 import { Item, ItemComponent, ItemEvent, ItemService } from '@deja-js/component/v2/item-list';
 import { ViewPort, ViewPortComponent, ViewPortItemClassEvent, ViewPortMode } from '@deja-js/component/v2/viewport';

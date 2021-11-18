@@ -9,7 +9,7 @@
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, Input, OnInit, Optional, Self, TemplateRef, ViewChild } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
-import { Destroy } from '@deja-js/component/core/destroy';
+import { Destroy } from '@deja-js/component/core';
 import { Circle, Position } from '@deja-js/component/core/graphics';
 import { debounceTime, filter, fromEvent, mergeWith, sampleTime, Subject, switchMap, take, takeUntil, tap } from 'rxjs';
 

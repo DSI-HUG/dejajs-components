@@ -9,7 +9,7 @@
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, HostListener, Input, Optional, Output, Self, TemplateRef } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
-import { Destroy } from '@deja-js/component/core/destroy';
+import { Destroy } from '@deja-js/component/core';
 import { fromEvent, mergeWith, take, takeUntil, tap } from 'rxjs';
 
 import { IRange, IRangeEvent, IStepRangeEvent, Range } from './range.interface';

@@ -6,9 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 import { Directive, ElementRef, HostBinding, Input, Optional } from '@angular/core';
-import { DejaClipboardService } from '@deja-js/component/core';
-import { Destroy } from '@deja-js/component/core/destroy';
-import { IdService } from '@deja-js/component/core/id';
+import { DejaClipboardService, Destroy, IdService } from '@deja-js/component/core';
 import { filter, fromEvent, switchMap, take, takeUntil } from 'rxjs';
 
 @Directive({

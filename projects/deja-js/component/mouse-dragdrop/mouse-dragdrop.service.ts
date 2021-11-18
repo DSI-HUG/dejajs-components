@@ -10,7 +10,7 @@
  * Dragdrop service for mouse drag and drop
  */
 import { Injectable } from '@angular/core';
-import { Destroy } from '@deja-js/component/core/destroy';
+import { Destroy } from '@deja-js/component/core';
 import { BehaviorSubject, filter, takeUntil, tap } from 'rxjs';
 
 import { IDragCursorInfos } from './mouse-drag-cursor-infos.interface';

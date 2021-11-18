@@ -8,8 +8,8 @@
 
 import { coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, HostBinding, Input, TemplateRef, ViewChild } from '@angular/core';
-import { IViewPort, IViewPortItem, IViewPortRefreshParams, ViewPortService } from '@deja-js/component/core';
-import { Destroy } from '@deja-js/component/core/destroy';
+import { Destroy } from '@deja-js/component/core';
+import { IViewPort, IViewPortItem, IViewPortRefreshParams, ViewPortService } from '@deja-js/component/core/item-list';
 import { BehaviorSubject, debounceTime, distinctUntilChanged, filter, fromEvent, interval, map, mergeWith, Observable, of, Subject, switchMap, takeUntil, tap, timer } from 'rxjs';
 
 export type DejaViewPortScrollStyleType = 'scrollbar' | 'buttons';

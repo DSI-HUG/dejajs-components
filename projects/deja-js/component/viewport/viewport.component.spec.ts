@@ -12,10 +12,9 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { IViewPortItem, ViewPortService } from '@deja-js/component/core';
+import { IViewPort, IViewPortItem, ViewPortService } from '@deja-js/component/core/item-list';
 import { debounceTime, delay, filter, Observable, tap } from 'rxjs';
 
-import { IViewPort } from '../core';
 import { DejaViewPortModule } from './index';
 import { DejaViewPortComponent } from './viewport.component';
 

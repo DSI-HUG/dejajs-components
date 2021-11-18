@@ -9,7 +9,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { NumberInput } from '@angular/cdk/coercion';
 import { Injectable } from '@angular/core';
-import { Destroy } from '@deja-js/component/core/destroy';
+import { Destroy } from '@deja-js/component/core';
 import { BehaviorSubject, combineLatestWith, debounceTime, distinctUntilChanged, filter, map, Observable, of, ReplaySubject, switchMap, takeUntil, tap, timer } from 'rxjs';
 
 /** Service de gestion du viewport d'une liste.
