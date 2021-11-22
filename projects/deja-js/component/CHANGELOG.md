@@ -1,3 +1,10 @@
+# [13.0.0-next.13](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.12...v13.0.0-next.13) (2021-11-19)
+
+
+### Bug Fixes
+
+* revert try fix importcost plugin failure with date-fns-utils.ts/locale import, not working ([3aca0f4](https://github.com/DSI-HUG/dejajs-components/commit/3aca0f4600c3d8c0c2c994f789418f02bc835c98))
+
 # [13.0.0-next.12](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.11...v13.0.0-next.12) (2021-11-19)
 
 
