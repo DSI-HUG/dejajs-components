@@ -305,7 +305,14 @@ export class TreeListDemoComponent extends Destroy {
             takeUntil(this.destroyed$)
         ).subscribe(([item, countries]) => {
             item.loaded = true;
-            item.items = countries.filter(country => country.naqme.startsWith(item.firstLetter)).map(country => new Item<Country>(country.code, country.displayName));
+            item.items = countries.filter(country => country.naqme.startsWith(item.firstLetter)).map(country => {
+                const child = new Item<Country>(country.code, country.displayName);
+                const loadingItem = new CountryGroupItem(undefined, 'loading...');
+                loadingItem.selectable = false;
+                child.collapsed = true;
+                child.items = [loadingItem];
+                return child;
+            });
             this.onExpandList.itemService.refreshFlatItemList$.next();
         });
 
@@ -330,26 +337,7 @@ export class TreeListDemoComponent extends Destroy {
                 return of(item);
             } else {
                 return this.confirmDialog()(item).pipe(
-                    switchMap(itm => {
-                        if (!itm) {
-                            return of(null as Item<Country>);
-                        }
-
-                        of(group).pipe(
-                            delay(2000),
-                            take(1),
-                            withLatestFrom(this.groupedCountryItems$),
-                            takeUntil(this.destroyed$)
-                        ).subscribe(([grp, groupedCountryItems]) => {
-                            // Simulate asynchronous load
-                            const original = groupedCountryItems.find(c => c.label === grp.label);
-                            grp.items = original.items;
-                            grp.loaded = true;
-                            // this.onExpandList.refresh();
-                        });
-
-                        return of(itm);
-                    })
+                    map(itm => itm || null as Item<Country>)
                 );
             }
         };
@@ -363,7 +351,8 @@ export class TreeListDemoComponent extends Destroy {
                 map(response => {
                     this.dialogVisible = false;
                     return response === 'ok' ? items : null;
-                }));
+                })
+            );
         };
     }
 
