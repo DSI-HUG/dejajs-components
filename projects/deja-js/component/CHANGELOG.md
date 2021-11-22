@@ -1,3 +1,10 @@
+# [13.0.0-next.14](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.13...v13.0.0-next.14) (2021-11-22)
+
+
+### Bug Fixes
+
+* clean demo ([d6a7884](https://github.com/DSI-HUG/dejajs-components/commit/d6a78843c95805867367758e8f0d7508e9e1ba39))
+
 # [13.0.0-next.13](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.12...v13.0.0-next.13) (2021-11-19)
 
 
