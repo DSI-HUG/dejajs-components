@@ -508,19 +508,20 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
                             this.itemService.setSelectedItems(rangeSelection);
                             this.viewPortComponent.reloadViewPort();
                             return of(null);
+
                         } else if (!event.ctrlKey) {
                             if (!this.multiSelect && clickedItem.selected) {
                                 return of(null);
+                            } else if (!this.multiSelect || !clickedItem.selected) {
+                                this.raiseChangeCallback = true;
+                                this.itemService.setSelectedItems([clickedItem]);
+                                this.currentItem = clickedItem;
+                                this.ensureItemVisible(clickedItem);
+                                this.viewPortComponent.reloadViewPort();
+                                this.lastClickedItem = clickedItem; // Keep for double-click
+
+                                return of(clickedItem);
                             }
-
-                            this.raiseChangeCallback = true;
-                            this.itemService.setSelectedItems([clickedItem]);
-                            this.currentItem = clickedItem;
-                            this.ensureItemVisible(clickedItem);
-                            this.viewPortComponent.reloadViewPort();
-                            this.lastClickedItem = clickedItem; // Keep for double-click
-
-                            return of(clickedItem);
                         }
                     }
 
