@@ -431,7 +431,7 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
         });
 
         this.itemService.query$.pipe(
-            filter(query => typeof query === 'string'),
+            filter(query => typeof query === 'string' || !query),
             takeUntil(this.destroyed$)
         ).subscribe(query => {
             if (this._query !== query) {
