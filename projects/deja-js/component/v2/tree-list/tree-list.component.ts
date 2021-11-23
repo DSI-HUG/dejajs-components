@@ -12,7 +12,7 @@ import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { DejaChildValidatorDirective, Destroy, KeyCodes } from '@deja-js/component/core';
 import { Item, ItemComponent, ItemEvent, ItemService } from '@deja-js/component/v2/item-list';
 import { ViewPort, ViewPortComponent, ViewPortItemClassEvent, ViewPortMode } from '@deja-js/component/v2/viewport';
-import { BehaviorSubject, combineLatestWith, delay, filter, fromEvent, map, mergeWith, Observable, of, ReplaySubject, Subject, switchMap, takeUntil, tap, timer, withLatestFrom } from 'rxjs';
+import { BehaviorSubject, combineLatestWith, delay, distinctUntilChanged, filter, fromEvent, map, mergeWith, Observable, of, ReplaySubject, Subject, switchMap, takeUntil, tap, timer, withLatestFrom } from 'rxjs';
 
 export type NgModelType = 'item' | 'model' | 'value';
 
@@ -104,7 +104,6 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
     private _searchArea = false;
     private lastClickedItem: Item<T>; // Double-click detection
     private reloadViewPort$ = new BehaviorSubject<void>(undefined);
-    private _query = '';
 
     @ViewChild(ViewPortComponent)
     public set viewPortComponent(viewPortComponent: ViewPortComponent<T>) {
@@ -236,12 +235,7 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
     /** Correspond au ngModel du champ de filtrage ou recherche */
     @Input()
     public set query(value: string) {
-        this._query = value || '';
         this.itemService.query$.next(value);
-    }
-
-    public get query(): string {
-        return this._query;
     }
 
     @Input() public set selectingItems(value: (items: Item<T>[]) => Observable<Item<T>[]>) {
@@ -432,13 +426,11 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
 
         this.itemService.query$.pipe(
             map(query => query || ''),
+            distinctUntilChanged(),
             filter(query => typeof query === 'string'),
             takeUntil(this.destroyed$)
         ).subscribe(query => {
-            if (this._query !== query) {
-                this._query = query as string;
-                this.queryChange.emit(this._query);
-            }
+            this.queryChange.emit(query as string);
         });
 
         const modelType$ = this.ngModelType$.pipe(
