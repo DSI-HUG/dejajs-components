@@ -1,3 +1,10 @@
+# [13.0.0-next.20](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.19...v13.0.0-next.20) (2021-11-23)
+
+
+### Bug Fixes
+
+* **treelist:** np on delete ([4f49b45](https://github.com/DSI-HUG/dejajs-components/commit/4f49b454de720727a08e2b9defdbdd61c1128450))
+
 # [13.0.0-next.19](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.18...v13.0.0-next.19) (2021-11-23)
 
 
