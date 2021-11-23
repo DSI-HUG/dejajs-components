@@ -1,3 +1,10 @@
+# [13.0.0-next.19](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.18...v13.0.0-next.19) (2021-11-23)
+
+
+### Bug Fixes
+
+* **treelist:** fix query event when query deleted ([5f4c7ca](https://github.com/DSI-HUG/dejajs-components/commit/5f4c7ca5b3ffcd04e6a40aa06752bd581822648a))
+
 # [13.0.0-next.18](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.17...v13.0.0-next.18) (2021-11-23)
 
 
