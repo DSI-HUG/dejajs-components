@@ -104,7 +104,7 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
     private _searchArea = false;
     private lastClickedItem: Item<T>; // Double-click detection
     private reloadViewPort$ = new BehaviorSubject<void>(undefined);
-    private _query: string;
+    private _query = '';
 
     @ViewChild(ViewPortComponent)
     public set viewPortComponent(viewPortComponent: ViewPortComponent<T>) {
@@ -236,7 +236,7 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
     /** Correspond au ngModel du champ de filtrage ou recherche */
     @Input()
     public set query(value: string) {
-        this._query = value;
+        this._query = value || '';
         this.itemService.query$.next(value);
     }
 
@@ -431,7 +431,8 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
         });
 
         this.itemService.query$.pipe(
-            filter(query => typeof query === 'string' || !query),
+            map(query => query || ''),
+            filter(query => typeof query === 'string'),
             takeUntil(this.destroyed$)
         ).subscribe(query => {
             if (this._query !== query) {
