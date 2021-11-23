@@ -1,3 +1,10 @@
+# [13.0.0-next.21](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.20...v13.0.0-next.21) (2021-11-23)
+
+
+### Bug Fixes
+
+* **treelistV2:** fix query getter ([0ceb457](https://github.com/DSI-HUG/dejajs-components/commit/0ceb4576e8222508f0d9a9134fc9447ca49f267f))
+
 # [13.0.0-next.20](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.19...v13.0.0-next.20) (2021-11-23)
 
 
