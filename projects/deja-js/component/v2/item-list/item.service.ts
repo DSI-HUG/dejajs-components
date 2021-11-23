@@ -77,7 +77,7 @@ export class ItemService<T> {
         this.itemList$ = this.items$.pipe(
             mergeWith(itemsFromModels$, itemsFromOptions$),
             switchMap(items => {
-                if (this.selectedItems$) {
+                if (this.selectedItems$ && items?.length > 0) {
                     return this.selectedItems$.pipe(
                         take(1),
                         map(selectedItems => {
