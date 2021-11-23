@@ -1,3 +1,10 @@
+# [13.0.0-next.15](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.14...v13.0.0-next.15) (2021-11-23)
+
+
+### Bug Fixes
+
+* **treelistv2:** la treelist ne sélectionne pas sur le mousedown DEJS-1028 ([d006da5](https://github.com/DSI-HUG/dejajs-components/commit/d006da5c1b94a9965c2ce3aa0e0c404677f3f6c5))
+
 # [13.0.0-next.14](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.13...v13.0.0-next.14) (2021-11-22)
 
 
