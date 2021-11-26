@@ -6,8 +6,9 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
+import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostBinding, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
-import { MatInput } from '@angular/material/input';
+import { MatFormFieldControl } from '@angular/material/form-field';
 import { Destroy, KeyCodes } from '@deja-js/component/core';
 import { combineLatestWith, debounceTime, delay, filter, fromEvent, map, shareReplay, Subject, switchMap, takeUntil, tap, timer, withLatestFrom } from 'rxjs';
 
@@ -25,11 +26,22 @@ export class DejaNumericStepperComponent extends Destroy implements OnInit {
     private static STEP_FN_ERROR = 'Input element on the same mat-form-field must implement stepDown/stepUp functions.';
     private static INPUT_ERROR = 'To use the automatic binding, you must specify the input field with a matInput reference. [input]="matInputRef"';
 
-    @HostBinding('attr.layout') @Input() public layout: DejaNumericStepperLayout = 'vertical';
+    @HostBinding('attr.layout') @Input()
+    public layout: DejaNumericStepperLayout = 'vertical';
+
     @Output() public readonly increment = new EventEmitter<void>();
     @Output() public readonly decrement = new EventEmitter<void>();
 
-    @Input() public input: MatInput;
+    @Input() public input: MatFormFieldControl<unknown>;
+
+    @Input()
+    public set arrowIcons(value: BooleanInput) {
+        this._arrowIcons = coerceBooleanProperty(value);
+    }
+
+    public get arrowIcons(): BooleanInput {
+        return this._arrowIcons;
+    }
 
     @HostBinding('attr.hover')
     protected hover = null as boolean;
@@ -50,6 +62,7 @@ export class DejaNumericStepperComponent extends Destroy implements OnInit {
     public clickArrow$ = new Subject<boolean>();
 
     private validateArrows$ = new Subject<void>();
+    private _arrowIcons = false;
 
     public constructor(
         private elementRef: ElementRef<HTMLElement>,
