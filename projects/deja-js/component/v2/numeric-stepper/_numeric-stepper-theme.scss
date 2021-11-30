@@ -8,6 +8,7 @@
     [deja-numeric-stepper-form-field] {
         deja-numeric-stepper {
             .arrow {
+                box-sizing: border-box;
                 color: mat.get-color-from-palette($primary);
 
                 &[disabled] {
@@ -23,6 +24,7 @@
         &:not(.disabled) {
             &.mat-form-field-invalid {
                 deja-numeric-stepper {
+
                     .arrow:not([disabled]) {
                         color: mat.get-color-from-palette($warn);
                     }

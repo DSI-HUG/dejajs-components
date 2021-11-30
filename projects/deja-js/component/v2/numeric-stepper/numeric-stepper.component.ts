@@ -56,6 +56,7 @@ export class DejaNumericStepperComponent extends Destroy implements OnInit {
     public topShadow: number = null;
     public widthShadow: number = null;
     public heightShadow: number = null;
+    public buttonPaddingTop = 0;
 
     public disableUp = false;
     public disableDown = false;
@@ -63,6 +64,7 @@ export class DejaNumericStepperComponent extends Destroy implements OnInit {
 
     private validateArrows$ = new Subject<void>();
     private _arrowIcons = false;
+    private parentAppearance: string = null;
 
     public constructor(
         private elementRef: ElementRef<HTMLElement>,
@@ -86,7 +88,8 @@ export class DejaNumericStepperComponent extends Destroy implements OnInit {
                 }
 
                 if (formFieldElement) {
-                    formFieldElement.setAttribute('deja-numeric-stepper-form-field', '');
+                    formFieldElement.setAttribute('deja-numeric-stepper-form-field', this.layout);
+                    this.parentAppearance = formFieldElement.getAttribute('appearance')?.toUpperCase();
                 }
 
                 return formFieldElement;
@@ -116,20 +119,46 @@ export class DejaNumericStepperComponent extends Destroy implements OnInit {
                     formFieldElement.setAttribute('hover', '');
 
                     if (this.layout === 'horizontal') {
-                        this.heightShadow = this.height = Math.min(48, formFieldBounds.height);
-                        this.topShadow = this.topUp = this.topDown = inputBounds.top - bounds.top + (inputBounds.height - this.heightShadow) / 2;
+                        this.heightShadow = this.height = Math.min(48, formFieldBounds.height) + 2;
+                        this.topShadow = this.topUp = this.topDown = inputBounds.top - bounds.top + (inputBounds.height - this.heightShadow) / 2 - 5;
                         this.leftDown = this.leftShadow = formFieldBounds.left - bounds.left - 28;
                         this.leftUp = formFieldBounds.right - bounds.left;
                         this.width = 32;
-                        this.widthShadow = this.leftUp - this.leftDown + 32;
+                        this.widthShadow = this.leftUp - this.leftDown + 28;
+                        this.buttonPaddingTop = 10;
+
+                        if (this.parentAppearance === 'LEGACY' || this.parentAppearance === 'STANDARD') {
+                            this.heightShadow -= 6;
+                            this.height = this.heightShadow;
+                            this.buttonPaddingTop = 12;
+                        } else if (this.parentAppearance === 'FILL') {
+                            this.heightShadow -= 2;
+                            this.height = this.heightShadow;
+                        }
 
                     } else if (this.layout === 'horizontal-inlay') {
-                        this.heightShadow = this.height = Math.min(48, formFieldBounds.height);
-                        this.topShadow = this.topUp = this.topDown = inputBounds.top - bounds.top + (inputBounds.height - this.heightShadow) / 2;
+                        this.heightShadow = this.height = Math.min(48, formFieldBounds.height) + 4;
+                        this.topShadow = this.topUp = this.topDown = (inputBounds.top - bounds.top + (inputBounds.height - this.heightShadow) / 2) - 5;
                         this.leftDown = this.leftShadow = formFieldBounds.left - bounds.left;
                         this.leftUp = formFieldBounds.right - bounds.left - 28;
                         this.width = 32;
-                        this.widthShadow = this.leftUp - this.leftDown + 32;
+                        this.widthShadow = this.leftUp - this.leftDown + 28;
+                        this.buttonPaddingTop = 10;
+
+                        if (this.parentAppearance === 'LEGACY' || this.parentAppearance === 'STANDARD') {
+                            const addedPadding = 6;
+                            this.widthShadow += addedPadding * 2;
+                            this.leftDown -= addedPadding;
+                            this.leftUp += addedPadding;
+                            this.heightShadow -= addedPadding;
+                            this.leftShadow -= addedPadding;
+                            this.height = this.heightShadow;
+                            this.buttonPaddingTop = 14;
+                        } else if (this.parentAppearance === 'FILL') {
+                            this.buttonPaddingTop = 8;
+                            this.heightShadow -= 2;
+                            this.height = this.heightShadow;
+                        }
 
                     } else {
                         this.heightShadow = 106;
