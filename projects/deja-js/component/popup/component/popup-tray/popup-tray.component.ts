@@ -42,7 +42,9 @@ export class DejaPopupTrayComponent implements OnInit {
                 filter(action => action.refreshDrawer))
             ),
             debounceTime(500),
-            map(() => this.dialogSrv.openDialogs.filter(dialog => dialog.componentInstance.config?.availableInTray))
+            map(() => this.dialogSrv.openDialogs
+                .filter(dialog => dialog?.componentInstance?.config?.availableInTray)
+            )
         );
 
     }
