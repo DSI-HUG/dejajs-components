@@ -8,7 +8,7 @@
 
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSelectModule } from '@angular/material/select';
@@ -37,6 +37,7 @@ const routes: Routes = [
         MatTabsModule,
         MatToolbarModule,
         MonacoEditorModule,
+        ReactiveFormsModule,
         RouterModule.forChild(routes)
     ],
     declarations: [MonacoEditorDemoComponent]
