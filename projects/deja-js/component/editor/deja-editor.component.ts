@@ -342,8 +342,11 @@ export class DejaEditorComponent extends Destroy implements OnChanges, AfterView
     }
 
     public getSelectedText(): string {
-        const selection = this.instance.getSelection();
-        return selection.getSelectedText();
+        if (this.instance) {
+            const selection = this.instance.getSelection();
+            return selection.getSelectedText();
+        }
+        return '';
     }
 
     /**
@@ -368,19 +371,21 @@ export class DejaEditorComponent extends Destroy implements OnChanges, AfterView
             this.instance.focus = focus;
             return;
         }
-        const range = this.instance.getSelection().getRanges(true)[0];
-        if (!range) {
-            this.instance.insertHtml(replace);
-            return;
+        if (this.instance) {
+            const range = this.instance.getSelection().getRanges(true)[0];
+            if (!range) {
+                this.instance.insertHtml(replace);
+                return;
+            }
+            const text = this.firstTextNode(range);
+            if (text) {
+                this.replaceWord(text, replace);
+            } else {
+                this.instance.insertHtml(replace);
+            }
+            this.updateValue();
+            this.setFocus();
         }
-        const text = this.firstTextNode(range);
-        if (text) {
-            this.replaceWord(text, replace);
-        } else {
-            this.instance.insertHtml(replace);
-        }
-        this.updateValue();
-        this.setFocus();
     }
 
     public setFocus(): void {
