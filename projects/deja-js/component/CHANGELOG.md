@@ -1,3 +1,24 @@
+# [13.0.0-next.23](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.22...v13.0.0-next.23) (2021-11-30)
+
+# [13.0.0-next.22](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.21...v13.0.0-next.22) (2021-11-26)
+
+
+### Bug Fixes
+
+* **numeric-stepper-v2:** add plus minus icons ([411f212](https://github.com/DSI-HUG/dejajs-components/commit/411f212e2b460db3c2ad83f8c07f8bcda4107d22))
+
+
+### Features
+
+* intégration du material-date-picker en prévision du remplacement du deja DEJS-1023 ([6239e28](https://github.com/DSI-HUG/dejajs-components/commit/6239e28b59ea2135faa6042aecbcd39a53e994e3))
+
+# [13.0.0-next.21](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.20...v13.0.0-next.21) (2021-11-23)
+
+
+### Bug Fixes
+
+* **treelistV2:** fix query getter ([0ceb457](https://github.com/DSI-HUG/dejajs-components/commit/0ceb4576e8222508f0d9a9134fc9447ca49f267f))
+
 # [13.0.0-next.20](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.19...v13.0.0-next.20) (2021-11-23)
 
 

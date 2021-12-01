@@ -1,4 +1,21 @@
 [deja-numeric-stepper-form-field] {
+    &[deja-numeric-stepper-form-field="vertical"] {
+
+        &:not(.disabled) {
+            &:hover {
+                .mat-form-field-label-wrapper {
+                    opacity: 0 !important;
+                }
+
+                &.mat-form-field-invalid {
+                    .mat-form-field-subscript-wrapper {
+                        visibility: hidden;
+                    }
+                }
+            }
+        }
+    }
+
     .noselect {
         -webkit-touch-callout: none;
         /* iOS Safari */
@@ -51,17 +68,10 @@
 
         &:hover {
 
-            .mat-form-field-label-wrapper,
             .mat-form-field-outline,
             .mat-form-field-outline-thick,
             .mat-form-field-underline {
                 opacity: 0 !important;
-            }
-
-            &.mat-form-field-invalid {
-                .mat-form-field-subscript-wrapper {
-                    visibility: hidden;
-                }
             }
 
             .mat-form-field-flex {
@@ -106,6 +116,17 @@
 
         .decrement {
             border-radius: 0 0 4px 4px;
+        }
+
+        &[layout="horizontal"],
+        &[layout="horizontal-inlay"] {
+            .increment {
+                border-radius: 0 4px 4px 0;
+            }
+
+            .decrement {
+                border-radius: 4px 0 0 4px;
+            }
         }
     }
 }
