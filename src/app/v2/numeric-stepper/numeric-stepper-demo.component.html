@@ -14,7 +14,8 @@
             <div>
                 <mat-form-field appearance="outline">
                     <mat-label>Outline</mat-label>
-                    <input matInput type="text" [ngModel]="value1 | number:'3.'" (change)="onInput1Change$.next($event)" #numericStepper="ngModel" />
+                    <input matInput type="text" [ngModel]="value1 | number:'3.'" (change)="onInput1Change$.next($event)" #numericStepper="ngModel" inputAutosize/>
+                    <span class="unit">cm</span>
                     <deja-numeric-stepper (increment)="value1 = value1 + 20" (decrement)="value1 = value1 - 20"></deja-numeric-stepper>
                 </mat-form-field>
             </div>
@@ -126,7 +127,8 @@
                 <mat-form-field appearance="outline" [style.width.px]="130">
                     <mat-label>Outline appearance</mat-label>
                     <deja-numeric-stepper layout="horizontal-inlay" (increment)="changeValue3(2)" (decrement)="changeValue3(-2)"></deja-numeric-stepper>
-                    <input matInput type="text" formControlName="numberValue3" />
+                    <input matInput type="text" formControlName="numberValue3" inputAutosize/>
+                    <span class="unit">cm</span>
                     <mat-error>{{ numberForm.get('numberValue3').errors ? numberForm.get('numberValue3').errors[0] : ''}}</mat-error>
                 </mat-form-field>
             </div>

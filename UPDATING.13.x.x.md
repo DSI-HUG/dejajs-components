@@ -34,3 +34,4 @@
 * core/grouping.service est maintenant dans core/item-list
 * component/message-box/DejaMessageBoxType est maintenant dans core
 * component/message-box/DejaMessageBoxAction est maintenant dans core
+* core/Diacritics est maintenant dans core/DiacriticService et est injectable
