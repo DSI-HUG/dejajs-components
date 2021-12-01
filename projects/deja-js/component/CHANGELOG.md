@@ -1,3 +1,11 @@
+# [13.0.0-next.24](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.23...v13.0.0-next.24) (2021-12-01)
+
+
+### Features
+
+* .DO NOT MERGE, sample for Victor ([731e9bc](https://github.com/DSI-HUG/dejajs-components/commit/731e9bc6e47fdd0cd5bb40b6733a888eb85b7aed))
+* add input-autosize.directive, fix numeric-stepper with inputAutosize directive ([20c4bc9](https://github.com/DSI-HUG/dejajs-components/commit/20c4bc98718ddc0c6b0ff3a2fa2d00b328cbb3b7))
+
 # [13.0.0-next.23](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.22...v13.0.0-next.23) (2021-11-30)
 
 # [13.0.0-next.22](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.21...v13.0.0-next.22) (2021-11-26)
