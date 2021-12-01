@@ -8,7 +8,6 @@
     [deja-numeric-stepper-form-field] {
         deja-numeric-stepper {
             .arrow {
-                box-sizing: border-box;
                 color: mat.get-color-from-palette($primary);
 
                 &[disabled] {
@@ -49,13 +48,7 @@
         &.mat-form-field-appearance-fill {
             deja-numeric-stepper {
                 .shadow::after {
-                    content: '';
                     background-color: rgba(0, 0, 0, 0.04);
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
                 }
             }
         }

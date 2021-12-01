@@ -16,6 +16,22 @@
         }
     }
 
+    &[deja-numeric-stepper-form-field="horizontal-inlay"] {
+        &:not(.disabled) {
+            &:hover {
+                input:not([inputautosize]) {
+                    margin: 0 32px;
+                }
+            }
+        }
+    }
+
+    .mat-form-field-infix {
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+    }
+
     .noselect {
         -webkit-touch-callout: none;
         /* iOS Safari */
@@ -45,7 +61,6 @@
 
     .mat-input-element {
         text-align: center;
-        z-index: 1;
     }
 
     &:not(.disabled) {
@@ -55,18 +70,6 @@
             .shadow {
                 opacity: 1;
             }
-        }
-
-        &:hover,
-        &[hover] {
-
-            .arrow,
-            .shadow {
-                visibility: visible;
-            }
-        }
-
-        &:hover {
 
             .mat-form-field-outline,
             .mat-form-field-outline-thick,
@@ -78,9 +81,18 @@
                 .mat-form-field-infix {
                     input {
                         position: relative;
-                        z-index: 1;
+                        z-index: 10001;
                     }
                 }
+            }
+        }
+
+        &:hover,
+        &[hover] {
+
+            .arrow,
+            .shadow {
+                visibility: visible;
             }
         }
     }
@@ -102,7 +114,7 @@
             justify-content: center;
             align-items: center;
             box-sizing: border-box;
-            z-index: 1;
+            z-index: 10002;
         }
 
         .shadow {
@@ -127,6 +139,15 @@
             .decrement {
                 border-radius: 4px 0 0 4px;
             }
+        }
+
+        .shadow::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
         }
     }
 }

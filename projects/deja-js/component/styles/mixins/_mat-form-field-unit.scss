@@ -1,0 +1,20 @@
+@mixin mat-form-field-unit() {
+    .mat-form-field {
+        .unit {
+            opacity: 1;
+            transition: opacity 0.3s ease;
+        }
+
+        &.mat-form-field-has-label.mat-form-field-hide-placeholder {
+            .unit {
+                opacity: 0;
+            }
+        }
+
+        &[deja-numeric-stepper-form-field]:not(.disabled):hover {
+            .unit {
+                z-index: 10001;
+            }
+        }
+    }
+}

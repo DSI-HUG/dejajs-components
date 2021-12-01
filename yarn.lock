@@ -1993,10 +1993,10 @@
   resolved "https://registry.yarnpkg.com/@rushstack/eslint-patch/-/eslint-patch-1.0.9.tgz#1168db664faab4c3bb82c76124b393970e80bf89"
   integrity sha512-yk9Xj/3bUxyz3azMXW8qigLqXWEr2R0h9G7PVnnmjNQdlZLN+aESqCTnVN7ubtYUIQfW32/v8+AXsbpL1ryI1A==
 
-"@rxweb/types@^1.0.7":
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/@rxweb/types/-/types-1.0.7.tgz#fcd32de46d63e2ba074053a485f7cb44a12db548"
-  integrity sha512-96qA5q+w0eCer5CaLPzxNlOpbLy8ShjMkt47WnMdVK3zmKo2HOVJ4GvYtovSTEqAzBCFMFDowRsy/25bNPzr6Q==
+"@rxweb/types@~1.0.8":
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/@rxweb/types/-/types-1.0.8.tgz#f92eacc5d9f28e2f3e82d182d78198e0a9d7e9ae"
+  integrity sha512-bmmCNIcWBd2deeHV7l1SXv4VP6RONZPTFFeo5DEj7mTdi2ky9jJWLwZX16bvsyeFPfTjs9s8xiDaediidHAVlA==
   dependencies:
     tslib "^2.0.0"
 
