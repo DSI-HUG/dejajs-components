@@ -1,3 +1,10 @@
+# [13.0.0-next.26](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.25...v13.0.0-next.26) (2021-12-02)
+
+
+### Bug Fixes
+
+* **numeric-stepper-v2:** precompute positions if the mouse is over when the control is created ([4508377](https://github.com/DSI-HUG/dejajs-components/commit/4508377ba65a3bd38b3d232b118b806ce72904d9))
+
 # [13.0.0-next.25](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.24...v13.0.0-next.25) (2021-12-02)
 
 
