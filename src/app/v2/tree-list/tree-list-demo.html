@@ -183,7 +183,7 @@
                 <h4>Selected country model :</h4>
                 <ul>
                     <li *ngFor="let item of multiselectModel">
-                        <span>{{ $any(item).naqme }}</span>
+                        <span>{{ item.naqme }}</span>
                     </li>
                 </ul>
                 </span>
@@ -280,7 +280,7 @@
                 <span class="flex45p flexLayout flexColumn">
                     <tree-list searchArea textField="naqme" valueField="code" [models]="numbers">
                         <ng-template #itemTemplate let-item let-flatindex="flatindex">
-                            <span deja-numeric-stepper-form-field>
+                            <span deja-numeric-stepper-container deja-numeric-stepper-form-field>
                                 <input matInput type="text" [ngModel]="item.model" #numericStepper="ngModel" />
                                 <deja-numeric-stepper layout="horizontal" (increment)="item.model = item.model + 20" (decrement)="item.model = item.model - 20"></deja-numeric-stepper>
                             </span>

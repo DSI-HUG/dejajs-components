@@ -149,7 +149,7 @@
                 </mat-form-field>
             </div>
             <div [formGroup]="numberForm">
-                <mat-form-field appearance="fill">
+                <mat-form-field appearance="fill" [style.width.px]="80">
                     <mat-label>Fill</mat-label>
                     <deja-numeric-stepper layout="horizontal-inlay" (increment)="changeValue6(2)" (decrement)="changeValue6(-2)"></deja-numeric-stepper>
                     <input matInput type="text" formControlName="numberValue6" />
