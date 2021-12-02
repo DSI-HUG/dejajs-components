@@ -1,3 +1,10 @@
+# [13.0.0-next.25](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.24...v13.0.0-next.25) (2021-12-02)
+
+
+### Bug Fixes
+
+* **numeric-stepper-v2:** fix alignments and size ([71700e4](https://github.com/DSI-HUG/dejajs-components/commit/71700e4e05917e8dec8ab159dc93bb01beee0102))
+
 # [13.0.0-next.24](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.23...v13.0.0-next.24) (2021-12-01)
 
 
