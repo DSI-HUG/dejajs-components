@@ -230,8 +230,13 @@ export class DejaNumericStepperComponent extends Destroy implements OnInit {
                     throw new Error(DejaNumericStepperComponent.INPUT_ERROR);
                 }
 
-                inputElement[fn]();
-                this.input.ngControl.control.setValue(inputElement.value);
+                if (isNaN(+inputElement.value) || inputElement.value === null || inputElement.value === '') {
+                    inputElement.value = (!isNaN(+inputElement.min) && inputElement.min) || '0';
+                } else {
+                    inputElement[fn]();
+                }
+
+                this.input.ngControl.control.setValue(+inputElement.value);
             }
             this.validateArrows$.next();
         };
