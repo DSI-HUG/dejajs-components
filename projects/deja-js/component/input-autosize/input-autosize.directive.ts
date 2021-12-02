@@ -30,6 +30,8 @@ export class InputAutosizeDirective extends Destroy implements OnInit {
 
     public ngOnInit(): void {
         const inputElement = this.elementRef.nativeElement;
+        inputElement.style.visibility = 'hidden';
+
         const computedStyles = window.getComputedStyle(inputElement);
         const font = `${computedStyles.fontSize} ${computedStyles.fontFamily}`;
         const context = this.canvas.getContext('2d');
@@ -40,10 +42,11 @@ export class InputAutosizeDirective extends Destroy implements OnInit {
         this.ngZone.runOutsideAngular(() => {
             fromEvent<Event>(inputElement, 'input').pipe(
                 mergeWith(fromEvent<Event>(inputElement, 'paste'), valueChanges$),
+                debounceTime(50),
                 startWith(inputElement.value),
-                debounceTime(5),
                 takeUntil(this.destroyed$)
             ).subscribe(() => {
+                inputElement.style.visibility = 'visible';
                 const metrics = context.measureText(inputElement.value);
                 const width = Math.max(16, metrics.width + 5);
                 inputElement.style.width = `${width}px`;

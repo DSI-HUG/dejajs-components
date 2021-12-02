@@ -11,7 +11,7 @@
     <mat-card class="demo-card">
         <mat-toolbar color="primary">Numeric Stepper in Material Form Field with different appearances</mat-toolbar>
         <mat-card-content>
-            <div>
+            <div deja-numeric-stepper-container>
                 <mat-form-field appearance="outline">
                     <mat-label>Outline</mat-label>
                     <input matInput type="text" [ngModel]="value1 | number:'3.'" (change)="onInput1Change$.next($event)" #numericStepper="ngModel" inputAutosize/>

@@ -72,6 +72,66 @@ export class DejaNumericStepperComponent extends Destroy implements OnInit {
     }
 
     public ngOnInit(): void {
+        const calcPositions = (linkedElements: { formFieldElement: HTMLElement; containerElement: HTMLElement; inputElement: HTMLInputElement }): void => {
+            const containerBounds = linkedElements.containerElement?.getBoundingClientRect();
+            const formFieldBounds = linkedElements.formFieldElement?.getBoundingClientRect();
+            const inputBounds = linkedElements.inputElement.getBoundingClientRect() || formFieldBounds;
+
+            const bounds = this.elementRef.nativeElement.getBoundingClientRect();
+
+            this.validateArrows$.next();
+
+            // Ensure delayed hover in case of the mouse leave accidentally
+            linkedElements.formFieldElement.setAttribute('hover', '');
+
+            if (this.layout === 'horizontal') {
+                this.heightShadow = Math.min(48, containerBounds?.height || formFieldBounds.height) + 2;
+                this.topShadow = (containerBounds?.top ?? inputBounds.top + (inputBounds.height - this.heightShadow) / 2 - 5) - bounds.top;
+                this.leftDown = this.leftShadow = formFieldBounds.left - bounds.left - 28;
+                this.leftUp = formFieldBounds.right - bounds.left;
+                this.widthShadow = this.leftUp - this.leftDown + 28;
+
+                if (this.parentAppearance === 'LEGACY' || this.parentAppearance === 'STANDARD') {
+                    this.heightShadow -= 6;
+                } else if (this.parentAppearance === 'FILL') {
+                    this.heightShadow -= 2;
+                }
+
+                this.topUp = this.topDown = inputBounds.top + (inputBounds.height - this.arrowSize) / 2 - bounds.top;
+
+            } else if (this.layout === 'horizontal-inlay') {
+                this.heightShadow = Math.min(48, containerBounds?.height || formFieldBounds.height) + 4;
+                this.topShadow = containerBounds?.top ?? (inputBounds.top + (inputBounds.height - this.heightShadow) / 2 - 5) - bounds.top;
+                this.leftDown = this.leftShadow = formFieldBounds.left - bounds.left;
+                this.leftUp = formFieldBounds.right - bounds.left - 28;
+                this.widthShadow = this.leftUp - this.leftDown + 28;
+
+                if (this.parentAppearance === 'LEGACY' || this.parentAppearance === 'STANDARD') {
+                    const addedPadding = 6;
+                    this.widthShadow += addedPadding * 2;
+                    this.leftDown -= addedPadding;
+                    this.leftUp += addedPadding;
+                    this.heightShadow -= addedPadding;
+                    this.leftShadow -= addedPadding;
+                } else if (this.parentAppearance === 'FILL') {
+                    this.heightShadow -= 2;
+                }
+
+                this.topUp = this.topDown = inputBounds.top + (inputBounds.height - this.arrowSize) / 2 - bounds.top;
+
+            } else {
+                this.heightShadow = 106;
+                this.topShadow = inputBounds.top - bounds.top + (inputBounds.height - this.heightShadow) / 2;
+                this.leftShadow = (containerBounds?.left ?? formFieldBounds.left) - bounds.left;
+                this.topUp = this.topShadow;
+                this.topDown = this.topShadow + this.heightShadow - this.arrowSize;
+                this.widthShadow = containerBounds?.width || formFieldBounds.width;
+                this.leftUp = this.leftDown = formFieldBounds.left + (formFieldBounds.width - this.arrowSize) / 2 - bounds.left;
+            }
+
+            this.changeDetectorRef.markForCheck();
+        };
+
         const linkedElements$ = timer(100).pipe(
             map(() => {
                 // Find form field
@@ -112,72 +172,14 @@ export class DejaNumericStepperComponent extends Destroy implements OnInit {
                 return { formFieldElement, containerElement, inputElement };
             }),
             filter(containerElements => containerElements.formFieldElement && !!containerElements.inputElement),
+            tap(linkedElements => calcPositions(linkedElements)),
             shareReplay(1)
         );
 
         linkedElements$.pipe(
             switchMap(linkedElements => fromEvent<MouseEvent>(linkedElements.containerElement || linkedElements.formFieldElement, 'mouseenter').pipe(
-                switchMap(() => {
-                    const containerBounds = linkedElements.containerElement?.getBoundingClientRect();
-                    const formFieldBounds = linkedElements.formFieldElement?.getBoundingClientRect();
-                    const inputBounds = linkedElements.inputElement.getBoundingClientRect() || formFieldBounds;
-
-                    const bounds = this.elementRef.nativeElement.getBoundingClientRect();
-
-                    this.validateArrows$.next();
-
-                    // Ensure delayed hover in case of the mouse leave accidentally
-                    linkedElements.formFieldElement.setAttribute('hover', '');
-
-                    if (this.layout === 'horizontal') {
-                        this.heightShadow = Math.min(48, containerBounds?.height || formFieldBounds.height) + 2;
-                        this.topShadow = (containerBounds?.top ?? inputBounds.top + (inputBounds.height - this.heightShadow) / 2 - 5) - bounds.top;
-                        this.leftDown = this.leftShadow = formFieldBounds.left - bounds.left - 28;
-                        this.leftUp = formFieldBounds.right - bounds.left;
-                        this.widthShadow = this.leftUp - this.leftDown + 28;
-
-                        if (this.parentAppearance === 'LEGACY' || this.parentAppearance === 'STANDARD') {
-                            this.heightShadow -= 6;
-                        } else if (this.parentAppearance === 'FILL') {
-                            this.heightShadow -= 2;
-                        }
-
-                        this.topUp = this.topDown = inputBounds.top + (inputBounds.height - this.arrowSize) / 2 - bounds.top;
-
-                    } else if (this.layout === 'horizontal-inlay') {
-                        this.heightShadow = Math.min(48, containerBounds?.height || formFieldBounds.height) + 4;
-                        this.topShadow = containerBounds?.top ?? (inputBounds.top + (inputBounds.height - this.heightShadow) / 2 - 5) - bounds.top;
-                        this.leftDown = this.leftShadow = formFieldBounds.left - bounds.left;
-                        this.leftUp = formFieldBounds.right - bounds.left - 28;
-                        this.widthShadow = this.leftUp - this.leftDown + 28;
-
-                        if (this.parentAppearance === 'LEGACY' || this.parentAppearance === 'STANDARD') {
-                            const addedPadding = 6;
-                            this.widthShadow += addedPadding * 2;
-                            this.leftDown -= addedPadding;
-                            this.leftUp += addedPadding;
-                            this.heightShadow -= addedPadding;
-                            this.leftShadow -= addedPadding;
-                        } else if (this.parentAppearance === 'FILL') {
-                            this.heightShadow -= 2;
-                        }
-
-                        this.topUp = this.topDown = inputBounds.top + (inputBounds.height - this.arrowSize) / 2 - bounds.top;
-
-                    } else {
-                        this.heightShadow = 106;
-                        this.topShadow = inputBounds.top - bounds.top + (inputBounds.height - this.heightShadow) / 2;
-                        this.leftShadow = (containerBounds?.left ?? formFieldBounds.left) - bounds.left;
-                        this.topUp = this.topShadow;
-                        this.topDown = this.topShadow + this.heightShadow - this.arrowSize;
-                        this.widthShadow = containerBounds?.width || formFieldBounds.width;
-                        this.leftUp = this.leftDown = formFieldBounds.left + (formFieldBounds.width - this.arrowSize) / 2 - bounds.left;
-                    }
-
-                    this.changeDetectorRef.markForCheck();
-
-                    return fromEvent<MouseEvent>(linkedElements.containerElement || linkedElements.formFieldElement, 'mouseleave');
-                }),
+                tap(() => calcPositions(linkedElements)),
+                switchMap(() => fromEvent<MouseEvent>(linkedElements.containerElement || linkedElements.formFieldElement, 'mouseleave')),
                 delay(400),
                 tap(() => {
                     linkedElements.formFieldElement.removeAttribute('hover');

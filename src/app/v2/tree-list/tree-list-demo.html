@@ -280,13 +280,14 @@
                 <span class="flex45p flexLayout flexColumn">
                     <tree-list searchArea textField="naqme" valueField="code" [models]="numbers">
                         <ng-template #itemTemplate let-item let-flatindex="flatindex">
-                            <span deja-numeric-stepper-container deja-numeric-stepper-form-field>
+                            <span *ngIf="!item.selected; else selected">{{item.model}} Text d'alignement</span>
+                <ng-template #selected>
+                    <span deja-numeric-stepper-container deja-numeric-stepper-form-field>
                                 <input matInput type="text" [ngModel]="item.model" #numericStepper="ngModel" />
                                 <deja-numeric-stepper layout="horizontal" (increment)="item.model = item.model + 20" (decrement)="item.model = item.model - 20"></deja-numeric-stepper>
                             </span>
-                <span>
-                                Text d'alignement
-                            </span>
+                    <span>Text d'alignement</span>
+                </ng-template>
                 </ng-template>
                 </tree-list>
                 </span>

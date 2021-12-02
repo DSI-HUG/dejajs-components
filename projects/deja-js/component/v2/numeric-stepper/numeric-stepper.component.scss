@@ -1,4 +1,11 @@
+[deja-numeric-stepper-container] .mat-form-field,
 [deja-numeric-stepper-form-field] {
+    .mat-form-field-infix {
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+    }
+
     &[deja-numeric-stepper-form-field="vertical"] {
 
         &:not(.disabled) {
@@ -30,12 +37,6 @@
                 }
             }
         }
-    }
-
-    .mat-form-field-infix {
-        display: inline-flex;
-        justify-content: center;
-        align-items: center;
     }
 
     .noselect {
