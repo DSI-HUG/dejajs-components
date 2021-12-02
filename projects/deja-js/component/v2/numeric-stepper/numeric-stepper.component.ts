@@ -236,7 +236,6 @@ export class DejaNumericStepperComponent extends Destroy implements OnInit {
             this.validateArrows$.next();
         };
 
-        // Click on the shadow
         this.clickArrow$.pipe(
             debounceTime(10),
             withLatestFrom(linkedElements$),
