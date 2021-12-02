@@ -1,3 +1,10 @@
+# [13.0.0-next.27](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.26...v13.0.0-next.27) (2021-12-02)
+
+
+### Bug Fixes
+
+* **numeric-stepper:** fix model become string if started value is undefined ([f26145b](https://github.com/DSI-HUG/dejajs-components/commit/f26145b0e026a351683574aa7b3a54d45f8dd685))
+
 # [13.0.0-next.26](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.25...v13.0.0-next.26) (2021-12-02)
 
 
