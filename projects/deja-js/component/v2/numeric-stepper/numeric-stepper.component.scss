@@ -20,7 +20,13 @@
         &:not(.disabled) {
             &:hover {
                 input:not([inputautosize]) {
-                    margin: 0 32px;
+                    margin: 0 30px;
+                }
+
+                &.mat-form-field-appearance-fill {
+                    input:not([inputautosize]) {
+                        margin: 0 18px;
+                    }
                 }
             }
         }
@@ -77,13 +83,13 @@
                 opacity: 0 !important;
             }
 
-            .mat-form-field-flex {
-                .mat-form-field-infix {
-                    input {
-                        position: relative;
-                        z-index: 10001;
-                    }
-                }
+            .mat-form-field-label-wrapper,
+            input {
+                z-index: 10001;
+            }
+
+            input {
+                position: relative;
             }
         }
 
@@ -115,6 +121,8 @@
             align-items: center;
             box-sizing: border-box;
             z-index: 10002;
+            height: 32px;
+            width: 32px;
         }
 
         .shadow {

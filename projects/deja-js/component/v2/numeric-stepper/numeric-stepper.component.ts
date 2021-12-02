@@ -50,13 +50,10 @@ export class DejaNumericStepperComponent extends Destroy implements OnInit {
     public leftDown: number = null;
     public topUp: number = null;
     public topDown: number = null;
-    public width: number = null;
-    public height: number = null;
     public leftShadow: number = null;
     public topShadow: number = null;
     public widthShadow: number = null;
     public heightShadow: number = null;
-    public buttonPaddingTop = 0;
 
     public disableUp = false;
     public disableDown = false;
@@ -64,6 +61,7 @@ export class DejaNumericStepperComponent extends Destroy implements OnInit {
 
     private validateArrows$ = new Subject<void>();
     private _arrowIcons = false;
+    private arrowSize = 32;
     private parentAppearance: string = null;
 
     public constructor(
@@ -74,17 +72,26 @@ export class DejaNumericStepperComponent extends Destroy implements OnInit {
     }
 
     public ngOnInit(): void {
-        const formFieldElement$ = timer(100).pipe(
+        const linkedElements$ = timer(100).pipe(
             map(() => {
                 // Find form field
-                const parentElement = this.elementRef.nativeElement.parentElement;
-                let formFieldElement = parentElement;
+                let parentElement = this.elementRef.nativeElement.parentElement;
+                let formFieldElement: HTMLElement;
+                let containerElement: HTMLElement;
+                let inputElement: HTMLInputElement;
+
                 // eslint-disable-next-line no-loops/no-loops
-                while (formFieldElement) {
-                    if (formFieldElement.tagName === 'MAT-FORM-FIELD' || formFieldElement.hasAttribute('deja-numeric-stepper-form-field')) {
+                while (parentElement) {
+                    if (parentElement.tagName === 'MAT-FORM-FIELD' || parentElement.hasAttribute('deja-numeric-stepper-form-field')) {
+                        formFieldElement = parentElement;
+                    }
+                    if (parentElement.hasAttribute('deja-numeric-stepper-container')) {
+                        containerElement = parentElement;
+                    }
+                    if (containerElement && formFieldElement) {
                         break;
                     }
-                    formFieldElement = formFieldElement.parentElement;
+                    parentElement = parentElement.parentElement;
                 }
 
                 if (formFieldElement) {
@@ -92,58 +99,57 @@ export class DejaNumericStepperComponent extends Destroy implements OnInit {
                     this.parentAppearance = formFieldElement.getAttribute('appearance')?.toUpperCase();
                 }
 
-                return formFieldElement;
+                if (!formFieldElement) {
+                    console.error('deja-numeric-stepper work only inside a mat-form-field or a [deja-numeric-stepper-form-field] element');
+                } else {
+                    inputElement = formFieldElement.getElementsByTagName('INPUT')?.[0] as HTMLInputElement || null;
+
+                    if (!inputElement) {
+                        console.error('deja-numeric-stepper work only inside a mat-form-field or a [deja-numeric-stepper-form-field] element containing an input element');
+                    }
+                }
+
+                return { formFieldElement, containerElement, inputElement };
             }),
+            filter(containerElements => containerElements.formFieldElement && !!containerElements.inputElement),
             shareReplay(1)
         );
 
-        const inputElement$ = formFieldElement$.pipe(
-            map(formFieldElement => {
-                const inputElements = formFieldElement.getElementsByTagName('INPUT');
-                return inputElements?.[0] as HTMLInputElement || null;
-            })
-        );
-
-        formFieldElement$.pipe(
-            withLatestFrom(inputElement$),
-            switchMap(([formFieldElement, inputElement]) => fromEvent<MouseEvent>(formFieldElement, 'mouseenter').pipe(
+        linkedElements$.pipe(
+            switchMap(linkedElements => fromEvent<MouseEvent>(linkedElements.containerElement || linkedElements.formFieldElement, 'mouseenter').pipe(
                 switchMap(() => {
-                    const formFieldBounds = formFieldElement.getBoundingClientRect();
-                    const bounds = this.elementRef.nativeElement.getBoundingClientRect();
+                    const containerBounds = linkedElements.containerElement?.getBoundingClientRect();
+                    const formFieldBounds = linkedElements.formFieldElement?.getBoundingClientRect();
+                    const inputBounds = linkedElements.inputElement.getBoundingClientRect() || formFieldBounds;
 
-                    const inputBounds = inputElement?.getBoundingClientRect() || formFieldBounds;
+                    const bounds = this.elementRef.nativeElement.getBoundingClientRect();
 
                     this.validateArrows$.next();
 
                     // Ensure delayed hover in case of the mouse leave accidentally
-                    formFieldElement.setAttribute('hover', '');
+                    linkedElements.formFieldElement.setAttribute('hover', '');
 
                     if (this.layout === 'horizontal') {
-                        this.heightShadow = this.height = Math.min(48, formFieldBounds.height) + 2;
-                        this.topShadow = this.topUp = this.topDown = inputBounds.top - bounds.top + (inputBounds.height - this.heightShadow) / 2 - 5;
+                        this.heightShadow = Math.min(48, containerBounds?.height || formFieldBounds.height) + 2;
+                        this.topShadow = (containerBounds?.top ?? inputBounds.top + (inputBounds.height - this.heightShadow) / 2 - 5) - bounds.top;
                         this.leftDown = this.leftShadow = formFieldBounds.left - bounds.left - 28;
                         this.leftUp = formFieldBounds.right - bounds.left;
-                        this.width = 32;
                         this.widthShadow = this.leftUp - this.leftDown + 28;
-                        this.buttonPaddingTop = 10;
 
                         if (this.parentAppearance === 'LEGACY' || this.parentAppearance === 'STANDARD') {
                             this.heightShadow -= 6;
-                            this.height = this.heightShadow;
-                            this.buttonPaddingTop = 12;
                         } else if (this.parentAppearance === 'FILL') {
                             this.heightShadow -= 2;
-                            this.height = this.heightShadow;
                         }
 
+                        this.topUp = this.topDown = inputBounds.top + (inputBounds.height - this.arrowSize) / 2 - bounds.top;
+
                     } else if (this.layout === 'horizontal-inlay') {
-                        this.heightShadow = this.height = Math.min(48, formFieldBounds.height) + 4;
-                        this.topShadow = this.topUp = this.topDown = (inputBounds.top - bounds.top + (inputBounds.height - this.heightShadow) / 2) - 5;
+                        this.heightShadow = Math.min(48, containerBounds?.height || formFieldBounds.height) + 4;
+                        this.topShadow = containerBounds?.top ?? (inputBounds.top + (inputBounds.height - this.heightShadow) / 2 - 5) - bounds.top;
                         this.leftDown = this.leftShadow = formFieldBounds.left - bounds.left;
                         this.leftUp = formFieldBounds.right - bounds.left - 28;
-                        this.width = 32;
                         this.widthShadow = this.leftUp - this.leftDown + 28;
-                        this.buttonPaddingTop = 10;
 
                         if (this.parentAppearance === 'LEGACY' || this.parentAppearance === 'STANDARD') {
                             const addedPadding = 6;
@@ -152,38 +158,36 @@ export class DejaNumericStepperComponent extends Destroy implements OnInit {
                             this.leftUp += addedPadding;
                             this.heightShadow -= addedPadding;
                             this.leftShadow -= addedPadding;
-                            this.height = this.heightShadow;
-                            this.buttonPaddingTop = 14;
                         } else if (this.parentAppearance === 'FILL') {
-                            this.buttonPaddingTop = 8;
                             this.heightShadow -= 2;
-                            this.height = this.heightShadow;
                         }
+
+                        this.topUp = this.topDown = inputBounds.top + (inputBounds.height - this.arrowSize) / 2 - bounds.top;
 
                     } else {
                         this.heightShadow = 106;
-                        this.height = 32;
                         this.topShadow = inputBounds.top - bounds.top + (inputBounds.height - this.heightShadow) / 2;
-                        this.leftUp = this.leftDown = this.leftShadow = formFieldBounds.left - bounds.left;
+                        this.leftShadow = (containerBounds?.left ?? formFieldBounds.left) - bounds.left;
                         this.topUp = this.topShadow;
-                        this.topDown = this.topShadow + this.heightShadow - this.height;
-                        this.width = this.widthShadow = formFieldBounds.width;
+                        this.topDown = this.topShadow + this.heightShadow - this.arrowSize;
+                        this.widthShadow = containerBounds?.width || formFieldBounds.width;
+                        this.leftUp = this.leftDown = formFieldBounds.left + (formFieldBounds.width - this.arrowSize) / 2 - bounds.left;
                     }
 
                     this.changeDetectorRef.markForCheck();
 
-                    return fromEvent<MouseEvent>(formFieldElement, 'mouseleave');
+                    return fromEvent<MouseEvent>(linkedElements.containerElement || linkedElements.formFieldElement, 'mouseleave');
                 }),
                 delay(400),
                 tap(() => {
-                    formFieldElement.removeAttribute('hover');
+                    linkedElements.formFieldElement.removeAttribute('hover');
                 })
             )),
             takeUntil(this.destroyed$)
         ).subscribe();
 
-        formFieldElement$.pipe(
-            switchMap(formFieldElement => fromEvent<KeyboardEvent>(formFieldElement, 'keydown')),
+        linkedElements$.pipe(
+            switchMap(linkedElements => fromEvent<KeyboardEvent>(linkedElements.formFieldElement, 'keydown')),
             filter(event => event.code === KeyCodes.UpArrow || event.code === KeyCodes.DownArrow),
             takeUntil(this.destroyed$)
         ).subscribe(event => {
@@ -192,19 +196,18 @@ export class DejaNumericStepperComponent extends Destroy implements OnInit {
             return false;
         });
 
-        inputElement$.pipe(
+        linkedElements$.pipe(
             combineLatestWith(this.validateArrows$),
             debounceTime(1),
-            filter(([inputElement]) => !!inputElement),
             takeUntil(this.destroyed$)
-        ).subscribe(([inputElement]) => {
-            const min = inputElement.min;
+        ).subscribe(([linkedElements]) => {
+            const min = linkedElements.inputElement.min;
             if (min !== '' && !isNaN(+min)) {
-                this.disableDown = +inputElement.value <= +min;
+                this.disableDown = +linkedElements.inputElement.value <= +min;
             }
-            const max = inputElement.max;
+            const max = linkedElements.inputElement.max;
             if (max !== '' && !isNaN(+max)) {
-                this.disableUp = +inputElement.value >= +max;
+                this.disableUp = +linkedElements.inputElement.value >= +max;
             }
             this.changeDetectorRef.markForCheck();
         });
@@ -231,16 +234,17 @@ export class DejaNumericStepperComponent extends Destroy implements OnInit {
             this.validateArrows$.next();
         };
 
+        // Click on the shadow
         this.clickArrow$.pipe(
             debounceTime(10),
-            withLatestFrom(inputElement$),
+            withLatestFrom(linkedElements$),
             takeUntil(this.destroyed$)
-        ).subscribe(([isUp, inputElement]) => {
+        ).subscribe(([isUp, linkedElements]) => {
             if (isUp && !this.disableUp) {
-                step(inputElement, 'increment', 'stepUp');
+                step(linkedElements.inputElement, 'increment', 'stepUp');
             }
             if (!isUp && !this.disableDown) {
-                step(inputElement, 'decrement', 'stepDown');
+                step(linkedElements.inputElement, 'decrement', 'stepDown');
             }
         });
     }
