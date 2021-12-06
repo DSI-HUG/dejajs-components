@@ -10,7 +10,7 @@ import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostBinding, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { Destroy, KeyCodes } from '@deja-js/component/core';
-import { combineLatestWith, debounceTime, delay, filter, fromEvent, map, shareReplay, Subject, switchMap, takeUntil, tap, timer, withLatestFrom } from 'rxjs';
+import { combineLatestWith, debounceTime, delay, filter, fromEvent, map, mergeWith, shareReplay, startWith, Subject, switchMap, takeUntil, tap, timer, withLatestFrom } from 'rxjs';
 
 export type DejaNumericStepperLayout = 'vertical' | 'horizontal' | 'horizontal-inlay';
 
@@ -176,8 +176,57 @@ export class DejaNumericStepperComponent extends Destroy implements OnInit {
             shareReplay(1)
         );
 
+        const step = (inputElement: HTMLInputElement, event: 'increment' | 'decrement', fn: 'stepUp' | 'stepDown'): void => {
+            if (this[event].observed) {
+                this[event].emit();
+            } else {
+                if (inputElement?.type !== 'number') {
+                    throw new Error(DejaNumericStepperComponent.TYPE_ERROR);
+                }
+
+                if (!inputElement[fn]) {
+                    throw new Error(DejaNumericStepperComponent.STEP_FN_ERROR);
+                }
+
+                if (!this.input?.ngControl?.control) {
+                    throw new Error(DejaNumericStepperComponent.INPUT_ERROR);
+                }
+
+                if (isNaN(+inputElement.value) || inputElement.value === null || inputElement.value === '') {
+                    inputElement.value = (!isNaN(+inputElement.min) && inputElement.min) || '0';
+                } else {
+                    inputElement[fn]();
+                }
+
+                this.input.ngControl.control.setValue(+inputElement.value);
+            }
+            this.validateArrows$.next();
+        };
+
+        const step$ = this.clickArrow$.pipe(
+            debounceTime(10),
+            withLatestFrom(linkedElements$),
+            tap(([isUp, linkedElements]) => {
+                if (isUp && !this.disableUp) {
+                    step(linkedElements.inputElement, 'increment', 'stepUp');
+                }
+                if (!isUp && !this.disableDown) {
+                    step(linkedElements.inputElement, 'decrement', 'stepDown');
+                }
+            })
+        );
+
+        const valueChange$ = linkedElements$.pipe(
+            switchMap(linkedElements => fromEvent<void>(linkedElements.inputElement, 'input').pipe(
+                mergeWith(step$, fromEvent<void>(linkedElements.inputElement, 'paste'), fromEvent<void>(linkedElements.inputElement, 'keypress'))
+            )),
+            debounceTime(50),
+            startWith(null as void)
+        );
+
         linkedElements$.pipe(
             switchMap(linkedElements => fromEvent<MouseEvent>(linkedElements.containerElement || linkedElements.formFieldElement, 'mouseenter').pipe(
+                switchMap(() => valueChange$),
                 tap(() => calcPositions(linkedElements)),
                 switchMap(() => fromEvent<MouseEvent>(linkedElements.containerElement || linkedElements.formFieldElement, 'mouseleave')),
                 delay(400),
@@ -214,44 +263,8 @@ export class DejaNumericStepperComponent extends Destroy implements OnInit {
             this.changeDetectorRef.markForCheck();
         });
 
-        const step = (inputElement: HTMLInputElement, event: 'increment' | 'decrement', fn: 'stepUp' | 'stepDown'): void => {
-            if (this[event].observed) {
-                this[event].emit();
-            } else {
-                if (inputElement?.type !== 'number') {
-                    throw new Error(DejaNumericStepperComponent.TYPE_ERROR);
-                }
-
-                if (!inputElement[fn]) {
-                    throw new Error(DejaNumericStepperComponent.STEP_FN_ERROR);
-                }
-
-                if (!this.input?.ngControl?.control) {
-                    throw new Error(DejaNumericStepperComponent.INPUT_ERROR);
-                }
-
-                if (isNaN(+inputElement.value) || inputElement.value === null || inputElement.value === '') {
-                    inputElement.value = (!isNaN(+inputElement.min) && inputElement.min) || '0';
-                } else {
-                    inputElement[fn]();
-                }
-
-                this.input.ngControl.control.setValue(+inputElement.value);
-            }
-            this.validateArrows$.next();
-        };
-
-        this.clickArrow$.pipe(
-            debounceTime(10),
-            withLatestFrom(linkedElements$),
+        step$.pipe(
             takeUntil(this.destroyed$)
-        ).subscribe(([isUp, linkedElements]) => {
-            if (isUp && !this.disableUp) {
-                step(linkedElements.inputElement, 'increment', 'stepUp');
-            }
-            if (!isUp && !this.disableDown) {
-                step(linkedElements.inputElement, 'decrement', 'stepDown');
-            }
-        });
+        ).subscribe();
     }
 }

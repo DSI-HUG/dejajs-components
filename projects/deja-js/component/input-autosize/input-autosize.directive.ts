@@ -12,7 +12,7 @@ import { Destroy } from '@deja-js/component/core';
 import { debounceTime, fromEvent, mergeWith, of, startWith, takeUntil } from 'rxjs';
 
 @Directive({
-    selector: '[matInput][inputAutosize]',
+    selector: '[inputAutosize][matInput], [inputAutosize] [matInput]',
     exportAs: 'inputAutosize'
 })
 export class InputAutosizeDirective extends Destroy implements OnInit {
@@ -25,12 +25,24 @@ export class InputAutosizeDirective extends Destroy implements OnInit {
     ) {
         super();
         this.canvas = document.createElement('canvas');
-        console.log(this.matInput);
     }
 
     public ngOnInit(): void {
         const inputElement = this.elementRef.nativeElement;
         inputElement.style.visibility = 'hidden';
+
+        // find formfield if any
+        let parentElement = inputElement.parentElement;
+        if (parentElement.classList.contains('mat-form-field-infix')) {
+            // eslint-disable-next-line no-loops/no-loops
+            while (parentElement) {
+                if (parentElement.classList.contains('mat-form-field')) {
+                    parentElement.setAttribute('input-autoSize-form-field', '');
+                    break;
+                }
+                parentElement = parentElement.parentElement;
+            }
+        }
 
         const computedStyles = window.getComputedStyle(inputElement);
         const font = `${computedStyles.fontSize} ${computedStyles.fontFamily}`;
@@ -41,7 +53,7 @@ export class InputAutosizeDirective extends Destroy implements OnInit {
 
         this.ngZone.runOutsideAngular(() => {
             fromEvent<Event>(inputElement, 'input').pipe(
-                mergeWith(fromEvent<Event>(inputElement, 'paste'), valueChanges$),
+                mergeWith(fromEvent<Event>(inputElement, 'paste'), fromEvent<Event>(inputElement, 'keypress'), valueChanges$),
                 debounceTime(50),
                 startWith(inputElement.value),
                 takeUntil(this.destroyed$)

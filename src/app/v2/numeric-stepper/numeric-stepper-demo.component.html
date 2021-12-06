@@ -124,10 +124,10 @@
         <mat-toolbar color="primary">Numeric Stepper with inlay horizontal layout</mat-toolbar>
         <mat-card-content>
             <div [formGroup]="numberForm">
-                <mat-form-field appearance="outline" [style.width.px]="130">
+                <mat-form-field appearance="outline" floatLabel="always">
                     <mat-label>Outline appearance</mat-label>
                     <deja-numeric-stepper layout="horizontal-inlay" (increment)="changeValue3(2)" (decrement)="changeValue3(-2)"></deja-numeric-stepper>
-                    <input matInput type="text" formControlName="numberValue3" inputAutosize/>
+                    <input matInput inputAutosize type="text" formControlName="numberValue3"/>
                     <span class="unit">cm</span>
                     <mat-error>{{ numberForm.get('numberValue3').errors ? numberForm.get('numberValue3').errors[0] : ''}}</mat-error>
                 </mat-form-field>
@@ -136,7 +136,7 @@
                 <mat-form-field appearance="legacy" [style.width.px]="80">
                     <mat-label>Legacy</mat-label>
                     <deja-numeric-stepper layout="horizontal-inlay" [input]="model4h"></deja-numeric-stepper>
-                    <input matInput type="number" formControlName="numberValue4" #model4h="matInput"/>
+                    <input matInput inputAutosize type="number" formControlName="numberValue4" #model4h="matInput"/>
                     <mat-error>{{ numberForm.get('numberValue4').errors ? numberForm.get('numberValue4').errors[0] : ''}}</mat-error>
                 </mat-form-field>
             </div>
@@ -144,7 +144,7 @@
                 <mat-form-field appearance="standard" [style.width.px]="80">
                     <mat-label>Standard</mat-label>
                     <deja-numeric-stepper layout="horizontal-inlay" (increment)="changeValue5(2)" (decrement)="changeValue5(-2)"></deja-numeric-stepper>
-                    <input matInput type="text" formControlName="numberValue5" />
+                    <input matInput inputAutosize type="text" formControlName="numberValue5" />
                     <mat-error>{{ numberForm.get('numberValue5').errors ? numberForm.get('numberValue5').errors[0] : ''}}</mat-error>
                 </mat-form-field>
             </div>
@@ -152,7 +152,7 @@
                 <mat-form-field appearance="fill" [style.width.px]="80">
                     <mat-label>Fill</mat-label>
                     <deja-numeric-stepper layout="horizontal-inlay" (increment)="changeValue6(2)" (decrement)="changeValue6(-2)"></deja-numeric-stepper>
-                    <input matInput type="text" formControlName="numberValue6" />
+                    <input matInput inputAutosize type="text" formControlName="numberValue6" />
                     <mat-error>{{ numberForm.get('numberValue6').errors ? numberForm.get('numberValue6').errors[0] : ''}}</mat-error>
                 </mat-form-field>
             </div>

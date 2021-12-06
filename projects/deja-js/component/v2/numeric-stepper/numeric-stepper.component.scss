@@ -26,13 +26,25 @@
     &[deja-numeric-stepper-form-field="horizontal-inlay"] {
         &:not(.disabled) {
             &:hover {
-                input:not([inputautosize]) {
-                    margin: 0 30px;
+                &[input-autosize-form-field] {
+
+                    &.mat-form-field-appearance-fill,
+                    &.mat-form-field-appearance-outline {
+                        .mat-form-field-infix {
+                            padding: 1em 18px;
+                        }
+                    }
                 }
 
-                &.mat-form-field-appearance-fill {
-                    input:not([inputautosize]) {
-                        margin: 0 18px;
+                &:not([input-autosize-form-field]) {
+                    input {
+                        margin: 0 30px;
+                    }
+
+                    &.mat-form-field-appearance-fill {
+                        input {
+                            margin: 0 18px;
+                        }
                     }
                 }
             }

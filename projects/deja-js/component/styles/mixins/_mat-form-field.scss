@@ -18,3 +18,13 @@
         }
     }
 }
+
+@mixin mat-form-field-input-autosize() {
+    .mat-form-field[input-autoSize-form-field] {
+
+        .mat-form-field-infix,
+        .mat-form-field-flex {
+            width: auto;
+        }
+    }
+}
