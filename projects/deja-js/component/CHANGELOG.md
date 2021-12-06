@@ -1,3 +1,10 @@
+# [13.0.0-next.28](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.27...v13.0.0-next.28) (2021-12-06)
+
+
+### Bug Fixes
+
+* **input-autosize.directive:** fix numeric stepper with input-autosize ([8625cd4](https://github.com/DSI-HUG/dejajs-components/commit/8625cd4c53c6b6c4ca6fa1b38ce935e27b99a587))
+
 # [13.0.0-next.27](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.26...v13.0.0-next.27) (2021-12-02)
 
 
