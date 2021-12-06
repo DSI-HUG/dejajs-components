@@ -27,8 +27,10 @@
         &:not(.disabled) {
             &:hover {
                 &[input-autosize-form-field] {
+                    .mat-form-field-infix {
+                        padding: 1em 23px;
+                    }
 
-                    &.mat-form-field-appearance-fill,
                     &.mat-form-field-appearance-outline {
                         .mat-form-field-infix {
                             padding: 1em 18px;
