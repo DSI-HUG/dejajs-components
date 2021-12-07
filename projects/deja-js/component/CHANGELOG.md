@@ -1,3 +1,10 @@
+# [13.0.0-next.30](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.29...v13.0.0-next.30) (2021-12-07)
+
+
+### Bug Fixes
+
+* **numeric-stepper:** original position cause visibility of the shadow ([94a2932](https://github.com/DSI-HUG/dejajs-components/commit/94a2932b9c527e48db67ffd347b76b1eca0ae702))
+
 # [13.0.0-next.29](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.28...v13.0.0-next.29) (2021-12-06)
 
 
