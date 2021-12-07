@@ -73,6 +73,7 @@ export class DejaNumericStepperComponent extends Destroy implements OnInit {
 
     public ngOnInit(): void {
         const calcPositions = (linkedElements: { formFieldElement: HTMLElement; containerElement: HTMLElement; inputElement: HTMLInputElement }): void => {
+            console.log('calcPositions');
             const containerBounds = linkedElements.containerElement?.getBoundingClientRect();
             const formFieldBounds = linkedElements.formFieldElement?.getBoundingClientRect();
             const inputBounds = linkedElements.inputElement.getBoundingClientRect() || formFieldBounds;
@@ -172,7 +173,6 @@ export class DejaNumericStepperComponent extends Destroy implements OnInit {
                 return { formFieldElement, containerElement, inputElement };
             }),
             filter(containerElements => containerElements.formFieldElement && !!containerElements.inputElement),
-            tap(linkedElements => calcPositions(linkedElements)),
             shareReplay(1)
         );
 
