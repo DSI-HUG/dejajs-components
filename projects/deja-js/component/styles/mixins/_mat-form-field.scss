@@ -11,9 +11,13 @@
             }
         }
 
-        &[deja-numeric-stepper-form-field]:not(.disabled):hover {
-            .unit {
-                z-index: 10001;
+        &[deja-numeric-stepper-form-field]:not(.disabled) {
+
+            &:hover,
+            &[hoverOnInit] {
+                .unit {
+                    z-index: 10001;
+                }
             }
         }
     }

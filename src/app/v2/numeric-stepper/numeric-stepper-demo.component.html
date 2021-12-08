@@ -16,7 +16,7 @@
                     <mat-label>Outline</mat-label>
                     <input matInput type="text" [ngModel]="value1 | number:'3.'" (change)="onInput1Change$.next($event)" #numericStepper="ngModel" inputAutosize/>
                     <span class="unit">cm</span>
-                    <deja-numeric-stepper (increment)="value1 = value1 + 20" (decrement)="value1 = value1 - 20"></deja-numeric-stepper>
+                    <deja-numeric-stepper showOnInit (increment)="value1 = value1 + 20" (decrement)="value1 = value1 - 20"></deja-numeric-stepper>
                 </mat-form-field>
             </div>
             <div>

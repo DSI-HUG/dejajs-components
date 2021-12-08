@@ -10,7 +10,7 @@ import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostBinding, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { Destroy, KeyCodes } from '@deja-js/component/core';
-import { combineLatestWith, debounceTime, delay, filter, fromEvent, map, mergeWith, shareReplay, startWith, Subject, switchMap, takeUntil, tap, timer, withLatestFrom } from 'rxjs';
+import { combineLatestWith, debounceTime, delay, filter, fromEvent, map, mergeWith, ReplaySubject, shareReplay, startWith, Subject, switchMap, takeUntil, tap, timer, withLatestFrom } from 'rxjs';
 
 export type DejaNumericStepperLayout = 'vertical' | 'horizontal' | 'horizontal-inlay';
 
@@ -43,6 +43,15 @@ export class DejaNumericStepperComponent extends Destroy implements OnInit {
         return this._arrowIcons;
     }
 
+    @Input()
+    public set showOnInit(value: BooleanInput) {
+        this._showOnInit = coerceBooleanProperty(value);
+    }
+
+    public get showOnInit(): BooleanInput {
+        return this._showOnInit;
+    }
+
     @HostBinding('attr.hover')
     protected hover = null as boolean;
 
@@ -58,9 +67,11 @@ export class DejaNumericStepperComponent extends Destroy implements OnInit {
     public disableUp = false;
     public disableDown = false;
     public clickArrow$ = new Subject<boolean>();
+    public show$ = new ReplaySubject<void>(1);
 
     private validateArrows$ = new Subject<void>();
     private _arrowIcons = false;
+    private _showOnInit = false;
     private arrowSize = 32;
     private parentAppearance: string = null;
 
@@ -226,11 +237,16 @@ export class DejaNumericStepperComponent extends Destroy implements OnInit {
         linkedElements$.pipe(
             switchMap(linkedElements => fromEvent<MouseEvent>(linkedElements.containerElement || linkedElements.formFieldElement, 'mouseenter').pipe(
                 switchMap(() => valueChange$),
+                mergeWith(this.show$.pipe(
+                    delay(200),
+                    tap(() => linkedElements.formFieldElement.setAttribute('hoverOnInit', ''))
+                )),
                 tap(() => calcPositions(linkedElements)),
                 switchMap(() => fromEvent<MouseEvent>(linkedElements.containerElement || linkedElements.formFieldElement, 'mouseleave')),
                 delay(400),
                 tap(() => {
                     linkedElements.formFieldElement.removeAttribute('hover');
+                    linkedElements.formFieldElement.removeAttribute('hoverOnInit');
                 })
             )),
             takeUntil(this.destroyed$)
@@ -265,5 +281,9 @@ export class DejaNumericStepperComponent extends Destroy implements OnInit {
         step$.pipe(
             takeUntil(this.destroyed$)
         ).subscribe();
+
+        if (this.showOnInit) {
+            this.show$.next();
+        }
     }
 }
