@@ -13,8 +13,7 @@
 
         &[deja-numeric-stepper-form-field]:not(.disabled) {
 
-            &:hover,
-            &[hoverOnInit] {
+            &:hover {
                 .unit {
                     z-index: 10001;
                 }

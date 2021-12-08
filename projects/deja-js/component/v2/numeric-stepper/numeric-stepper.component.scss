@@ -10,8 +10,7 @@
 
         &:not(.disabled) {
 
-            &:hover,
-            &[hoverOnInit] {
+            &:hover {
                 .mat-form-field-label-wrapper {
                     opacity: 0 !important;
                 }
@@ -28,8 +27,7 @@
     &[deja-numeric-stepper-form-field="horizontal-inlay"] {
         &:not(.disabled) {
 
-            &:hover,
-            &[hoverOnInit] {
+            &:hover {
                 &[input-autosize-form-field] {
                     .mat-form-field-infix {
                         padding: 1em 23px;
@@ -90,8 +88,7 @@
 
     &:not(.disabled) {
 
-        &:hover,
-        &[hoverOnInit] {
+        &:hover {
 
             .arrow,
             .shadow {
@@ -115,7 +112,6 @@
         }
 
         &:hover,
-        &[hoverOnInit],
         &[hover] {
 
             .arrow,

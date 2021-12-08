@@ -238,15 +238,13 @@ export class DejaNumericStepperComponent extends Destroy implements OnInit {
             switchMap(linkedElements => fromEvent<MouseEvent>(linkedElements.containerElement || linkedElements.formFieldElement, 'mouseenter').pipe(
                 switchMap(() => valueChange$),
                 mergeWith(this.show$.pipe(
-                    delay(200),
-                    tap(() => linkedElements.formFieldElement.setAttribute('hoverOnInit', ''))
+                    delay(200)
                 )),
                 tap(() => calcPositions(linkedElements)),
                 switchMap(() => fromEvent<MouseEvent>(linkedElements.containerElement || linkedElements.formFieldElement, 'mouseleave')),
                 delay(400),
                 tap(() => {
                     linkedElements.formFieldElement.removeAttribute('hover');
-                    linkedElements.formFieldElement.removeAttribute('hoverOnInit');
                 })
             )),
             takeUntil(this.destroyed$)
