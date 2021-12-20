@@ -131,7 +131,7 @@ export class DejaNumericStepperComponent extends Destroy implements OnInit {
                 this.topUp = this.topDown = inputBounds.top + (inputBounds.height - this.arrowSize) / 2 - bounds.top;
 
             } else {
-                this.heightShadow = 106;
+                this.heightShadow = 90;
                 this.topShadow = inputBounds.top - bounds.top + (inputBounds.height - this.heightShadow) / 2;
                 this.leftShadow = (containerBounds?.left ?? formFieldBounds.left) - bounds.left;
                 this.topUp = this.topShadow;
