@@ -1,3 +1,10 @@
+# [13.0.0-next.32](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.31...v13.0.0-next.32) (2021-12-08)
+
+
+### Bug Fixes
+
+* **numeric-stepper.component:** add a showOnInit input for some special usages ([9c962b1](https://github.com/DSI-HUG/dejajs-components/commit/9c962b11ec312ef17620b8367be2c4e8aa63dbeb))
+
 # [13.0.0-next.31](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.30...v13.0.0-next.31) (2021-12-08)
 
 
