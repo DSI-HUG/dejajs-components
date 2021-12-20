@@ -85,17 +85,21 @@ export class DejaTimePickerComponent extends Destroy implements ControlValueAcce
             distinctUntilChanged(),
             map(hours => {
                 if (typeof hours === 'object') {
-                    return parseInt((hours.target as HTMLInputElement).value, 10);
+                    const value = (hours.target as HTMLInputElement).value;
+                    hours = value !== undefined ? parseInt(value, 10) : undefined as number;
                 }
-                return hours;
+                return !isNaN(hours) ? hours : undefined;
             }),
             takeUntil(this.destroyed$)
         ).subscribe(hours => {
-            const value = this.value?.getTime();
-            const clone = value ? new Date(value) : set(new Date(), { hours: 0, minutes: 0, seconds: 0 });
-            clone.setHours(hours);
-
-            this.value = clone;
+            if (hours !== undefined || this.mode === 'fullTimeWithMinutesDisabled') {
+                const value = this.value?.getTime();
+                const clone = value ? new Date(value) : set(new Date(), { hours: 0, minutes: 0, seconds: 0 });
+                clone.setHours(hours || 0);
+                this.value = clone;
+            } else {
+                this.value = undefined;
+            }
             this.changeDetectorRef.markForCheck();
         });
 
@@ -104,22 +108,27 @@ export class DejaTimePickerComponent extends Destroy implements ControlValueAcce
             distinctUntilChanged(),
             map(minutes => {
                 if (typeof minutes === 'object') {
-                    return parseInt((minutes.target as HTMLInputElement).value, 10);
+                    const value = (minutes.target as HTMLInputElement).value;
+                    minutes = value !== undefined ? parseInt(value, 10) : undefined as number;
                 }
-                return minutes;
+                return !isNaN(minutes) ? minutes : undefined;
             }),
             takeUntil(this.destroyed$)
         ).subscribe(minutes => {
-            const value = this.value?.getTime();
-            const clone = value ? new Date(value) : set(new Date(), { hours: 0, minutes: 0, seconds: 0 });
-            if (minutes < 0) {
-                minutes += 60;
-            } else if (minutes >= 60) {
-                minutes -= 60;
+            if (minutes !== undefined || this.mode === 'fullTimeWithHoursDisabled') {
+                const value = this.value?.getTime();
+                const clone = value ? new Date(value) : set(new Date(), { hours: 0, minutes: 0, seconds: 0 });
+                if (minutes < 0) {
+                    minutes += 60;
+                } else if (minutes >= 60) {
+                    minutes -= 60;
+                }
+                clone.setMinutes(minutes || 0);
+                this.value = clone;
+            } else {
+                this.value = undefined;
             }
-            clone.setMinutes(minutes);
 
-            this.value = clone;
             this.changeDetectorRef.markForCheck();
         });
     }
@@ -142,7 +151,7 @@ export class DejaTimePickerComponent extends Destroy implements ControlValueAcce
     /** From ControlValueAccessor interface */
     public writeValue(value: Date): void {
         if ((value || null) !== (this._value || null)) {
-            this._value = value ? new Date(value.getTime()) : set(new Date(), { hours: 0, minutes: 0, seconds: 0 });
+            this._value = value && new Date(value.getTime());
             this.changeDetectorRef.markForCheck();
         }
     }
