@@ -1,3 +1,10 @@
+# [13.0.0-next.33](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.32...v13.0.0-next.33) (2021-12-20)
+
+
+### Bug Fixes
+
+* **time-picker:** fix height and alignment in a inline form row ([655e800](https://github.com/DSI-HUG/dejajs-components/commit/655e800001a5cbc5b1310af6bd6e90d7a079331e))
+
 # [13.0.0-next.32](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.31...v13.0.0-next.32) (2021-12-08)
 
 
