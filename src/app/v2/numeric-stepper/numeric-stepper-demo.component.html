@@ -126,8 +126,8 @@
         <mat-toolbar color="primary">Numeric Stepper with inlay horizontal layout</mat-toolbar>
         <mat-card-content>
             <div [formGroup]="numberForm">
-                <mat-form-field appearance="outline" floatLabel="always">
-                    <mat-label>Outline appearance</mat-label>
+                <mat-form-field appearance="outline">
+                    <mat-label>Outline</mat-label>
                     <deja-numeric-stepper layout="horizontal-inlay" (increment)="changeValue3(2)" (decrement)="changeValue3(-2)"></deja-numeric-stepper>
                     <input matInput inputAutosize type="text" formControlName="numberValue3"/>
                     <span class="unit">cm</span>

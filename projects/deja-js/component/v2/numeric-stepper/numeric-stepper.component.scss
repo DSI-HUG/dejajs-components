@@ -26,8 +26,13 @@
 
     &[deja-numeric-stepper-form-field="horizontal-inlay"] {
         &:not(.disabled) {
-
             &:hover {
+                &:not([float-label="always"]) {
+                    .mat-form-field-label.mat-empty {
+                        padding-left: 23px
+                    }
+                }
+
                 &[inputAutosizeFormField] {
                     .mat-form-field-infix {
                         padding: 1em 23px;

@@ -31,6 +31,19 @@ export class InputAutosizeDirective extends Destroy implements OnInit {
         const inputElement = this.elementRef.nativeElement;
         inputElement.style.visibility = 'hidden';
 
+        // find formfield if any
+        let parentElement = inputElement.parentElement;
+        if (parentElement.classList.contains('mat-form-field-infix')) {
+            // eslint-disable-next-line no-loops/no-loops
+            while (parentElement) {
+                if (parentElement.classList.contains('mat-form-field')) {
+                    parentElement.setAttribute('input-autoSize-form-field', '');
+                    break;
+                }
+                parentElement = parentElement.parentElement;
+            }
+        }
+
         const computedStyles = window.getComputedStyle(inputElement);
         const font = `${computedStyles.fontSize} ${computedStyles.fontFamily}`;
         const context = this.canvas.getContext('2d');
