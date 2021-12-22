@@ -1,3 +1,10 @@
+# [13.0.0-next.36](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.35...v13.0.0-next.36) (2021-12-22)
+
+
+### Bug Fixes
+
+* **numeric-stepper-v2:** fix label spacing if no values inlay and hover ([6243669](https://github.com/DSI-HUG/dejajs-components/commit/6243669a0ab25a9b10357fa084a44235f9bdcc6b))
+
 # [13.0.0-next.35](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.34...v13.0.0-next.35) (2021-12-22)
 
 
