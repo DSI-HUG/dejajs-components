@@ -1,3 +1,10 @@
+# [13.0.0-next.35](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.34...v13.0.0-next.35) (2021-12-22)
+
+
+### Bug Fixes
+
+* inputAutosize and inputAutosizeFormField ([4694ceb](https://github.com/DSI-HUG/dejajs-components/commit/4694ceb57ea588da0e389e428e1964dc19777379))
+
 # [13.0.0-next.34](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.33...v13.0.0-next.34) (2021-12-20)
 
 
