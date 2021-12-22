@@ -23,7 +23,7 @@
 }
 
 @mixin mat-form-field-input-autosize() {
-    .mat-form-field[input-autoSize-form-field] {
+    .mat-form-field[inputAutosizeFormField] {
 
         .mat-form-field-infix,
         .mat-form-field-flex {

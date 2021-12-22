@@ -12,7 +12,7 @@
         <mat-toolbar color="primary">Numeric Stepper in Material Form Field with different appearances</mat-toolbar>
         <mat-card-content>
             <div deja-numeric-stepper-container>
-                <mat-form-field appearance="outline">
+                <mat-form-field appearance="outline" inputAutosizeFormField>
                     <mat-label>Outline</mat-label>
                     <input matInput type="text" [ngModel]="value1 | number:'3.'" (change)="onInput1Change$.next($event)" #numericStepper="ngModel" inputAutosize/>
                     <span class="unit">cm</span>
@@ -50,6 +50,7 @@
                     <mat-label>Outline appearance</mat-label>
                     <deja-numeric-stepper (increment)="changeValue3(2)" (decrement)="changeValue3(-2)"></deja-numeric-stepper>
                     <input matInput type="text" formControlName="numberValue3" />
+                    <span class="unit">cm</span>
                     <mat-error>{{ numberForm.get('numberValue3').errors ? numberForm.get('numberValue3').errors[0] : ''}}</mat-error>
                 </mat-form-field>
             </div>
@@ -89,7 +90,8 @@
                 <mat-form-field appearance="outline" [style.width.px]="130">
                     <mat-label>Outline appearance</mat-label>
                     <deja-numeric-stepper layout="horizontal" (increment)="changeValue3(2)" (decrement)="changeValue3(-2)"></deja-numeric-stepper>
-                    <input matInput type="text" formControlName="numberValue3" />
+                    <input matInput type="text" formControlName="numberValue3" inputAutosize />
+                    <span class="unit">cm</span>
                     <mat-error>{{ numberForm.get('numberValue3').errors ? numberForm.get('numberValue3').errors[0] : ''}}</mat-error>
                 </mat-form-field>
             </div>

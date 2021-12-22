@@ -28,7 +28,7 @@
         &:not(.disabled) {
 
             &:hover {
-                &[input-autosize-form-field] {
+                &[inputAutosizeFormField] {
                     .mat-form-field-infix {
                         padding: 1em 23px;
                     }
@@ -40,7 +40,7 @@
                     }
                 }
 
-                &:not([input-autosize-form-field]) {
+                &:not([inputAutosizeFormField]) {
                     input {
                         margin: 0 30px;
                     }
