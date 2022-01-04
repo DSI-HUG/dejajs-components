@@ -6,10 +6,13 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 import { Injectable, NgZone } from '@angular/core';
-import { IDisposable } from 'monaco-editor';
 import { Observable, shareReplay, take } from 'rxjs';
 
 import { EditorOptions, Language } from './options/editor-options.model';
+
+export interface IDisposable {
+    dispose?: () => void;
+}
 
 export interface MonacoEditorModel {
     id?: string;

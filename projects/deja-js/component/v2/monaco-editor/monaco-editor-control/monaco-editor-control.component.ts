@@ -9,10 +9,9 @@
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
 import { Destroy } from '@deja-js/component/core';
-import { IDisposable } from 'monaco-editor';
 import { debounceTime, Subject, takeUntil, tap } from 'rxjs';
 
-import { MonacoApi, MonacoEditorControl, MonacoEditorModel } from '../monaco-editor.service';
+import { IDisposable, MonacoApi, MonacoEditorControl, MonacoEditorModel } from '../monaco-editor.service';
 import { EditorOptions } from '../options/editor-options.model';
 
 /**
