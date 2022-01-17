@@ -31,6 +31,10 @@ jobs:
       - name: Build
         run: npm run build:lib
       - name: Release
+        env:
+            GITHUB_TOKEN: ${{ secrets.GIT_ACTIONS_TOKEN }}
+            user_name: github-actions[bot]
+            user_email: 41898282+github-actions[bot]@users.noreply.github.com
         run: npm run release:ci
       - name: Publish
         env:
