@@ -3,25 +3,20 @@ deja-date-time-selector {
         display: flex;
         flex-direction: column;
         margin: 0 auto;
-        width: 310px;
+        width: 280px;
         outline: none;
-
-        &.timeonly {
-            height: 15rem;
-        }
 
         #date-header {
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            font-size: 2rem;
-            height: 94px;
+            font-size: 1.4rem;
             padding: 0;
             position: relative;
 
             [current] {
-                font-size: 2rem;
+                font-size: 1.5rem;
             }
 
             .year {
@@ -44,7 +39,7 @@ deja-date-time-selector {
         }
 
         #time-selector {
-            height: 8rem;
+            padding: 1.4rem;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -52,19 +47,19 @@ deja-date-time-selector {
 
         #date-selector {
             margin: 0 auto;
-            width: 310px;
+            width: 280px;
 
             #sub-header {
                 .month {
                     align-items: center;
                     display: flex;
                     justify-content: center;
-                    padding: 1rem;
+                    padding: 0 0.3rem;
                     text-align: center;
 
                     span {
                         flex: 1 1 auto;
-                        font-size: 1rem;
+                        font-size: 0.9rem;
                         text-transform: capitalize;
                     }
 
