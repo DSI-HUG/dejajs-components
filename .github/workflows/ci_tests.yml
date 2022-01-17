@@ -2,10 +2,11 @@ name: CI tests
 
 on:
   pull_request:
-    - master
-    - develop
-    - next/13.x.x
-    - release/13.x.x
+      branches:
+        - master
+        - develop
+        - next/13.x.x
+        - release/13.x.x
 
 jobs:
   ci_tests:
