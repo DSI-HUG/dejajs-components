@@ -3,9 +3,12 @@ name: CI tests
 on:
   push:
     branches:
-    - '**'
+    - master
+    - develop
+    - next/13.x.x
+    - release/13.x.x
     tags-ignore:
-    - '**'
+    - skip-ci
   pull_request:
   workflow_dispatch:
 
@@ -26,5 +29,9 @@ jobs:
         run: npm clean-install
       - name: Lint
         run: npm run lint
+      - name: Lint
+        run: npm run build:lib
+      - name: license-check
+        run: npm run license-check
       - name: Test
-        run: npm run test
+        run: npm run test:lib:ci
