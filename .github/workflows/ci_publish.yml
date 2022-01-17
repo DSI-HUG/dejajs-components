@@ -1,8 +1,15 @@
 name: Publish library to NPM
 
 on:
+  push:
+    branches:
+        - master
+        - develop
+        - next/13.x.x
+        - release/13.x.x
+    tags-ignore:
+        - skip-ci
   release:
-    types: [created]
 
 jobs:
   ci_publish:
