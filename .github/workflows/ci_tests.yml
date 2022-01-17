@@ -1,16 +1,11 @@
 name: CI tests
 
 on:
-  push:
-    branches:
+  pull_request:
     - master
     - develop
     - next/13.x.x
     - release/13.x.x
-    tags-ignore:
-    - skip-ci
-  pull_request:
-  workflow_dispatch:
 
 jobs:
   ci_tests:
