@@ -38,6 +38,10 @@ deja-date-time-selector {
             }
         }
 
+        &.timeonly  #date-header {
+            padding: 0.4rem;
+        }
+
         #time-selector {
             padding: 1.4rem;
             display: flex;
