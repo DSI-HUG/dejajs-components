@@ -103,6 +103,7 @@ export class DejaOverlayComponent extends Destroy {
     private _positionsForMobile: DejaConnectionPositionPair[];
 
     private _isMobile = false;
+    private _disableMobileDisplay = false;
     private disableMediaService = false;
 
     public constructor(private changeDetectorRef: ChangeDetectorRef, private elementRef: ElementRef, private overlayContainer: OverlayContainer, mediaService: MediaService) {
@@ -115,7 +116,7 @@ export class DejaOverlayComponent extends Destroy {
         });
 
         mediaService.isMobile$.pipe(
-            takeWhile(() => !this.disableMediaService),
+            takeWhile(() => !this.disableMediaService && !this._disableMobileDisplay),
             takeUntil(this.destroyed$)
         ).subscribe(value => {
             this._isMobile = value;
@@ -152,7 +153,7 @@ export class DejaOverlayComponent extends Destroy {
     }
 
     public get isMobile(): BooleanInput {
-        return this._isMobile;
+        return this._isMobile && !this._disableMobileDisplay;
     }
 
     @Input()
@@ -160,6 +161,16 @@ export class DejaOverlayComponent extends Destroy {
         this._isMobile = coerceBooleanProperty(value);
         this.updateOriginOverlay();
         this.disableMediaService = true;
+    }
+
+    /** Désactiver l'affichage mobile */
+    @Input()
+    public set disableMobileDisplay(value: BooleanInput) {
+        this._disableMobileDisplay = coerceBooleanProperty(value) || false;
+    }
+
+    public get disableMobileDisplay(): BooleanInput {
+        return this._disableMobileDisplay;
     }
 
     public get width(): NumberInput {
@@ -204,7 +215,7 @@ export class DejaOverlayComponent extends Destroy {
         this.overlayOffsetY = offsetY || 0;
         const e = eventOrOffsetX as MouseEvent;
         const target = e?.target;
-        this.overlayOrigin = new CdkOverlayOrigin(new ElementRef((this.isMobile && document.body) || target || this.ownerElement || this.elementRef.nativeElement));
+        this.overlayOrigin = new CdkOverlayOrigin(new ElementRef((this.isMobile && document.body) || target || this._ownerElement || this.elementRef.nativeElement));
         this.isVisible = true;
         this.changeDetectorRef.markForCheck();
         timer(1).pipe(

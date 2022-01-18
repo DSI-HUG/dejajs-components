@@ -151,6 +151,16 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
         return this._allowFreeEntry;
     }
 
+    /** Désactiver l'affichage mobile */
+    @Input()
+    public set disableMobileDisplay(value: BooleanInput) {
+        this._disableMobileDisplay = coerceBooleanProperty(value) || false;
+    }
+
+    public get disableMobileDisplay(): BooleanInput {
+        return this._disableMobileDisplay;
+    }
+
     /** Mask for input */
     public _mask = [] as (string | RegExp)[];
 
@@ -194,6 +204,7 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
     private focus$ = new Subject();
     private _showDropDown = false;
     private _positions = DejaConnectionPositionPair.default;
+    private _disableMobileDisplay = false;
 
     private _inputModel: string;
     private cursorPosition: number;
