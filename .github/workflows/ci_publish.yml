@@ -17,6 +17,8 @@ jobs:
     steps:
       - name: Checkout sources
         uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.PUBLISH_TOKEN }}
       - name: Setup node
         uses: actions/setup-node@v2
         with:
@@ -30,12 +32,14 @@ jobs:
         run: npm run lint
       - name: Build
         run: npm run build:lib
-      - name: Release
+      - name: Install semantic-release extra plugins
+        run: npm install --save-dev @semantic-release/changelog @semantic-release/git
+      - name: Semantic Release
+        run: npx semantic-release
         env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            GITHUB_TOKEN: ${{ secrets.PUBLISH_TOKEN }}
             user_name: github-actions[bot]
             user_email: 41898282+github-actions[bot]@users.noreply.github.com
-        run: npm run release:ci
       - name: Publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
