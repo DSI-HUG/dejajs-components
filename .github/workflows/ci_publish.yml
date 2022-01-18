@@ -30,9 +30,9 @@ jobs:
         run: npm run lint
       - name: Build
         run: npm run build:lib
-      - name: Release
+      - name: Semantic Release
         env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            GITHUB_TOKEN: ${{ secrets.PUBLISH_TOKEN }}
             user_name: github-actions[bot]
             user_email: 41898282+github-actions[bot]@users.noreply.github.com
         run: npm run release:ci
