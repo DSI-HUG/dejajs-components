@@ -7,8 +7,6 @@ on:
         - develop
         - next/13.x.x
         - release/13.x.x
-    tags-ignore:
-        - skip-ci
   release:
 
 jobs:
@@ -35,7 +33,7 @@ jobs:
       - name: Install semantic-release extra plugins
         run: npm install --save-dev @semantic-release/changelog @semantic-release/git
       - name: Semantic Release
-        run: npx semantic-release
+        run: npm run release:ci
         env:
             GITHUB_TOKEN: ${{ secrets.PUBLISH_TOKEN }}
             user_name: github-actions[bot]
@@ -43,4 +41,4 @@ jobs:
       - name: Publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npm publish ./dist/deja-js --access public
+        run: npm publish ./dist/deja-js/component --access public
