@@ -16,7 +16,7 @@ jobs:
       - name: Checkout sources
         uses: actions/checkout@v2
         with:
-          token: ${{ secrets.NPM_PUBLISH_TOKEN }}
+          token: ${{ secrets.PUBLISH_TOKEN }}
       - name: Setup node
         uses: actions/setup-node@v2
         with:
@@ -24,7 +24,7 @@ jobs:
           registry-url: https://registry.npmjs.org/
       - run: npm run create:npmrc
         env:
-          NPM_TOKEN: ${{secrets.NPM_TOKEN}}
+          NPM_TOKEN: ${{secrets.NPM_PUBLISH_TOKEN}}
       - name: Make sure npm is latest
         run: npm install -g npm@latest
       - name: Install dependencies
