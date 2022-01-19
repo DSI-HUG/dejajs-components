@@ -1,3 +1,10 @@
+# [13.0.0-next.37](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.36...v13.0.0-next.37) (2022-01-19)
+
+
+### Bug Fixes
+
+* **monaco-editor:** fix monaco editor dependency even if not used ([16f9fa6](https://github.com/DSI-HUG/dejajs-components/commit/16f9fa6f678bac36479b5623fc453a46b0549f26))
+
 # [13.0.0-next.36](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.35...v13.0.0-next.36) (2021-12-22)
 
 
