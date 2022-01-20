@@ -3,8 +3,6 @@ name: CI tests
 on:
   pull_request:
       branches:
-        - master
-        - develop
         - next/13.x.x
         - release/13.x.x
 
