@@ -29,7 +29,6 @@
         "build:lib:watch": "node --max-old-space-size=8192 ./node_modules/@angular/cli/bin/ng build @deja-js/component --watch",
         "release": "semantic-release --no-ci",
         "release:ci": "semantic-release",
-        "create:npmrc": "node ./scripts/create-npmrc.js",
         "postinstall": "ngcc && node ./husky.js",
         "stats": "webpack-bundle-analyzer ./dist/demo/stats.json",
         "analyze": "ng build --statsJson=true && webpack-bundle-analyzer --port 8989 ./dist/demo/stats.json",
