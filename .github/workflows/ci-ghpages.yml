@@ -1,13 +1,7 @@
 name: Deploy docs to GitHub Pages
 
 on:
-  workflow_run:
-    workflows:
-      - Publish
-    types:
-      - requested
-    branches:
-      - next/13.x.x
+  workflow_call:
 
 jobs:
   ci_ghpages:
