@@ -11,8 +11,6 @@ jobs:
   ci_publish:
     runs-on: ubuntu-latest
     steps:
-      call-workflow:
-        uses: DSI-HUG/dejajs-components/.github/workflows/ci-ghpages.yml@next/13.x.x
       - name: Checkout sources
         uses: actions/checkout@v2
         with:
