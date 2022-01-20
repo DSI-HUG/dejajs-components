@@ -2,13 +2,15 @@ name: Deploy docs to GitHub Pages
 
 on:
   workflow_run:
-    workflows: [Publish]
-    types: [completed]
-    branches: [next/13.x.x]
+    workflows:
+      - Publish
+    types:
+      - completed
+    branches:
+      - next/13.x.x
 
 jobs:
   ci_ghpages:
-    name: GH Pages
     runs-on: ubuntu-latest
     steps:
       - name: Checkout sources

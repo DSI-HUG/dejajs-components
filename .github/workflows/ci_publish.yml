@@ -1,4 +1,4 @@
-name: Publish library to NPM
+name: Publish
 
 on:
   push:
@@ -9,7 +9,6 @@ on:
 
 jobs:
   ci_publish:
-    name: Publish
     runs-on: ubuntu-latest
     steps:
       - name: Checkout sources
