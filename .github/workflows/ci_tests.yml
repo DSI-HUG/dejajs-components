@@ -3,13 +3,12 @@ name: CI tests
 on:
   pull_request:
       branches:
-        - master
-        - develop
         - next/13.x.x
         - release/13.x.x
 
 jobs:
   ci_tests:
+    name: Test Pull-Request
     runs-on: ubuntu-latest
     steps:
       - name: Checkout sources

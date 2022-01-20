@@ -3,13 +3,13 @@ name: Publish library to NPM
 on:
   push:
     branches:
-        - master
-        - develop
-        - release/13.x.x
+      - next/13.x.x
+      - release/13.x.x
   release:
 
 jobs:
   ci_publish:
+    name: Publish
     runs-on: ubuntu-latest
     steps:
       - name: Checkout sources
