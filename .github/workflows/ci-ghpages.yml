@@ -5,7 +5,6 @@ on:
     branches:
         - master
         - next/13.x.x
-    paths: [dist/**]
 
 jobs:
   ci_docs:
