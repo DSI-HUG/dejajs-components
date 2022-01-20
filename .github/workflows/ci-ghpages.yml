@@ -5,7 +5,7 @@ on:
     workflows:
       - Publish
     types:
-      - completed
+      - requested
     branches:
       - next/13.x.x
 
