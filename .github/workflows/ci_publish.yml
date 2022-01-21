@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - develop
-    release:
+      - master
 
 jobs:
   ci_publish:
@@ -39,13 +39,10 @@ jobs:
         run: npm publish ./dist/deja-js/component --access public
       - name: Merge master back to dev
         if: github.ref == 'refs/heads/master'
-        run: |
-          git fetch
-          git checkout develop
-          git pull
-          git merge --no-ff master -m "merge branch 'master' of github.com:DSI-HUG/dejajs-components into develop [skip ci]"
-          git push
-        env:
-            GITHUB_TOKEN: ${{ secrets.PUBLISH_TOKEN }}
-            user_name: github-actions[bot]
-            user_email: 41898282+github-actions[bot]@users.noreply.github.com
+        uses: everlytic/branch-merge@1.1.2
+        with:
+          github_token: ${{ secrets.PUBLISH_TOKEN }}
+          source_ref: 'master'
+          target_branch: 'develop'
+          commit_message_template: 'merge branch {source_ref} of github.com:DSI-HUG/dejajs-components into {target_branch} [skip ci]'
+
