@@ -40,7 +40,10 @@
                         "type": "feat",
                         "release": "patch"
                     }
-                ]
+                ],
+                "parserOpts": {
+                    "noteKeywords": []
+                }
             }
         ],
         "@semantic-release/release-notes-generator",
