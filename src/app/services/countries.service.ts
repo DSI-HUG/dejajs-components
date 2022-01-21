@@ -8,10 +8,9 @@
 
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Color, MaterialColors } from '@deja-js/component/core';
+import { Color, MaterialColorService } from '@deja-js/component/core/graphics';
 import { ObjectMapper } from 'json-object-mapper';
-import { Observable, of } from 'rxjs';
-import { map, shareReplay } from 'rxjs/operators';
+import { map, Observable, of, shareReplay } from 'rxjs';
 
 export class Country {
     public displayName: string = void 0;
@@ -21,12 +20,14 @@ export class Country {
     public equals: (item: Country) => boolean;
 }
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class CountriesService {
     private countriesDic = {} as { [code: string]: Country };
     private materialColors: Color[];
 
-    public constructor(private httpClient: HttpClient, materialColors: MaterialColors) {
+    public constructor(private httpClient: HttpClient, materialColors: MaterialColorService) {
         this.materialColors = materialColors.getPalet('700');
     }
 

@@ -9,11 +9,9 @@
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
 import { Destroy } from '@deja-js/component/core';
-import { IDisposable } from 'monaco-editor';
-import { Subject } from 'rxjs';
-import { debounceTime, takeUntil, tap } from 'rxjs/operators';
+import { debounceTime, Subject, takeUntil, tap } from 'rxjs';
 
-import { MonacoApi, MonacoEditorControl, MonacoEditorModel } from '../monaco-editor.service';
+import { IDisposable, MonacoApi, MonacoEditorControl, MonacoEditorModel } from '../monaco-editor.service';
 import { EditorOptions } from '../options/editor-options.model';
 
 /**
@@ -108,7 +106,7 @@ export class MonacoEditorControlComponent extends Destroy implements OnInit {
     private _options: EditorOptions;
     private _monacoEditorApi: MonacoApi;
 
-    private createEditor$ = new Subject();
+    private createEditor$ = new Subject<void>();
 
     private get editableModel(): MonacoEditorModel {
         const model = this.editor?.getModel();
@@ -128,7 +126,9 @@ export class MonacoEditorControlComponent extends Destroy implements OnInit {
         console.log('MonacoEditorControlComponent constructor');
 
         this.createEditor$.pipe(
-            tap(() => this.editor = null),
+            tap(() => {
+                this.editor = null;
+            }),
             debounceTime(100),
             takeUntil(this.destroyed$)
         ).subscribe(() => {

@@ -8,8 +8,7 @@
 
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, combineLatest, fromEvent, merge, Observable, of, ReplaySubject, Subject } from 'rxjs';
-import { debounceTime, delay, distinctUntilChanged, filter, map, shareReplay, startWith, switchMap, take, tap, withLatestFrom } from 'rxjs/operators';
+import { BehaviorSubject, combineLatestWith, debounceTime, delay, distinctUntilChanged, filter, fromEvent, map, mergeWith, Observable, of, ReplaySubject, shareReplay, startWith, Subject, switchMap, take, tap, withLatestFrom } from 'rxjs';
 
 export type ViewPortMode = 'disabled' | 'fixed' | 'variable' | 'auto';
 
@@ -81,7 +80,8 @@ export class ViewPortService<T> {
             distinctUntilChanged()
         );
 
-        const deleteSizeCache$ = (): Observable<[ViewPortItem<T>[], ViewPortMode]> => combineLatest([this.items$, mode$]).pipe(
+        const deleteSizeCache$ = (): Observable<[ViewPortItem<T>[], ViewPortMode]> => this.items$.pipe(
+            combineLatestWith(mode$),
             take(1),
             tap(([items, mode]) => {
                 if (items?.length && mode === 'auto') {
@@ -90,7 +90,8 @@ export class ViewPortService<T> {
             })
         );
 
-        const direction$ = combineLatest([dir$, this.deleteSizeCache$]).pipe(
+        const direction$ = dir$.pipe(
+            combineLatestWith(this.deleteSizeCache$),
             switchMap(([direction]) =>
                 // Reset items size when direction change in auto mode
                 deleteSizeCache$().pipe(
@@ -255,25 +256,27 @@ export class ViewPortService<T> {
                     } else {
                         // Measure items size
                         this.log('calcAutoSizeViewPort: measure');
-                        return merge(measure$, measure$.pipe(
-                            delay(1),
-                            tap(() => {
-                                const elements = Array.from(params.element.getElementsByClassName('listitem'));
-                                elements.forEach(itemElement => {
-                                    const index = +itemElement.getAttribute('flat');
-                                    const item = viewPort.visibleItems[index - viewPort.startIndex];
-                                    if (item) {
-                                        item.size = clientSize(itemElement as HTMLElement, params.direction);
-                                        this.log('calcAutoSizeViewPort: item found', item, 'measured size', item.size, 'HTML Element', itemElement);
-                                    } else {
-                                        this.log('calcAutoSizeViewPort: item not found', item);
-                                    }
-                                });
-                                // Recalc Viewport size
-                                viewPort.viewPortSize = viewPort.visibleItems.reduce((size, item) => size += item.size || params.itemsSize, 0);
-                            }),
-                            switchMap(() => calcVariableSizeViewPort$(params, items, viewPort.targetScrollPos || scrollPosition, containerSize))
-                        ));
+                        return measure$.pipe(
+                            mergeWith(measure$.pipe(
+                                delay(1),
+                                tap(() => {
+                                    const elements = Array.from(params.element.getElementsByClassName('listitem'));
+                                    elements.forEach(itemElement => {
+                                        const index = +itemElement.getAttribute('flat');
+                                        const item = viewPort.visibleItems[index - viewPort.startIndex];
+                                        if (item) {
+                                            item.size = clientSize(itemElement as HTMLElement, params.direction);
+                                            this.log('calcAutoSizeViewPort: item found', item, 'measured size', item.size, 'HTML Element', itemElement);
+                                        } else {
+                                            this.log('calcAutoSizeViewPort: item not found', item);
+                                        }
+                                    });
+                                    // Recalc Viewport size
+                                    viewPort.viewPortSize = viewPort.visibleItems.reduce((size, item) => size += item.size || params.itemsSize, 0);
+                                }),
+                                switchMap(() => calcVariableSizeViewPort$(params, items, viewPort.targetScrollPos || scrollPosition, containerSize))
+                            ))
+                        );
                     }
                 })
             );
@@ -300,10 +303,12 @@ export class ViewPortService<T> {
 
             if (elements.length !== items.length && (bindIfAny ?? true)) {
                 const measure$ = of(viewPort);
-                return merge(measure$, measure$.pipe(
-                    delay(1),
-                    switchMap(() => calcDisabledViewPort$(params, items, scrollPosition, containerSize, false))
-                ));
+                return measure$.pipe(
+                    mergeWith(measure$.pipe(
+                        delay(1),
+                        switchMap(() => calcDisabledViewPort$(params, items, scrollPosition, containerSize, false))
+                    ))
+                );
             }
 
             if (!params.ensureParams || params.ensureParams.index === undefined || !params.ensureParams.atEnd) {
@@ -406,10 +411,12 @@ export class ViewPortService<T> {
                         if (params.mode !== 'disabled' && listSize < 80) {
                             // Measure again container and recalc viewport
                             const measure$ = of(this.measureViewPort);
-                            return merge(measure$, measure$.pipe(
-                                delay(1),
-                                switchMap(() => calcViewPort$(params, items, scrollPosition, true))
-                            ));
+                            return measure$.pipe(
+                                mergeWith(measure$.pipe(
+                                    delay(1),
+                                    switchMap(() => calcViewPort$(params, items, scrollPosition, true))
+                                ))
+                            );
                         } else if (endScrollPos < 0 || (items.length && endScrollPos > 0 && (viewPort.targetScrollPos || scrollPosition) > endScrollPos)) {
                             // Scroll position is over the last item
                             // Ensure last item visible and recalc viewport
@@ -471,14 +478,15 @@ export class ViewPortService<T> {
             shareReplay({ bufferSize: 1, refCount: false })
         );
 
-        const resize$ = fromEvent(window, 'resize').pipe(
+        const resize$ = fromEvent<Event>(window, 'resize').pipe(
             debounceTime(5),
             switchMap(() => deleteSizeCache$().pipe(
                 map(() => false)
             ))
         );
 
-        const refresh$ = merge(this.refresh$, resize$).pipe(
+        const refresh$ = this.refresh$.pipe(
+            mergeWith(resize$),
             withLatestFrom(this.items$),
             tap(([clearMeasuredSize, items]) => {
                 if (clearMeasuredSize && items?.length) {
@@ -494,13 +502,11 @@ export class ViewPortService<T> {
         );
 
         // Calc view port observable
-        const viewPortParams$ = combineLatest([element$, maxSize$, mode$, direction$, itemsSize$, ensureParams$]).pipe(
+        const viewPort$ = element$.pipe(
+            combineLatestWith(maxSize$, mode$, direction$, itemsSize$, ensureParams$),
             map(([element, maxSize, mode, direction, itemsSize, ensureParams]) => ({ element, maxSize, mode, direction, itemsSize, ensureParams } as ViewPortParams)),
-            debounceTime(1)
-        );
-
-        // .pipe(tap(_x => {debugger}))
-        const viewPort$ = combineLatest([viewPortParams$, this.items$, scrollPosition$, refresh$]).pipe(
+            debounceTime(1),
+            combineLatestWith(this.items$, scrollPosition$, refresh$),
             filter(([params]) => !!params.element),
             switchMap(([params, items, scrollPosition]) => {
                 this.log('scrollPosition', scrollPosition);
@@ -511,29 +517,31 @@ export class ViewPortService<T> {
                     // Set the viewlist to the maximum height to measure the real max-height defined in the css
                     // Use a blank div to do that
                     const measure$ = of(this.measureViewPort);
-                    vp$ = merge(measure$, measure$.pipe(
-                        delay(1), // Wait next life cycle for the result
-                        switchMap(() => {
-                            // Get max size from container
-                            maxSizeValue = this.lastCalculatedSize = clientSize(params.element, params.direction);
-                            // Ensure that max size is not more than the items size
-                            if (params.mode === 'fixed') {
-                                if (items.length * params.itemsSize < maxSizeValue) {
-                                    maxSizeValue = items.length * params.itemsSize;
+                    vp$ = measure$.pipe(
+                        mergeWith(measure$.pipe(
+                            delay(1), // Wait next life cycle for the result
+                            switchMap(() => {
+                                // Get max size from container
+                                maxSizeValue = this.lastCalculatedSize = clientSize(params.element, params.direction);
+                                // Ensure that max size is not more than the items size
+                                if (params.mode === 'fixed') {
+                                    if (items.length * params.itemsSize < maxSizeValue) {
+                                        maxSizeValue = items.length * params.itemsSize;
+                                    }
+                                } else if (params.mode === 'variable') {
+                                    let maxItemsSize = 0;
+                                    items.find(item => {
+                                        maxItemsSize += item.size || params.itemsSize;
+                                        return maxItemsSize > maxSizeValue;
+                                    });
+                                    if (maxItemsSize < maxSizeValue) {
+                                        maxSizeValue = maxItemsSize;
+                                    }
                                 }
-                            } else if (params.mode === 'variable') {
-                                let maxItemsSize = 0;
-                                items.find(item => {
-                                    maxItemsSize += item.size || params.itemsSize;
-                                    return maxItemsSize > maxSizeValue;
-                                });
-                                if (maxItemsSize < maxSizeValue) {
-                                    maxSizeValue = maxItemsSize;
-                                }
-                            }
-                            return calcViewPort$(params, items, scrollPosition);
-                        })
-                    ));
+                                return calcViewPort$(params, items, scrollPosition);
+                            })
+                        ))
+                    );
                 } else {
                     vp$ = calcViewPort$(params, items, scrollPosition);
                 }
@@ -544,7 +552,8 @@ export class ViewPortService<T> {
             })
         );
 
-        this.viewPort$ = merge(viewPort$, this.clear$).pipe(
+        this.viewPort$ = viewPort$.pipe(
+            mergeWith(this.clear$),
             shareReplay({ bufferSize: 1, refCount: true })
         );
     }

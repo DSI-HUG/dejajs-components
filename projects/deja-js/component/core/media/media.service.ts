@@ -7,8 +7,7 @@
  */
 
 import { Inject, Injectable, InjectionToken, NgZone, OnDestroy, Optional } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { distinctUntilChanged, map } from 'rxjs/operators';
+import { BehaviorSubject, distinctUntilChanged, map, Observable } from 'rxjs';
 
 export interface MediaQueryDefinition {
     alias: string;

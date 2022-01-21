@@ -24,13 +24,13 @@ import { DejaDatePickerComponent } from './date-picker.component';
     exports: [DejaDatePickerComponent],
     imports: [
         CommonModule,
-        FormsModule,
-        DejaOverlayModule,
-        MatInputModule,
-        MatButtonModule,
-        MatIconModule,
         DejaChildValidatorModule,
         DejaDateSelectorModule,
+        DejaOverlayModule,
+        FormsModule,
+        MatButtonModule,
+        MatIconModule,
+        MatInputModule,
         NgxMaskModule.forRoot()
     ]
 })

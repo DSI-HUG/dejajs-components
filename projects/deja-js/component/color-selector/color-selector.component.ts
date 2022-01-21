@@ -9,9 +9,8 @@
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Component, ElementRef, EventEmitter, Input, OnDestroy, Optional, Output, Self } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
-import { Color, MaterialColor } from '@deja-js/component/core';
-import { BehaviorSubject, combineLatest, fromEvent, merge, Observable, Subject, timer } from 'rxjs';
-import { debounce, debounceTime, delay, distinctUntilChanged, filter, map, take, takeUntil, tap } from 'rxjs/operators';
+import { Color, MaterialColor } from '@deja-js/component/core/graphics';
+import { BehaviorSubject, combineLatestWith, debounce, debounceTime, delay, distinctUntilChanged, filter, fromEvent, map, mergeWith, Observable, Subject, take, takeUntil, tap, timer } from 'rxjs';
 
 import { DejaColorFab } from './color-fab.class';
 
@@ -36,7 +35,7 @@ export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestr
 
     public _resetcolor: Color;
 
-    protected destroyed$ = new Subject();
+    protected destroyed$ = new Subject<void>();
 
     private _value: Color;
 
@@ -93,7 +92,8 @@ export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestr
             map(colors => colors.map((color, index) => new DejaColorFab(color, this._disabled, index === this._selectedBaseIndex))),
             tap(colorFabs => this._colorFabs = colorFabs));
 
-        combineLatest([this._colors$, this._resetcolor$]).pipe(
+        this._colors$.pipe(
+            combineLatestWith(this._resetcolor$),
             takeUntil(this.destroyed$)
         ).subscribe(([colors, resetcolor]) => {
             if (!colors || !colors.length || !resetcolor) {
@@ -141,7 +141,8 @@ export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestr
             tap(colorIndex => this._selectedBaseIndex = colorIndex)
         );
 
-        this._subColorFabs$ = merge(hilightedBaseIndex$, selectedBaseIndex$).pipe(
+        this._subColorFabs$ = hilightedBaseIndex$.pipe(
+            mergeWith(selectedBaseIndex$),
             distinctUntilChanged(),
             tap(colorIndex => {
                 if (this._colorFabs) {
@@ -177,12 +178,13 @@ export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestr
             tap(subColorIndex => this._selectedSubIndex = subColorIndex)
         );
 
-        merge(hilightedSubIndex$, selectedSubIndex$).pipe(
+        hilightedSubIndex$.pipe(
+            mergeWith(selectedSubIndex$),
             filter(() => !!this._subColorFabs),
             takeUntil(this.destroyed$)
         ).subscribe(subColorIndex => this._subColorFabs.forEach((colorFab, index) => colorFab.active = index === subColorIndex));
 
-        fromEvent(element, 'mousemove').pipe(
+        fromEvent<MouseEvent>(element, 'mousemove').pipe(
             filter(() => !this._disabled),
             takeUntil(this.destroyed$)
         ).subscribe(event => {
@@ -203,7 +205,7 @@ export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestr
             }
         });
 
-        fromEvent(element, 'click').pipe(
+        fromEvent<Event>(element, 'click').pipe(
             filter(() => !this._disabled),
             takeUntil(this.destroyed$)
         ).subscribe(event => {

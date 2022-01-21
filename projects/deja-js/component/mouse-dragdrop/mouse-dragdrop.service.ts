@@ -11,8 +11,7 @@
  */
 import { Injectable } from '@angular/core';
 import { Destroy } from '@deja-js/component/core';
-import { BehaviorSubject } from 'rxjs';
-import { filter, takeUntil, tap } from 'rxjs/operators';
+import { BehaviorSubject, filter, takeUntil, tap } from 'rxjs';
 
 import { IDragCursorInfos } from './mouse-drag-cursor-infos.interface';
 import { IDragDropContext } from './mouse-dragdrop-context.interface';

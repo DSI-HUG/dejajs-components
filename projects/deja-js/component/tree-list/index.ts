@@ -13,7 +13,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { DejaChildValidatorModule, DejaItemModule, DejaTextMetricsModule } from '@deja-js/component/core';
+import { DejaChildValidatorModule, DejaTextMetricsModule } from '@deja-js/component/core';
+import { DejaItemModule } from '@deja-js/component/core/item-list';
 import { DejaDragDropModule } from '@deja-js/component/dragdrop';
 import { DejaListLoaderModule } from '@deja-js/component/loaders';
 
@@ -28,16 +29,16 @@ import { DejaTreeListComponent } from './tree-list.component';
     ],
     imports: [
         CommonModule,
+        DejaChildValidatorModule,
+        DejaDragDropModule,
+        DejaItemModule,
+        DejaListLoaderModule,
+        DejaTextMetricsModule,
         FormsModule,
         MatButtonModule,
-        MatInputModule,
         MatCheckboxModule,
         MatIconModule,
-        DejaChildValidatorModule,
-        DejaListLoaderModule,
-        DejaDragDropModule,
-        DejaTextMetricsModule,
-        DejaItemModule
+        MatInputModule
     ]
 })
 export class DejaTreeListModule { }

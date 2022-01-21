@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Color } from '@deja-js/component/core';
+import { Color } from '@deja-js/component/core/graphics';
 import { BehaviorSubject, Subject } from 'rxjs';
 
 export class DejaColorFab {

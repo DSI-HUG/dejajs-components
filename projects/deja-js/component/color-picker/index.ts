@@ -20,10 +20,10 @@ import { DejaColorPickerComponent } from './color-picker.component';
     exports: [DejaColorPickerComponent],
     imports: [
         CommonModule,
-        FormsModule,
         DejaColorSelectorModule,
-        MatButtonModule,
-        DejaOverlayModule
+        DejaOverlayModule,
+        FormsModule,
+        MatButtonModule
     ]
 })
 export class DejaColorPickerModule { }

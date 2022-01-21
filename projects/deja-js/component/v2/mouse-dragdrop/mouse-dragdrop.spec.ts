@@ -103,7 +103,7 @@ describe('MouseDragDrop', () => {
         const fixture = TestBed.createComponent(MouseDragDropComponent);
 
         fixture.detectChanges();
-        return fixture.whenStable().then(() => {
+        void fixture.whenStable().then(() => {
             const dragDebugElement = fixture.debugElement.query(By.css('div#dragArea'));
             const dropDebugElement = fixture.debugElement.query(By.css('div#dropArea'));
             const dragElement = dragDebugElement.nativeElement as HTMLElement;

@@ -7,7 +7,7 @@
  */
 
 import { Component } from '@angular/core';
-import { DejaMessageBoxAction } from '@deja-js/component/message-box';
+import { DejaMessageBoxAction } from '@deja-js/component/core';
 
 @Component({
     selector: 'message-box-demo',

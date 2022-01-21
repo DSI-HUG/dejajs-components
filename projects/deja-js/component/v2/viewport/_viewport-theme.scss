@@ -1,4 +1,5 @@
-@use '~@angular/material' as mat;
+@use '~@angular/material'as mat;
+
 @mixin viewport-2-theme($theme) {
     $primary: map-get($theme, primary);
 

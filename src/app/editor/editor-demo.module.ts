@@ -25,6 +25,8 @@ import { routing } from './editor-demo.routes';
     exports: [DejaEditorDemoComponent],
     imports: [
         CommonModule,
+        DejaMarkdownModule,
+        DejaMatEditorModule,
         FormsModule,
         MatButtonModule,
         MatCardModule,
@@ -32,8 +34,6 @@ import { routing } from './editor-demo.routes';
         MatInputModule,
         MatTabsModule,
         MatToolbarModule,
-        DejaMatEditorModule,
-        DejaMarkdownModule,
         routing
     ],
     providers: []

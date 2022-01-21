@@ -7,9 +7,9 @@
  */
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Component, ContentChild, ElementRef, EventEmitter, Input, OnInit, Output, TemplateRef, ViewEncapsulation } from '@angular/core';
-import { DejaConnectionPositionPair, Destroy, Position, Rect } from '@deja-js/component/core';
-import { from, fromEvent, Observable } from 'rxjs';
-import { debounceTime, delay, filter, map, takeUntil, tap } from 'rxjs/operators';
+import { DejaConnectionPositionPair, Destroy } from '@deja-js/component/core';
+import { Position, Rect } from '@deja-js/component/core/graphics';
+import { debounceTime, delay, filter, from, fromEvent, map, Observable, takeUntil, tap } from 'rxjs';
 
 import { DejaTooltipService } from './tooltip.service';
 import { ITooltipParams } from './tooltip-params.interface';
@@ -120,13 +120,16 @@ export class DejaTooltipComponent extends Destroy implements OnInit {
         const element = elementRef.nativeElement as HTMLElement;
 
         const hide$ = from(this.hide).pipe(
-            tap(() => this._model = undefined));
+            tap(() => {
+                this._model = undefined;
+            })
+        );
 
-        fromEvent(element.ownerDocument, 'mousemove').pipe(
+        fromEvent<MouseEvent>(element.ownerDocument, 'mousemove').pipe(
             // eslint-disable-next-line rxjs/no-unsafe-takeuntil
             takeUntil(hide$),
             debounceTime(100),
-            map((event: MouseEvent) => new Position(event.pageX, event.pageY)),
+            map(event => new Position(event.pageX, event.pageY)),
             filter(position => {
                 if (this._closeOnMoveOver) {
                     return true;

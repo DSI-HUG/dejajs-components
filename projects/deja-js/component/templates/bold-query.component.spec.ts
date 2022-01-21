@@ -113,7 +113,7 @@ describe('DejaBoldQueryComponent', () => {
         comp.query = 'test';
         comp.regexpOption = '';
         fixture.detectChanges();
-        return fixture.whenStable().then(() => {
+        void fixture.whenStable().then(() => {
             const result = `${highlightOpenTag}test${highlightEndTag} caractères spéciaux +?^\${}()|[]\\. Fin ${highlightOpenTag}test${highlightEndTag}.`;
             void expect(comp.content).toEqual(result);
             done();

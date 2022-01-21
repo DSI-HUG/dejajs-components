@@ -23,26 +23,26 @@ import { DejaSidenavMenuSeparatorDirective } from './sidenav-separator.directive
 @NgModule({
     declarations: [
         DejaSidenavComponent,
-        DejaSidenavMenuDirective,
         DejaSidenavContentDirective,
-        DejaSidenavMenuSeparatorDirective,
-        DejaSidenavHeaderDirective
+        DejaSidenavHeaderDirective,
+        DejaSidenavMenuDirective,
+        DejaSidenavMenuSeparatorDirective
     ],
     exports: [
         DejaSidenavComponent,
-        DejaSidenavMenuDirective,
         DejaSidenavContentDirective,
-        DejaSidenavMenuSeparatorDirective,
-        DejaSidenavHeaderDirective
+        DejaSidenavHeaderDirective,
+        DejaSidenavMenuDirective,
+        DejaSidenavMenuSeparatorDirective
     ],
     imports: [
         CommonModule,
-        MatSidenavModule,
-        MatToolbarModule,
+        DejaSlimScrollModule,
         MatButtonModule,
         MatIconModule,
-        MediaModule,
-        DejaSlimScrollModule
+        MatSidenavModule,
+        MatToolbarModule,
+        MediaModule
     ]
 })
 export class DejaSidenavModule { }

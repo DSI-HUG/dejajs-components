@@ -3,8 +3,9 @@ name: Publish
 on:
   push:
     branches:
-      - develop
       - master
+      - develop
+  release:
 
 jobs:
   ci_publish:
@@ -17,7 +18,7 @@ jobs:
       - name: Setup node
         uses: actions/setup-node@v2
         with:
-          node-version: 12.x
+          node-version: 14.x
           registry-url: https://registry.npmjs.org/
       - name: Make sure npm is latest
         run: npm install -g npm@latest
@@ -45,4 +46,3 @@ jobs:
           source_ref: 'master'
           target_branch: 'develop'
           commit_message_template: 'merge branch {source_ref} of github.com:DSI-HUG/dejajs-components into {target_branch} [skip ci]'
-

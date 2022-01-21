@@ -7,9 +7,8 @@
  */
 
 import { Component, EventEmitter, OnInit } from '@angular/core';
-import { MaterialColors } from '@deja-js/component/core';
-import { from, interval, Observable } from 'rxjs';
-import { defaultIfEmpty, filter, map, scan } from 'rxjs/operators';
+import { MaterialColorService } from '@deja-js/component/core/graphics';
+import { defaultIfEmpty, filter, from, interval, map, Observable, scan } from 'rxjs';
 
 import { Message } from './message.class';
 
@@ -43,7 +42,7 @@ export class DejaSnackbarDemoComponent implements OnInit {
     public default: string;
 
     public ngOnInit(): void {
-        const colors = new MaterialColors();
+        const colors = new MaterialColorService();
         this.danger = colors.getColor('mat-red')[500];
         this.warning = colors.getColor('mat-orange')[500];
         this.success = colors.getColor('mat-green')[500];

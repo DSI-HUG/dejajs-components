@@ -8,7 +8,7 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { IColorEvent } from '@deja-js/component/color-selector';
-import { Color, MaterialColors } from '@deja-js/component/core';
+import { Color, MaterialColorService } from '@deja-js/component/core/graphics';
 import { DejaPopupAction, DejaPopupConfig } from '@deja-js/component/popup';
 
 @Component({
@@ -22,7 +22,7 @@ export class DummyComponent {
 
     public constructor(
         @Inject(MAT_DIALOG_DATA) public config: DejaPopupConfig<unknown>,
-        public materialColors: MaterialColors
+        public materialColors: MaterialColorService
     ) { }
 
     public onColorPickerChange(event: IColorEvent): void {

@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Position } from '@deja-js/component/core';
+import { Position } from '@deja-js/component/core/graphics';
 
 import { IDropCursorInfos } from './mouse-drop-cursor-infos.interface';
 

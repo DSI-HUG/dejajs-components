@@ -30,8 +30,8 @@ import { routing } from './time-picker-demo.routes';
     exports: [DejaTimePickerDemoComponent],
     imports: [
         CommonModule,
-        DejaTimePickerModule,
         DejaMarkdownModule,
+        DejaTimePickerModule,
         FormsModule,
         MatButtonModule,
         MatCardModule,

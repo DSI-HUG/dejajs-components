@@ -11,8 +11,7 @@ import { ComponentPortal, Portal } from '@angular/cdk/portal';
 import { AfterViewInit, Component, ElementRef, Inject, Injector, OnInit, Renderer2, ViewEncapsulation } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DomSanitizer } from '@angular/platform-browser';
-import { timer } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, timer } from 'rxjs';
 
 import { DejaPopupAction } from '../../model/popup-action.model';
 import { DejaPopupBase } from '../../model/popup-base.class';

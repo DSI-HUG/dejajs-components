@@ -1,8 +1,7 @@
 {
     "ngPackage": {
         "lib": {
-            "entryFile": "./index.ts",
-            "umdModuleIds": {}
+            "entryFile": "./index.ts"
         }
     },
     "peerDependencies": {

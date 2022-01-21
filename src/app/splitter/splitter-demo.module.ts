@@ -23,12 +23,12 @@ import { routing } from './splitter-demo.routes';
     exports: [DejaSplitterDemoComponent],
     imports: [
         CommonModule,
+        DejaMarkdownModule,
+        DejaSplitterModule,
         FormsModule,
         MatCardModule,
         MatTabsModule,
         MatToolbarModule,
-        DejaSplitterModule,
-        DejaMarkdownModule,
         routing
     ],
     providers: [

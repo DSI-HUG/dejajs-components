@@ -23,12 +23,12 @@ import { routing } from './circular-picker-demo.routes';
     exports: [DejaCircularPickerDemoComponent],
     imports: [
         CommonModule,
+        DejaCircularPickerModule,
+        DejaMarkdownModule,
         FormsModule,
         MatCardModule,
         MatTabsModule,
         MatToolbarModule,
-        DejaCircularPickerModule,
-        DejaMarkdownModule,
         routing
     ],
     providers: [

@@ -8,8 +8,7 @@
 
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { timer } from 'rxjs';
-import { delay, take, tap } from 'rxjs/operators';
+import { delay, take, tap, timer } from 'rxjs';
 
 import { DejaCircularPickerModule } from '.';
 import { DejaCircularPickerComponent, ICircularRange } from './circular-picker.component';
@@ -71,7 +70,7 @@ describe('DejaCircularPickerComponent', () => {
         component.value = 3;
         fixture.detectChanges();
 
-        return fixture.whenStable().then(() => {
+        void fixture.whenStable().then(() => {
             const htmlElement = fixture.debugElement.nativeElement as HTMLElement;
             const cursorElement = fixture.debugElement.query(By.css('.circular-picker > .cursor-container > .cursor > span')).nativeElement as HTMLSpanElement;
             const valueElement = fixture.debugElement.query(By.css('.circular-picker > [value="9"]')).nativeElement as HTMLSpanElement;

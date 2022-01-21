@@ -17,7 +17,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { DejaItemModule, DejaSortingModule, GroupingService } from '@deja-js/component/core';
+import { DejaItemModule, DejaSortingModule } from '@deja-js/component/core/item-list';
 import { DejaDialogModule } from '@deja-js/component/dialog';
 import { DejaDragDropModule } from '@deja-js/component/dragdrop';
 import { DejaMessageBoxModule } from '@deja-js/component/message-box';
@@ -26,6 +26,7 @@ import { DejaTreeListModule } from '@deja-js/component/tree-list';
 
 import { DejaMarkdownModule } from '../../component/markdown/index';
 import { NewsCardModule } from '../common/news-card.module';
+import { FoldersService } from '../services/folders.service';
 import { DejaTreeListDemoComponent } from './tree-list-demo';
 import { routing } from './tree-list-demo.routes';
 
@@ -38,29 +39,29 @@ import { routing } from './tree-list-demo.routes';
     ],
     imports: [
         CommonModule,
-        FormsModule,
-        ReactiveFormsModule,
-        MatFormFieldModule,
-        MatCheckboxModule,
-        MatInputModule,
-        MatButtonModule,
-        MatIconModule,
-        MatCardModule,
-        MatTabsModule,
-        MatToolbarModule,
-        DejaTreeListModule,
+        DejaDialogModule,
+        DejaDragDropModule,
+        DejaItemModule,
         DejaMarkdownModule,
         DejaMessageBoxModule,
-        DejaDialogModule,
-        DejaItemModule,
         DejaMouseDragDropModule,
-        DejaDragDropModule,
         DejaSortingModule,
+        DejaTreeListModule,
+        FormsModule,
+        MatButtonModule,
+        MatCardModule,
+        MatCheckboxModule,
+        MatFormFieldModule,
+        MatIconModule,
+        MatInputModule,
+        MatTabsModule,
+        MatToolbarModule,
         NewsCardModule,
+        ReactiveFormsModule,
         routing
     ],
     providers: [
-        GroupingService
+        FoldersService
     ]
 })
 export class DejaTreeListDemoModule { }

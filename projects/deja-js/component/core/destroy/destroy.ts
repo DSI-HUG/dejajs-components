@@ -13,7 +13,7 @@ import { Subject } from 'rxjs';
 // eslint-disable-next-line @angular-eslint/directive-class-suffix
 export class Destroy implements OnDestroy {
 
-    protected destroyed$ = new Subject();
+    protected destroyed$ = new Subject<void>();
 
     public ngOnDestroy(): void {
         if (this.destroyed$.closed) {

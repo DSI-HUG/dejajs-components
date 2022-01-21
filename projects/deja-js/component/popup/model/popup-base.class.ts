@@ -10,8 +10,7 @@ import { ComponentPortal, Portal } from '@angular/cdk/portal';
 import { Directive, ElementRef, Injector, OnInit, Renderer2 } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Destroy } from '@deja-js/component/core';
-import { Subscription } from 'rxjs';
-import { filter, take, takeUntil, tap } from 'rxjs/operators';
+import { filter, Subscription, take, takeUntil, tap } from 'rxjs';
 
 import { DejaPopupAction } from './popup-action.model';
 import { DejaPopupConfig } from './popup-config.model';
