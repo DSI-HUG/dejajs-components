@@ -30,5 +30,3 @@ jobs:
           git push
         env:
             GITHUB_TOKEN: ${{ secrets.PUBLISH_TOKEN }}
-            user_name: github-actions[bot]
-            user_email: 41898282+github-actions[bot]@users.noreply.github.com
