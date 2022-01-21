@@ -40,8 +40,12 @@ jobs:
       - name: Merge master back to dev
         if: github.ref == 'refs/heads/master'
         run: |
-          git fetch --unshallow
-          git checkout dev
+          git fetch
+          git checkout develop
           git pull
-          git merge --no-ff master -m "Auto-merge master back to dev [skip-ci]"
+          git merge --no-ff master -m "merge branch 'master' of github.com:DSI-HUG/dejajs-components into develop [skip ci]"
           git push
+        env:
+            GITHUB_TOKEN: ${{ secrets.PUBLISH_TOKEN }}
+            user_name: github-actions[bot]
+            user_email: 41898282+github-actions[bot]@users.noreply.github.com
