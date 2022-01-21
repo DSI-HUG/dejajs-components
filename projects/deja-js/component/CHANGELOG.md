@@ -1,3 +1,10 @@
+## [12.6.2-develop.1](https://github.com/DSI-HUG/dejajs-components/compare/v12.6.1...v12.6.2-develop.1) (2022-01-21)
+
+
+### Features
+
+* fix publish workflow and force version to 12.7 ([6d3464e](https://github.com/DSI-HUG/dejajs-components/commit/6d3464e84fdb431eb4040ce0056e2532a5a659f4))
+
 ## [12.6.1](https://github.com/DSI-HUG/dejajs-components/compare/v12.6.0...v12.6.1) (2022-01-21)
 
 
