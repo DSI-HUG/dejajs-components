@@ -13,7 +13,7 @@
 
 /* eslint-disable @typescript-eslint/naming-convention */
 import { FormGroupDirective, NgControl, NgForm } from '@angular/forms';
-import { _Constructor, CanUpdateErrorState, ErrorStateMatcher, mixinErrorState } from '@angular/material/core';
+import { CanUpdateErrorStateCtor, ErrorStateMatcher, mixinErrorState } from '@angular/material/core';
 
 export class MatInputBase {
     public constructor(
@@ -24,4 +24,4 @@ export class MatInputBase {
     ) { }
 }
 
-export const _MatInputMixinBase: _Constructor<CanUpdateErrorState> & typeof MatInputBase = mixinErrorState(MatInputBase);
+export const _MatInputMixinBase: CanUpdateErrorStateCtor & typeof MatInputBase = mixinErrorState(MatInputBase);

@@ -1,4 +1,5 @@
-@use '@angular/material' as mat;
+@use '~@angular/material'as mat;
+
 @mixin data-grid-header-theme($theme) {
     $primary: map-get($theme, primary);
     $foreground: map-get($theme, foreground);

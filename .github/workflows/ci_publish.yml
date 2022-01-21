@@ -1,14 +1,10 @@
-name: Publish library to NPM
+name: Publish
 
 on:
   push:
     branches:
-        - master
-        - develop
-        - next/13.x.x
-        - release/13.x.x
-    tags-ignore:
-        - skip-ci
+      - master
+      - develop
   release:
 
 jobs:
@@ -17,6 +13,8 @@ jobs:
     steps:
       - name: Checkout sources
         uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.PUBLISH_TOKEN }}
       - name: Setup node
         uses: actions/setup-node@v2
         with:
@@ -26,17 +24,25 @@ jobs:
         run: npm install -g npm@latest
       - name: Install dependencies
         run: npm clean-install
-      - name: Lint
-        run: npm run lint
       - name: Build
         run: npm run build:lib
+      - name: Lint
+        run: npm run lint
       - name: Semantic Release
+        run: npm run release:ci
         env:
             GITHUB_TOKEN: ${{ secrets.PUBLISH_TOKEN }}
             user_name: github-actions[bot]
             user_email: 41898282+github-actions[bot]@users.noreply.github.com
-        run: npm run release:ci
       - name: Publish
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npm publish ./dist --access public
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
+        run: npm publish ./dist/deja-js/component --access public
+      - name: Merge master back to dev
+        if: github.ref == 'refs/heads/master'
+        uses: everlytic/branch-merge@1.1.2
+        with:
+          github_token: ${{ secrets.PUBLISH_TOKEN }}
+          source_ref: 'master'
+          target_branch: 'develop'
+          commit_message_template: 'merge branch {source_ref} of github.com:DSI-HUG/dejajs-components into {target_branch} [skip ci]'

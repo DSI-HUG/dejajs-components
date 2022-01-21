@@ -1,4 +1,5 @@
-@use '@angular/material' as mat;
+@use '~@angular/material'as mat;
+
 @mixin messageBoxStandard($palette) {
     background-color: mat.get-color-from-palette($palette, 500);
     color: mat.get-contrast-color-from-palette($palette, 900);

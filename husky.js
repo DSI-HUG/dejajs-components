@@ -3,7 +3,7 @@ const isCi = process.env.CI !== undefined;
 if (!isCi) {
     const fs = require('fs');
 
-    fs.rmdir('.husky', { recursive: true }, err => {
+    fs.rm('.husky', { recursive: true }, err => {
         if (err) {
             throw err;
         }
