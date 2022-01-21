@@ -22,11 +22,9 @@ jobs:
         run: npm install -g npm@latest
       - name: Merge master back to dev
         if: github.ref == 'refs/heads/master'
-        run: |
-          git fetch
-          git checkout develop
-          git pull
-          git merge --no-ff master -m "merge branch 'master' of github.com:DSI-HUG/dejajs-components into develop [skip ci]"
-          git push
-        env:
-            GITHUB_TOKEN: ${{ secrets.PUBLISH_TOKEN }}
+        uses: everlytic/branch-merge@1.1.2
+        with:
+          github_token: ${{ secrets.PUBLISH_TOKEN }}
+          source_ref: 'master'
+          target_branch: 'develop'
+          commit_message_template: 'merge branch {source_ref} of github.com:DSI-HUG/dejajs-components into {target_branch} [skip ci]'
