@@ -7,12 +7,12 @@
  */
 import { ChangeDetectorRef, Component, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { Destroy, GroupingService, IItemBase, IItemTree, IViewPortItem } from '@deja-js/component/core';
+import { Destroy } from '@deja-js/component/core';
+import { GroupingService, IItemBase, IItemTree, IViewPortItem } from '@deja-js/component/core/item-list';
 import { IDejaDragEvent } from '@deja-js/component/dragdrop';
 import { IDejaMouseDraggableContext, IDejaMouseDroppableContext, IDropCursorInfos } from '@deja-js/component/mouse-dragdrop';
 import { DejaTreeListComponent } from '@deja-js/component/tree-list';
-import { Observable, of, Subject, Subscription } from 'rxjs';
-import { delay, map, switchMap, take, takeUntil, tap, toArray } from 'rxjs/operators';
+import { delay, map, Observable, of, Subject, Subscription, switchMap, take, takeUntil, tap, toArray } from 'rxjs';
 
 import { News } from '../common/news.model';
 import { cheeseValidator } from '../select/validators';
@@ -37,6 +37,7 @@ interface ViewPortInfo {
 }
 
 @Component({
+    providers: [CountriesListService],
     encapsulation: ViewEncapsulation.None,
     selector: 'deja-tree-list-demo',
     styleUrls: ['./tree-list-demo.scss'],

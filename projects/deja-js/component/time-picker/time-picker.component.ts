@@ -11,8 +11,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, In
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { Destroy } from '@deja-js/component/core';
 import { set } from 'date-fns';
-import { Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, map, takeUntil } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, map, Subject, takeUntil } from 'rxjs';
 
 export type TimePickerDisplayMode = 'fullTime' | 'fullTimeWithHoursDisabled' | 'fullTimeWithMinutesDisabled' | 'hoursOnly' | 'minutesOnly';
 
@@ -152,7 +151,7 @@ export class DejaTimePickerComponent extends Destroy implements ControlValueAcce
     /** From ControlValueAccessor interface */
     public writeValue(value: Date): void {
         if ((value || null) !== (this._value || null)) {
-            this._value = value ? new Date(value.getTime()) : set(new Date(), { hours: 0, minutes: 0, seconds: 0 });
+            this._value = value && new Date(value.getTime());
             this.changeDetectorRef.markForCheck();
         }
     }

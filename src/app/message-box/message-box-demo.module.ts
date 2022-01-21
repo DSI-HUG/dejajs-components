@@ -27,16 +27,16 @@ import { routing } from './message-box-demo.routes';
     exports: [DejaMessageBoxDemoComponent],
     imports: [
         CommonModule,
+        DejaDialogModule,
+        DejaMarkdownModule,
+        DejaMessageBoxModule,
+        DejaTooltipModule,
         FormsModule,
         MatButtonModule,
         MatCardModule,
+        MatIconModule,
         MatTabsModule,
         MatToolbarModule,
-        MatIconModule,
-        DejaDialogModule,
-        DejaMessageBoxModule,
-        DejaMarkdownModule,
-        DejaTooltipModule,
         routing
     ],
     providers: [

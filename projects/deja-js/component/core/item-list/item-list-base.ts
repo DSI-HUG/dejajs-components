@@ -8,17 +8,16 @@
 
 import { coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
 import { ChangeDetectorRef, EventEmitter } from '@angular/core';
-import { from, Observable, of, Subscription, timer } from 'rxjs';
-import { filter, map, reduce, switchMap, take, takeUntil, tap } from 'rxjs/operators';
+import { Destroy } from '@deja-js/component/core';
+import { filter, from, map, Observable, of, reduce, Subscription, switchMap, take, takeUntil, tap, timer } from 'rxjs';
 
-import { Destroy } from '../destroy/destroy';
-import { IGroupInfo } from '../grouping/group-infos';
-import { GroupingService } from '../grouping/grouping.service';
-import { ISortInfos } from '../sorting/sort-infos.model';
-import { SortingService } from '../sorting/sorting.service';
+import { IGroupInfo } from './grouping/group-infos';
+import { GroupingService } from './grouping/grouping.service';
 import { IItemBase } from './item-base';
 import { IFindItemResult, IParentListInfoResult, ItemListService, IViewListResult } from './item-list.service';
 import { IItemTree } from './item-tree';
+import { ISortInfos } from './sorting/sort-infos.model';
+import { SortingService } from './sorting/sorting.service';
 import { IViewPort, IViewPortRefreshParams, ViewPortService } from './viewport.service';
 
 /** Classe de base pour tous les composants à listes (deja-treelist, deja-select, deja-grid) */

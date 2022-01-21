@@ -14,10 +14,10 @@ import { CanDisable, CanUpdateErrorState, ErrorStateMatcher } from '@angular/mat
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { IDejaChipsComponentCloseEvent } from '@deja-js/component/chips';
-import { DejaChildValidatorDirective, DejaConnectionPositionPair, DejaItemComponent, DejaItemEvent, DejaItemsEvent, GroupingService, IFindItemResult, IItemBase, IItemTree, ItemListBase, ItemListService, IViewListResult, IViewPort, KeyCodes, MediaService, SortingService, ViewPortService } from '@deja-js/component/core';
+import { DejaChildValidatorDirective, DejaConnectionPositionPair, KeyCodes, MediaService } from '@deja-js/component/core';
+import { DejaItemComponent, DejaItemEvent, DejaItemsEvent, GroupingService, IFindItemResult, IItemBase, IItemTree, ItemListBase, ItemListService, IViewListResult, IViewPort, SortingService, ViewPortService } from '@deja-js/component/core/item-list';
 import { DejaOverlayComponent } from '@deja-js/component/overlay';
-import { BehaviorSubject, combineLatest, fromEvent, merge, Observable, of, Subject, Subscription, timer } from 'rxjs';
-import { debounce, debounceTime, delay, delayWhen, filter, map, switchMap, take, takeUntil, tap } from 'rxjs/operators';
+import { BehaviorSubject, combineLatestWith, debounce, debounceTime, delay, delayWhen, filter, fromEvent, map, mergeWith, Observable, of, Subject, Subscription, switchMap, take, takeUntil, tap, timer } from 'rxjs';
 
 export type SelectType = 'autocomplete' | 'multiselect' | 'select';
 
@@ -115,16 +115,16 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
     private _focused = false;
 
     private clearFilterExpression$ = new BehaviorSubject<void>(null);
-    private filterListComplete$ = new Subject();
+    private filterListComplete$ = new Subject<void>();
     private storeScrollPosition$ = new Subject<number>();
     private hideDropDown$ = new Subject<number>();
-    private showDropDown$ = new Subject();
+    private showDropDown$ = new Subject<void>();
     private filter$ = new Subject<Event>();
     private query$ = new BehaviorSubject<string>('');
     private writeValue$ = new Subject<unknown>();
-    private contentInitialized$ = new Subject();
+    private contentInitialized$ = new Subject<boolean>();
 
-    private keyboardNavigation$ = new Subject();
+    private keyboardNavigation$ = new Subject<void>();
 
     private delaySearchTrigger$ = new BehaviorSubject<number>(250);
 
@@ -280,7 +280,8 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
             takeUntil(this.destroyed$)
         ).subscribe(() => this.filterExpression = '');
 
-        combineLatest([this.delaySearchTrigger$, this.filterListComplete$]).pipe(
+        this.delaySearchTrigger$.pipe(
+            combineLatestWith(this.filterListComplete$),
             debounce(([delaySearchTrigger]) => timer(delaySearchTrigger)),
             takeUntil(this.destroyed$)
         ).subscribe(() => {
@@ -382,7 +383,8 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
             this.changeDetectorRef.markForCheck();
         });
 
-        combineLatest([this.writeValue$, this.contentInitialized$]).pipe(
+        this.writeValue$.pipe(
+            combineLatestWith(this.contentInitialized$),
             map(([value]) => value),
             tap(value => {
                 if (this.modelIsValue === undefined) {
@@ -896,7 +898,7 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
     }
 
     public ngAfterViewInit(): void {
-        fromEvent(this.htmlInputElement, 'click').pipe(
+        fromEvent<Event>(this.htmlInputElement, 'click').pipe(
             filter(() => !this.dropdownVisible && !this.disabled),
             takeUntil(this.destroyed$)
         ).subscribe(event => {
@@ -908,7 +910,7 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
             }
         });
 
-        fromEvent(this.htmlInputElement, 'focus').pipe(
+        fromEvent<Event>(this.htmlInputElement, 'focus').pipe(
             filter(() => !this.dropdownVisible && !this.disabled),
             delay(10),
             filter(() => this.htmlInputElement === document.activeElement),
@@ -921,7 +923,7 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
             }
         });
 
-        fromEvent(this.htmlInputElement, 'blur').pipe(
+        fromEvent<Event>(this.htmlInputElement, 'blur').pipe(
             filter(() => this.selectingItemIndex === undefined),
             takeUntil(this.destroyed$)
         ).subscribe(() => {
@@ -929,8 +931,9 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
             this.hideDropDown$.next(10);
         });
 
-        merge(fromEvent(this.htmlInputElement, 'keydown'), fromEvent(this.elementRef.nativeElement, 'keydown')).pipe(
-            filter((event: KeyboardEvent) => {
+        fromEvent<KeyboardEvent>(this.htmlInputElement, 'keydown').pipe(
+            mergeWith(fromEvent<KeyboardEvent>(this.elementRef.nativeElement, 'keydown')),
+            filter(event => {
                 if (event.defaultPrevented) {
                     return false;
                 }
@@ -1016,10 +1019,11 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
 
                         case KeyCodes.Space:
                             if (this.dropdownVisible) {
-                                const item = this._itemList[this.currentItemIndex - this.vpStartRow] as IItemTree<unknown>;
+                                const item = this._itemList[this.currentItemIndex - this.vpStartRow];
                                 if (this.isCollapsible(item)) {
                                     this.keyboardNavigation$.next();
-                                    return this.toggleCollapse$(this.currentItemIndex, !item.collapsed).pipe(
+                                    const treeItem = item as unknown as IItemTree<unknown>;
+                                    return this.toggleCollapse$(this.currentItemIndex, !treeItem.collapsed).pipe(
                                         map(() => false)
                                     );
                                 }
@@ -1050,16 +1054,18 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
             takeUntil(this.destroyed$)
         ).subscribe();
 
-        const keyUp$ = fromEvent(this.htmlInputElement, 'keyup').pipe(
-            filter((event: KeyboardEvent) => {
+        const keyUp$ = fromEvent<KeyboardEvent>(this.htmlInputElement, 'keyup').pipe(
+            filter(event => {
                 const keyCode = event.code;
                 return keyCode >= KeyCodes.Key0 ||
                     keyCode === KeyCodes.Backspace ||
                     keyCode === KeyCodes.Space ||
                     keyCode === KeyCodes.Delete;
-            }));
+            })
+        );
 
-        merge(keyUp$, this.filter$).pipe(
+        keyUp$.pipe(
+            mergeWith(this.filter$),
             tap(() => {
                 if ((this.query || '').length < this.minSearchlength) {
                     this._itemList = [];
@@ -1067,17 +1073,18 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
                     return;
                 }
             }),
-            switchMap((event: KeyboardEvent) => {
+            switchMap(event => {
                 // console.log('select.component, keycode:' + event.code);
                 this.keyboardNavigation$.next();
                 if (this.isModeSelect) {
+                    const keyboardEvent = event as KeyboardEvent;
                     // Select, search on the list
-                    if ((/[a-zA-Z0-9]/).test(event.key)) {
+                    if ((/[a-zA-Z0-9]/).test(keyboardEvent.key)) {
                         // Valid char
                         this.clearFilterExpression$.next(null);
 
                         // Search next
-                        this.filterExpression += event.key;
+                        this.filterExpression += keyboardEvent.key;
                         const rg = new RegExp(`^${this.filterExpression}`, 'i');
                         return this.findNextMatch$(item => {
                             if (item && this.isSelectable(item)) {
@@ -1194,14 +1201,14 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
 
         this.selectingItemIndex = this.getItemIndexFromHTMLElement(e.target as HTMLElement);
 
-        this.mouseUp$sub = fromEvent(this.listElement, 'mouseup').pipe(
-            switchMap((upEvent: MouseEvent) => {
+        this.mouseUp$sub = fromEvent<MouseEvent>(this.listElement, 'mouseup').pipe(
+            switchMap(upEvent => {
                 const itemIndex = this.getItemIndexFromHTMLElement(upEvent.target as HTMLElement);
                 if (itemIndex === undefined || this.selectingItemIndex === undefined || itemIndex !== this.selectingItemIndex) {
                     return of(null);
                 }
 
-                const item = this._itemList[itemIndex - this.vpStartRow] as IItemTree<unknown>;
+                const item = this._itemList[itemIndex - this.vpStartRow];
                 if (!item || upEvent.button !== 0) {
                     // Right click menu
                     return of(null);
@@ -1211,7 +1218,8 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
 
                 if (this.isCollapsible(item) && (isExpandButton(e.target as HTMLElement) || !this.isSelectable(item))) {
                     if (upEvent.button === 0) {
-                        return this.toggleCollapse$(itemIndex, !item.collapsed);
+                        const treeItem = item as unknown as IItemTree<unknown>;
+                        return this.toggleCollapse$(itemIndex, !treeItem.collapsed);
                     }
                 } else if (!item.selected) {
                     this.select(item);
@@ -1335,7 +1343,7 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
 
     protected calcViewList$(): Observable<IViewListResult<unknown>> {
         return super.calcViewList$(this.dropDownQuery).pipe(
-            tap(() => void this.changeDetectorRef.markForCheck())
+            tap(() => this.changeDetectorRef.markForCheck())
         );
     }
 
@@ -1439,7 +1447,7 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
         }
 
         this.calcViewList$().pipe(
-            tap(() => void this.refreshViewPort()),
+            tap(() => this.refreshViewPort()),
             switchMap(() => this.viewPortChanged), // Wait for viewport calculation
             take(1),
             delay(1),

@@ -64,43 +64,43 @@ export class DejaTimePickerDemoComponent {
     }
 
     public date0Changed(date: Date): void {
-        const clone = new Date(date.getTime());
+        const clone = date && new Date(date.getTime());
         this.date0 = clone;
         this.changeDetectorRef.markForCheck();
     }
 
     public date1Changed(date: Date): void {
-        const clone = new Date(date.getTime());
+        const clone = date && new Date(date.getTime());
         this.date1 = clone;
         this.changeDetectorRef.markForCheck();
     }
 
     public date2Changed(date: Date): void {
-        const clone = new Date(date.getTime());
+        const clone = date && new Date(date.getTime());
         this.date2 = clone;
         this.changeDetectorRef.markForCheck();
     }
 
     public date3Changed(date: Date): void {
-        const clone = new Date(date.getTime());
+        const clone = date && new Date(date.getTime());
         this.date3 = clone;
         this.changeDetectorRef.markForCheck();
     }
 
     public date4Changed(date: Date): void {
-        const clone = new Date(date.getTime());
+        const clone = date && new Date(date.getTime());
         this.date4 = clone;
         this.changeDetectorRef.markForCheck();
     }
 
     public date5Changed(date: Date): void {
-        const clone = new Date(date.getTime());
+        const clone = date && new Date(date.getTime());
         this.date5 = clone;
         this.changeDetectorRef.markForCheck();
     }
 
     public date6Changed(date: Date): void {
-        const clone = new Date(date.getTime());
+        const clone = date && new Date(date.getTime());
         this.date6 = clone;
         this.changeDetectorRef.markForCheck();
     }

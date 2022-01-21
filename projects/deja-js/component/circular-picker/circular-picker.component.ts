@@ -9,9 +9,9 @@
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, Input, OnInit, Optional, Self, TemplateRef, ViewChild } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
-import { Circle, Destroy, Position } from '@deja-js/component/core';
-import { fromEvent, merge, Observable, Subject } from 'rxjs';
-import { debounceTime, filter, sampleTime, switchMap, take, takeUntil, tap } from 'rxjs/operators';
+import { Destroy } from '@deja-js/component/core';
+import { Circle, Position } from '@deja-js/component/core/graphics';
+import { debounceTime, filter, fromEvent, mergeWith, sampleTime, Subject, switchMap, take, takeUntil, tap } from 'rxjs';
 
 export enum ClockwiseFactorEnum {
     // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -131,8 +131,8 @@ export class DejaCircularPickerComponent extends Destroy implements OnInit, Cont
             this.control.valueAccessor = this;
         }
 
-        const mouseUpEvent$ = fromEvent(element.ownerDocument, 'mouseup') as Observable<MouseEvent>;
-        const mouseDownEvent$ = fromEvent(element, 'mousedown') as Observable<MouseEvent>;
+        const mouseUpEvent$ = fromEvent<MouseEvent>(element.ownerDocument, 'mouseup');
+        const mouseDownEvent$ = fromEvent<MouseEvent>(element, 'mousedown');
         mouseDownEvent$.pipe(
             filter(event => !this.disabled && event.buttons === 1),
             debounceTime(100),
@@ -149,14 +149,15 @@ export class DejaCircularPickerComponent extends Destroy implements OnInit, Cont
                 return !!cursorElement || !!valueElement;
             }),
             switchMap(() => {
-                const moveUp$ = new Subject();
+                const moveUp$ = new Subject<void>();
 
                 // eslint-disable-next-line @typescript-eslint/prefer-regexp-exec
                 if (!element.ownerDocument.body.className.match(/noselect/)) {
                     element.ownerDocument.body.classList.add('noselect');
                 }
 
-                const cancelMouse$ = merge(moveUp$, mouseUpEvent$).pipe(
+                const cancelMouse$ = moveUp$.pipe(
+                    mergeWith(mouseUpEvent$),
                     take(1),
                     tap(() => {
                         delete this.cursorElement;
@@ -167,7 +168,7 @@ export class DejaCircularPickerComponent extends Destroy implements OnInit, Cont
                 const pickerElem = this.picker.nativeElement as HTMLElement;
                 const clientRect = pickerElem.getBoundingClientRect();
 
-                const mouseMoveEvent$ = fromEvent(element.ownerDocument, 'mousemove') as Observable<MouseEvent>;
+                const mouseMoveEvent$ = fromEvent<MouseEvent>(element.ownerDocument, 'mousemove');
                 return mouseMoveEvent$.pipe(
                     // eslint-disable-next-line rxjs/no-unsafe-takeuntil
                     takeUntil(cancelMouse$),

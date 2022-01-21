@@ -8,10 +8,10 @@
 
 import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { Destroy, IItemBase, IItemTree, IViewPortItem } from '@deja-js/component/core';
+import { Destroy } from '@deja-js/component/core';
+import { IItemBase, IItemTree, IViewPortItem } from '@deja-js/component/core/item-list';
 import { DejaSelectComponent } from '@deja-js/component/select';
-import { Observable, of, Subject, Subscription } from 'rxjs';
-import { delay, map, take, takeUntil, tap } from 'rxjs/operators';
+import { delay, map, Observable, of, Subject, Subscription, take, takeUntil, tap } from 'rxjs';
 
 import { News } from '../common/news.model';
 import { CountriesService, Country } from '../services/countries.service';
@@ -20,6 +20,7 @@ import { NewsService } from '../services/news.service';
 import { cheeseValidator } from './validators';
 
 @Component({
+    providers: [CountriesListService],
     selector: 'deja-select-demo',
     styleUrls: ['./select-demo.scss'],
     templateUrl: './select-demo.html'
@@ -218,11 +219,6 @@ export class SelectDemoComponent extends Destroy {
                 return of(null);
             }
         };
-    }
-
-    public confirmDialogWithPromise(): (item: IItemBase<unknown>) => Promise<IItemBase<unknown>> {
-        // eslint-disable-next-line rxjs/no-topromise
-        return (item: IItemBase<unknown>): Promise<IItemBase<unknown>> => this.confirmDialog()(item).toPromise();
     }
 
     public confirmDialog(): (item: IItemBase<unknown>) => Observable<IItemBase<unknown>> {

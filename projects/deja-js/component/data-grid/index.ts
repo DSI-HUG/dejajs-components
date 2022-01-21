@@ -11,7 +11,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { DejaChipsModule } from '@deja-js/component/chips';
-import { DejaSortingModule } from '@deja-js/component/core';
+import { DejaSortingModule } from '@deja-js/component/core/item-list';
 import { DejaDragDropModule } from '@deja-js/component/dragdrop';
 import { DejaTreeListModule } from '@deja-js/component/tree-list';
 
@@ -24,26 +24,26 @@ import { DejaGridRowComponent } from './data-grid-row/data-grid-row.component';
 @NgModule({
     declarations: [
         DejaGridComponent,
-        DejaGridRowComponent,
-        DejaGridParentRowComponent,
+        DejaGridGroupAreaComponent,
         DejaGridHeaderComponent,
-        DejaGridGroupAreaComponent
+        DejaGridParentRowComponent,
+        DejaGridRowComponent
     ],
     exports: [
         DejaGridComponent,
-        DejaGridRowComponent,
-        DejaGridParentRowComponent,
+        DejaGridGroupAreaComponent,
         DejaGridHeaderComponent,
-        DejaGridGroupAreaComponent
+        DejaGridParentRowComponent,
+        DejaGridRowComponent
     ],
     imports: [
         CommonModule,
-        FormsModule,
-        MatIconModule,
-        DejaTreeListModule,
+        DejaChipsModule,
         DejaDragDropModule,
         DejaSortingModule,
-        DejaChipsModule
+        DejaTreeListModule,
+        FormsModule,
+        MatIconModule
     ]
 })
 export class DejaGridModule {}

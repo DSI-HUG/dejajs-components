@@ -7,13 +7,13 @@
  */
 import { ChangeDetectorRef, Component, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { Destroy, GroupingService } from '@deja-js/component/core';
+import { Destroy } from '@deja-js/component/core';
+import { GroupingService } from '@deja-js/component/core/item-list';
 import { Item, SortInfos, SortingService } from '@deja-js/component/v2/item-list';
 import { DropCursorInfos, MouseDraggableContext, MouseDroppableContext } from '@deja-js/component/v2/mouse-dragdrop';
 import { TreeListComponent } from '@deja-js/component/v2/tree-list';
 import { ViewPortItem } from '@deja-js/component/v2/viewport';
-import { BehaviorSubject, combineLatest, Observable, of, range, Subject, Subscription } from 'rxjs';
-import { delay, filter, groupBy, map, mergeMap, reduce, shareReplay, switchMap, take, takeUntil, tap, toArray, withLatestFrom } from 'rxjs/operators';
+import { BehaviorSubject, combineLatestWith, delay, filter, groupBy, map, mergeMap, Observable, of, range, reduce, shareReplay, Subject, Subscription, switchMap, take, takeUntil, tap, toArray, withLatestFrom } from 'rxjs';
 
 import { News } from '../../common/news.model';
 import { cheeseValidator } from '../../select/validators';
@@ -38,6 +38,7 @@ interface ViewPortInfo {
 }
 
 @Component({
+    providers: [CountriesListService],
     encapsulation: ViewEncapsulation.None,
     selector: 'tree-list-demo',
     styleUrls: ['./tree-list-demo.scss'],
@@ -139,7 +140,7 @@ export class TreeListDemoComponent extends Destroy {
                 item.size = rand;
                 return item;
             }),
-            groupBy(p => p.size, p => p),
+            groupBy(p => p.size, { element: p => p }),
             mergeMap(group$ => group$.pipe(reduce((item, child) => {
                 if (!item.items) {
                     item.label = child.label;
@@ -173,7 +174,8 @@ export class TreeListDemoComponent extends Destroy {
             shareReplay({ bufferSize: 1, refCount: false })
         );
 
-        this.sortedCountries$ = combineLatest([this.countries$, this.sortInfos$]).pipe(
+        this.sortedCountries$ = this.countries$.pipe(
+            combineLatestWith(this.sortInfos$),
             map(([countries, sortInfos]) => sortingService.sort(countries, sortInfos)),
             shareReplay({ bufferSize: 1, refCount: false })
         );
@@ -303,7 +305,14 @@ export class TreeListDemoComponent extends Destroy {
             takeUntil(this.destroyed$)
         ).subscribe(([item, countries]) => {
             item.loaded = true;
-            item.items = countries.filter(country => country.naqme.startsWith(item.firstLetter)).map(country => new Item<Country>(country.code, country.displayName));
+            item.items = countries.filter(country => country.naqme.startsWith(item.firstLetter)).map(country => {
+                const child = new Item<Country>(country.code, country.displayName);
+                const loadingItem = new CountryGroupItem(undefined, 'loading...');
+                loadingItem.selectable = false;
+                child.collapsed = true;
+                child.items = [loadingItem];
+                return child;
+            });
             this.onExpandList.itemService.refreshFlatItemList$.next();
         });
 
@@ -328,26 +337,7 @@ export class TreeListDemoComponent extends Destroy {
                 return of(item);
             } else {
                 return this.confirmDialog()(item).pipe(
-                    switchMap(itm => {
-                        if (!itm) {
-                            return of(null as Item<Country>);
-                        }
-
-                        of(group).pipe(
-                            delay(2000),
-                            take(1),
-                            withLatestFrom(this.groupedCountryItems$),
-                            takeUntil(this.destroyed$)
-                        ).subscribe(([grp, groupedCountryItems]) => {
-                            // Simulate asynchronous load
-                            const original = groupedCountryItems.find(c => c.label === grp.label);
-                            grp.items = original.items;
-                            grp.loaded = true;
-                            // this.onExpandList.refresh();
-                        });
-
-                        return of(itm);
-                    })
+                    map(itm => itm || null as Item<Country>)
                 );
             }
         };
@@ -361,7 +351,8 @@ export class TreeListDemoComponent extends Destroy {
                 map(response => {
                     this.dialogVisible = false;
                     return response === 'ok' ? items : null;
-                }));
+                })
+            );
         };
     }
 
@@ -444,7 +435,7 @@ export class TreeListDemoComponent extends Destroy {
             } as DropCursorInfos),
             drop: country => {
                 if (country) {
-                    dropArea.innerText = `The dropped country is ${country.naqme} - the code is: ${country.code}`;
+                    dropArea.innerText = `The dropped country is ${country.naqme} - the code is: ${country.code} `;
                 }
             }
         } as MouseDroppableContext<Country>;

@@ -7,9 +7,9 @@
  */
 
 import { Directive, ElementRef, Input } from '@angular/core';
-import { Destroy, Position, Rect } from '@deja-js/component/core';
-import { Observable, of } from 'rxjs';
-import { distinctUntilChanged, filter, switchMap, take, takeUntil, tap } from 'rxjs/operators';
+import { Destroy } from '@deja-js/component/core';
+import { Position, Rect } from '@deja-js/component/core/graphics';
+import { distinctUntilChanged, filter, Observable, of, switchMap, take, takeUntil, tap } from 'rxjs';
 
 import { IDragCursorInfos } from './mouse-drag-cursor-infos.interface';
 import { DejaMouseDragDropService } from './mouse-dragdrop.service';
@@ -110,8 +110,8 @@ export class DejaMouseDroppableDirective extends Destroy {
 
 export interface IDejaMouseDroppableContext {
     // eslint-disable-next-line rxjs/finnish
-    dragEnter?(dragContext: IDragDropContext, dragCursor: IDragCursorInfos): IDropCursorInfos | Observable<IDropCursorInfos>; // Return object or observable<object>
-    dragOver?(dragContext: IDragDropContext, dragCursor: IDragCursorInfos): IDropCursorInfos;
-    dragLeave?(dragContext: IDragDropContext): void;
-    drop?(dragContext: IDragDropContext, dragCursor: IDragCursorInfos): void;
+    dragEnter?: (dragContext: IDragDropContext, dragCursor: IDragCursorInfos) => IDropCursorInfos | Observable<IDropCursorInfos>; // Return object or observable<object>
+    dragOver?: (dragContext: IDragDropContext, dragCursor: IDragCursorInfos) => IDropCursorInfos;
+    dragLeave?: (dragContext: IDragDropContext) => void;
+    drop?: (dragContext: IDragDropContext, dragCursor: IDragCursorInfos) => void;
 }

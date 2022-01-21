@@ -12,8 +12,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DoCheck, Element
 import { ControlValueAccessor, FormControl, FormGroupDirective, NgControl, NgForm, ValidationErrors, Validator, ValidatorFn } from '@angular/forms';
 import { CanUpdateErrorState, ErrorStateMatcher } from '@angular/material/core';
 import { MatFormFieldControl } from '@angular/material/form-field';
-import { DejaChildValidatorDirective, DejaTextMetricsService } from '@deja-js/component/core';
-import { _MatInputMixinBase } from '@deja-js/component/core/util';
+import { _MatInputMixinBase, DejaChildValidatorDirective, DejaTextMetricsService } from '@deja-js/component/core';
 import { Subject } from 'rxjs';
 
 export interface RangeError {
@@ -215,6 +214,9 @@ export class DejaNumericStepperComponent extends _MatInputMixinBase implements C
         _defaultErrorStateMatcher: ErrorStateMatcher
     ) {
         super(_defaultErrorStateMatcher, _parentForm, _parentFormGroup, ngControl);
+
+        console.warn('@deja-js/component/numeric-stepper is deprecated, and will be removed in a further version. Please use @deja-js/component/v2/numeric-stepper instead.');
+
         if (this.ngControl) {
             this.ngControl.valueAccessor = this;
         }

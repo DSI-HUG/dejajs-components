@@ -18,8 +18,8 @@ import { DejaOverlayComponent } from './overlay.component';
     exports: [DejaOverlayComponent],
     imports: [
         CommonModule,
-        OverlayModule,
-        MediaModule
+        MediaModule,
+        OverlayModule
     ]
 })
 export class DejaOverlayModule { }

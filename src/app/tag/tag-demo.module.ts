@@ -23,12 +23,12 @@ import { routing } from './tag-demo.routes';
     exports: [DejaTagDemoComponent],
     imports: [
         CommonModule,
+        DejaMarkdownModule,
+        DejaTagModule,
         FormsModule,
         MatCardModule,
         MatTabsModule,
         MatToolbarModule,
-        DejaTagModule,
-        DejaMarkdownModule,
         routing
     ],
     providers: [

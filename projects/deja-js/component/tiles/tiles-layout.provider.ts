@@ -8,11 +8,10 @@
 
 /* eslint-disable rxjs/finnish */
 import { Injectable, Optional } from '@angular/core';
-import { DejaClipboardService, Destroy, Directions, KeyCodes, Position, Rect, Size } from '@deja-js/component/core';
+import { DejaClipboardService, Destroy, KeyCodes } from '@deja-js/component/core';
+import { Directions, Position, Rect, Size } from '@deja-js/component/core/graphics';
 import { DragCursorInfos } from '@deja-js/component/v2/mouse-dragdrop';
-import { BehaviorSubject, from, fromEvent, merge, Observable, of, Subject, Subscription, timer } from 'rxjs';
-import { debounceTime, delay, filter, map, reduce, switchMap, take, takeUntil, tap } from 'rxjs/operators';
-import { __spread } from 'tslib';
+import { BehaviorSubject, debounceTime, delay, filter, from, fromEvent, map, mergeWith, of, reduce, Subject, Subscription, switchMap, take, takeUntil, tap, timer } from 'rxjs';
 
 import { DejaTile } from './tile.class';
 import { IDejaTilesAddedEvent, IDejaTilesAddEvent, IDejaTilesDeletedEvent, IDejaTilesEvent, IDejaTilesRemoveEvent } from './tiles.event';
@@ -58,7 +57,7 @@ export class DejaTilesLayoutProvider extends Destroy {
     public dragDropInfos$ = new Subject<IDragDropInfos>();
     public selectionRect$ = new Subject<Rect>();
     public dragover$ = new Subject<DragCursorInfos>();
-    public dragleave$ = new Subject();
+    public dragleave$ = new Subject<void>();
     public deleteTiles$ = new Subject<Array<DejaTile>>();
     public designMode = false;
 
@@ -214,7 +213,8 @@ export class DejaTilesLayoutProvider extends Destroy {
             filter(tile => !!tile),
             map(tile => tile.percentBounds));
 
-        merge(this.ensureBounds$, ensureTile$).pipe(
+        this.ensureBounds$.pipe(
+            mergeWith(ensureTile$),
             takeUntil(this.destroyed$)
         ).subscribe(percentBounds => {
             const { left, right, top, bottom } = this.getPixelBounds(percentBounds);
@@ -251,11 +251,11 @@ export class DejaTilesLayoutProvider extends Destroy {
 
         this.dragSelection$.pipe(
             switchMap(dragSelection => {
-                const mouseUp$ = fromEvent(this._container.ownerDocument, 'mouseup').pipe(
+                const mouseUp$ = fromEvent<MouseEvent>(this._container.ownerDocument, 'mouseup').pipe(
                     tap(() => this.selectionRect$.next(null))
                 );
 
-                const mouseMove$ = fromEvent(this._container, 'mousemove') as Observable<MouseEvent>;
+                const mouseMove$ = fromEvent<MouseEvent>(this._container, 'mousemove');
                 return mouseMove$.pipe(
                     // eslint-disable-next-line rxjs/no-unsafe-takeuntil
                     takeUntil(mouseUp$),
@@ -285,32 +285,36 @@ export class DejaTilesLayoutProvider extends Destroy {
                 }
 
                 const externalDrop = !dragDropInfos.tiles;
-                const mouseMove$ = fromEvent(this._container, 'mousemove') as Observable<MouseEvent>;
-                const keyUp$ = fromEvent(this._container.ownerDocument, 'keyup');
-                const escape$ = keyUp$.pipe(filter((event: KeyboardEvent) => event.code === KeyCodes.Escape));
+                const mouseMove$ = fromEvent<MouseEvent>(this._container, 'mousemove');
+                const keyUp$ = fromEvent<KeyboardEvent>(this._container.ownerDocument, 'keyup');
+                const escape$ = keyUp$.pipe(filter(event => event.code === KeyCodes.Escape));
 
                 const mouseButtonReleased$ = mouseMove$.pipe(
                     filter(event => event.buttons !== 1)
                 );
 
-                const cancel$ = merge(leave$, mouseButtonReleased$, escape$).pipe(
+                const cancel$ = leave$.pipe(
+                    mergeWith(mouseButtonReleased$, escape$),
                     tap(() => {
                         this.removeTemporaryTile();
                         this.cancelDrag(tiles);
                     })
                 );
 
-                const mouseUp$ = fromEvent(this._container.ownerDocument, 'mouseup').pipe(
+                const mouseUp$ = fromEvent<MouseEvent>(this._container.ownerDocument, 'mouseup').pipe(
                     tap(() => this.drop(tiles))
-                ) as Observable<MouseEvent>;
+                );
 
-                const kill$ = merge(mouseUp$, cancel$);
+                const kill$ = mouseUp$.pipe(
+                    mergeWith(cancel$)
+                );
 
                 const dragover$ = this.dragover$.pipe(
                     map(cursor => cursor.originalEvent)
                 );
 
-                return merge(mouseMove$, dragover$).pipe(
+                return mouseMove$.pipe(
+                    mergeWith(dragover$),
                     // eslint-disable-next-line rxjs/no-unsafe-takeuntil
                     takeUntil(kill$),
                     tap(event => {
@@ -375,9 +379,9 @@ export class DejaTilesLayoutProvider extends Destroy {
         this._container = container;
 
         if (this._container) {
-            const leave$ = fromEvent(container, 'mouseleave');
-            const mouseUp$ = fromEvent(container.ownerDocument, 'mouseup') as Observable<MouseEvent>;
-            const mouseEnter$ = fromEvent(container, 'mouseenter');
+            const leave$ = fromEvent<MouseEvent>(container, 'mouseleave');
+            const mouseUp$ = fromEvent<MouseEvent>(container.ownerDocument, 'mouseup');
+            const mouseEnter$ = fromEvent<MouseEvent>(container, 'mouseenter');
 
             // Cursor provider
             mouseEnter$.pipe(
@@ -387,7 +391,7 @@ export class DejaTilesLayoutProvider extends Destroy {
                             tap(() => this.container.style.cursor = '')
                         );
 
-                        const mouseMove$ = fromEvent(container, 'mousemove') as Observable<MouseEvent>;
+                        const mouseMove$ = fromEvent<MouseEvent>(container, 'mousemove');
                         return mouseMove$.pipe(
                             // eslint-disable-next-line rxjs/no-unsafe-takeuntil
                             takeUntil(leaveCursor$),
@@ -403,7 +407,7 @@ export class DejaTilesLayoutProvider extends Destroy {
 
             mouseEnter$.pipe(
                 switchMap(() => {
-                    const mouseDownEvent$ = fromEvent(container, 'mousedown') as Observable<MouseEvent>;
+                    const mouseDownEvent$ = fromEvent<MouseEvent>(container, 'mousedown');
                     const mouseDown$ = mouseDownEvent$.pipe(
                         filter(event => event.buttons === 1),
                         filter(event => !this.isElementInsideDejaEditor(event.target as HTMLElement)),
@@ -709,7 +713,7 @@ export class DejaTilesLayoutProvider extends Destroy {
         const event = new CustomEvent('DejaTilesRemoveEvent', { cancelable: true }) as IDejaTilesRemoveEvent;
         event.tiles = this.tiles;
         event.removed = tilesToRemove;
-        event.cancel$ = new Subject();
+        event.cancel$ = new Subject<void>();
 
         const cancelSubscription = event.cancel$.pipe(
             take(1),
@@ -1023,7 +1027,7 @@ export class DejaTilesLayoutProvider extends Destroy {
         const event = new CustomEvent('DejaTilesAddEvent', { cancelable: true }) as IDejaTilesAddEvent;
         event.tiles = this.tiles;
         event.added = newTiles;
-        event.cancel$ = new Subject();
+        event.cancel$ = new Subject<void>();
 
         // Delete provider if cut operation
         const deleteSourceProvider$ = this.clipboardService?.get('tiles-provider') as Subject<Array<DejaTile>>;
@@ -1092,7 +1096,7 @@ export class DejaTilesLayoutProvider extends Destroy {
                 tap(tile => tile.isHidden = true),
                 delay(1000),
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-                reduce((acc, cur) => __spread(acc, [cur]), new Array<DejaTile>()),
+                reduce((acc, cur) => [...acc, cur], new Array<DejaTile>()),
                 take(1),
                 takeUntil(this.destroyed$)
             ).subscribe(tiles => this.deleteTiles(tiles));

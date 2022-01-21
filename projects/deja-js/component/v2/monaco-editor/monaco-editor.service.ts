@@ -6,33 +6,35 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 import { Injectable, NgZone } from '@angular/core';
-import { IDisposable } from 'monaco-editor';
-import { Observable } from 'rxjs';
-import { shareReplay, take } from 'rxjs/operators';
+import { Observable, shareReplay, take } from 'rxjs';
 
 import { EditorOptions, Language } from './options/editor-options.model';
+
+export interface IDisposable {
+    dispose?: () => void;
+}
 
 export interface MonacoEditorModel {
     id?: string;
     modified?: unknown;
     original?: unknown;
-    getValue?(): string;
-    setValue?(value: string): void;
-    onDidChangeContent?(f: () => void): IDisposable;
+    getValue?: () => string;
+    setValue?: (value: string) => void;
+    onDidChangeContent?: (f: () => void) => IDisposable;
 }
 
 export interface MonacoEditorControl extends IDisposable {
-    setModel(options: MonacoEditorModel): void;
-    getModel(): MonacoEditorModel;
-    trigger(a: string, ation: string): void;
-    layout(): void;
-    updateOptions(options: EditorOptions): void;
+    setModel: (options: MonacoEditorModel) => void;
+    getModel: () => MonacoEditorModel;
+    trigger: (a: string, ation: string) => void;
+    layout: () => void;
+    updateOptions: (options: EditorOptions) => void;
 }
 
 export interface MonacoEditorApi {
-    createModel(value: string, language: Language): MonacoEditorModel;
-    create(element: HTMLElement, options: EditorOptions): MonacoEditorControl;
-    createDiffEditor(element: HTMLElement, options: EditorOptions): MonacoEditorControl;
+    createModel: (value: string, language: Language) => MonacoEditorModel;
+    create: (element: HTMLElement, options: EditorOptions) => MonacoEditorControl;
+    createDiffEditor: (element: HTMLElement, options: EditorOptions) => MonacoEditorControl;
 }
 
 export interface MonacoApi {
@@ -57,7 +59,7 @@ export class MonacoEditorService {
             const wnd = window as unknown;
             type Require1 = ((keys: string[], f: () => void) => void);
             interface Require2 {
-                config(options: { paths: { vs: string } }): void;
+                config: (options: { paths: { vs: string } }) => void;
             }
             const monacoWindow = wnd as {
                 // eslint-disable-next-line @typescript-eslint/naming-convention

@@ -7,12 +7,11 @@
  */
 
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { Rect } from '@deja-js/component/core';
-import { DejaMessageBoxType } from '@deja-js/component/message-box';
+import { DejaMessageBoxType } from '@deja-js/component/core';
+import { Rect } from '@deja-js/component/core/graphics';
 import { DejaTile, IDejaTilesAddEvent, IDejaTilesRemoveEvent, ITileDragDropContext } from '@deja-js/component/tiles';
 import { DropCursorInfos, MouseDraggableContext, MouseDroppableContext } from '@deja-js/component/v2/mouse-dragdrop';
-import { Observable, Subject } from 'rxjs';
-import { defaultIfEmpty, map, reduce, scan, switchMap, take } from 'rxjs/operators';
+import { defaultIfEmpty, map, Observable, reduce, scan, Subject, switchMap, take } from 'rxjs';
 
 import { CountriesService, Country } from '../services/countries.service';
 
@@ -166,5 +165,5 @@ interface IMessage {
     title: string;
     type: DejaMessageBoxType;
     gate: boolean;
-    cancel(value: boolean): void;
+    cancel: (value: boolean) => void;
 }

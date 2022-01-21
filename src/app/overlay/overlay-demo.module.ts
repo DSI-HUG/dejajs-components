@@ -25,14 +25,14 @@ import { routing } from './overlay-demo.routes';
     exports: [DejaOverlayDemoComponent],
     imports: [
         CommonModule,
+        DejaMarkdownModule,
+        DejaOverlayModule,
         FormsModule,
         MatButtonModule,
         MatCardModule,
         MatIconModule,
         MatTabsModule,
         MatToolbarModule,
-        DejaOverlayModule,
-        DejaMarkdownModule,
         routing
     ],
     providers: [

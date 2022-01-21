@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Rect } from '@deja-js/component/core';
+import { Rect } from '@deja-js/component/core/graphics';
 import { BehaviorSubject, ReplaySubject, Subject } from 'rxjs';
 
 export class DejaTile {
@@ -19,8 +19,8 @@ export class DejaTile {
     public selected$ = new BehaviorSubject<boolean>(false);
     public hidden$ = new ReplaySubject<boolean>(1);
     public pixelBounds$ = new BehaviorSubject<Rect>(null);
-    public deleted$ = new Subject();
-    public refresh$ = new Subject();
+    public deleted$ = new Subject<void>();
+    public refresh$ = new Subject<void>();
     public isTemporary = false;
 
     private _id: string;

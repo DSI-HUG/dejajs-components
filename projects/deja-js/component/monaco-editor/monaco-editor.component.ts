@@ -431,8 +431,9 @@ export class DejaMonacoEditorComponent implements OnDestroy, AfterViewInit, OnCh
     /**
      * Event triggered when editor is initialized
      */
+    @Output()
     // eslint-disable-next-line @angular-eslint/no-output-on-prefix
-    @Output() public readonly onInit = new EventEmitter();
+    public readonly onInit = new EventEmitter();
 
     @ViewChild('editor', { static: true })
     private editorContent: ElementRef<HTMLDivElement>;

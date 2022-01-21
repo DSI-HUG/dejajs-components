@@ -1,3 +1,59 @@
+# [12.8.0-develop.1](https://github.com/DSI-HUG/dejajs-components/compare/v12.7.2...v12.8.0-develop.1) (2022-01-21)
+
+
+### Bug Fixes
+
+* clean demo ([d6a7884](https://github.com/DSI-HUG/dejajs-components/commit/d6a78843c95805867367758e8f0d7508e9e1ba39))
+* fix bundle analyzer commands [skip ci] ([d253746](https://github.com/DSI-HUG/dejajs-components/commit/d253746f3309217dbba64b38aee7ced3ce426ac2))
+* fix lazy-loader service ([11f805c](https://github.com/DSI-HUG/dejajs-components/commit/11f805c0fad77a2c87fe9778939a33349a96eb5c))
+* fix lazy-loader service ([a89888d](https://github.com/DSI-HUG/dejajs-components/commit/a89888d12a9669ea3a2c948621b340cd3a3a16a5))
+* **input-autosize.directive:** fix numeric stepper with input-autosize ([14a98e4](https://github.com/DSI-HUG/dejajs-components/commit/14a98e46b72d56c6cd2ba68736a591083b39f346))
+* **input-autosize.directive:** fix numeric stepper with input-autosize ([8625cd4](https://github.com/DSI-HUG/dejajs-components/commit/8625cd4c53c6b6c4ca6fa1b38ce935e27b99a587))
+* inputAutosize and inputAutosizeFormField ([4694ceb](https://github.com/DSI-HUG/dejajs-components/commit/4694ceb57ea588da0e389e428e1964dc19777379))
+* **monaco-editor:** fix monaco editor dependency even if not used ([16f9fa6](https://github.com/DSI-HUG/dejajs-components/commit/16f9fa6f678bac36479b5623fc453a46b0549f26))
+* **numeric-stepper-v2:** add plus minus icons ([411f212](https://github.com/DSI-HUG/dejajs-components/commit/411f212e2b460db3c2ad83f8c07f8bcda4107d22))
+* **numeric-stepper-v2:** fix alignments and size ([71700e4](https://github.com/DSI-HUG/dejajs-components/commit/71700e4e05917e8dec8ab159dc93bb01beee0102))
+* **numeric-stepper-v2:** fix label spacing if no values inlay and hover ([6243669](https://github.com/DSI-HUG/dejajs-components/commit/6243669a0ab25a9b10357fa084a44235f9bdcc6b))
+* **numeric-stepper-v2:** precompute positions if the mouse is over when the control is created ([4508377](https://github.com/DSI-HUG/dejajs-components/commit/4508377ba65a3bd38b3d232b118b806ce72904d9))
+* **numeric-stepper.component:** add a showOnInit input for some special usages ([9c962b1](https://github.com/DSI-HUG/dejajs-components/commit/9c962b11ec312ef17620b8367be2c4e8aa63dbeb))
+* **numeric-stepper.component:** add a showOnInit input for some special usages ([b15fcfd](https://github.com/DSI-HUG/dejajs-components/commit/b15fcfd3dbe95527d487c72365080ea97566935c))
+* **numeric-stepper:** fix model become string if started value is undefined ([f26145b](https://github.com/DSI-HUG/dejajs-components/commit/f26145b0e026a351683574aa7b3a54d45f8dd685))
+* **numeric-stepper:** original position cause visibility of the shadow ([94a2932](https://github.com/DSI-HUG/dejajs-components/commit/94a2932b9c527e48db67ffd347b76b1eca0ae702))
+* peer dependencies ([2c8f198](https://github.com/DSI-HUG/dejajs-components/commit/2c8f19831cbe530e05ff7aefa91bb7c632f545a0))
+* replace some deprecated code ([9362270](https://github.com/DSI-HUG/dejajs-components/commit/9362270ce2069444045fd5df5c2549b36f2f7d9e))
+* revert try fix importcost plugin failure with date-fns-utils.ts/locale import, not working ([3aca0f4](https://github.com/DSI-HUG/dejajs-components/commit/3aca0f4600c3d8c0c2c994f789418f02bc835c98))
+* sass exports ([2e9187b](https://github.com/DSI-HUG/dejajs-components/commit/2e9187b5f662ffd314cd289f1fa348a991fdf4e9))
+* sass exports ([11a2841](https://github.com/DSI-HUG/dejajs-components/commit/11a28416a69e2dbf0e9df9da8cbf81e5111fe6ad))
+* **time-picker:** fix clear minutes or hours cause an invalid date crash ([82d1291](https://github.com/DSI-HUG/dejajs-components/commit/82d129127bf8bf9fe7ed57521f81be939219b000))
+* **time-picker:** fix height and alignment in a inline form row ([655e800](https://github.com/DSI-HUG/dejajs-components/commit/655e800001a5cbc5b1310af6bd6e90d7a079331e))
+* **treelist:** fix query event when query deleted ([5f4c7ca](https://github.com/DSI-HUG/dejajs-components/commit/5f4c7ca5b3ffcd04e6a40aa06752bd581822648a))
+* **treelist:** fix query event when query deleted ([904cfb0](https://github.com/DSI-HUG/dejajs-components/commit/904cfb01db8e3cf90088142612f68ce2801c3a39))
+* **treelist:** fix query event when query deleted ([d0158f6](https://github.com/DSI-HUG/dejajs-components/commit/d0158f603bde20353daa790019d92731a1e9bc5a))
+* **treelist:** np on delete ([4f49b45](https://github.com/DSI-HUG/dejajs-components/commit/4f49b454de720727a08e2b9defdbdd61c1128450))
+* **treelistV2:** fix query getter ([0ceb457](https://github.com/DSI-HUG/dejajs-components/commit/0ceb4576e8222508f0d9a9134fc9447ca49f267f))
+* **treelistv2:** la treelist ne sélectionne pas sur le mousedown DEJS-1028 ([e312ea9](https://github.com/DSI-HUG/dejajs-components/commit/e312ea9154e6686f70963052dc2eb4034781f3d0))
+* **treelistv2:** la treelist ne sélectionne pas sur le mousedown DEJS-1028 ([d006da5](https://github.com/DSI-HUG/dejajs-components/commit/d006da5c1b94a9965c2ce3aa0e0c404677f3f6c5))
+* try fix importcost plugin failure with date-fns-utils.ts/locale import ([30fc029](https://github.com/DSI-HUG/dejajs-components/commit/30fc02906cdf83066cff63dd5fe2552ceec61fb9))
+* try to fix theming import from another project ([3dc76de](https://github.com/DSI-HUG/dejajs-components/commit/3dc76de3a88a03aaf19ed36a8f07ccc4c771fe02))
+* update to rxjs 7 [skip ci] ([789e63c](https://github.com/DSI-HUG/dejajs-components/commit/789e63cb5dc3fd93b8e8f08dccd4a58260e31e4b))
+
+
+* refactor!: finish version 13 ([132c8db](https://github.com/DSI-HUG/dejajs-components/commit/132c8dbd2f3c404484f5cba3bc6fb9ef51bfbba6))
+
+
+### Features
+
+* .DO NOT MERGE, sample for Victor ([731e9bc](https://github.com/DSI-HUG/dejajs-components/commit/731e9bc6e47fdd0cd5bb40b6733a888eb85b7aed))
+* add input-autosize.directive, fix numeric-stepper with inputAutosize directive ([20c4bc9](https://github.com/DSI-HUG/dejajs-components/commit/20c4bc98718ddc0c6b0ff3a2fa2d00b328cbb3b7))
+* husky 7 [skip ci] ([febfc85](https://github.com/DSI-HUG/dejajs-components/commit/febfc8568f2f605fcb0ab8534849fd91d34d25dc))
+* intégration du material-date-picker en prévision du remplacement du deja DEJS-1023 ([6239e28](https://github.com/DSI-HUG/dejajs-components/commit/6239e28b59ea2135faa6042aecbcd39a53e994e3))
+* making 12.8 form ng13 modifications ([a29bcd7](https://github.com/DSI-HUG/dejajs-components/commit/a29bcd72e9a2fb810673f9dd364577595265dd28))
+
+
+### BREAKING CHANGES
+
+* init dejajs version 13
+
 ## [12.7.2](https://github.com/DSI-HUG/dejajs-components/compare/v12.7.1...v12.7.2) (2022-01-21)
 
 ## [12.7.2-develop.1](https://github.com/DSI-HUG/dejajs-components/compare/v12.7.1...v12.7.2-develop.1) (2022-01-21)

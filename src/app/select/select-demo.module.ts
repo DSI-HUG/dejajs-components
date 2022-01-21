@@ -17,7 +17,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { DejaItemModule } from '@deja-js/component/core';
+import { DejaItemModule } from '@deja-js/component/core/item-list';
 import { DejaDialogModule } from '@deja-js/component/dialog';
 import { DejaMessageBoxModule } from '@deja-js/component/message-box';
 import { DejaSelectModule } from '@deja-js/component/select';
@@ -35,23 +35,23 @@ import { routing } from './select-demo.routes';
     exports: [SelectDemoComponent],
     imports: [
         CommonModule,
-        FormsModule,
-        ReactiveFormsModule,
-        MatFormFieldModule,
-        MatIconModule,
-        MatCardModule,
-        MatCheckboxModule,
-        MatTabsModule,
-        MatToolbarModule,
-        MatInputModule,
-        MatButtonModule,
-        DejaSelectModule,
-        DejaMarkdownModule,
-        DejaMessageBoxModule,
+        DejaBoldQueryModule,
         DejaDialogModule,
         DejaItemModule,
-        DejaBoldQueryModule,
+        DejaMarkdownModule,
+        DejaMessageBoxModule,
+        DejaSelectModule,
+        FormsModule,
+        MatButtonModule,
+        MatCardModule,
+        MatCheckboxModule,
+        MatFormFieldModule,
+        MatIconModule,
+        MatInputModule,
+        MatTabsModule,
+        MatToolbarModule,
         NewsCardModule,
+        ReactiveFormsModule,
         routing
     ],
     providers: [

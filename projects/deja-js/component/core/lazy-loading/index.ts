@@ -7,3 +7,4 @@
  */
 
 export * from './lazy-loader.service';
+export * from './dialog.service';

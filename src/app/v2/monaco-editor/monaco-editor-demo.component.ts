@@ -9,12 +9,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Destroy } from '@deja-js/component/core';
 import { Language } from '@deja-js/component/v2/monaco-editor';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil } from 'rxjs';
 
 import { MonacoEditorDemoService } from './monaco-editor-demo.service';
 
 @Component({
-    providers: [MonacoEditorDemoService],
     selector: 'monaco-editor-demo',
     templateUrl: './monaco-editor-demo.component.html',
     styleUrls: ['./monaco-editor-demo.component.scss']

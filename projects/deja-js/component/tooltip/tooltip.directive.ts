@@ -8,8 +8,7 @@
 
 import { Directive, ElementRef, EventEmitter, Input, Output } from '@angular/core';
 import { DejaConnectionPositionPair, Destroy } from '@deja-js/component/core';
-import { fromEvent, of } from 'rxjs';
-import { delay, switchMap, takeUntil } from 'rxjs/operators';
+import { delay, fromEvent, of, switchMap, takeUntil } from 'rxjs';
 
 import { DejaTooltipService } from './tooltip.service';
 
@@ -32,9 +31,9 @@ export class DejaTooltipDirective extends Destroy {
 
         const element = elementRef.nativeElement as HTMLElement;
 
-        const leave$ = fromEvent(element, 'mouseleave');
+        const leave$ = fromEvent<MouseEvent>(element, 'mouseleave');
 
-        fromEvent(element, 'mouseenter').pipe(
+        fromEvent<MouseEvent>(element, 'mouseenter').pipe(
             switchMap(e => of(e).pipe(
                 delay(this.delay),
                 takeUntil(leave$)

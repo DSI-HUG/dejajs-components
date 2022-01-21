@@ -19,6 +19,6 @@ export interface IItemBase<T> extends IViewPortItem {
     className?: string;
     /** Immutable model */
     model?: T;
-    toString?(): string;
-    equals?(item: IItemBase<T>): boolean;
+    toString?: () => string;
+    equals?: (item: IItemBase<T>) => boolean;
 }

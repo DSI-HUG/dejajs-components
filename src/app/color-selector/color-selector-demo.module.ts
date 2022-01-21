@@ -24,13 +24,13 @@ import { routing } from './color-selector-demo.routes';
     exports: [DejaColorSelectorDemoComponent],
     imports: [
         CommonModule,
+        DejaColorPickerModule,
+        DejaColorSelectorModule,
+        DejaMarkdownModule,
         FormsModule,
         MatCardModule,
         MatTabsModule,
         MatToolbarModule,
-        DejaColorSelectorModule,
-        DejaColorPickerModule,
-        DejaMarkdownModule,
         routing
     ],
     providers: [

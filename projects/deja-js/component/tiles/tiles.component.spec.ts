@@ -13,10 +13,8 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { Rect } from '@deja-js/component/core';
-import { from, Observable } from 'rxjs';
-import { debounceTime, delay, map, take, tap } from 'rxjs/operators';
-import { __spread } from 'tslib';
+import { Rect } from '@deja-js/component/core/graphics';
+import { debounceTime, delay, from, map, Observable, take, tap } from 'rxjs';
 
 import { DejaTilesModule } from './index';
 import { DejaTile } from './tile.class';
@@ -151,7 +149,7 @@ describe('DejaTilesComponent', () => {
             providers: [
                 {
                     provide: OverlayContainer,
-                    useFactory: (): { getContainerElement(): HTMLElement } => {
+                    useFactory: (): { getContainerElement: () => HTMLElement } => {
                         overlayContainerElement = document.createElement('div');
                         return { getContainerElement: (): HTMLElement => overlayContainerElement };
                     }
@@ -223,10 +221,10 @@ describe('DejaTilesComponent', () => {
 
         tilesContainerInstance.tiles.unshift(tile);
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        tilesContainerInstance.tiles = __spread(tilesContainerInstance.tiles);
+        tilesContainerInstance.tiles = [...tilesContainerInstance.tiles];
         fixture.detectChanges();
 
-        return fixture.whenStable().then(() => {
+        void fixture.whenStable().then(() => {
             tilesInstance.refresh();
         });
     });
@@ -254,7 +252,7 @@ describe('DejaTilesComponent', () => {
         });
 
         fixture.detectChanges();
-        return fixture.whenStable().then(() => {
+        void fixture.whenStable().then(() => {
             tilesInstance.refresh();
         });
     });
@@ -283,7 +281,7 @@ describe('DejaTilesComponent', () => {
         fixture.detectChanges();
         tilesInstance.selectedTiles = ['Guava', 'Mango'];
 
-        return fixture.whenStable().then(() => {
+        void fixture.whenStable().then(() => {
             tilesInstance.refresh();
         });
     });
@@ -372,7 +370,7 @@ describe('DejaTilesComponent', () => {
         fixture.detectChanges();
         tilesInstance.selectedTiles = ['Cherries'];
 
-        return fixture.whenStable().then(() => {
+        void fixture.whenStable().then(() => {
             tilesInstance.refresh();
         });
     });
@@ -423,7 +421,7 @@ describe('DejaTilesComponent', () => {
 
         fixture.detectChanges();
 
-        return fixture.whenStable().then(() => {
+        void fixture.whenStable().then(() => {
             tilesInstance.refresh();
         });
     });
@@ -508,7 +506,7 @@ describe('DejaTilesComponent', () => {
         fixture.detectChanges();
         tiles1Instance.selectedTiles = ['Guava', 'Mango'];
 
-        return fixture.whenStable().then(() => {
+        void fixture.whenStable().then(() => {
             tiles1Instance.refresh();
             tiles1Instance.onBlur();
         });
@@ -584,7 +582,7 @@ describe('DejaTilesComponent', () => {
 
         fixture.detectChanges();
 
-        return fixture.whenStable().then(() => {
+        void fixture.whenStable().then(() => {
             tilesInstance.refresh();
         });
     });
@@ -662,7 +660,7 @@ describe('DejaTilesComponent', () => {
 
         fixture.detectChanges();
 
-        return fixture.whenStable().then(() => {
+        void fixture.whenStable().then(() => {
             tilesInstance.refresh();
         });
     });
@@ -740,7 +738,7 @@ describe('DejaTilesComponent', () => {
 
         fixture.detectChanges();
 
-        return fixture.whenStable().then(() => {
+        void fixture.whenStable().then(() => {
             tilesInstance.refresh();
         });
     });
@@ -818,7 +816,7 @@ describe('DejaTilesComponent', () => {
 
         fixture.detectChanges();
 
-        return fixture.whenStable().then(() => {
+        void fixture.whenStable().then(() => {
             tilesInstance.refresh();
         });
     });
@@ -896,7 +894,7 @@ describe('DejaTilesComponent', () => {
 
         fixture.detectChanges();
 
-        return fixture.whenStable().then(() => {
+        void fixture.whenStable().then(() => {
             tilesInstance.refresh();
         });
     });
@@ -974,7 +972,7 @@ describe('DejaTilesComponent', () => {
 
         fixture.detectChanges();
 
-        return fixture.whenStable().then(() => {
+        void fixture.whenStable().then(() => {
             tilesInstance.refresh();
         });
     });
@@ -1052,7 +1050,7 @@ describe('DejaTilesComponent', () => {
 
         fixture.detectChanges();
 
-        return fixture.whenStable().then(() => {
+        void fixture.whenStable().then(() => {
             tilesInstance.refresh();
         });
     });
@@ -1130,7 +1128,7 @@ describe('DejaTilesComponent', () => {
 
         fixture.detectChanges();
 
-        return fixture.whenStable().then(() => {
+        void fixture.whenStable().then(() => {
             tilesInstance.refresh();
         });
     });
@@ -1208,7 +1206,7 @@ describe('DejaTilesComponent', () => {
 
         fixture.detectChanges();
 
-        return fixture.whenStable().then(() => {
+        void fixture.whenStable().then(() => {
             tilesInstance.refresh();
         });
     });
@@ -1264,7 +1262,7 @@ describe('DejaTilesComponent', () => {
 
         fixture.detectChanges();
 
-        return fixture.whenStable().then(() => {
+        void fixture.whenStable().then(() => {
             tilesInstance.refresh();
         });
     });

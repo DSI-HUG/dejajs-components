@@ -13,9 +13,9 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { DejaConnectionPositionPair, DejaItemModule, GroupingService, IItemBase, IItemTree, ISortInfos, ItemListService, IViewPort, KeyCodes, SortingService, ViewPortService } from '@deja-js/component/core';
-import { from, Observable, of, timer } from 'rxjs';
-import { debounceTime, delay, filter, take, tap } from 'rxjs/operators';
+import { DejaConnectionPositionPair, KeyCodes } from '@deja-js/component/core';
+import { DejaItemModule, GroupingService, IItemBase, IItemTree, ISortInfos, ItemListService, IViewPort, SortingService, ViewPortService } from '@deja-js/component/core/item-list';
+import { debounceTime, delay, filter, from, Observable, of, take, tap, timer } from 'rxjs';
 
 import { DejaSelectModule } from './index';
 import { DejaSelectComponent } from './select.component';
@@ -501,7 +501,7 @@ describe('DejaSelectByModelContainerComponent', () => {
         const fixture = TestBed.createComponent(DejaSelectByModelContainerComponent);
         fixture.detectChanges();
 
-        return fixture.whenStable().then(() => {
+        void fixture.whenStable().then(() => {
             fixture.detectChanges();
 
             let selectedChips = fixture.debugElement.queryAll(By.css('deja-select > deja-chips > span.chips-item > #close-button'));
@@ -528,7 +528,7 @@ describe('DejaSelectByModelContainerComponent', () => {
 
         fixture.detectChanges();
 
-        return fixture.whenStable().then(() => {
+        void fixture.whenStable().then(() => {
             fixture.detectChanges();
             void expect(selectInstance.selectedItems.length).toBe(3, '1');
             void expect(selectInstance.selectedModels.length).toBe(3, '2');
@@ -555,7 +555,7 @@ describe('DejaSelectByModelContainerComponent', () => {
 
         fixture.detectChanges();
 
-        return fixture.whenStable().then(() => {
+        void fixture.whenStable().then(() => {
             selectInstance.type = 'select';
             fixture.detectChanges();
 
@@ -617,7 +617,7 @@ describe('DejaSelectByOptionsContainerComponent', () => {
 
         fixture.detectChanges();
 
-        return fixture.whenStable().then(() => {
+        void fixture.whenStable().then(() => {
             from(selectInstance.dropDownVisibleChange).subscribe(() => fixture.detectChanges());
 
             viewPortService.viewPortResult$.pipe(
@@ -648,7 +648,7 @@ describe('DejaSelectByOptionsContainerComponent', () => {
         const sl = selectInstance as any;
         fixture.detectChanges();
 
-        return fixture.whenStable().then(() => {
+        void fixture.whenStable().then(() => {
             observeOptionsViewPort$(fixture).pipe(
                 debounceTime(100),
                 take(1)
@@ -693,7 +693,7 @@ describe('DejaSelectByOptionsContainerComponent', () => {
 
         fixture.detectChanges();
 
-        return fixture.whenStable().then(() => {
+        void fixture.whenStable().then(() => {
             observeOptionsViewPort$(fixture).pipe(
                 debounceTime(100)
             ).subscribe(vp => {
@@ -862,7 +862,7 @@ describe('DejaSelectByOptionsContainerComponent', () => {
 
         fixture.detectChanges();
 
-        return fixture.whenStable().then(() => {
+        void fixture.whenStable().then(() => {
             observeOptionsViewPort$(fixture).pipe(
                 debounceTime(10),
                 take(1)

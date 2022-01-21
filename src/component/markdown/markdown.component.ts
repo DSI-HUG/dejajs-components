@@ -11,7 +11,7 @@ import { AfterViewChecked, ChangeDetectionStrategy, ChangeDetectorRef, Component
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Destroy } from '@deja-js/component/core';
 import * as Prism from 'prismjs';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil } from 'rxjs';
 import * as Showdown from 'showdown';
 
 @Component({
@@ -44,10 +44,13 @@ export class DejaMarkdownComponent extends Destroy implements AfterViewChecked {
         });
         this.httpClient.get(url, { observe: 'body', headers: headers, responseType: 'text' }).pipe(
             takeUntil(this.destroyed$)
-        ).subscribe(object => {
-            this.value = object.toString();
-        }, (error: {message: string}) => {
-            this.value = `${error.message}`;
+        ).subscribe({
+            next: object => {
+                this.value = object.toString();
+            },
+            error: (error: { message: string }) => {
+                this.value = `${error.message}`;
+            }
         });
     }
 

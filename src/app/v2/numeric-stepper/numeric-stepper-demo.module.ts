@@ -15,6 +15,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { InputAutosizeModule } from '@deja-js/component/input-autosize';
 import { DejaNumericStepperModule } from '@deja-js/component/v2/numeric-stepper';
 
 import { DejaMarkdownModule } from '../../../component/markdown/index';
@@ -26,17 +27,18 @@ import { routing } from './numeric-stepper-demo.routes';
     exports: [DejaNumericStepperDemoComponent],
     imports: [
         CommonModule,
+        DejaMarkdownModule,
+        DejaNumericStepperModule,
         FormsModule,
+        InputAutosizeModule,
+        MatButtonModule,
         MatCardModule,
+        MatFormFieldModule,
+        MatInputModule,
         MatTabsModule,
         MatToolbarModule,
-        MatFormFieldModule,
-        DejaNumericStepperModule,
-        DejaMarkdownModule,
-        routing,
-        MatButtonModule,
-        MatInputModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        routing
     ],
     providers: [
     ]

@@ -19,7 +19,7 @@ import { MockMediaService } from './test/MockMediaService';
     selector: 'DejaOverlayContainerComponent',
     template: '<deja-overlay>Overlay content</deja-overlay>'
 })
-class DejaOverlayContainerComponent {}
+class DejaOverlayContainerComponent { }
 
 describe('DejaOverlayComponent', () => {
 

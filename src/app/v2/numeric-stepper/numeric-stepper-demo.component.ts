@@ -9,8 +9,7 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Destroy } from '@deja-js/component/core';
-import { Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, map, takeUntil } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, map, Subject, takeUntil } from 'rxjs';
 
 import { numberValidator } from './validators';
 

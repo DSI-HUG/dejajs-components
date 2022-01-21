@@ -7,8 +7,7 @@
  */
 import { Component, ContentChild, ElementRef, EventEmitter, HostListener, Output } from '@angular/core';
 import { Destroy, KeyCodes } from '@deja-js/component/core';
-import { fromEvent } from 'rxjs';
-import { filter, takeUntil } from 'rxjs/operators';
+import { filter, fromEvent, takeUntil } from 'rxjs';
 
 /**
  * Simple dialog for Angular
@@ -33,10 +32,10 @@ export class DejaDialogComponent extends Destroy {
 
         const element = elementRef.nativeElement as HTMLElement;
 
-        fromEvent(element.ownerDocument, 'keyup').pipe(
-            filter((event: KeyboardEvent) => !!(event.code === KeyCodes.Enter && this.okButton?._elementRef) || !!(event.code === KeyCodes.Escape && this.cancelButton?._elementRef)),
+        fromEvent<KeyboardEvent>(element.ownerDocument, 'keyup').pipe(
+            filter(event => !!(event.code === KeyCodes.Enter && this.okButton?._elementRef) || !!(event.code === KeyCodes.Escape && this.cancelButton?._elementRef)),
             takeUntil(this.destroyed$)
-        ).subscribe((event: KeyboardEvent) => {
+        ).subscribe(event => {
             if (event.code === KeyCodes.Enter) {
                 this.okButton._elementRef.nativeElement.click();
             } else if (event.code === KeyCodes.Escape) {
