@@ -38,3 +38,11 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
         run: npm publish ./dist/deja-js/component --access public
+      - name: Merge master back to dev
+        if: github.ref == 'refs/heads/master'
+        run: |
+          git fetch --unshallow
+          git checkout dev
+          git pull
+          git merge --no-ff master -m "Auto-merge master back to dev [skip-ci]"
+          git push
