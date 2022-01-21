@@ -33,7 +33,7 @@
                         "release": "minor"
                     },
                     {
-                        "type": "BREAKING CHANGE",
+                        "type": "breaking",
                         "release": "minor"
                     }
                 ]
