@@ -20,9 +20,15 @@ jobs:
           registry-url: https://registry.npmjs.org/
       - name: Make sure npm is latest
         run: npm install -g npm@latest
-      - name: Merge master into develop
-        uses: devmasx/merge-branch@master
-        with:
-          label_name: 'merge branch 'master' of github.com:DSI-HUG/dejajs-components into develop [skip ci]'
-          target_branch: 'develop'
-          github_token: ${{ github.token }}
+      - name: Merge master back to dev
+        if: github.ref == 'refs/heads/master'
+        run: |
+          git fetch
+          git checkout develop
+          git pull
+          git merge --no-ff master -m "merge branch 'master' of github.com:DSI-HUG/dejajs-components into develop [skip ci]"
+          git push
+        env:
+            GITHUB_TOKEN: ${{ secrets.PUBLISH_TOKEN }}
+            user_name: github-actions[bot]
+            user_email: 41898282+github-actions[bot]@users.noreply.github.com
