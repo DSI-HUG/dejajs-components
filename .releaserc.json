@@ -3,7 +3,8 @@
         "master",
         {
             "name": "develop",
-            "prerelease": true
+            "prerelease": "develop",
+            "range": "12.x.x"
         }
     ],
     "plugins": [
