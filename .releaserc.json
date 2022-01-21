@@ -31,12 +31,11 @@
                     {
                         "type": "chore",
                         "release": "minor"
-                    },
-                    {
-                        "tag": "BREAKING CHANGE",
-                        "release": "minor"
                     }
-                ]
+                ],
+                "parserOpts": {
+                    "noteKeywords": []
+                }
             }
         ],
         "@semantic-release/release-notes-generator",
