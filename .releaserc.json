@@ -30,15 +30,11 @@
                     },
                     {
                         "type": "chore",
-                        "release": "patch"
+                        "release": "minor"
                     },
                     {
-                        "type": "fix",
-                        "release": "patch"
-                    },
-                    {
-                        "type": "feat",
-                        "release": "patch"
+                        "type": "BREAKING CHANGE",
+                        "release": "minor"
                     }
                 ]
             }
