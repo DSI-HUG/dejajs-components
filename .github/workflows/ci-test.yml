@@ -23,6 +23,6 @@ jobs:
       - name: Merge master into develop
         uses: devmasx/merge-branch@master
         with:
-          label_name: 'merge branch 'master' of github.com:DSI-HUG/dejajs-components into develop [skip ci]'
+          label_name: 'merge branch master of github.com:DSI-HUG/dejajs-components into develop [skip ci]'
           target_branch: 'develop'
           github_token: ${{ github.token }}
