@@ -29,7 +29,15 @@
                     },
                     {
                         "type": "chore",
-                        "release": "minor"
+                        "release": "patch"
+                    },
+                    {
+                        "type": "fix",
+                        "release": "patch"
+                    },
+                    {
+                        "type": "feat",
+                        "release": "patch"
                     }
                 ]
             }
