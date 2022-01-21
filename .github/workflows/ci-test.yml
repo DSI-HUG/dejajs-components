@@ -1,0 +1,30 @@
+name: Test
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  ci_publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.PUBLISH_TOKEN }}
+      - name: Setup node
+        uses: actions/setup-node@v2
+        with:
+          node-version: 12.x
+          registry-url: https://registry.npmjs.org/
+      - name: Make sure npm is latest
+        run: npm install -g npm@latest
+      - name: Merge master back to dev
+        if: github.ref == 'refs/heads/master'
+        uses: everlytic/branch-merge@1.1.2
+        with:
+          github_token: ${{ secrets.PUBLISH_TOKEN }}
+          source_ref: 'master'
+          target_branch: 'develop'
+          commit_message_template: 'merge branch {source_ref} of github.com:DSI-HUG/dejajs-components into {target_branch} [skip ci]'
