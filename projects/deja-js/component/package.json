@@ -17,14 +17,6 @@
     "dependencies": {
         "tslib": "^2.1.0"
     },
-    "exports": {
-        "./theming": {
-            "sass": "./styles/theming.scss"
-        },
-        "./backdrop": {
-            "sass": "./styles/mixins/_backdrop.scss"
-        }
-    },
     "peerDependencies": {
         "@angular/animations": "^12.0.0",
         "@angular/cdk": "^12.0.0",
