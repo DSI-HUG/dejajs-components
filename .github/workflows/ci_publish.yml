@@ -3,8 +3,9 @@ name: Publish
 on:
   push:
     branches:
-      - 12.6.x
-  release:
+      - master
+      - develop
+    release:
 
 jobs:
   ci_publish:
