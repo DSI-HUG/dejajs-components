@@ -2,8 +2,9 @@
     "branches": [
         "master",
         {
-            "name": "develop",
-            "prerelease": true
+            "name": "12.7.x",
+            "range": "12.7.x",
+            "channel": "12.7.x"
         }
     ],
     "plugins": [
