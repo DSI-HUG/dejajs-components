@@ -44,7 +44,7 @@ jobs:
           git fetch
           git checkout develop
           git pull
-          git merge --no-ff master -m "Auto-merge master back to dev [skip-ci]"
+          git merge --no-ff master -m "merge branch 'master' of github.com:DSI-HUG/dejajs-components into develop [skip ci]"
           git push
         env:
             GITHUB_TOKEN: ${{ secrets.PUBLISH_TOKEN }}
