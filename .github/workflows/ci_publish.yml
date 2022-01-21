@@ -1,0 +1,39 @@
+name: Publish
+
+on:
+  push:
+    branches:
+      - 12.6.x
+  release:
+
+jobs:
+  ci_publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.PUBLISH_TOKEN }}
+      - name: Setup node
+        uses: actions/setup-node@v2
+        with:
+          node-version: 12.x
+          registry-url: https://registry.npmjs.org/
+      - name: Make sure npm is latest
+        run: npm install -g npm@latest
+      - name: Install dependencies
+        run: npm clean-install
+      - name: Build
+        run: npm run build:lib
+      - name: Lint
+        run: npm run lint
+      - name: Semantic Release
+        run: npm run release:ci
+        env:
+            GITHUB_TOKEN: ${{ secrets.PUBLISH_TOKEN }}
+            user_name: github-actions[bot]
+            user_email: 41898282+github-actions[bot]@users.noreply.github.com
+      - name: Publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
+        run: npm publish ./dist/deja-js/component --access public

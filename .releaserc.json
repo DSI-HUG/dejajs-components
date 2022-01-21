@@ -2,8 +2,8 @@
     "branches": [
         "master",
         {
-            "name": "develop",
-            "prerelease": true
+            "name": "12.6.x",
+            "channel": "12.6.x"
         }
     ],
     "plugins": [
@@ -29,7 +29,15 @@
                     },
                     {
                         "type": "chore",
-                        "release": "minor"
+                        "release": "patch"
+                    },
+                    {
+                        "type": "fix",
+                        "release": "patch"
+                    },
+                    {
+                        "type": "feat",
+                        "release": "patch"
                     }
                 ]
             }
