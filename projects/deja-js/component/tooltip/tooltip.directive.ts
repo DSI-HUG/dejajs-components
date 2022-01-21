@@ -24,7 +24,7 @@ export class DejaTooltipDirective extends Destroy {
     @Input('deja-tooltip') public name: string;
     // eslint-disable-next-line @angular-eslint/no-input-rename
     @Input('tooltip-positions') public positions: DejaConnectionPositionPair | string;
-    // eslint-disable-next-line @angular-eslint/no-output-rename
+    // eslint-disable-next-line @angular-eslint/no-output-rename, @angular-eslint/no-output-native
     @Output('tooltip-show') public readonly show = new EventEmitter();
 
     public constructor(elementRef: ElementRef, tooltipService: DejaTooltipService) {

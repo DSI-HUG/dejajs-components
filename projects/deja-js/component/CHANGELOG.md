@@ -1,3 +1,33 @@
+## [12.6.1-develop.4](https://github.com/DSI-HUG/dejajs-components/compare/v12.6.1-develop.3...v12.6.1-develop.4) (2022-01-21)
+
+
+### Bug Fixes
+
+* **date-picker:** improve datepicker responsiveness and add compact design (DEJS-1040) ([d59cfa0](https://github.com/DSI-HUG/dejajs-components/commit/d59cfa0ec8a19e94ed458b27ea7e4ab82afc7a31))
+* **datepicker:** fix actions position and numeric stepper value visibilitiy (DEJS-1040) ([652d6cc](https://github.com/DSI-HUG/dejajs-components/commit/652d6cc349e92bf74ad3145ff263afd454c626c8))
+* **time-picker:** fix the infinite loop when unsetting hours or minutes (DEJS-1040) ([f6922c1](https://github.com/DSI-HUG/dejajs-components/commit/f6922c1621c8f88ca73b73748c21818c234a97d4))
+
+## [12.6.1-develop.3](https://github.com/DSI-HUG/dejajs-components/compare/v12.6.1-develop.2...v12.6.1-develop.3) (2021-11-10)
+
+
+### Bug Fixes
+
+* **popup-tray:** avoid NPE on dialog without componentInstance ([542d994](https://github.com/DSI-HUG/dejajs-components/commit/542d9943e08cd627d704b3c2c7d3a4c55faa17e7))
+
+## [12.6.1-develop.2](https://github.com/DSI-HUG/dejajs-components/compare/v12.6.1-develop.1...v12.6.1-develop.2) (2021-10-27)
+
+
+### Bug Fixes
+
+* **numeric-stepper:** fix arrow alignment ([1b4bda4](https://github.com/DSI-HUG/dejajs-components/commit/1b4bda4620d74810ae08f476189f09b11c240183))
+
+## [12.6.1-develop.1](https://github.com/DSI-HUG/dejajs-components/compare/v12.6.0...v12.6.1-develop.1) (2021-10-27)
+
+
+### Bug Fixes
+
+* **numeric-stepper:** fix arrow alignment ([d4ab1b1](https://github.com/DSI-HUG/dejajs-components/commit/d4ab1b1ff335bcd5798800e8380980ec351bc768))
+
 # [12.6.0](https://github.com/DSI-HUG/dejajs-components/compare/v12.5.0...v12.6.0) (2021-10-26)
 
 

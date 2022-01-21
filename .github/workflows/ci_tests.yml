@@ -1,0 +1,31 @@
+name: Test Pull-Request
+
+on:
+  pull_request:
+    branches:
+      - master
+      - develop
+
+jobs:
+  ci_tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v2
+      - name: Setup node
+        uses: actions/setup-node@v2
+        with:
+          node-version: 12.x
+          registry-url: https://registry.npmjs.org/
+      - name: Make sure npm is latest
+        run: npm install -g npm@latest
+      - name: Install dependencies
+        run: npm clean-install
+      - name: Build
+        run: npm run build:lib
+      - name: Lint
+        run: npm run lint
+      - name: license-check
+        run: npm run license-check
+      - name: Test
+        run: npm run test:lib:ci

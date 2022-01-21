@@ -69,7 +69,7 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
         if (this.breakpointObserver.isMatched('(max-height: 900px)')) {
             oc += ' under-toolbar-position';
         }
-        if (this.breakpointObserver.isMatched('(max-height: 550px)')) {
+        if (this.breakpointObserver.isMatched('(max-height: 580px)')) {
             oc += ' top-position';
         }
         return oc;
