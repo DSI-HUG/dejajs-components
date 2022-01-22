@@ -47,9 +47,9 @@ deja-date-picker {
     }
 
 	.actions {
-		position: relative;
-		right: 2.7rem;
-		top: 0;
+		position: absolute;
+		right: 0.3rem;
+		top: 0.3rem;
 
 		button.mat-mini-fab {
 			background: none;
@@ -57,15 +57,4 @@ deja-date-picker {
 			box-shadow: none;
 		}
 	}
-
-    deja-date-time-selector {
-        >#date-time-selector {
-            >#time-selector {
-                deja-numeric-stepper .shadow {
-                    background-color: inherit;
-                }
-            }
-        }
-
-    }
 }

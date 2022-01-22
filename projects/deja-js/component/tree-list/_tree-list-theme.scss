@@ -1,4 +1,4 @@
-@use '~@angular/material'as mat;
+@use '@angular/material'as mat;
 @use '../styles/mixins/item-list-theme'as itemListTheme;
 
 @mixin tree-list-theme($theme) {
