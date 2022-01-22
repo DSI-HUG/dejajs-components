@@ -38,3 +38,11 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
         run: npm publish ./dist/deja-js/component --access public
+      - name: Merge release back to next
+        if: github.ref == 'refs/heads/release/13.x.x'
+        uses: everlytic/branch-merge@1.1.2
+        with:
+          github_token: ${{ secrets.PUBLISH_TOKEN }}
+          source_ref: 'release/13.x.x'
+          target_branch: 'next/13.x.x'
+          commit_message_template: 'merge branch {source_ref} of github.com:DSI-HUG/dejajs-components into {target_branch} [skip ci]'

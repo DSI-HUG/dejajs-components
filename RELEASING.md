@@ -1,4 +1,4 @@
-# Faire une release de @deja-js/component >= 13.x.x
+# Faire une release de @deja-js/component
 
 Les releases de @deja-js/component se font automatiquement sur Github Actions. 
 
