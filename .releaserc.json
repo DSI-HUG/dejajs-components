@@ -2,13 +2,8 @@
     "branches": [
         "master",
         {
-            "name": "release/13.x.x",
-            "channel": "release/13.x.x"
-        },
-        {
-            "name": "next/13.x.x",
-            "channel": "next/13.x.x",
-            "prerelease": "next"
+            "name": "develop",
+            "prerelease": "develop"
         }
     ],
     "plugins": [
@@ -36,7 +31,10 @@
                         "type": "chore",
                         "release": "minor"
                     }
-                ]
+                ],
+                "parserOpts": {
+                    "noteKeywords": []
+                }
             }
         ],
         "@semantic-release/release-notes-generator",
