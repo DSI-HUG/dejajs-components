@@ -4,6 +4,15 @@
         {
             "name": "develop",
             "prerelease": "develop"
+        },
+        {
+            "name": "release/13.x.x",
+            "channel": "release/13.x.x"
+        },
+        {
+            "name": "next/13.x.x",
+            "channel": "next/13.x.x",
+            "prerelease": "next"
         }
     ],
     "plugins": [
@@ -11,6 +20,10 @@
             "@semantic-release/commit-analyzer", {
                 "preset": "angular",
                 "releaseRules": [{
+                        "breaking": true,
+                        "release": "minor"
+                    },
+                    {
                         "type": "docs",
                         "scope": "README",
                         "release": "patch"
