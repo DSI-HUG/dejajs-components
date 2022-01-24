@@ -1,4 +1,6 @@
-# [13.1.0-next.1](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0...v13.1.0-next.1) (2022-01-22)
+## [12.9.1-develop.1](https://github.com/DSI-HUG/dejajs-components/compare/v12.9.0...v12.9.1-develop.1) (2022-01-24)
+
+# [12.9.0](https://github.com/DSI-HUG/dejajs-components/compare/v12.8.0...v12.9.0) (2022-01-21)
 
 
 ### Bug Fixes
