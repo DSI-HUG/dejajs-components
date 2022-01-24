@@ -1,3 +1,10 @@
+## [12.10.1](https://github.com/DSI-HUG/dejajs-components/compare/v12.10.0...v12.10.1) (2022-01-24)
+
+
+### Bug Fixes
+
+* remove non working exports ([fed1bfe](https://github.com/DSI-HUG/dejajs-components/commit/fed1bfeac9796168cad850ab800f221f29e278d0))
+
 # [12.10.0](https://github.com/DSI-HUG/dejajs-components/compare/v12.9.0...v12.10.0) (2022-01-24)
 
 # [12.9.0](https://github.com/DSI-HUG/dejajs-components/compare/v12.8.0...v12.9.0) (2022-01-21)
