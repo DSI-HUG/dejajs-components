@@ -11,6 +11,10 @@
             "@semantic-release/commit-analyzer", {
                 "preset": "angular",
                 "releaseRules": [{
+                        "breaking": true,
+                        "release": "minor"
+                    },
+                    {
                         "type": "docs",
                         "scope": "README",
                         "release": "patch"
