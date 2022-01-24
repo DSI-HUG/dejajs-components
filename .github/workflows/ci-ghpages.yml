@@ -3,8 +3,7 @@ name: Deploy docs to GitHub Pages
 on:
   push:
     branches:
-      - release/13.x.x
-  release:
+      - master
 
 jobs:
   ci_ghpages:

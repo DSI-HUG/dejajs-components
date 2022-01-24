@@ -3,9 +3,8 @@ name: Publish
 on:
   push:
     branches:
-      - next/13.x.x
-      - release/13.x.x
-  release:
+      - develop
+      - master
 
 jobs:
   ci_publish:
