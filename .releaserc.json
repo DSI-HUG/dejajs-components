@@ -2,8 +2,9 @@
     "branches": [
         "master",
         {
-            "name": "develop",
-            "prerelease": "develop"
+            "name": "12.x.x",
+            "range": "12.x.x",
+            "channel": "12.x.x"
         }
     ],
     "plugins": [
@@ -11,6 +12,10 @@
             "@semantic-release/commit-analyzer", {
                 "preset": "angular",
                 "releaseRules": [{
+                        "breaking": true,
+                        "release": "minor"
+                    },
+                    {
                         "type": "docs",
                         "scope": "README",
                         "release": "patch"

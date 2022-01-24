@@ -3,9 +3,7 @@ name: Publish
 on:
   push:
     branches:
-      - master
-      - develop
-  release:
+      - 12.x.x
 
 jobs:
   ci_publish:

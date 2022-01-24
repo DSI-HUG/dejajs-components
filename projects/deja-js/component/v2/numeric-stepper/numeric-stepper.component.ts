@@ -223,7 +223,8 @@ export class DejaNumericStepperComponent extends Destroy implements OnInit {
                 if (!isUp && !this.disableDown) {
                     step(linkedElements.inputElement, 'decrement', 'stepDown');
                 }
-            })
+            }),
+            shareReplay({ bufferSize: 1, refCount: false })
         );
 
         const valueChange$ = linkedElements$.pipe(
