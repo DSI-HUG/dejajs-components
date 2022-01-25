@@ -1,3 +1,12 @@
+# [13.1.0-develop.2](https://github.com/DSI-HUG/dejajs-components/compare/v13.1.0-develop.1...v13.1.0-develop.2) (2022-01-25)
+
+
+### Bug Fixes
+
+* **deja-editor:** check instance is defined to avoid NPE (DEJS-1031) ([9190223](https://github.com/DSI-HUG/dejajs-components/commit/91902238107802e7eba320e27ca43a5bb3328476))
+* **deja-editor:** move check to the top of the method (DEJS-1031) ([92ae721](https://github.com/DSI-HUG/dejajs-components/commit/92ae72108e105aedd635052b9b255359c61eab91))
+* remove non working exports ([fed1bfe](https://github.com/DSI-HUG/dejajs-components/commit/fed1bfeac9796168cad850ab800f221f29e278d0))
+
 # [13.1.0-develop.1](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0...v13.1.0-develop.1) (2022-01-24)
 
 
