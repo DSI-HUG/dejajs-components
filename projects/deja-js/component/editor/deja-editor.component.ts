@@ -341,8 +341,11 @@ export class DejaEditorComponent extends Destroy implements OnChanges, AfterView
     }
 
     public getSelectedText(): string {
-        const selection = this.instance.getSelection();
-        return selection.getSelectedText();
+        if (this.instance) {
+            const selection = this.instance.getSelection();
+            return selection.getSelectedText();
+        }
+        return '';
     }
 
     /**
@@ -354,7 +357,7 @@ export class DejaEditorComponent extends Destroy implements OnChanges, AfterView
      * @param replace the string to replace with
      */
     public replace(replace: string): void {
-        if (!replace) {
+        if (!replace || !this.instance) {
             return;
         }
         const selection = this.getSelectedText();
@@ -367,6 +370,7 @@ export class DejaEditorComponent extends Destroy implements OnChanges, AfterView
             this.instance.focus = focus;
             return;
         }
+
         const range = this.instance.getSelection().getRanges(true)[0];
         if (!range) {
             this.instance.insertHtml(replace);
