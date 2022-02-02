@@ -8,8 +8,7 @@
 
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { from } from 'rxjs';
-import { delay } from 'rxjs/operators';
+import { delay, from } from 'rxjs';
 
 import { MonacoEditorModule } from '.';
 import { MonacoEditorComponent } from './monaco-editor.component';

@@ -7,9 +7,9 @@
  */
 
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, Input, TemplateRef } from '@angular/core';
-import { Destroy, ItemListService } from '@deja-js/component/core';
-import { Subscription } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { Destroy } from '@deja-js/component/core';
+import { ItemListService } from '@deja-js/component/core/item-list';
+import { Subscription, takeUntil } from 'rxjs';
 
 import { IDejaGridColumnLayout } from '../data-grid-column/data-grid-column-layout';
 import { IDejaGridRow } from './data-grid-row';

@@ -7,11 +7,12 @@
  */
 
 import { Directive, ElementRef, Input } from '@angular/core';
-import { Destroy, Position, Rect } from '@deja-js/component/core';
-import { fromEvent, isObservable, merge, Observable, of, Subject } from 'rxjs';
-import { filter, map, switchMap, take, takeUntil, tap } from 'rxjs/operators';
+import { Destroy } from '@deja-js/component/core';
+import { Position, Rect } from '@deja-js/component/core/graphics';
+import { filter, fromEvent, isObservable, map, mergeWith, Observable, of, Subject, switchMap, take, takeUntil, tap } from 'rxjs';
 
 import { DragCursorInfos, MouseDragDropService } from './mouse-dragdrop.service';
+
 
 @Directive({
     selector: '[mouse-draggable]'
@@ -86,13 +87,14 @@ export class MouseDraggableDirective<T> extends Destroy {
                         switchMap(target => {
                             dragDropService.dragging$.next(true);
 
-                            const moveUp$ = new Subject();
+                            const moveUp$ = new Subject<void>();
 
                             const enterWhileNotDragDropEvent$ = mouseEnterEvent$.pipe(
                                 filter(event => event.buttons !== 1 && dragDropService.isDragging)
                             );
 
-                            const kill$ = merge(mouseUpEvent$, enterWhileNotDragDropEvent$, moveUp$).pipe(
+                            const kill$ = mouseUpEvent$.pipe(
+                                mergeWith(enterWhileNotDragDropEvent$, moveUp$),
                                 take(1),
                                 tap(() => {
                                     dragDropService.dragCursor$.next(null);
@@ -144,5 +146,5 @@ export class MouseDraggableDirective<T> extends Destroy {
 export interface MouseDraggableContext<T> {
     target?: string; // Tagname or #id or [attribute]
     className?: string;
-    dragStart?(element: HTMLElement): T;
+    dragStart?: (element: HTMLElement) => T;
 }

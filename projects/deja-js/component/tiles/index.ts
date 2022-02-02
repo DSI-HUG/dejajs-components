@@ -17,13 +17,13 @@ import { DejaTilePositionDirective } from './tile-position.directive';
 import { DejaTilesComponent } from './tiles.component';
 
 @NgModule({
-    declarations: [DejaTileComponent, DejaTilesComponent, DejaTilePositionDirective],
+    declarations: [DejaTileComponent, DejaTilePositionDirective, DejaTilesComponent],
     exports: [DejaTileComponent, DejaTilesComponent],
     imports: [
         CommonModule,
         FormsModule,
-        MouseDragDropModule,
-        MatProgressSpinnerModule
+        MatProgressSpinnerModule,
+        MouseDragDropModule
     ]
 })
 export class DejaTilesModule { }

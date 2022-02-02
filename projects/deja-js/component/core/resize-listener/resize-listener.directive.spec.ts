@@ -71,7 +71,7 @@ describe('DejaResizeListenerDirective', () => {
         divElement.style.height = '200px';
         fixture.detectChanges();
 
-        return fixture.whenStable().then(() => {
+        void fixture.whenStable().then(() => {
             timer(100).subscribe(() => {
                 void expect(spy).toHaveBeenCalledTimes(1);
                 done();

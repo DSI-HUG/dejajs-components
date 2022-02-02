@@ -10,13 +10,14 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ObjectMapper } from 'json-object-mapper';
 import { cloneDeep } from 'lodash-es';
-import { Observable } from 'rxjs';
-import { map, shareReplay, switchMap } from 'rxjs/operators';
+import { map, Observable, shareReplay, switchMap } from 'rxjs';
 
 import { News, NewsArticles, NewsSource, NewsSources } from '../common/news.model';
 
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class NewsService {
     public constructor(private httpClient: HttpClient) { }
 

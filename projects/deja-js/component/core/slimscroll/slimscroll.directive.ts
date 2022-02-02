@@ -12,8 +12,7 @@
 
 /* eslint-disable @typescript-eslint/unbound-method */
 import { Directive, ElementRef, HostListener, Input, OnDestroy, OnInit, Renderer2, RendererFactory2 } from '@angular/core';
-import { interval, Subscription, timer } from 'rxjs';
-import { filter, take, takeUntil } from 'rxjs/operators';
+import { filter, interval, Subscription, take, takeUntil, timer } from 'rxjs';
 
 import { Destroy } from '../destroy/destroy';
 

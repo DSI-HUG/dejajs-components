@@ -6,9 +6,8 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 import { Directive, ElementRef, HostBinding, Input, Optional } from '@angular/core';
-import { DejaClipboardService, Destroy, UUID } from '@deja-js/component/core';
-import { fromEvent } from 'rxjs';
-import { filter, switchMap, take, takeUntil } from 'rxjs/operators';
+import { DejaClipboardService, Destroy, IdService } from '@deja-js/component/core';
+import { filter, fromEvent, switchMap, take, takeUntil } from 'rxjs';
 
 @Directive({
     selector: '[deja-draggable]'
@@ -32,21 +31,21 @@ export class DejaDraggableDirective extends Destroy {
         return this._context;
     }
 
-    public constructor(elementRef: ElementRef, @Optional() private clipboardService: DejaClipboardService) {
+    public constructor(elementRef: ElementRef, @Optional() private clipboardService: DejaClipboardService, idService: IdService) {
         super();
 
         const element = elementRef.nativeElement as HTMLElement;
 
-        fromEvent(element, 'dragstart').pipe(
+        fromEvent<DragEvent>(element, 'dragstart').pipe(
             filter(() => !!this.context),
-            switchMap((event: DragEvent) => {
+            switchMap(event => {
                 if (!clipboardService) {
                     throw new Error('To use the DejaDraggableDirective, please import and provide the DejaClipboardService in your application.');
                 }
 
                 // console.log('dragstart');
                 const dragInfos = {} as Record<string, unknown>;
-                this.dragdropid = new UUID().toString();
+                this.dragdropid = idService.generate();
                 dragInfos[this.uuidKey] = this.dragdropid;
 
                 const object = this.context?.object || element;
@@ -74,12 +73,12 @@ export class DejaDraggableDirective extends Destroy {
                     }
                 }
 
-                return fromEvent(element, 'dragend').pipe(
+                return fromEvent<DragEvent>(element, 'dragend').pipe(
                     take(1)
                 );
             }),
             takeUntil(this.destroyed$)
-        ).subscribe((evt: DragEvent) => {
+        ).subscribe(evt => {
             // console.log('dragend');
             const dragEndInfos = this.clipboardService.get(this.draginfokey) as Record<string, unknown>;
             const obj = dragEndInfos?.[this.objectKey];
@@ -114,6 +113,6 @@ export interface IDejaDragEvent extends DragEvent {
 
 export interface IDejaDragContext {
     object?: unknown;
-    dragstartcallback?(event: IDejaDragEvent): void;
-    dragendcallback?(event: IDejaDragEvent): void;
+    dragstartcallback?: (event: IDejaDragEvent) => void;
+    dragendcallback?: (event: IDejaDragEvent) => void;
 }

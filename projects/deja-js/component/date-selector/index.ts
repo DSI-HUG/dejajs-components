@@ -19,8 +19,8 @@ import { DejaDateSelectorComponent } from './date-selector.component';
     declarations: [DejaDateSelectorComponent],
     exports: [DejaDateSelectorComponent],
     imports: [
-        DejaTimePickerModule,
         CommonModule,
+        DejaTimePickerModule,
         FormsModule,
         MatButtonModule,
         MatIconModule

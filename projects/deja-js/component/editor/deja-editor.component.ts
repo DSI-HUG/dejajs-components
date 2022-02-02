@@ -17,8 +17,7 @@ import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, E
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Destroy } from '@deja-js/component/core';
 import { cloneDeep } from 'lodash-es';
-import { from, Subscription, timer } from 'rxjs';
-import { delay, first, take, takeUntil, tap } from 'rxjs/operators';
+import { delay, first, from, Subscription, take, takeUntil, tap, timer } from 'rxjs';
 
 import { DejaEditorService } from './deja-editor.service';
 

@@ -40,7 +40,7 @@ describe('DejaEditorComponent', () => {
 
     it('should load ckeditor', done => {
         fixture.detectChanges();
-        return fixture.whenStable().then(() => {
+        void fixture.whenStable().then(() => {
             timer(5000).subscribe(() => {
                 fixture.detectChanges();
                 // eslint-disable-next-line no-prototype-builtins

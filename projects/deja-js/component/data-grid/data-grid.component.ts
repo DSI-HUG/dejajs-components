@@ -9,11 +9,11 @@
 import { BooleanInput, coerceBooleanProperty, coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, Input, Optional, Output, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { IDejaChipsComponentCloseEvent } from '@deja-js/component/chips';
-import { DejaClipboardService, Destroy, GroupingService, IGroupInfo, IItemBase, IItemTree, ISortInfos, ItemListService, IViewListResult, IViewPort, KeyCodes, SortingService, ViewPortService } from '@deja-js/component/core';
+import { DejaClipboardService, Destroy, KeyCodes } from '@deja-js/component/core';
+import { GroupingService, IGroupInfo, IItemBase, IItemTree, ISortInfos, ItemListService, IViewListResult, IViewPort, SortingService, ViewPortService } from '@deja-js/component/core/item-list';
 import { IDejaDragEvent } from '@deja-js/component/dragdrop';
 import { DejaTreeListComponent, DejaTreeListScrollEvent } from '@deja-js/component/tree-list';
-import { combineLatest, fromEvent, Observable, ReplaySubject, Subject, timer } from 'rxjs';
-import { debounceTime, filter, map, switchMap, take, takeUntil, tap } from 'rxjs/operators';
+import { combineLatestWith, debounceTime, filter, fromEvent, map, Observable, ReplaySubject, Subject, switchMap, take, takeUntil, tap, timer } from 'rxjs';
 
 import { IDejaGridColumn, IDejaGridColumnEvent, IDejaGridColumnLayoutEvent, IDejaGridColumnSizeEvent } from './data-grid-column/data-grid-column';
 import { IDejaGridColumnLayout } from './data-grid-column/data-grid-column-layout';
@@ -156,8 +156,8 @@ export class DejaGridComponent extends Destroy {
 
     private lastScrollLeft = 0;
 
-    private printColumnLayout$ = new Subject();
-    private disableUserSelection$ = new Subject();
+    private printColumnLayout$ = new Subject<void>();
+    private disableUserSelection$ = new Subject<void>();
 
     private _noHorizontalScroll = false;
     private _itemListService: ItemListService<unknown>;
@@ -471,7 +471,8 @@ export class DejaGridComponent extends Destroy {
             map(() => groupInfos)
         );
 
-        combineLatest([this.columns$, this.columnGroups$]).pipe(
+        this.columns$.pipe(
+            combineLatestWith(this.columnGroups$),
             map(([columns, columnGroups]) => {
                 if (typeof columnGroups === 'string') {
                     const groups = columnGroups.split(',').map(v => v.trim());
@@ -523,13 +524,13 @@ export class DejaGridComponent extends Destroy {
             takeUntil(this.destroyed$)
         ).subscribe(() => element.removeAttribute('disableselection'));
 
-        fromEvent(window, 'resize').pipe(
+        fromEvent<Event>(window, 'resize').pipe(
             filter(() => this.hasPercentageColumns),
             debounceTime(5),
             takeUntil(this.destroyed$)
         ).subscribe(() => this.calcColumnsLayout());
 
-        const keyDown$ = fromEvent(element, 'keydown') as Observable<KeyboardEvent>;
+        const keyDown$ = fromEvent<KeyboardEvent>(element, 'keydown');
         keyDown$.pipe(
             takeUntil(this.destroyed$)
         ).subscribe(event => {
@@ -569,12 +570,12 @@ export class DejaGridComponent extends Destroy {
             }
         });
 
-        const mouseDownEvent$ = fromEvent(element, 'mousedown') as Observable<MouseEvent>;
+        const mouseDownEvent$ = fromEvent<MouseEvent>(element, 'mousedown');
         mouseDownEvent$.pipe(
             filter(downEvent => downEvent.buttons === 1),
             switchMap(downEvent => {
                 const clickedColumn = this.getColumnFromHtmlElement(downEvent.target as HTMLElement);
-                const mouseUpEvent$ = fromEvent(element, 'mouseup') as Observable<MouseEvent>;
+                const mouseUpEvent$ = fromEvent<MouseEvent>(element, 'mouseup');
                 return mouseUpEvent$.pipe(
                     take(1),
                     filter(() => !!clickedColumn),

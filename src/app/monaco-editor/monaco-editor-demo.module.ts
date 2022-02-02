@@ -20,7 +20,6 @@ import { DejaSplitterModule } from '@deja-js/component/splitter';
 
 import { DejaMarkdownModule } from '../../component/markdown/index';
 import { DejaMonacoEditorDemoComponent } from './monaco-editor-demo.component';
-import { MonacoEditorDemoService } from './monaco-editor-demo.service';
 
 const routes: Routes = [
     { path: '', component: DejaMonacoEditorDemoComponent }
@@ -28,21 +27,18 @@ const routes: Routes = [
 
 @NgModule({
     imports: [
-        DejaMonacoEditorModule,
         CommonModule,
+        DejaMarkdownModule,
+        DejaMonacoEditorModule,
+        DejaSplitterModule,
         FormsModule,
         MatCardModule,
         MatCheckboxModule,
         MatSelectModule,
         MatTabsModule,
         MatToolbarModule,
-        DejaSplitterModule,
-        DejaMarkdownModule,
         RouterModule.forChild(routes)
     ],
-    declarations: [DejaMonacoEditorDemoComponent],
-    providers: [
-        MonacoEditorDemoService
-    ]
+    declarations: [DejaMonacoEditorDemoComponent]
 })
 export class MonacoEditorDemoModule { }

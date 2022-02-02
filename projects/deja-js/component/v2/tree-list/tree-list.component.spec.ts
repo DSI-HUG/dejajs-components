@@ -12,10 +12,10 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { Destroy, GroupingService, KeyCodes } from '@deja-js/component/core';
+import { Destroy, KeyCodes } from '@deja-js/component/core';
+import { GroupingService } from '@deja-js/component/core/item-list';
 import { Item, ItemModule, SortInfos, SortingService } from '@deja-js/component/v2/item-list';
-import { Observable, timer } from 'rxjs';
-import { debounceTime, delay, filter, take, takeUntil, tap } from 'rxjs/operators';
+import { debounceTime, delay, filter, Observable, take, takeUntil, tap, timer } from 'rxjs';
 
 import { ViewPort } from '../viewport';
 import { TreeListModule } from './index';

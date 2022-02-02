@@ -14,11 +14,10 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { DejaItemModule, GroupingService, IItemBase, IItemTree, ISortInfos, ItemListService, KeyCodes, SortingService, ViewPortService } from '@deja-js/component/core';
-import { Observable, timer } from 'rxjs';
-import { debounceTime, delay, filter, take, tap } from 'rxjs/operators';
+import { KeyCodes } from '@deja-js/component/core';
+import { DejaItemModule, GroupingService, IItemBase, IItemTree, ISortInfos, ItemListService, IViewPort, SortingService, ViewPortService } from '@deja-js/component/core/item-list';
+import { debounceTime, delay, filter, Observable, take, tap, timer } from 'rxjs';
 
-import { IViewPort } from '../core';
 import { DejaTreeListModule } from './index';
 import { DejaTreeListComponent } from './tree-list.component';
 
@@ -599,7 +598,7 @@ describe('DejaTreeListByModelContainerComponent', () => {
 
         observeModelViewPort$(fixture).pipe(
             debounceTime(100),
-            tap(() => void expect(treeListInstance.keyboardNavigation()).toBeTruthy()),
+            tap(() => expect(treeListInstance.keyboardNavigation()).toBeTruthy()),
             delay(1000)
         ).subscribe(() => {
             void expect(treeListInstance.keyboardNavigation()).toBeFalsy();

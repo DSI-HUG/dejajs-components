@@ -15,17 +15,17 @@ import { DejaMouseDroppableDirective } from './mouse-droppable.directive';
 
 @NgModule({
     declarations: [
+        DejaMouseDragDropCursorComponent,
         DejaMouseDraggableDirective,
-        DejaMouseDroppableDirective,
-        DejaMouseDragDropCursorComponent
+        DejaMouseDroppableDirective
     ],
     imports: [
         MatIconModule
     ],
     exports: [
+        DejaMouseDragDropCursorComponent,
         DejaMouseDraggableDirective,
-        DejaMouseDroppableDirective,
-        DejaMouseDragDropCursorComponent
+        DejaMouseDroppableDirective
     ],
     providers: []
 })

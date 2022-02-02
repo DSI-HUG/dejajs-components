@@ -23,9 +23,9 @@ import { DejaMessageBoxComponent } from './message-box.component';
     ],
     imports: [
         CommonModule,
+        MatButtonModule,
         MatCardModule,
-        MatIconModule,
-        MatButtonModule
+        MatIconModule
     ]
 })
 export class DejaMessageBoxModule { }

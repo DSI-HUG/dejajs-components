@@ -8,16 +8,16 @@
 
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { BehaviorSubject, concat, from, iif, Observable, of, Subscriber } from 'rxjs';
-import { filter, map, reduce, switchMap, tap } from 'rxjs/operators';
+import { DiacriticService } from '@deja-js/component/core';
+import { BehaviorSubject, concat, filter, from, iif, map, Observable, of, reduce, Subscriber, switchMap, tap } from 'rxjs';
 
-import { Diacritics } from '../diacritics/diacritics';
-import { IGroupInfo } from '../grouping/group-infos';
-import { GroupingService } from '../grouping/grouping.service';
-import { ISortInfos } from '../sorting/sort-infos.model';
-import { SortingService } from '../sorting/sorting.service';
+import { IGroupInfo } from './grouping/group-infos';
+import { GroupingService } from './grouping/grouping.service';
 import { IItemBase } from './item-base';
 import { IItemTree } from './item-tree';
+import { ISortInfos } from './sorting/sort-infos.model';
+import { SortingService } from './sorting/sorting.service';
+
 
 /** Service de gestion des listes (deja-treelist, deja-select et deja-grid).
  * Ce service permet la gestion du viewport et la gestion des caches des listes.
@@ -920,7 +920,7 @@ export class ItemListService<T> {
         if (query) {
             if (typeof query === 'string') {
                 try {
-                    query = Diacritics.remove(query);
+                    query = (new DiacriticService).remove(query);
                     const escapedQuery = escapeChars(query);
                     regExp = new RegExp(escapedQuery, 'i');
                 } catch (exc) {
@@ -1043,7 +1043,7 @@ export class ItemListService<T> {
         const field = (<any>item)[searchField];
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
         const value = typeof field === 'function' ? field() : field || this.getTextValue(item, searchField);
-        return value && regExp.test(Diacritics.remove(value));
+        return value && regExp.test((new DiacriticService).remove(value));
     }
 
     /** Retourne une liste groupée si un modèle de groupe interne est spécifié.

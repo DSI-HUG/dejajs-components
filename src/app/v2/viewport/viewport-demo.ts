@@ -8,8 +8,7 @@
 
 import { Component, ViewChild } from '@angular/core';
 import { ViewPortComponent, ViewPortItem } from '@deja-js/component/v2/viewport';
-import { Observable } from 'rxjs';
-import { shareReplay } from 'rxjs/operators';
+import { Observable, shareReplay } from 'rxjs';
 
 import { News } from '../../common/news.model';
 import { NewsService } from '../../services/news.service';

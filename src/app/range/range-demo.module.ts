@@ -26,15 +26,15 @@ import { routing } from './range-demo.routes';
     exports: [DejaRangeDemoComponent],
     imports: [
         CommonModule,
+        DejaMarkdownModule,
+        DejaMessageBoxModule,
+        DejaRangeModule,
+        DejaSnackbarModule,
         FormsModule,
+        MatButtonModule,
         MatCardModule,
         MatTabsModule,
         MatToolbarModule,
-        MatButtonModule,
-        DejaRangeModule,
-        DejaMarkdownModule,
-        DejaSnackbarModule,
-        DejaMessageBoxModule,
         routing
     ],
     providers: [

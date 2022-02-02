@@ -23,6 +23,7 @@
         &:not(.disabled) {
             &.mat-form-field-invalid {
                 deja-numeric-stepper {
+
                     .arrow:not([disabled]) {
                         color: mat.get-color-from-palette($warn);
                     }
@@ -47,13 +48,7 @@
         &.mat-form-field-appearance-fill {
             deja-numeric-stepper {
                 .shadow::after {
-                    content: '';
                     background-color: rgba(0, 0, 0, 0.04);
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
                 }
             }
         }

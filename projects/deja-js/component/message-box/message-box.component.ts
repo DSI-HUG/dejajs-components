@@ -8,15 +8,7 @@
 
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Component, ContentChild, EventEmitter, Input, OnInit, Output, TemplateRef, ViewEncapsulation } from '@angular/core';
-
-export type DejaMessageBoxType = 'info' | 'primary' | 'success' | 'warn' | 'danger';
-
-export interface DejaMessageBoxAction {
-    text?: string;
-    type?: DejaMessageBoxType;
-    icon?: string;
-    action(): unknown;
-}
+import { DejaMessageBoxAction, DejaMessageBoxType } from '@deja-js/component/core';
 
 @Component({
     encapsulation: ViewEncapsulation.None,

@@ -26,11 +26,11 @@ import { TreeListComponent } from './tree-list.component';
     ],
     imports: [
         CommonModule,
-        FormsModule,
-        MatInputModule,
-        MatIconModule,
         DejaChildValidatorModule,
+        FormsModule,
         ItemModule,
+        MatIconModule,
+        MatInputModule,
         ViewPortModule
     ]
 })

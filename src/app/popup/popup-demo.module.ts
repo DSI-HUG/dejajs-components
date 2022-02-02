@@ -29,23 +29,23 @@ import { routing } from './popup-demo.routes';
 import { PopupDemoButtonComponent } from './popup-demo-button/popup-demo-button.component';
 
 @NgModule({
-    declarations: [DejaPopupDemoComponent, DejaPopupCustomDemoComponent, DummyComponent, PopupDemoButtonComponent],
+    declarations: [DejaPopupCustomDemoComponent, DejaPopupDemoComponent, DummyComponent, PopupDemoButtonComponent],
     exports: [DejaPopupDemoComponent],
     imports: [
         CommonModule,
+        DejaColorSelectorModule,
+        DejaMarkdownModule,
+        DejaMessageBoxModule,
+        DejaPopupModule,
+        DejaSnackbarModule,
         FormsModule,
         MatButtonModule,
-        MatIconModule,
         MatCardModule,
+        MatIconModule,
+        MatInputModule,
         MatTabsModule,
         MatToolbarModule,
-        MatInputModule,
         MatTooltipModule,
-        DejaColorSelectorModule,
-        DejaPopupModule,
-        DejaMarkdownModule,
-        DejaSnackbarModule,
-        DejaMessageBoxModule,
         routing
     ],
     entryComponents: [

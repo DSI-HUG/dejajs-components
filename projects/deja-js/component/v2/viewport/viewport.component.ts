@@ -9,8 +9,7 @@
 import { BooleanInput, coerceBooleanProperty, coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, Component, ContentChild, ElementRef, EventEmitter, HostBinding, Input, Output, QueryList, TemplateRef, ViewChild, ViewChildren } from '@angular/core';
 import { Destroy } from '@deja-js/component/core';
-import { BehaviorSubject, combineLatest, from, fromEvent, interval, merge, Observable, Subject, timer } from 'rxjs';
-import { debounceTime, distinctUntilChanged, filter, map, mergeMap, switchMap, takeUntil, tap, withLatestFrom } from 'rxjs/operators';
+import { BehaviorSubject, combineLatestWith, debounceTime, distinctUntilChanged, filter, from, fromEvent, interval, map, mergeMap, mergeWith, Observable, Subject, switchMap, takeUntil, tap, timer, withLatestFrom } from 'rxjs';
 
 import { ViewPort, ViewPortDirection, ViewPortItem, ViewPortMode, ViewPortService } from './viewport.service';
 
@@ -141,13 +140,14 @@ export class ViewPortComponent<T> extends Destroy {
     ) {
         super();
 
-        this.viewPort$ = combineLatest([viewPortService.viewPort$, this.reloadViewPort$]).pipe(
+        this.viewPort$ = viewPortService.viewPort$.pipe(
+            combineLatestWith(this.reloadViewPort$),
             map(([viewPort]) => ({ ...viewPort }))
         );
 
         viewPortService.element$.pipe(
             distinctUntilChanged(),
-            switchMap(element => fromEvent(element, 'scroll').pipe(
+            switchMap(element => fromEvent<Event>(element, 'scroll').pipe(
                 distinctUntilChanged(),
                 withLatestFrom(viewPortService.direction$),
                 map(([_, direction]) => Math.round(direction === 'horizontal' ? element.scrollLeft : element.scrollTop))
@@ -236,7 +236,9 @@ export class ViewPortComponent<T> extends Destroy {
                         const sign = button.id === 'down' ? 1 : -1;
 
                         const autoScroll$ = (event: MouseEvent): Observable<number> => {
-                            const mouseup$ = merge(fromEvent<MouseEvent>(buttons[0], 'mouseup'), fromEvent<MouseEvent>(buttons[0], 'mouseleave'), fromEvent<MouseEvent>(buttons[1], 'mouseup'), fromEvent<MouseEvent>(buttons[1], 'mouseleave'));
+                            const mouseup$ = fromEvent<MouseEvent>(buttons[0], 'mouseup').pipe(
+                                mergeWith(fromEvent<MouseEvent>(buttons[0], 'mouseleave'), fromEvent<MouseEvent>(buttons[1], 'mouseup'), fromEvent<MouseEvent>(buttons[1], 'mouseleave'))
+                            );
                             return timer(750).pipe(
                                 mergeMap(() => interval(50)),
                                 tap(() => scroll(event, sign)),
@@ -277,12 +279,12 @@ export class ViewPortComponent<T> extends Destroy {
         this.viewPortService.ensureItem$.next(item);
     }
 
-    public getCssSize(item: ViewPortItem < T >, defaultItemSize: number, mode: ViewPortMode): string {
+    public getCssSize(item: ViewPortItem<T>, defaultItemSize: number, mode: ViewPortMode): string {
         const itemSize = this.getItemSize(item, defaultItemSize, mode);
         return itemSize ? `${itemSize}px` : 'auto';
     }
 
-    public getItemSize(item: ViewPortItem < T >, defaultItemSize: number, mode: ViewPortMode): NumberInput {
+    public getItemSize(item: ViewPortItem<T>, defaultItemSize: number, mode: ViewPortMode): NumberInput {
         if (mode === 'disabled') {
             return null;
         } else if (mode === 'fixed') {
@@ -296,7 +298,7 @@ export class ViewPortComponent<T> extends Destroy {
 
     public getItemClassName(item: ViewPortItem<T>): string {
         const classes = ['listitem'];
-        if (this.itemClass.observers.length > 0) {
+        if (this.itemClass.observed) {
             this.itemClass.next({
                 item,
                 classes

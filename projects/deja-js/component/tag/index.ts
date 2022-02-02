@@ -20,10 +20,10 @@ import { DejaTagComponent } from './tag.component';
     exports: [DejaTagComponent],
     imports: [
         CommonModule,
+        DejaChipsModule,
         FormsModule,
         MatIconModule,
-        MatInputModule,
-        DejaChipsModule
+        MatInputModule
     ],
     providers: []
 })

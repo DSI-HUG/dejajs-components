@@ -3,6 +3,7 @@
 @use './mixins/menu'as menu;
 @use './mixins/popup'as popup;
 @use './mixins/tree-list-borders'as treeListBorders;
+@use './mixins/mat-form-field'as matFormField;
 
 /* specials themes */
 @use './material/material'as materialTheme;
@@ -45,6 +46,8 @@
     @include menu.deja-menu();
     @include popup.deja-popup();
     @include treeListBorders.deja-tree-list-borders();
+    @include matFormField.mat-form-field-unit();
+    @include matFormField.mat-form-field-input-autosize();
     @include listLoaderTheme.list-loader-theme($custom-theme);
     @include loader.loader-theme($custom-theme);
     @include materialTheme.deja-material-theme($custom-theme);

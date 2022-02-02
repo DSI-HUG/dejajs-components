@@ -9,10 +9,10 @@
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Directive, ElementRef, HostBinding, Input, Optional } from '@angular/core';
 import { DejaClipboardService, Destroy } from '@deja-js/component/core';
-import { fromEvent, merge, Observable } from 'rxjs';
-import { filter, switchMap, take, takeUntil, tap } from 'rxjs/operators';
+import { filter, fromEvent, mergeWith, switchMap, take, takeUntil, tap } from 'rxjs';
 
 import { IDejaDragEvent } from './draggable.directive';
+
 
 @Directive({
     selector: '[deja-droppable]'
@@ -55,7 +55,7 @@ export class DejaDroppableDirective extends Destroy {
         const element = elementRef.nativeElement as HTMLElement;
 
         // DragEnter event
-        const dragEnterEvent$ = fromEvent(element, 'dragenter').pipe(
+        const dragEnterEvent$ = fromEvent<DragEvent>(element, 'dragenter').pipe(
             tap(() => {
                 if (!clipboardService) {
                     throw new Error('To use the DejaDroppableDirective, please import and provide the DejaClipboardService in your application.');
@@ -63,12 +63,12 @@ export class DejaDroppableDirective extends Destroy {
             }),
             filter(() => !inDrag && !!this.context && !!this.context.dragentercallback && !!this.clipboardService.get(this.draginfokey)),
             tap(() => inDrag = true)
-        ) as Observable<DragEvent>;
+        );
 
         // DragLeave event
-        const dragLeaveEvent$ = fromEvent(element, 'dragleave').pipe(
+        const dragLeaveEvent$ = fromEvent<DragEvent>(element, 'dragleave').pipe(
             filter(() => inDrag && !!this.context && !!this.clipboardService.get(this.draginfokey)),
-            filter((leaveEvent: DragEvent) => {
+            filter(leaveEvent => {
                 const bounds = element.getBoundingClientRect();
                 const inside = leaveEvent.x >= bounds.left && leaveEvent.x <= bounds.right && leaveEvent.y >= bounds.top && leaveEvent.y <= bounds.bottom;
                 return !inside;
@@ -76,16 +76,17 @@ export class DejaDroppableDirective extends Destroy {
         );
 
         // Drop event
-        const dropEvent$ = fromEvent(element, 'drop').pipe(
+        const dropEvent$ = fromEvent<DragEvent>(element, 'drop').pipe(
             filter(() => inDrag && !!this.context && !!this.clipboardService.get(this.draginfokey))
-        ) as Observable<DragEvent>;
+        );
 
         // DragOver event
-        const dragOverEvent$ = fromEvent(element, 'dragover').pipe(
+        const dragOverEvent$ = fromEvent<DragEvent>(element, 'dragover').pipe(
             filter(() => inDrag)
-        ) as Observable<DragEvent>;
+        );
 
-        const dragEndEvent$ = merge(dragEnterEvent$, dragLeaveEvent$, dropEvent$).pipe(
+        const dragEndEvent$ = dragEnterEvent$.pipe(
+            mergeWith(dragLeaveEvent$, dropEvent$),
             tap(() => inDrag = false)
         );
 
@@ -174,7 +175,9 @@ export class DejaDroppableDirective extends Destroy {
                     })
                 );
 
-                return merge(drop$, over$, leave$);
+                return drop$.pipe(
+                    mergeWith(over$, leave$)
+                );
             }),
             takeUntil(this.destroyed$)
         ).subscribe(_event => {
@@ -188,8 +191,8 @@ export interface IDejaDropEvent extends IDejaDragEvent {
 }
 
 export interface IDejaDropContext {
-    dragentercallback(event: IDejaDropEvent): void;
-    dropcallback?(event: IDejaDropEvent): void;
-    dragovercallback?(event: IDejaDropEvent): void;
-    dragleavecallback?(event: CustomEvent): void;
+    dragentercallback: (event: IDejaDropEvent) => void;
+    dropcallback?: (event: IDejaDropEvent) => void;
+    dragovercallback?: (event: IDejaDropEvent) => void;
+    dragleavecallback?: (event: CustomEvent) => void;
 }

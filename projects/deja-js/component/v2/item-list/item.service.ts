@@ -9,9 +9,8 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Injectable } from '@angular/core';
-import { Diacritics } from '@deja-js/component/core';
-import { BehaviorSubject, combineLatest, merge, Observable, of, ReplaySubject } from 'rxjs';
-import { filter, map, shareReplay, startWith, switchMap, take, tap } from 'rxjs/operators';
+import { DiacriticService } from '@deja-js/component/core';
+import { BehaviorSubject, combineLatestWith, filter, map, mergeWith, Observable, of, ReplaySubject, shareReplay, startWith, switchMap, take, tap } from 'rxjs';
 
 import { Item } from './item';
 import { ItemComponent } from './item.component';
@@ -50,7 +49,7 @@ export class ItemService<T> {
 
     private previousQuery: string;
 
-    public constructor() {
+    public constructor(private diacriticService: DiacriticService) {
 
         const itemsFromOptions$ = this.options$.pipe(
             map(options => {
@@ -69,14 +68,16 @@ export class ItemService<T> {
             shareReplay({ bufferSize: 1, refCount: false })
         );
 
-        const itemsFromModels$ = combineLatest([this.models$, this.valueField$, this.textField$, this.childrenField$]).pipe(
+        const itemsFromModels$ = this.models$.pipe(
+            combineLatestWith(this.valueField$, this.textField$, this.childrenField$),
             map(([models, valueField, textField, childrenField]) => (models && models instanceof Array && this.mapToItem(models, valueField, textField, childrenField)) || []),
             shareReplay({ bufferSize: 1, refCount: false })
         );
 
-        this.itemList$ = merge(this.items$, itemsFromModels$, itemsFromOptions$).pipe(
+        this.itemList$ = this.items$.pipe(
+            mergeWith(itemsFromModels$, itemsFromOptions$),
             switchMap(items => {
-                if (this.selectedItems$) {
+                if (this.selectedItems$ && items?.length > 0) {
                     return this.selectedItems$.pipe(
                         take(1),
                         map(selectedItems => {
@@ -102,7 +103,8 @@ export class ItemService<T> {
             shareReplay({ bufferSize: 1, refCount: false })
         );
 
-        this.flatItemList$ = combineLatest([this.itemList$, this.refreshFlatItemList$]).pipe(
+        this.flatItemList$ = this.itemList$.pipe(
+            combineLatestWith(this.refreshFlatItemList$),
             map(([items]) => {
                 const addItems = (itms: Item<T>[], depth: number): Array<Item<T>> => itms.reduce((a, item) => {
                     item.depth = depth;
@@ -126,7 +128,8 @@ export class ItemService<T> {
             })
         );
 
-        this.filteredItemList$ = combineLatest([this.flatItemList$, this.query$, this.minSearchLength$, this.searchField$, refreshFilterItemList$]).pipe(
+        this.filteredItemList$ = this.flatItemList$.pipe(
+            combineLatestWith(this.query$, this.minSearchLength$, this.searchField$, refreshFilterItemList$),
             switchMap(([flatItemList, query, minSearchLength, searchField]) => {
                 if (minSearchLength > 0 && (!query || typeof query === 'string' && query.length < minSearchLength)) {
                     this.previousQuery = null;
@@ -153,7 +156,7 @@ export class ItemService<T> {
                 if (query) {
                     if (typeof query === 'string') {
                         try {
-                            query = Diacritics.remove(query);
+                            query = this.diacriticService.remove(query);
                             const escapedQuery = escapeChars(query);
                             regExp = new RegExp(escapedQuery, 'i');
                         } catch (exc) {
@@ -192,7 +195,8 @@ export class ItemService<T> {
             shareReplay({ bufferSize: 1, refCount: false })
         );
 
-        this.visibleItemList$ = combineLatest([this.filteredItemList$, this.refreshVisibleItemList$]).pipe(
+        this.visibleItemList$ = this.filteredItemList$.pipe(
+            combineLatestWith(this.refreshVisibleItemList$),
             map(([items]) => {
                 let isOdd = false;
                 let hideDepth = undefined as number;
@@ -230,7 +234,8 @@ export class ItemService<T> {
             shareReplay({ bufferSize: 1, refCount: false })
         );
 
-        this.selectedItems$ = combineLatest([this.visibleItemList$, this.valueField$, this.refreshSelection$]).pipe(
+        this.selectedItems$ = this.visibleItemList$.pipe(
+            combineLatestWith(this.valueField$, this.refreshSelection$),
             filter(([items]) => items?.length > 0),
             switchMap(([items, valueField, refreshSelection]) => {
                 const select = refreshSelection.selectItems;
@@ -443,7 +448,7 @@ export class ItemService<T> {
     protected itemMatch(item: Item<T>, searchField: string, regExp: RegExp): boolean {
         const indexedItem = item as IndexedItem<T>;
         const value = (searchField && indexedItem[searchField] as string) ?? item.label;
-        return value && regExp.test(Diacritics.remove(value));
+        return value && regExp.test(this.diacriticService.remove(value));
     }
 
     protected parentItemMatch(item: Item<T>, previousItem: Item<T>, _searchField: string, _regExp: RegExp): boolean {
@@ -503,7 +508,7 @@ export class ItemService<T> {
 }
 
 interface Comparable<T> {
-    equals(model: T): boolean;
+    equals: (model: T) => boolean;
 }
 
 interface RefreshSelectionParams<T> {

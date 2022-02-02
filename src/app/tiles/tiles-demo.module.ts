@@ -28,17 +28,17 @@ import { routing } from './tiles-demo.routes';
     exports: [DejaTilesDemoComponent],
     imports: [
         CommonModule,
+        DejaMarkdownModule,
+        DejaMessageBoxModule,
+        DejaSnackbarModule,
+        DejaTilesModule,
         FormsModule,
+        MatButtonModule,
         MatCardModule,
+        MatCheckboxModule,
         MatTabsModule,
         MatToolbarModule,
-        MatButtonModule,
-        MatCheckboxModule,
-        DejaTilesModule,
-        DejaMarkdownModule,
-        DejaSnackbarModule,
         MouseDragDropModule,
-        DejaMessageBoxModule,
         routing
     ],
     providers: [

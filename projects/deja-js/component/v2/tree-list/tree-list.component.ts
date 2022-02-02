@@ -12,8 +12,7 @@ import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { DejaChildValidatorDirective, Destroy, KeyCodes } from '@deja-js/component/core';
 import { Item, ItemComponent, ItemEvent, ItemService } from '@deja-js/component/v2/item-list';
 import { ViewPort, ViewPortComponent, ViewPortItemClassEvent, ViewPortMode } from '@deja-js/component/v2/viewport';
-import { BehaviorSubject, combineLatest, fromEvent, merge, Observable, of, ReplaySubject, Subject, timer } from 'rxjs';
-import { delay, filter, map, switchMap, takeUntil, tap, withLatestFrom } from 'rxjs/operators';
+import { BehaviorSubject, combineLatestWith, delay, distinctUntilChanged, filter, fromEvent, map, mergeWith, Observable, of, ReplaySubject, Subject, switchMap, takeUntil, tap, timer, withLatestFrom } from 'rxjs';
 
 export type NgModelType = 'item' | 'model' | 'value';
 
@@ -237,7 +236,6 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
     /** Correspond au ngModel du champ de filtrage ou recherche */
     @Input()
     public set query(value: string) {
-        this._query = value;
         this.itemService.query$.next(value);
     }
 
@@ -363,7 +361,8 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
             switchMap(viewPortComponent => viewPortComponent.viewPort$)
         );
 
-        this.viewPort$ = combineLatest([viewPort$, this.reloadViewPort$]).pipe(
+        this.viewPort$ = viewPort$.pipe(
+            combineLatestWith(this.reloadViewPort$),
             map(([viewPort]) => viewPort)
         );
 
@@ -372,7 +371,7 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
             switchMap(viewPortComponent => viewPortComponent.itemClass),
             takeUntil(this.destroyed$)
         ).subscribe((itemClassEvent: ViewPortItemClassEvent<T>) => {
-            const item = itemClassEvent.item as Item<T>;
+            const item = itemClassEvent.item as unknown as Item<T>;
             if (item?.selected) {
                 itemClassEvent.classes.push('selected');
             }
@@ -411,7 +410,7 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
                     this.onTouchedCallback();
                     this.raiseChangeCallback = false;
 
-                    if (this.selectedChange.observers.length > 0) {
+                    if (this.selectedChange.observed) {
                         const selectedModels = this.selectedModels;
                         this.selectedChange.next({
                             item: selectedItems[0],
@@ -431,20 +430,21 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
         });
 
         this.itemService.query$.pipe(
+            map(query => query || ''),
+            distinctUntilChanged(),
             filter(query => typeof query === 'string'),
             takeUntil(this.destroyed$)
         ).subscribe(query => {
-            if (this._query !== query) {
-                this._query = query as string;
-                this.queryChange.emit(this._query);
-            }
+            this._query = query as string;
+            this.queryChange.emit(this._query);
         });
 
         const modelType$ = this.ngModelType$.pipe(
             tap(modelType => this._ngModelType = modelType)
         );
 
-        combineLatest([this.writeValue$, this.multiSelect$, modelType$]).pipe(
+        this.writeValue$.pipe(
+            combineLatestWith(this.multiSelect$, modelType$),
             takeUntil(this.destroyed$)
         ).subscribe(([value, multiSelect, modelType]) => {
             if (!value) {
@@ -496,7 +496,7 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
 
                     const isExpandButton = (el: HTMLElement): boolean => el.hasAttribute('expandbtn') || el.parentElement.hasAttribute('expandbtn');
 
-                    const clickedItem = viewPort.visibleItems[itemIndex - viewPort.startIndex] as Item<T>;
+                    const clickedItem = viewPort.visibleItems[itemIndex - viewPort.startIndex] as unknown as Item<T>;
 
                     if ((!isExpandButton(target) || !clickedItem.isCollapsible) && clickedItem.isSelectable && (!event.ctrlKey || !this.multiSelect) && (event.button === 0 || !clickedItem.selected)) {
                         if (event.shiftKey && this.multiSelect) {
@@ -507,6 +507,20 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
                             this.itemService.setSelectedItems(rangeSelection);
                             this.viewPortComponent.reloadViewPort();
                             return of(null);
+
+                        } else if (!event.ctrlKey) {
+                            if (!this.multiSelect && clickedItem.selected) {
+                                return of(null);
+                            } else if (!this.multiSelect || !clickedItem.selected) {
+                                this.raiseChangeCallback = true;
+                                this.itemService.setSelectedItems([clickedItem]);
+                                this.currentItem = clickedItem;
+                                this.ensureItemVisible(clickedItem);
+                                this.viewPortComponent.reloadViewPort();
+                                this.lastClickedItem = clickedItem; // Keep for double-click
+
+                                return of(clickedItem);
+                            }
                         }
                     }
 
@@ -519,7 +533,7 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
                                 return;
                             }
 
-                            const upItem = viewPort.visibleItems[upIndex - viewPort.startIndex] as Item<T>;
+                            const upItem = viewPort.visibleItems[upIndex - viewPort.startIndex] as unknown as Item<T>;
                             if (clickedItem && upItem !== clickedItem) {
                                 return;
                             }
@@ -557,7 +571,9 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
                             }
                         }),
                         delay(300),
-                        tap(() => this.lastClickedItem = undefined)
+                        tap(() => {
+                            this.lastClickedItem = undefined;
+                        })
                     );
                 })
             )),
@@ -578,7 +594,8 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
             switchMap(listElement => fromEvent<KeyboardEvent>(listElement, 'keydown'))
         );
 
-        merge(listKeyDownEvent$, inputKeyDownEvents$).pipe(
+        listKeyDownEvent$.pipe(
+            mergeWith(inputKeyDownEvents$),
             filter(() => !this.disabled),
             filter(event => {
                 const keyCode = event.code;
@@ -602,7 +619,7 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
 
             // Set current item from index for keyboard features only
             const setCurrentIndex = (index: number): void => {
-                this.currentItem = viewPort.items[index] as Item<T>;
+                this.currentItem = viewPort.items[index] as unknown as Item<T>;
                 this.ensureItemVisible(this.currentItem);
                 this.viewPortComponent.reloadViewPort();
             };
@@ -620,7 +637,7 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
                     this.viewPortComponent.reloadViewPort();
                 } else if (!event.ctrlKey) {
                     this.raiseChangeCallback = true;
-                    this.selectedItem = viewPort.items[nextIndex] as Item<T>;
+                    this.selectedItem = viewPort.items[nextIndex] as unknown as Item<T>;
                     setCurrentIndex(nextIndex);
                 } else {
                     setCurrentIndex(nextIndex);
@@ -640,7 +657,7 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
                     } else if (!event.ctrlKey) {
                         // Select first element
                         this.raiseChangeCallback = true;
-                        this.selectedItem = viewPort.items[0] as Item<T>;
+                        this.selectedItem = viewPort.items[0] as unknown as Item<T>;
                     }
                     setCurrentIndex(0);
                     this.keyboardStartIndex = 0;
@@ -654,7 +671,7 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
                     } else if (!event.ctrlKey) {
                         // Select last element
                         this.raiseChangeCallback = true;
-                        this.selectedItem = viewPort.items[viewPort.items.length - 1] as Item<T>;
+                        this.selectedItem = viewPort.items[viewPort.items.length - 1] as unknown as Item<T>;
                     }
                     setCurrentIndex(viewPort.items.length - 1);
                     this.keyboardStartIndex = viewPort.items.length - 1;
@@ -711,7 +728,7 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
                             this.ensureItemVisible(this.currentItem);
 
                         } else if (this.currentItem.isSelectable) {
-                            if (this.itemEnter.observers.length > 0) {
+                            if (this.itemEnter.observed) {
                                 this.itemEnter.next({
                                     item: this.currentItem,
                                     items: [this.currentItem],
@@ -745,7 +762,9 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
                 if (inputElement) {
                     const inputKeyup$ = fromEvent<KeyboardEvent>(inputElement, 'keyup');
                     const inputDrop$ = fromEvent<KeyboardEvent>(inputElement, 'drop');
-                    return merge(inputKeyup$, inputDrop$);
+                    return inputKeyup$.pipe(
+                        mergeWith(inputDrop$)
+                    );
                 }
                 return of(null as KeyboardEvent);
             }),
@@ -756,7 +775,8 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
             switchMap(listElement => fromEvent<KeyboardEvent>(listElement, 'keyup'))
         );
 
-        merge(listKeyboardEvent$, inputKeyboardEvents$).pipe(
+        listKeyboardEvent$.pipe(
+            mergeWith(inputKeyboardEvents$),
             filter(() => !this.disabled),
             filter(event => {
                 const keyCode = event.code;
@@ -778,7 +798,7 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
                             // Just turn the number of items max
                             return viewPort.items.some(() => {
                                 // That the real index and item in the loop
-                                const item = viewPort.items[nextIndex] as Item<T>;
+                                const item = viewPort.items[nextIndex] as unknown as Item<T>;
                                 if (item?.isSelectable) {
                                     if (rg.test(item.label)) {
                                         // Found, set current item

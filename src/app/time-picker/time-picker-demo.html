@@ -55,9 +55,12 @@
                     <p>Selected date : {{ date4 | date:'HH:mm' }}</p>
                 </div>
                 <div>
-                    <h3>With minutes displayed only</h3>
+                    <h3>With minutes displayed only inline in a form</h3>
                     <div class="flex-layout-center">
-                        <deja-time-picker [ngModel]="date5" (ngModelChange)="date5Changed($event)" mode="minutesOnly"></deja-time-picker>
+                        <deja-time-picker inform [ngModel]="date5" (ngModelChange)="date5Changed($event)" mode="minutesOnly"></deja-time-picker>
+                        <mat-form-field appearance="outline">
+                            <input matInput>
+                        </mat-form-field>
                     </div>
                     <p>Selected date : {{ date5 | date:'HH:mm' }}</p>
                 </div>

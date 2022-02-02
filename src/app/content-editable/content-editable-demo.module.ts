@@ -24,13 +24,13 @@ import { routing } from './content-editable-demo.routes';
     exports: [DejaContentEditableDemoComponent],
     imports: [
         CommonModule,
+        DejaEditableModule,
+        DejaMarkdownModule,
         FormsModule,
         MatCardModule,
         MatCheckboxModule,
         MatTabsModule,
         MatToolbarModule,
-        DejaEditableModule,
-        DejaMarkdownModule,
         routing
     ],
     providers: [
