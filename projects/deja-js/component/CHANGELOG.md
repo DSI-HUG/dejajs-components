@@ -1,3 +1,13 @@
+# [12.11.0](https://github.com/DSI-HUG/dejajs-components/compare/v12.10.2...v12.11.0) (2022-02-03)
+
+
+### Bug Fixes
+
+* **date-picker:** avoid closing the date-picker depending on the selected value (DEJS-1040) ([fb81146](https://github.com/DSI-HUG/dejajs-components/commit/fb8114674f60d666c72a5355758671f301e1d31c))
+* **date-picker:** avoid overlap from the closing action on the calendar (DEJS-1040) ([a32c797](https://github.com/DSI-HUG/dejajs-components/commit/a32c7979b723f264a0f5e1ff81dcdc81bcca4e31))
+* **date-selector:** avoid updating the selectedDate when exploring the calendar (DEJS-1040) ([62faf0b](https://github.com/DSI-HUG/dejajs-components/commit/62faf0ba87ef50684ca90bcbe634ae5f3b2a90cf))
+* **time-picker:** avoid clear full time when unset value and avoid undef time (DEJS-1040) ([f3eed5e](https://github.com/DSI-HUG/dejajs-components/commit/f3eed5eae48f7b877e83b84b4f080ee1952d03a4))
+
 ## [12.10.2](https://github.com/DSI-HUG/dejajs-components/compare/v12.10.1...v12.10.2) (2022-01-25)
 
 
