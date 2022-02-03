@@ -88,18 +88,14 @@ export class DejaTimePickerComponent extends Destroy implements ControlValueAcce
                     const value = (hours.target as HTMLInputElement).value;
                     hours = value !== undefined ? parseInt(value, 10) : undefined as number;
                 }
-                return !isNaN(hours) ? hours : undefined;
+                return !isNaN(hours) ? hours : 0;
             }),
             takeUntil(this.destroyed$)
         ).subscribe(hours => {
-            if (hours !== undefined || this.mode === 'fullTimeWithMinutesDisabled') {
-                const value = this.value?.getTime();
-                const clone = value ? new Date(value) : set(new Date(), { hours: 0, minutes: 0, seconds: 0 });
-                clone.setHours(hours || 0);
-                this.value = clone;
-            } else {
-                this.value = undefined;
-            }
+            const value = this.value?.getTime();
+            const clone = value ? new Date(value) : set(new Date(), { hours: 0, minutes: 0, seconds: 0 });
+            clone.setHours(hours);
+            this.value = clone;
             this.changeDetectorRef.markForCheck();
         });
 
@@ -111,24 +107,19 @@ export class DejaTimePickerComponent extends Destroy implements ControlValueAcce
                     const value = (minutes.target as HTMLInputElement).value;
                     minutes = value !== undefined ? parseInt(value, 10) : undefined as number;
                 }
-                return !isNaN(minutes) ? minutes : undefined;
+                return !isNaN(minutes) ? minutes : 0;
             }),
             takeUntil(this.destroyed$)
         ).subscribe(minutes => {
-            if (minutes !== undefined || this.mode === 'fullTimeWithHoursDisabled') {
-                const value = this.value?.getTime();
-                const clone = value ? new Date(value) : set(new Date(), { hours: 0, minutes: 0, seconds: 0 });
-                if (minutes < 0) {
-                    minutes += 60;
-                } else if (minutes >= 60) {
-                    minutes -= 60;
-                }
-                clone.setMinutes(minutes || 0);
-                this.value = clone;
-            } else {
-                this.value = undefined;
+            const value = this.value?.getTime();
+            const clone = value ? new Date(value) : set(new Date(), { hours: 0, minutes: 0, seconds: 0 });
+            if (minutes < 0) {
+                minutes += 60;
+            } else if (minutes >= 60) {
+                minutes -= 60;
             }
-
+            clone.setMinutes(minutes);
+            this.value = clone;
             this.changeDetectorRef.markForCheck();
         });
     }

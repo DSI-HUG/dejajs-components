@@ -603,7 +603,6 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
 
         if (date instanceof Date) {
             if (this.value instanceof Date && this.value && this.value.getTime() === date.getTime()) {
-                this.close();
                 return;
             }
 
