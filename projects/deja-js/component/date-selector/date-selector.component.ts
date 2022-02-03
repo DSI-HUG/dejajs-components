@@ -405,31 +405,46 @@ export class DejaDateSelectorComponent extends Destroy implements OnInit, Contro
             d.setHours(0, 0, 0, 0);
         }
 
-        d.setHours(hours.getHours(), hours.getMinutes(), hours.getSeconds(), hours.getMilliseconds());
+        if (hours) {
+            d.setHours(hours.getHours(), hours.getMinutes(), hours.getSeconds(), hours.getMilliseconds());
+        } else {
+            d.setHours(0, 0, 0, 0);
+        }
         this.value = d;
         this.timeChange.emit(this.value);
     }
 
     public getDisplayedDate(): string {
-        const sb = new Array<string>();
-        if (!this.format) {
-            if (this.layoutId < 3) {
-                sb.push(this.displayedDate?.toLocaleDateString());
-            }
-            if (this.layoutId > 1) {
-                const hours = `0${this.displayedDate.getHours()}`;
-                const minutes = `0${this.displayedDate.getMinutes()}`;
-                sb.push(`${hours.slice(-2)}:${minutes.slice(-2)}`);
-            }
-        } else {
-            sb.push((this.displayedDate && this.format && format(this.displayedDate, this.format)) || this.displayedDate?.toLocaleDateString());
-        }
+        return this.getDateLabel(this.displayedDate);
+    }
 
-        return sb.join('&nbsp;&nbsp;');
+    public getSelectedDate(): string {
+        return this.getDateLabel(this.selectedDate);
     }
 
     public onTouchedCallback = (): void => undefined;
     public onChangeCallback = (_a?: unknown): void => undefined;
+
+    private getDateLabel(date: Date): string {
+        if (!date) {
+            return '-';
+        }
+        const sb = new Array<string>();
+        if (!this.format) {
+            if (this.layoutId < 3) {
+                sb.push(date?.toLocaleDateString());
+            }
+            if (this.layoutId > 1) {
+                const hours = `0${date.getHours()}`;
+                const minutes = `0${date.getMinutes()}`;
+                sb.push(`${hours.slice(-2)}:${minutes.slice(-2)}`);
+            }
+        } else {
+            sb.push((date && this.format && format(date, this.format)) || date?.toLocaleDateString());
+        }
+
+        return sb.join('&nbsp;&nbsp;');
+    }
 
     private bind(): void {
         const month = this._displayedDate.getMonth();
@@ -502,7 +517,6 @@ export class DejaDateSelectorComponent extends Destroy implements OnInit, Contro
         } else if (this.disableDates && this.isDisabledDate(d)) {
             this.setDateIfPossible(d, num);
         } else {
-            this.selectedDate = d;
             this._displayedDate = d;
             this.bind();
             this.dateChange.emit(this._displayedDate);
@@ -523,7 +537,6 @@ export class DejaDateSelectorComponent extends Destroy implements OnInit, Contro
             num = (num < 0) ? -1 : 1;
             this.setDateIfPossible(d, num);
         } else {
-            this.selectedDate = d;
             this._displayedDate = d;
             this.bind();
             this.dateChange.emit(this._displayedDate);
@@ -544,7 +557,6 @@ export class DejaDateSelectorComponent extends Destroy implements OnInit, Contro
             num = (num < 0) ? -1 : 1;
             this.setDateIfPossible(d, num);
         } else {
-            this.selectedDate = d;
             this._displayedDate = d;
             this.bind();
             this.dateChange.emit(this._displayedDate);

@@ -9,7 +9,7 @@
                 <mat-icon>keyboard_arrow_right</mat-icon>
             </button>
         </div>
-        <div current [innerHTML]="getDisplayedDate()">
+        <div current [innerHTML]="getSelectedDate() || '-'">
         </div>
     </div>
     <div id="date-selector" *ngIf="layoutId < 3">
