@@ -2,6 +2,7 @@
     display: flex;
     padding-right: 3rem;
     position: relative;
+
     input {
         border: none;
         background: none;
@@ -17,7 +18,7 @@
         color: rgba(0, 0, 0, 0.55);
     }
 
-    input::-webkit-inner-spin-button, 
+    input::-webkit-inner-spin-button,
     input::-webkit-outer-spin-button {
         -webkit-appearance: none !important;
         margin: 0 !important;
@@ -33,10 +34,12 @@
         right: 0;
         bottom: 0;
         top: 0;
-        > span {
+
+        >span {
             font-family: 'Material Icons';
             font-size: 1.2rem;
         }
+
         button {
             background: none;
             border: none;

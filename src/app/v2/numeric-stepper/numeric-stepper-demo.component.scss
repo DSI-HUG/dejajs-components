@@ -14,12 +14,6 @@
 
         mat-form-field {
             flex: 1 1 auto;
-
-            &[deja-numeric-stepper-form-field="horizontal-inlay"] {
-                input[inputautosize] {
-                    min-width: 32px;
-                }
-            }
         }
     }
 }

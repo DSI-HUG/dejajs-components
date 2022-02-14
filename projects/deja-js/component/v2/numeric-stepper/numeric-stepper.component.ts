@@ -265,15 +265,18 @@ export class DejaNumericStepperComponent extends Destroy implements OnInit {
             combineLatestWith(this.validateArrows$),
             debounceTime(1),
             takeUntil(this.destroyed$)
-        ).subscribe(([linkedElements]) => {
-            const min = linkedElements.inputElement.min;
-            if (min !== '' && !isNaN(+min)) {
-                this.disableDown = +linkedElements.inputElement.value <= +min;
+        ).subscribe(([inputElement]) => {
+            if (inputElement.inputElement.disabled) {
+                this.disableDown = true;
+                this.disableUp = true;
+            } else {
+                const min = inputElement.inputElement.min;
+                this.disableDown = min !== '' && !isNaN(+min) && +inputElement.inputElement.value <= +min;
+
+                const max = inputElement.inputElement.max;
+                this.disableUp = max !== '' && !isNaN(+max) && +inputElement.inputElement.value >= +max;
             }
-            const max = linkedElements.inputElement.max;
-            if (max !== '' && !isNaN(+max)) {
-                this.disableUp = +linkedElements.inputElement.value >= +max;
-            }
+
             this.changeDetectorRef.markForCheck();
         });
 
