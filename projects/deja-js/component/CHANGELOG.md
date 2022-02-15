@@ -1,3 +1,10 @@
+# [12.12.0](https://github.com/DSI-HUG/dejajs-components/compare/v12.11.0...v12.12.0) (2022-02-15)
+
+
+### Bug Fixes
+
+* **numeric-stepper:** fixed numeric stepper unit/controls aspect when disabled ([d00c446](https://github.com/DSI-HUG/dejajs-components/commit/d00c4468d78601a70afce1f616413665cf8f932e))
+
 # [12.11.0](https://github.com/DSI-HUG/dejajs-components/compare/v12.10.2...v12.11.0) (2022-02-03)
 
 
