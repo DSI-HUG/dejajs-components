@@ -21,10 +21,10 @@ jobs:
         run: npm install -g npm@latest
       - name: Install dependencies
         run: npm clean-install
+      - name: Build
+        run: npm run build:lib
       - name: Lint
         run: npm run lint
-      - name: Lint
-        run: npm run build:lib
       - name: license-check
         run: npm run license-check
       - name: Test
