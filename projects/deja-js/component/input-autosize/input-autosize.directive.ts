@@ -16,7 +16,6 @@ import { debounceTime, fromEvent, mergeWith, of, startWith, takeUntil } from 'rx
     exportAs: 'inputAutosize'
 })
 export class InputAutosizeDirective extends Destroy implements OnInit {
-    private canvas: HTMLCanvasElement;
 
     public constructor(
         private elementRef: ElementRef<HTMLInputElement>,
@@ -24,44 +23,23 @@ export class InputAutosizeDirective extends Destroy implements OnInit {
         private matInput: MatInput
     ) {
         super();
-        this.canvas = document.createElement('canvas');
     }
 
     public ngOnInit(): void {
         const inputElement = this.elementRef.nativeElement;
-        inputElement.style.visibility = 'hidden';
-
-        // find formfield if any
-        let parentElement = inputElement.parentElement;
-        if (parentElement.classList.contains('mat-form-field-infix')) {
-            // eslint-disable-next-line no-loops/no-loops
-            while (parentElement) {
-                if (parentElement.classList.contains('mat-form-field')) {
-                    parentElement.setAttribute('input-autoSize-form-field', '');
-                    break;
-                }
-                parentElement = parentElement.parentElement;
-            }
-        }
-
-        const computedStyles = window.getComputedStyle(inputElement);
-        const font = `${computedStyles.fontSize} ${computedStyles.fontFamily}`;
-        const context = this.canvas.getContext('2d');
-        context.font = font;
-
         const valueChanges$ = this.matInput?.ngControl?.valueChanges || of(null as unknown);
 
         this.ngZone.runOutsideAngular(() => {
             fromEvent<Event>(inputElement, 'input').pipe(
-                mergeWith(fromEvent<Event>(inputElement, 'paste'), fromEvent<Event>(inputElement, 'keypress'), valueChanges$),
-                debounceTime(50),
+                mergeWith(fromEvent<Event>(inputElement, 'paste'), valueChanges$),
                 startWith(inputElement.value),
+                debounceTime(5),
                 takeUntil(this.destroyed$)
             ).subscribe(() => {
-                inputElement.style.visibility = 'visible';
-                const metrics = context.measureText(inputElement.value);
-                const width = Math.max(16, metrics.width + 5);
-                inputElement.style.width = `${width}px`;
+                const nbChar = inputElement.value?.length;
+
+                // Forced to have a fallback value as the "style" is higher than class/usual style in the hierarchy
+                inputElement.style.width = nbChar ? `${nbChar}ch` : '1ch';
                 inputElement.style.maxWidth = '100%';
             });
         });

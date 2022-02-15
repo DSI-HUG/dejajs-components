@@ -46,9 +46,6 @@
                 }
 
                 &:not([inputAutosizeFormField]) {
-                    input {
-                        margin: 0 30px;
-                    }
 
                     &.mat-form-field-appearance-fill {
                         input {
@@ -146,6 +143,10 @@
             z-index: 10002;
             height: 32px;
             width: 32px;
+
+            &[disabled=true] {
+                cursor: default;
+            }
         }
 
         .shadow {
