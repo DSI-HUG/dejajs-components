@@ -3,8 +3,5 @@
         "lib": {
             "entryFile": "./index.ts"
         }
-    },
-    "peerDependencies": {
-        "date-fns": "~2.16.1"
     }
 }

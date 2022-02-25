@@ -3,8 +3,5 @@
         "lib": {
             "entryFile": "./index.ts"
         }
-    },
-    "peerDependencies": {
-        "lodash-es": "^4.17.20"
     }
 }

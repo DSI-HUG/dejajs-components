@@ -10,7 +10,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ObjectMapper } from 'json-object-mapper';
 import { cloneDeep } from 'lodash-es';
-import { map, Observable, shareReplay, switchMap } from 'rxjs';
+import { map, Observable, shareReplay, switchMap, tap } from 'rxjs';
 
 import { News, NewsArticles, NewsSource, NewsSources } from '../common/news.model';
 
@@ -19,10 +19,10 @@ import { News, NewsArticles, NewsSource, NewsSources } from '../common/news.mode
     providedIn: 'root'
 })
 export class NewsService {
-    public constructor(private httpClient: HttpClient) { }
+    private news$: Observable<News[]>;
 
-    public getNews$(recordCount?: number): Observable<News[]> {
-        return this.httpClient.get<Record<string, unknown>>('https://newsapi.org/v1/sources?language=en').pipe(
+    public constructor(private httpClient: HttpClient) {
+        this.news$ = this.httpClient.get<Record<string, unknown>>('https://newsapi.org/v1/sources?language=en').pipe(
             map(response => ObjectMapper.deserialize(NewsSources, response)),
             map(resp => {
                 if (resp.status !== 'ok') {
@@ -42,7 +42,15 @@ export class NewsService {
                 }
                 return resp.articles;
             }),
-            shareReplay({ bufferSize: 1, refCount: false }),
+            tap(x => {
+                console.log('x', x);
+            }),
+            shareReplay({ bufferSize: 1, refCount: false })
+        );
+    }
+
+    public getNews$(recordCount?: number): Observable<News[]> {
+        return this.news$.pipe(
             map(news => {
                 let returnNews = news;
                 if (recordCount) {
