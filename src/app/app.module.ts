@@ -22,6 +22,7 @@ import { DejaSidenavModule } from '@deja-js/component/sidenav';
 import { AppComponent } from './app.component';
 import { routing } from './app.routes';
 
+
 @NgModule({
     declarations: [
         AppComponent
