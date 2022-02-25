@@ -1,3 +1,15 @@
+# [13.1.0-develop.5](https://github.com/DSI-HUG/dejajs-components/compare/v13.1.0-develop.4...v13.1.0-develop.5) (2022-02-25)
+
+
+### Bug Fixes
+
+* **numeric-stepper:** fixed numeric stepper unit/controls aspect when disabled ([d00c446](https://github.com/DSI-HUG/dejajs-components/commit/d00c4468d78601a70afce1f616413665cf8f932e))
+
+
+### Features
+
+* lazy tooltip ([7bbc6fd](https://github.com/DSI-HUG/dejajs-components/commit/7bbc6fd4fd32e1fa0b2bf7f57677b0ccdbeaca6c))
+
 # [12.12.0](https://github.com/DSI-HUG/dejajs-components/compare/v12.11.0...v12.12.0) (2022-02-15)
 
 
