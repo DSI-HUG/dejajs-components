@@ -1,3 +1,10 @@
+# [12.13.0](https://github.com/DSI-HUG/dejajs-components/compare/v12.12.0...v12.13.0) (2022-02-25)
+
+
+### Features
+
+* lazy tooltip ([7bbc6fd](https://github.com/DSI-HUG/dejajs-components/commit/7bbc6fd4fd32e1fa0b2bf7f57677b0ccdbeaca6c))
+
 # [12.12.0](https://github.com/DSI-HUG/dejajs-components/compare/v12.11.0...v12.12.0) (2022-02-15)
 
 
