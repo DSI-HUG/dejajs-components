@@ -24,6 +24,7 @@ export * from './text/index';
 export * from './util/index';
 export * from './validation/index';
 export * from './keycodes.enum';
+export * from './custom-operators';
 
 if (!document.doctype) {
     console.warn('[DejaJS] Current document does not have a doctype. This may cause some components not to behave as expected.');

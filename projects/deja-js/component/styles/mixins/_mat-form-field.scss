@@ -1,8 +1,17 @@
 @mixin mat-form-field-unit() {
     .mat-form-field {
+
+        &.mat-form-field-disabled {
+            .unit {
+                opacity: 0.5;
+            }
+        }
+
         .unit {
             opacity: 1;
             transition: opacity 0.3s ease;
+            margin-left: .5ch;
+            margin-top: -1px;
         }
 
         &.mat-form-field-has-label.mat-form-field-hide-placeholder {
@@ -11,23 +20,10 @@
             }
         }
 
-        &[deja-numeric-stepper-form-field]:not(.disabled) {
-
-            &:hover {
-                .unit {
-                    z-index: 10001;
-                }
+        &[deja-numeric-stepper-form-field]:not(.disabled):hover {
+            .unit {
+                z-index: 10001;
             }
-        }
-    }
-}
-
-@mixin mat-form-field-input-autosize() {
-    .mat-form-field[inputAutosizeFormField] {
-
-        .mat-form-field-infix,
-        .mat-form-field-flex {
-            width: auto;
         }
     }
 }
