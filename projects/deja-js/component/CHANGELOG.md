@@ -1,3 +1,10 @@
+## [12.13.1](https://github.com/DSI-HUG/dejajs-components/compare/v12.13.0...v12.13.1) (2022-02-28)
+
+
+### Bug Fixes
+
+* possible null pointer with openTooltip$ ([b5ecfc1](https://github.com/DSI-HUG/dejajs-components/commit/b5ecfc10b8a78370d50d573d33616f3b40b2fe42))
+
 # [12.13.0](https://github.com/DSI-HUG/dejajs-components/compare/v12.12.0...v12.13.0) (2022-02-25)
 
 
