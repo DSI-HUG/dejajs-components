@@ -6,23 +6,31 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { DialogPosition, MatDialogRef } from '@angular/material/dialog';
-import { DialogService, subscribeWith } from '@deja-js/component/core';
+import { Type } from '@angular/core';
+import { DialogPosition, MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
+import { AbstractLazyModule, LazyLoaderService, subscribeWith } from '@deja-js/component/core';
 import { merge } from 'lodash-es';
-import { debounceTime, delay, EMPTY, filter, fromEvent, map, mergeWith, Observable, shareReplay, switchMap, tap, timer, withLatestFrom } from 'rxjs';
+import { debounceTime, delay, EMPTY, filter, fromEvent, map, mergeWith, Observable, shareReplay, Subject, switchMap, tap, timer, withLatestFrom } from 'rxjs';
 
 import { TooltipComponent } from './tooltip.component';
 import { TooltipConfig } from './tooltip.model';
 
 
-export abstract class TooltipService<D, R = unknown> extends DialogService<R, D, TooltipComponent> {
-    public static CURRENT_TRIGGER_ELEMENT: HTMLElement; // Because only one tooltip can be displayed at time
+export abstract class TooltipService<D> {
+    protected close$ = new Subject<void>();
 
-    public open$(tooltipData: D, tooltipConfig?: TooltipConfig<D>): Observable<R> {
+    public constructor(
+        private lazyLoaderService: LazyLoaderService,
+        private dialog: MatDialog,
+        private tooltipConfig?: MatDialogConfig<D>
+    ) {
+        if (!this.tooltipConfig) {
+            this.tooltipConfig = new MatDialogConfig();
+        }
+    }
+
+    public open$(triggerElement: HTMLElement, tooltipData: D, tooltipConfig?: TooltipConfig<D>): Observable<void> {
         this.closeDialog();
-
-        const triggerElement = TooltipService.CURRENT_TRIGGER_ELEMENT;
-        delete TooltipService.CURRENT_TRIGGER_ELEMENT;
 
         const bounds = triggerElement.getBoundingClientRect() || { left: 0, bottom: 0 };
         const config = merge(tooltipConfig, {
@@ -68,7 +76,7 @@ export abstract class TooltipService<D, R = unknown> extends DialogService<R, D,
                     mergeWith(reset$),
                     debounceTime(config.hideDelay || 150),
                     filter(Boolean),
-                    map(() => undefined as R)
+                    map(() => undefined as void)
                 );
             })
         );
@@ -85,12 +93,28 @@ export abstract class TooltipService<D, R = unknown> extends DialogService<R, D,
             switchMap(dialogRef => dialogRef.afterClosed()),
             subscribeWith(close$, animate$),
             shareReplay({ bufferSize: 1, refCount: false })
-
         );
     }
 
-    protected openTooltipRef$(tooltipData: D, triggerElement: HTMLElement, tooltipConfig: Partial<TooltipConfig<D>>): Observable<MatDialogRef<TooltipComponent, R>> {
-        return super.openDialogRef$(tooltipData, tooltipConfig).pipe(
+    public closeDialog(): void {
+        this.close$.next();
+    }
+
+    protected openTooltipRef$(tooltipData: D, triggerElement: HTMLElement, tooltipConfig: Partial<TooltipConfig<D>>): Observable<MatDialogRef<TooltipComponent, void>> {
+        return this.lazyLoaderService.loadModule$(this.getModule()).pipe(
+            switchMap(moduleInfos => {
+                const config = merge({}, this.tooltipConfig, tooltipConfig || {} as Partial<MatDialogConfig<D>>);
+                config.data = tooltipData || {} as D;
+                config.minWidth = config.minWidth || '400px';
+
+                // injector is private in MatDialog
+                // eslint-disable-next-line dot-notation
+                this.dialog['_injector'] = moduleInfos.injector;
+                const dialogRef = this.dialog.open<TooltipComponent, D, void>(moduleInfos.module.componentType, config);
+                return dialogRef.afterOpened().pipe(
+                    map(() => dialogRef)
+                );
+            }),
             tap(dialogRef => {
                 const bodyPosition = document.body.getBoundingClientRect();
                 const componentInstance = dialogRef.componentInstance;
@@ -121,4 +145,6 @@ export abstract class TooltipService<D, R = unknown> extends DialogService<R, D,
             })
         );
     }
+
+    protected abstract getModule(): Promise<Type<AbstractLazyModule<TooltipComponent>>>;
 }

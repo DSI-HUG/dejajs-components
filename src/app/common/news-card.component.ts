@@ -8,7 +8,7 @@
 
 import { Component, ElementRef, EventEmitter, Inject, Input, Optional, Output } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { TooltipComponent } from '@deja-js/component/v2/tooltip/tooltip.component';
+import { TooltipComponent } from '@deja-js/component/v2/tooltip';
 
 import { News } from './news.model';
 

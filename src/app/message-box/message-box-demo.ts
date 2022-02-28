@@ -22,7 +22,7 @@ import { NewsTooltipService } from './tooltip/news-tooltip.service';
 export class DejaMessageBoxDemoComponent {
     public tabIndex = 1;
     public dialogTitle: string;
-    public newsTooltip$: Observable<unknown>;
+    public newsTooltip$: (element: HTMLElement) => Observable<void>;
 
     public actions = [
         {
@@ -53,8 +53,8 @@ export class DejaMessageBoxDemoComponent {
         newsService: NewsService,
         newsTooltipService: NewsTooltipService
     ) {
-        this.newsTooltip$ = newsService.getNews$(10).pipe(
-            switchMap(news => newsTooltipService.open$(news?.[Math.round(Math.random() * 10)]))
+        this.newsTooltip$ = (element: HTMLElement): Observable < void> => newsService.getNews$(10).pipe(
+            switchMap(news => newsTooltipService.open$(element, news?.[Math.round(Math.random() * 10)]))
         );
     }
 }

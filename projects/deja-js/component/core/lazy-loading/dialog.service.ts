@@ -8,67 +8,49 @@
 
 import { Type } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
-import { merge } from 'lodash-es';
-import { map, Observable, ReplaySubject, shareReplay, Subject, switchMap, tap, withLatestFrom } from 'rxjs';
+import { Observable, ReplaySubject, switchMap, take, throttleTime } from 'rxjs';
 
-import { subscribeWith } from '../custom-operators';
 import { AbstractLazyModule, LazyLoaderService } from './lazy-loader.service';
 
-
-export abstract class DialogService<ReturnType, DataType, ComponentType = unknown> {
+export abstract class DialogService<ReturnType, DataType> {
     protected openDialogSub$ = new ReplaySubject<MatDialogConfig<DataType>>(1);
-    protected dialogRef: MatDialogRef<ComponentType, ReturnType>;
-    protected close$ = new Subject<ReturnType>();
+    protected dialogResponse$: Observable<ReturnType>;
+    protected dialogRef: MatDialogRef<unknown, ReturnType>;
 
     public constructor(
         private lazyLoaderService: LazyLoaderService,
         private dialog: MatDialog,
-        private matDialogConfig?: MatDialogConfig<DataType>
-    ) { }
+        matDialogConfig?: MatDialogConfig<DataType>
+    ) {
+        this.dialogResponse$ = this.openDialogSub$.pipe(
+            throttleTime(10),
+            take(1),
+            switchMap(dialogConfig => this.lazyLoaderService.loadModule$(this.getModule()).pipe(
+                switchMap(moduleInfos => {
+                    const config = { ...matDialogConfig || {}, ...dialogConfig };
+                    config.minWidth = config.minWidth || '400px';
+
+                    // injector is private in MatDialog
+                    // eslint-disable-next-line dot-notation
+                    this.dialog['_injector'] = moduleInfos.injector;
+                    this.dialogRef = this.dialog.open<unknown, DataType, ReturnType>(moduleInfos.module.componentType, config);
+
+                    return this.dialogRef.afterClosed();
+                })
+            ))
+        );
+    }
 
     public openDialog$(dialogData?: DataType, dialogConfig?: MatDialogConfig<DataType>): Observable<ReturnType> {
-        // dialogConfig = dialogConfig || {};
-        // dialogConfig.data = dialogData || {} as DataType;
-        // this.openDialogSub$.next(dialogConfig);
-        // return this.dialogResponse$;
-        const dialogRef$ = this.openDialogRef$(dialogData, dialogConfig).pipe(
-            shareReplay({ bufferSize: 1, refCount: false })
-        );
-
-        const externalClose$ = this.close$.pipe(
-            withLatestFrom(dialogRef$),
-            tap(([response, dialogRef]) => dialogRef.close(response))
-        );
-
-        return dialogRef$.pipe(
-            switchMap(dialogRef => dialogRef.afterClosed()),
-            subscribeWith(externalClose$),
-            shareReplay({ bufferSize: 1, refCount: false })
-        );
+        dialogConfig = dialogConfig || {};
+        dialogConfig.data = dialogData || {} as DataType;
+        this.openDialogSub$.next(dialogConfig);
+        return this.dialogResponse$;
     }
 
-    public closeDialog(response?: ReturnType): void {
-        this.close$.next(response);
+    public closeDialog(): void {
+        this.dialogRef.close();
     }
 
-    protected openDialogRef$(dialogData: DataType, dialogConfig?: Partial<MatDialogConfig<DataType>>): Observable<MatDialogRef<ComponentType, ReturnType>> {
-        return this.lazyLoaderService.loadModule$(this.getModule()).pipe(
-            switchMap(moduleInfos => {
-                const config = merge({}, this.matDialogConfig, dialogConfig || {} as Partial<MatDialogConfig<DataType>>);
-                config.data = dialogData || {} as DataType;
-                config.minWidth = config.minWidth || '400px';
-
-                // injector is private in MatDialog
-                // eslint-disable-next-line dot-notation
-                this.dialog['_injector'] = moduleInfos.injector;
-                const dialogRef = this.dialog.open<ComponentType, DataType, ReturnType>(moduleInfos.module.componentType, config);
-
-                return dialogRef.afterOpened().pipe(
-                    map(() => dialogRef)
-                );
-            })
-        );
-    }
-
-    protected abstract getModule(): Promise<Type<AbstractLazyModule<ComponentType>>>;
+    protected abstract getModule(): Promise<Type<AbstractLazyModule<unknown>>>;
 }
