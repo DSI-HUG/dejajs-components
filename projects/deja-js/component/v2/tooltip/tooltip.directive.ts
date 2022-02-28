@@ -8,7 +8,7 @@
 
 import { Directive, ElementRef, Input } from '@angular/core';
 import { Destroy } from '@deja-js/component/core';
-import { fromEvent, Observable, switchMap, take, takeUntil, timer } from 'rxjs';
+import { filter, fromEvent, Observable, switchMap, take, takeUntil, timer } from 'rxjs';
 
 import { TooltipService } from './tooltip.service';
 
@@ -32,6 +32,7 @@ export class TooltipDirective extends Destroy {
         fromEvent<MouseEvent>(triggerElement, 'mouseenter').pipe(
             switchMap(() => timer(this.delay).pipe(
                 take(1),
+                filter(() => !!this.openTooltip$),
                 switchMap(() => {
                     TooltipService.CURRENT_TRIGGER_ELEMENT = triggerElement;
                     return this.openTooltip$;
