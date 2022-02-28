@@ -15,7 +15,7 @@ import { filter, fromEvent, Observable, switchMap, take, takeUntil, timer } from
 })
 export class TooltipDirective extends Destroy {
     // eslint-disable-next-line @angular-eslint/no-input-rename
-    @Input('tooltip-delay') public delay = 600;
+    @Input('tooltip-delay') public delay = 300;
 
     @Input('app-tooltip') public openTooltip$: (element: HTMLElement) => Observable<void>;
 

@@ -74,7 +74,7 @@ export abstract class TooltipService<D> {
                 );
                 return set$.pipe(
                     mergeWith(reset$),
-                    debounceTime(config.hideDelay || 50),
+                    debounceTime(config.hideDelay || 10),
                     filter(Boolean),
                     map(() => undefined as void)
                 );
@@ -105,7 +105,7 @@ export abstract class TooltipService<D> {
             switchMap(moduleInfos => {
                 const config = merge({}, this.tooltipConfig, tooltipConfig || {} as Partial<MatDialogConfig<D>>);
                 config.data = tooltipData || {} as D;
-                config.minWidth = config.minWidth || '400px';
+                config.minWidth = config.minWidth || '100px';
 
                 // injector is private in MatDialog
                 // eslint-disable-next-line dot-notation
