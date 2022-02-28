@@ -1,3 +1,10 @@
+## [12.13.2](https://github.com/DSI-HUG/dejajs-components/compare/v12.13.1...v12.13.2) (2022-02-28)
+
+
+### Bug Fixes
+
+* tooltip V2 remove static field not working in build mode ([5dac816](https://github.com/DSI-HUG/dejajs-components/commit/5dac816de9e4115a6c7aa620de01c67aa4fd17aa))
+
 ## [12.13.1](https://github.com/DSI-HUG/dejajs-components/compare/v12.13.0...v12.13.1) (2022-02-28)
 
 
