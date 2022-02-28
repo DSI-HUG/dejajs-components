@@ -1,3 +1,10 @@
+## [12.13.4](https://github.com/DSI-HUG/dejajs-components/compare/v12.13.3...v12.13.4) (2022-02-28)
+
+
+### Bug Fixes
+
+* tooltip.service.ts improve timing ([1da2f93](https://github.com/DSI-HUG/dejajs-components/commit/1da2f93568c04b38a364b3c67c34725f8b81ef1b))
+
 ## [12.13.3](https://github.com/DSI-HUG/dejajs-components/compare/v12.13.2...v12.13.3) (2022-02-28)
 
 
