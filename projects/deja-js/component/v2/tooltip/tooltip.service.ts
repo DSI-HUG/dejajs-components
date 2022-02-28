@@ -30,7 +30,7 @@ export abstract class TooltipService<D> {
     }
 
     public open$(triggerElement: HTMLElement, tooltipData: D, tooltipConfig?: TooltipConfig<D>): Observable<void> {
-        this.closeDialog();
+        this.close();
 
         const bounds = triggerElement.getBoundingClientRect() || { left: 0, bottom: 0 };
         const config = merge(tooltipConfig, {
@@ -43,7 +43,7 @@ export abstract class TooltipService<D> {
         } as TooltipConfig<D>);
 
 
-        const dialogRef$ = this.openTooltipRef$(tooltipData, triggerElement, config).pipe(
+        const dialogRef$ = this.openRef$(tooltipData, triggerElement, config).pipe(
             shareReplay({ bufferSize: 1, refCount: false })
         );
 
@@ -74,7 +74,7 @@ export abstract class TooltipService<D> {
                 );
                 return set$.pipe(
                     mergeWith(reset$),
-                    debounceTime(config.hideDelay || 150),
+                    debounceTime(config.hideDelay || 50),
                     filter(Boolean),
                     map(() => undefined as void)
                 );
@@ -96,11 +96,11 @@ export abstract class TooltipService<D> {
         );
     }
 
-    public closeDialog(): void {
+    public close(): void {
         this.close$.next();
     }
 
-    protected openTooltipRef$(tooltipData: D, triggerElement: HTMLElement, tooltipConfig: Partial<TooltipConfig<D>>): Observable<MatDialogRef<TooltipComponent, void>> {
+    protected openRef$(tooltipData: D, triggerElement: HTMLElement, tooltipConfig: Partial<TooltipConfig<D>>): Observable<MatDialogRef<TooltipComponent, void>> {
         return this.lazyLoaderService.loadModule$(this.getModule()).pipe(
             switchMap(moduleInfos => {
                 const config = merge({}, this.tooltipConfig, tooltipConfig || {} as Partial<MatDialogConfig<D>>);
