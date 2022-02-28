@@ -1,3 +1,10 @@
+## [12.13.3](https://github.com/DSI-HUG/dejajs-components/compare/v12.13.2...v12.13.3) (2022-02-28)
+
+
+### Bug Fixes
+
+* tooltip.service.ts improve naming ([30b13db](https://github.com/DSI-HUG/dejajs-components/commit/30b13db9aa9348e41fc07c175cfb2bcd59a78d8d))
+
 ## [12.13.2](https://github.com/DSI-HUG/dejajs-components/compare/v12.13.1...v12.13.2) (2022-02-28)
 
 
