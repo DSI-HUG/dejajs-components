@@ -9,7 +9,7 @@
 import { Directive, ElementRef } from '@angular/core';
 
 @Directive()
-export class TooltipComponent {
+export abstract class TooltipComponent {
     public constructor(
         public elementRef: ElementRef<HTMLElement>
     ) { }
