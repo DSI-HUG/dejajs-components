@@ -1,3 +1,10 @@
+## [12.13.5](https://github.com/DSI-HUG/dejajs-components/compare/v12.13.4...v12.13.5) (2022-03-01)
+
+
+### Bug Fixes
+
+* improve tooltip alignment ([095fbf5](https://github.com/DSI-HUG/dejajs-components/commit/095fbf5292d3ead0608bd047caac51aadd886e1a))
+
 ## [12.13.4](https://github.com/DSI-HUG/dejajs-components/compare/v12.13.3...v12.13.4) (2022-02-28)
 
 
