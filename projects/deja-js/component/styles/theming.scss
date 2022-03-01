@@ -2,6 +2,7 @@
 @use './mixins/loader'as loader;
 @use './mixins/menu'as menu;
 @use './mixins/popup'as popup;
+@use './mixins/tooltip'as tooltip;
 @use './mixins/tree-list-borders'as treeListBorders;
 @use './mixins/mat-form-field'as matFormField;
 
@@ -45,6 +46,7 @@
     @include dateSelectorTheme.date-selector-theme($custom-theme);
     @include menu.deja-menu();
     @include popup.deja-popup();
+    @include tooltip.tooltip();
     @include treeListBorders.deja-tree-list-borders();
     @include matFormField.mat-form-field-unit();
     @include listLoaderTheme.list-loader-theme($custom-theme);
