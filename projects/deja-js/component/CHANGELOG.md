@@ -1,3 +1,14 @@
+# [13.1.0-develop.8](https://github.com/DSI-HUG/dejajs-components/compare/v13.1.0-develop.7...v13.1.0-develop.8) (2022-03-01)
+
+
+### Bug Fixes
+
+* improve tooltip alignment ([095fbf5](https://github.com/DSI-HUG/dejajs-components/commit/095fbf5292d3ead0608bd047caac51aadd886e1a))
+* possible null pointer with openTooltip$ ([b5ecfc1](https://github.com/DSI-HUG/dejajs-components/commit/b5ecfc10b8a78370d50d573d33616f3b40b2fe42))
+* tooltip V2 remove static field not working in build mode ([5dac816](https://github.com/DSI-HUG/dejajs-components/commit/5dac816de9e4115a6c7aa620de01c67aa4fd17aa))
+* tooltip.service.ts improve naming ([30b13db](https://github.com/DSI-HUG/dejajs-components/commit/30b13db9aa9348e41fc07c175cfb2bcd59a78d8d))
+* tooltip.service.ts improve timing ([1da2f93](https://github.com/DSI-HUG/dejajs-components/commit/1da2f93568c04b38a364b3c67c34725f8b81ef1b))
+
 # [13.1.0-develop.7](https://github.com/DSI-HUG/dejajs-components/compare/v13.1.0-develop.6...v13.1.0-develop.7) (2022-03-01)
 
 # [13.1.0-develop.6](https://github.com/DSI-HUG/dejajs-components/compare/v13.1.0-develop.5...v13.1.0-develop.6) (2022-02-25)
