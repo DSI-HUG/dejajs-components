@@ -1,7 +1,7 @@
 import { Injectable, Type } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AbstractLazyModule, LazyLoaderService } from '@deja-js/component/core';
-import { TooltipComponent, TooltipConfig, TooltipService } from '@deja-js/component/v2/tooltip';
+import { TooltipComponentInterface, TooltipConfig, TooltipService } from '@deja-js/component/v2/tooltip';
 
 import { News } from 'src/app/common/news.model';
 
@@ -18,7 +18,7 @@ export class NewsTooltipService extends TooltipService<News> {
         super(lazyLoaderService, dialog, toolTipConfig);
     }
 
-    protected getModule(): Promise<Type<AbstractLazyModule<TooltipComponent>>> {
+    protected getModule(): Promise<Type<AbstractLazyModule<TooltipComponentInterface>>> {
         return import('../../common/news-card.module').then(m => m.NewsCardModule);
     }
 }

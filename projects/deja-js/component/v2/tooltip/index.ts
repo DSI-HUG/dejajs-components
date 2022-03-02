@@ -25,6 +25,6 @@ import { TooltipDirective } from './tooltip.directive';
 export class TooltipModule { }
 
 export * from './tooltip.model';
-export * from './tooltip.component';
+export * from './tooltip-component.interface';
 export * from './tooltip.service';
 export * from './tooltip.directive';

@@ -8,8 +8,8 @@
 
 import { Component, ElementRef, EventEmitter, Inject, Input, Optional, Output } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { TooltipComponent } from '@deja-js/component/v2/tooltip';
 
+import { TooltipComponentInterface } from '../../../projects/deja-js/component/v2/tooltip/tooltip-component.interface';
 import { News } from './news.model';
 
 @Component({
@@ -17,7 +17,7 @@ import { News } from './news.model';
     styleUrls: ['./news-card.component.scss'],
     templateUrl: './news-card.component.html'
 })
-export class NewsCardComponent extends TooltipComponent {
+export class NewsCardComponent implements TooltipComponentInterface {
     @Input()
     public item: News;
 
@@ -25,11 +25,9 @@ export class NewsCardComponent extends TooltipComponent {
     public readonly imageLoaded = new EventEmitter();
 
     public constructor(
-        elementRef: ElementRef<HTMLElement>,
+        public elementRef: ElementRef<HTMLElement>,
         @Optional() @Inject(MAT_DIALOG_DATA) news: News
     ) {
-        super(elementRef);
-
         if (news) {
             this.item = news;
         }
