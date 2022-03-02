@@ -6,8 +6,10 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Inject, Input, Optional, Output } from '@angular/core';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
+import { TooltipComponentInterface } from '../../../projects/deja-js/component/v2/tooltip/tooltip-component.interface';
 import { News } from './news.model';
 
 @Component({
@@ -15,10 +17,19 @@ import { News } from './news.model';
     styleUrls: ['./news-card.component.scss'],
     templateUrl: './news-card.component.html'
 })
-export class NewsCardComponent {
+export class NewsCardComponent implements TooltipComponentInterface {
     @Input()
     public item: News;
 
     @Output()
     public readonly imageLoaded = new EventEmitter();
+
+    public constructor(
+        public elementRef: ElementRef<HTMLElement>,
+        @Optional() @Inject(MAT_DIALOG_DATA) news: News
+    ) {
+        if (news) {
+            this.item = news;
+        }
+    }
 }

@@ -1,0 +1,12 @@
+@mixin tooltip() {
+    .tooltip-opening {
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 200ms linear;
+
+        &.tooltip-opened {
+            opacity: 1;
+            visibility: visible;
+        }
+    }
+}

@@ -125,11 +125,7 @@ export class TreeListDemoComponent extends Destroy {
         this.news$ = newsService.getNews$(50);
         this.bigCountries$ = countriesService.getCountries$(null, 100000);
 
-        const bigNews$ = newsService.getNews$(10000).pipe(
-            shareReplay({ bufferSize: 1, refCount: false })
-        );
-
-        this.bigNews$ = bigNews$.pipe(
+        this.bigNews$ = newsService.getNews$(10000).pipe(
             shareReplay({ bufferSize: 1, refCount: false })
         );
 

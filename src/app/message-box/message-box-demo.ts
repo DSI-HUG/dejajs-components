@@ -8,6 +8,11 @@
 
 import { Component } from '@angular/core';
 import { DejaMessageBoxAction } from '@deja-js/component/core';
+import { Observable, switchMap } from 'rxjs';
+
+import { NewsService } from '../services/news.service';
+import { NewsTooltipService } from './tooltip/news-tooltip.service';
+
 
 @Component({
     selector: 'message-box-demo',
@@ -17,12 +22,7 @@ import { DejaMessageBoxAction } from '@deja-js/component/core';
 export class DejaMessageBoxDemoComponent {
     public tabIndex = 1;
     public dialogTitle: string;
-
-    public toolTipModel = {
-        text: 'Je suis un deja-tooltip'
-    };
-
-    public tooltipVisible = false;
+    public newsTooltip$: (element: HTMLElement) => Observable<void>;
 
     public actions = [
         {
@@ -48,4 +48,13 @@ export class DejaMessageBoxDemoComponent {
             icon: 'clear'
         }
     ] as DejaMessageBoxAction[];
+
+    public constructor(
+        newsService: NewsService,
+        newsTooltipService: NewsTooltipService
+    ) {
+        this.newsTooltip$ = (element: HTMLElement): Observable < void> => newsService.getNews$(10).pipe(
+            switchMap(news => newsTooltipService.open$(element, news?.[Math.round(Math.random() * 10)]))
+        );
+    }
 }

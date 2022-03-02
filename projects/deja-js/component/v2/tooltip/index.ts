@@ -8,21 +8,23 @@
 
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { AbstractLazyModule } from '@deja-js/component/core';
 
-import { NewsCardComponent } from './news-card.component';
+import { TooltipDirective } from './tooltip.directive';
 
 @NgModule({
-    declarations: [NewsCardComponent],
-    exports: [NewsCardComponent],
+    declarations: [
+        TooltipDirective
+    ],
+    exports: [
+        TooltipDirective
+    ],
     imports: [
         CommonModule
-    ],
-    providers: [
     ]
 })
-export class NewsCardModule extends AbstractLazyModule<NewsCardComponent> {
-    public constructor() {
-        super(NewsCardComponent);
-    }
-}
+export class TooltipModule { }
+
+export * from './tooltip.model';
+export * from './tooltip-component.interface';
+export * from './tooltip.service';
+export * from './tooltip.directive';
