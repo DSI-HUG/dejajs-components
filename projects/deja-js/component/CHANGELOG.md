@@ -1,3 +1,10 @@
+# [13.1.0-develop.9](https://github.com/DSI-HUG/dejajs-components/compare/v13.1.0-develop.8...v13.1.0-develop.9) (2022-03-02)
+
+
+### Bug Fixes
+
+* improve tooltip ([b87a502](https://github.com/DSI-HUG/dejajs-components/commit/b87a5028f154afe4e8420cd817cb3a66c877e4a7))
+
 # [13.1.0-develop.8](https://github.com/DSI-HUG/dejajs-components/compare/v13.1.0-develop.7...v13.1.0-develop.8) (2022-03-01)
 
 
