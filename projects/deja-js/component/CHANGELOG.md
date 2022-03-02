@@ -1,3 +1,28 @@
+# [13.2.0](https://github.com/DSI-HUG/dejajs-components/compare/v13.1.0...v13.2.0) (2022-03-02)
+
+
+### Bug Fixes
+
+* **date-picker:** avoid closing the date-picker depending on the selected value (DEJS-1040) ([fb81146](https://github.com/DSI-HUG/dejajs-components/commit/fb8114674f60d666c72a5355758671f301e1d31c))
+* **date-picker:** avoid overlap from the closing action on the calendar (DEJS-1040) ([a32c797](https://github.com/DSI-HUG/dejajs-components/commit/a32c7979b723f264a0f5e1ff81dcdc81bcca4e31))
+* **date-selector:** avoid updating the selectedDate when exploring the calendar (DEJS-1040) ([62faf0b](https://github.com/DSI-HUG/dejajs-components/commit/62faf0ba87ef50684ca90bcbe634ae5f3b2a90cf))
+* **deja-editor:** check instance is defined to avoid NPE (DEJS-1031) ([9190223](https://github.com/DSI-HUG/dejajs-components/commit/91902238107802e7eba320e27ca43a5bb3328476))
+* **deja-editor:** move check to the top of the method (DEJS-1031) ([92ae721](https://github.com/DSI-HUG/dejajs-components/commit/92ae72108e105aedd635052b9b255359c61eab91))
+* improve tooltip ([b87a502](https://github.com/DSI-HUG/dejajs-components/commit/b87a5028f154afe4e8420cd817cb3a66c877e4a7))
+* improve tooltip alignment ([095fbf5](https://github.com/DSI-HUG/dejajs-components/commit/095fbf5292d3ead0608bd047caac51aadd886e1a))
+* **numeric-stepper:** fixed numeric stepper unit/controls aspect when disabled ([d00c446](https://github.com/DSI-HUG/dejajs-components/commit/d00c4468d78601a70afce1f616413665cf8f932e))
+* possible null pointer with openTooltip$ ([b5ecfc1](https://github.com/DSI-HUG/dejajs-components/commit/b5ecfc10b8a78370d50d573d33616f3b40b2fe42))
+* remove non working exports ([fed1bfe](https://github.com/DSI-HUG/dejajs-components/commit/fed1bfeac9796168cad850ab800f221f29e278d0))
+* **time-picker:** avoid clear full time when unset value and avoid undef time (DEJS-1040) ([f3eed5e](https://github.com/DSI-HUG/dejajs-components/commit/f3eed5eae48f7b877e83b84b4f080ee1952d03a4))
+* tooltip V2 remove static field not working in build mode ([5dac816](https://github.com/DSI-HUG/dejajs-components/commit/5dac816de9e4115a6c7aa620de01c67aa4fd17aa))
+* tooltip.service.ts improve naming ([30b13db](https://github.com/DSI-HUG/dejajs-components/commit/30b13db9aa9348e41fc07c175cfb2bcd59a78d8d))
+* tooltip.service.ts improve timing ([1da2f93](https://github.com/DSI-HUG/dejajs-components/commit/1da2f93568c04b38a364b3c67c34725f8b81ef1b))
+
+
+### Features
+
+* lazy tooltip ([7bbc6fd](https://github.com/DSI-HUG/dejajs-components/commit/7bbc6fd4fd32e1fa0b2bf7f57677b0ccdbeaca6c))
+
 # [13.1.0](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0...v13.1.0) (2022-01-24)
 
 
