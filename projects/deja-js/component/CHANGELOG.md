@@ -1,78 +1,60 @@
-# [13.1.0-develop.10](https://github.com/DSI-HUG/dejajs-components/compare/v13.1.0-develop.9...v13.1.0-develop.10) (2022-03-02)
-
-# [13.1.0-develop.9](https://github.com/DSI-HUG/dejajs-components/compare/v13.1.0-develop.8...v13.1.0-develop.9) (2022-03-02)
+# [13.1.0](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0...v13.1.0) (2022-01-24)
 
 
 ### Bug Fixes
 
-* improve tooltip ([b87a502](https://github.com/DSI-HUG/dejajs-components/commit/b87a5028f154afe4e8420cd817cb3a66c877e4a7))
-
-# [13.1.0-develop.8](https://github.com/DSI-HUG/dejajs-components/compare/v13.1.0-develop.7...v13.1.0-develop.8) (2022-03-01)
-
-
-### Bug Fixes
-
-* improve tooltip alignment ([095fbf5](https://github.com/DSI-HUG/dejajs-components/commit/095fbf5292d3ead0608bd047caac51aadd886e1a))
-* possible null pointer with openTooltip$ ([b5ecfc1](https://github.com/DSI-HUG/dejajs-components/commit/b5ecfc10b8a78370d50d573d33616f3b40b2fe42))
-* tooltip V2 remove static field not working in build mode ([5dac816](https://github.com/DSI-HUG/dejajs-components/commit/5dac816de9e4115a6c7aa620de01c67aa4fd17aa))
-* tooltip.service.ts improve naming ([30b13db](https://github.com/DSI-HUG/dejajs-components/commit/30b13db9aa9348e41fc07c175cfb2bcd59a78d8d))
-* tooltip.service.ts improve timing ([1da2f93](https://github.com/DSI-HUG/dejajs-components/commit/1da2f93568c04b38a364b3c67c34725f8b81ef1b))
-
-# [13.1.0-develop.7](https://github.com/DSI-HUG/dejajs-components/compare/v13.1.0-develop.6...v13.1.0-develop.7) (2022-03-01)
-
-# [13.1.0-develop.6](https://github.com/DSI-HUG/dejajs-components/compare/v13.1.0-develop.5...v13.1.0-develop.6) (2022-02-25)
-
-# [13.1.0-develop.5](https://github.com/DSI-HUG/dejajs-components/compare/v13.1.0-develop.4...v13.1.0-develop.5) (2022-02-25)
-
-
-### Bug Fixes
-
-* **numeric-stepper:** fixed numeric stepper unit/controls aspect when disabled ([d00c446](https://github.com/DSI-HUG/dejajs-components/commit/d00c4468d78601a70afce1f616413665cf8f932e))
+* **date-picker:** improve datepicker responsiveness and add compact design (DEJS-1040) ([d59cfa0](https://github.com/DSI-HUG/dejajs-components/commit/d59cfa0ec8a19e94ed458b27ea7e4ab82afc7a31))
+* **datepicker:** fix actions position and numeric stepper value visibilitiy (DEJS-1040) ([652d6cc](https://github.com/DSI-HUG/dejajs-components/commit/652d6cc349e92bf74ad3145ff263afd454c626c8))
+* **numeric-stepper:** fix arrow alignment ([1b4bda4](https://github.com/DSI-HUG/dejajs-components/commit/1b4bda4620d74810ae08f476189f09b11c240183))
+* **numeric-stepper:** fix arrow alignment ([d4ab1b1](https://github.com/DSI-HUG/dejajs-components/commit/d4ab1b1ff335bcd5798800e8380980ec351bc768))
+* **popup-tray:** avoid NPE on dialog without componentInstance ([542d994](https://github.com/DSI-HUG/dejajs-components/commit/542d9943e08cd627d704b3c2c7d3a4c55faa17e7))
+* **time-picker:** fix the infinite loop when unsetting hours or minutes (DEJS-1040) ([f6922c1](https://github.com/DSI-HUG/dejajs-components/commit/f6922c1621c8f88ca73b73748c21818c234a97d4))
 
 
 ### Features
 
-* lazy tooltip ([7bbc6fd](https://github.com/DSI-HUG/dejajs-components/commit/7bbc6fd4fd32e1fa0b2bf7f57677b0ccdbeaca6c))
+* fix publish workflow and force version to 12.7 ([6d3464e](https://github.com/DSI-HUG/dejajs-components/commit/6d3464e84fdb431eb4040ce0056e2532a5a659f4))
+* making 12.8 form ng13 modifications ([a29bcd7](https://github.com/DSI-HUG/dejajs-components/commit/a29bcd72e9a2fb810673f9dd364577595265dd28))
 
-# [12.12.0](https://github.com/DSI-HUG/dejajs-components/compare/v12.11.0...v12.12.0) (2022-02-15)
-
-
-### Bug Fixes
-
-* **numeric-stepper:** fixed numeric stepper unit/controls aspect when disabled ([d00c446](https://github.com/DSI-HUG/dejajs-components/commit/d00c4468d78601a70afce1f616413665cf8f932e))
-
-# [12.11.0](https://github.com/DSI-HUG/dejajs-components/compare/v12.10.2...v12.11.0) (2022-02-03)
+# [13.1.0-develop.1](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0...v13.1.0-develop.1) (2022-01-24)
 
 
 ### Bug Fixes
 
-* **date-picker:** avoid closing the date-picker depending on the selected value (DEJS-1040) ([fb81146](https://github.com/DSI-HUG/dejajs-components/commit/fb8114674f60d666c72a5355758671f301e1d31c))
-* **date-picker:** avoid overlap from the closing action on the calendar (DEJS-1040) ([a32c797](https://github.com/DSI-HUG/dejajs-components/commit/a32c7979b723f264a0f5e1ff81dcdc81bcca4e31))
-* **date-selector:** avoid updating the selectedDate when exploring the calendar (DEJS-1040) ([62faf0b](https://github.com/DSI-HUG/dejajs-components/commit/62faf0ba87ef50684ca90bcbe634ae5f3b2a90cf))
-* **time-picker:** avoid clear full time when unset value and avoid undef time (DEJS-1040) ([f3eed5e](https://github.com/DSI-HUG/dejajs-components/commit/f3eed5eae48f7b877e83b84b4f080ee1952d03a4))
-
-## [12.10.2](https://github.com/DSI-HUG/dejajs-components/compare/v12.10.1...v12.10.2) (2022-01-25)
-
-
-### Bug Fixes
-
-* **deja-editor:** check instance is defined to avoid NPE (DEJS-1031) ([9190223](https://github.com/DSI-HUG/dejajs-components/commit/91902238107802e7eba320e27ca43a5bb3328476))
-* **deja-editor:** move check to the top of the method (DEJS-1031) ([92ae721](https://github.com/DSI-HUG/dejajs-components/commit/92ae72108e105aedd635052b9b255359c61eab91))
-
-## [12.10.1](https://github.com/DSI-HUG/dejajs-components/compare/v12.10.0...v12.10.1) (2022-01-24)
+* **date-picker:** improve datepicker responsiveness and add compact design (DEJS-1040) ([d59cfa0](https://github.com/DSI-HUG/dejajs-components/commit/d59cfa0ec8a19e94ed458b27ea7e4ab82afc7a31))
+* **datepicker:** fix actions position and numeric stepper value visibilitiy (DEJS-1040) ([652d6cc](https://github.com/DSI-HUG/dejajs-components/commit/652d6cc349e92bf74ad3145ff263afd454c626c8))
+* **numeric-stepper:** fix arrow alignment ([1b4bda4](https://github.com/DSI-HUG/dejajs-components/commit/1b4bda4620d74810ae08f476189f09b11c240183))
+* **numeric-stepper:** fix arrow alignment ([d4ab1b1](https://github.com/DSI-HUG/dejajs-components/commit/d4ab1b1ff335bcd5798800e8380980ec351bc768))
+* **popup-tray:** avoid NPE on dialog without componentInstance ([542d994](https://github.com/DSI-HUG/dejajs-components/commit/542d9943e08cd627d704b3c2c7d3a4c55faa17e7))
+* **time-picker:** fix the infinite loop when unsetting hours or minutes (DEJS-1040) ([f6922c1](https://github.com/DSI-HUG/dejajs-components/commit/f6922c1621c8f88ca73b73748c21818c234a97d4))
 
 
-### Bug Fixes
+### Features
 
-* remove non working exports ([fed1bfe](https://github.com/DSI-HUG/dejajs-components/commit/fed1bfeac9796168cad850ab800f221f29e278d0))
+* fix publish workflow and force version to 12.7 ([6d3464e](https://github.com/DSI-HUG/dejajs-components/commit/6d3464e84fdb431eb4040ce0056e2532a5a659f4))
+* making 12.8 form ng13 modifications ([a29bcd7](https://github.com/DSI-HUG/dejajs-components/commit/a29bcd72e9a2fb810673f9dd364577595265dd28))
 
-# [12.10.0](https://github.com/DSI-HUG/dejajs-components/compare/v12.9.0...v12.10.0) (2022-01-24)
+## [12.9.1-develop.1](https://github.com/DSI-HUG/dejajs-components/compare/v12.9.0...v12.9.1-develop.1) (2022-01-24)
 
 # [12.9.0](https://github.com/DSI-HUG/dejajs-components/compare/v12.8.0...v12.9.0) (2022-01-21)
 
-# [12.9.0-develop.1](https://github.com/DSI-HUG/dejajs-components/compare/v12.8.0...v12.9.0-develop.1) (2022-01-21)
 
-# [12.8.0](https://github.com/DSI-HUG/dejajs-components/compare/v12.7.2...v12.8.0) (2022-01-21)
+### Bug Fixes
+
+* **date-picker:** improve datepicker responsiveness and add compact design (DEJS-1040) ([d59cfa0](https://github.com/DSI-HUG/dejajs-components/commit/d59cfa0ec8a19e94ed458b27ea7e4ab82afc7a31))
+* **datepicker:** fix actions position and numeric stepper value visibilitiy (DEJS-1040) ([652d6cc](https://github.com/DSI-HUG/dejajs-components/commit/652d6cc349e92bf74ad3145ff263afd454c626c8))
+* **numeric-stepper:** fix arrow alignment ([1b4bda4](https://github.com/DSI-HUG/dejajs-components/commit/1b4bda4620d74810ae08f476189f09b11c240183))
+* **numeric-stepper:** fix arrow alignment ([d4ab1b1](https://github.com/DSI-HUG/dejajs-components/commit/d4ab1b1ff335bcd5798800e8380980ec351bc768))
+* **popup-tray:** avoid NPE on dialog without componentInstance ([542d994](https://github.com/DSI-HUG/dejajs-components/commit/542d9943e08cd627d704b3c2c7d3a4c55faa17e7))
+* **time-picker:** fix the infinite loop when unsetting hours or minutes (DEJS-1040) ([f6922c1](https://github.com/DSI-HUG/dejajs-components/commit/f6922c1621c8f88ca73b73748c21818c234a97d4))
+
+
+### Features
+
+* fix publish workflow and force version to 12.7 ([6d3464e](https://github.com/DSI-HUG/dejajs-components/commit/6d3464e84fdb431eb4040ce0056e2532a5a659f4))
+* making 12.8 form ng13 modifications ([a29bcd7](https://github.com/DSI-HUG/dejajs-components/commit/a29bcd72e9a2fb810673f9dd364577595265dd28))
+
+# [13.0.0](https://github.com/DSI-HUG/dejajs-components/compare/v12.6.0...v13.0.0) (2022-01-20)
 
 
 ### Bug Fixes
@@ -121,50 +103,280 @@
 * add input-autosize.directive, fix numeric-stepper with inputAutosize directive ([20c4bc9](https://github.com/DSI-HUG/dejajs-components/commit/20c4bc98718ddc0c6b0ff3a2fa2d00b328cbb3b7))
 * husky 7 [skip ci] ([febfc85](https://github.com/DSI-HUG/dejajs-components/commit/febfc8568f2f605fcb0ab8534849fd91d34d25dc))
 * intégration du material-date-picker en prévision du remplacement du deja DEJS-1023 ([6239e28](https://github.com/DSI-HUG/dejajs-components/commit/6239e28b59ea2135faa6042aecbcd39a53e994e3))
-* making 12.8 form ng13 modifications ([a29bcd7](https://github.com/DSI-HUG/dejajs-components/commit/a29bcd72e9a2fb810673f9dd364577595265dd28))
 
 
 ### BREAKING CHANGES
 
 * init dejajs version 13
 
-# [12.8.0-develop.1](https://github.com/DSI-HUG/dejajs-components/compare/v12.7.2...v12.8.0-develop.1) (2022-01-21)
+# [13.0.0-next.53](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.52...v13.0.0-next.53) (2022-01-20)
+
+# [13.0.0-next.52](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.51...v13.0.0-next.52) (2022-01-20)
+
+# [13.0.0-next.51](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.50...v13.0.0-next.51) (2022-01-20)
+
+# [13.0.0-next.50](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.49...v13.0.0-next.50) (2022-01-20)
+
+# [13.0.0-next.49](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.48...v13.0.0-next.49) (2022-01-20)
+
+# [13.0.0-next.48](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.47...v13.0.0-next.48) (2022-01-20)
+
+# [13.0.0-next.47](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.46...v13.0.0-next.47) (2022-01-19)
+
+# [13.0.0-next.46](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.45...v13.0.0-next.46) (2022-01-19)
+
+# [13.0.0-next.45](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.44...v13.0.0-next.45) (2022-01-19)
+
+# [13.0.0-next.44](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.43...v13.0.0-next.44) (2022-01-19)
+
+# [13.0.0-next.43](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.42...v13.0.0-next.43) (2022-01-19)
+
+# [13.0.0-next.42](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.41...v13.0.0-next.42) (2022-01-19)
+
+# [13.0.0-next.41](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.40...v13.0.0-next.41) (2022-01-19)
+
+# [13.0.0-next.40](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.39...v13.0.0-next.40) (2022-01-19)
+
+# [13.0.0-next.39](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.38...v13.0.0-next.39) (2022-01-19)
+
+# [13.0.0-next.38](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.37...v13.0.0-next.38) (2022-01-19)
+
+# [13.0.0-next.37](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.36...v13.0.0-next.37) (2022-01-19)
+
+
+### Bug Fixes
+
+* **monaco-editor:** fix monaco editor dependency even if not used ([16f9fa6](https://github.com/DSI-HUG/dejajs-components/commit/16f9fa6f678bac36479b5623fc453a46b0549f26))
+
+# [13.0.0-next.36](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.35...v13.0.0-next.36) (2021-12-22)
+
+
+### Bug Fixes
+
+* **numeric-stepper-v2:** fix label spacing if no values inlay and hover ([6243669](https://github.com/DSI-HUG/dejajs-components/commit/6243669a0ab25a9b10357fa084a44235f9bdcc6b))
+
+# [13.0.0-next.35](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.34...v13.0.0-next.35) (2021-12-22)
+
+
+### Bug Fixes
+
+* inputAutosize and inputAutosizeFormField ([4694ceb](https://github.com/DSI-HUG/dejajs-components/commit/4694ceb57ea588da0e389e428e1964dc19777379))
+
+# [13.0.0-next.34](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.33...v13.0.0-next.34) (2021-12-20)
+
+
+### Bug Fixes
+
+* **time-picker:** fix clear minutes or hours cause an invalid date crash ([82d1291](https://github.com/DSI-HUG/dejajs-components/commit/82d129127bf8bf9fe7ed57521f81be939219b000))
+
+# [13.0.0-next.33](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.32...v13.0.0-next.33) (2021-12-20)
+
+
+### Bug Fixes
+
+* **time-picker:** fix height and alignment in a inline form row ([655e800](https://github.com/DSI-HUG/dejajs-components/commit/655e800001a5cbc5b1310af6bd6e90d7a079331e))
+
+# [13.0.0-next.32](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.31...v13.0.0-next.32) (2021-12-08)
+
+
+### Bug Fixes
+
+* **numeric-stepper.component:** add a showOnInit input for some special usages ([9c962b1](https://github.com/DSI-HUG/dejajs-components/commit/9c962b11ec312ef17620b8367be2c4e8aa63dbeb))
+
+# [13.0.0-next.31](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.30...v13.0.0-next.31) (2021-12-08)
+
+
+### Bug Fixes
+
+* **numeric-stepper.component:** add a showOnInit input for some special usages ([b15fcfd](https://github.com/DSI-HUG/dejajs-components/commit/b15fcfd3dbe95527d487c72365080ea97566935c))
+
+# [13.0.0-next.30](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.29...v13.0.0-next.30) (2021-12-07)
+
+
+### Bug Fixes
+
+* **numeric-stepper:** original position cause visibility of the shadow ([94a2932](https://github.com/DSI-HUG/dejajs-components/commit/94a2932b9c527e48db67ffd347b76b1eca0ae702))
+
+# [13.0.0-next.29](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.28...v13.0.0-next.29) (2021-12-06)
+
+
+### Bug Fixes
+
+* **input-autosize.directive:** fix numeric stepper with input-autosize ([14a98e4](https://github.com/DSI-HUG/dejajs-components/commit/14a98e46b72d56c6cd2ba68736a591083b39f346))
+
+# [13.0.0-next.28](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.27...v13.0.0-next.28) (2021-12-06)
+
+
+### Bug Fixes
+
+* **input-autosize.directive:** fix numeric stepper with input-autosize ([8625cd4](https://github.com/DSI-HUG/dejajs-components/commit/8625cd4c53c6b6c4ca6fa1b38ce935e27b99a587))
+
+# [13.0.0-next.27](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.26...v13.0.0-next.27) (2021-12-02)
+
+
+### Bug Fixes
+
+* **numeric-stepper:** fix model become string if started value is undefined ([f26145b](https://github.com/DSI-HUG/dejajs-components/commit/f26145b0e026a351683574aa7b3a54d45f8dd685))
+
+# [13.0.0-next.26](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.25...v13.0.0-next.26) (2021-12-02)
+
+
+### Bug Fixes
+
+* **numeric-stepper-v2:** precompute positions if the mouse is over when the control is created ([4508377](https://github.com/DSI-HUG/dejajs-components/commit/4508377ba65a3bd38b3d232b118b806ce72904d9))
+
+# [13.0.0-next.25](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.24...v13.0.0-next.25) (2021-12-02)
+
+
+### Bug Fixes
+
+* **numeric-stepper-v2:** fix alignments and size ([71700e4](https://github.com/DSI-HUG/dejajs-components/commit/71700e4e05917e8dec8ab159dc93bb01beee0102))
+
+# [13.0.0-next.24](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.23...v13.0.0-next.24) (2021-12-01)
+
+
+### Features
+
+* .DO NOT MERGE, sample for Victor ([731e9bc](https://github.com/DSI-HUG/dejajs-components/commit/731e9bc6e47fdd0cd5bb40b6733a888eb85b7aed))
+* add input-autosize.directive, fix numeric-stepper with inputAutosize directive ([20c4bc9](https://github.com/DSI-HUG/dejajs-components/commit/20c4bc98718ddc0c6b0ff3a2fa2d00b328cbb3b7))
+
+# [13.0.0-next.23](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.22...v13.0.0-next.23) (2021-11-30)
+
+# [13.0.0-next.22](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.21...v13.0.0-next.22) (2021-11-26)
+
+
+### Bug Fixes
+
+* **numeric-stepper-v2:** add plus minus icons ([411f212](https://github.com/DSI-HUG/dejajs-components/commit/411f212e2b460db3c2ad83f8c07f8bcda4107d22))
+
+
+### Features
+
+* intégration du material-date-picker en prévision du remplacement du deja DEJS-1023 ([6239e28](https://github.com/DSI-HUG/dejajs-components/commit/6239e28b59ea2135faa6042aecbcd39a53e994e3))
+
+# [13.0.0-next.21](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.20...v13.0.0-next.21) (2021-11-23)
+
+
+### Bug Fixes
+
+* **treelistV2:** fix query getter ([0ceb457](https://github.com/DSI-HUG/dejajs-components/commit/0ceb4576e8222508f0d9a9134fc9447ca49f267f))
+
+# [13.0.0-next.20](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.19...v13.0.0-next.20) (2021-11-23)
+
+
+### Bug Fixes
+
+* **treelist:** np on delete ([4f49b45](https://github.com/DSI-HUG/dejajs-components/commit/4f49b454de720727a08e2b9defdbdd61c1128450))
+
+# [13.0.0-next.19](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.18...v13.0.0-next.19) (2021-11-23)
+
+
+### Bug Fixes
+
+* **treelist:** fix query event when query deleted ([5f4c7ca](https://github.com/DSI-HUG/dejajs-components/commit/5f4c7ca5b3ffcd04e6a40aa06752bd581822648a))
+
+# [13.0.0-next.18](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.17...v13.0.0-next.18) (2021-11-23)
+
+
+### Bug Fixes
+
+* **treelist:** fix query event when query deleted ([904cfb0](https://github.com/DSI-HUG/dejajs-components/commit/904cfb01db8e3cf90088142612f68ce2801c3a39))
+
+# [13.0.0-next.17](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.16...v13.0.0-next.17) (2021-11-23)
+
+
+### Bug Fixes
+
+* **treelist:** fix query event when query deleted ([d0158f6](https://github.com/DSI-HUG/dejajs-components/commit/d0158f603bde20353daa790019d92731a1e9bc5a))
+
+# [13.0.0-next.16](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.15...v13.0.0-next.16) (2021-11-23)
+
+
+### Bug Fixes
+
+* **treelistv2:** la treelist ne sélectionne pas sur le mousedown DEJS-1028 ([e312ea9](https://github.com/DSI-HUG/dejajs-components/commit/e312ea9154e6686f70963052dc2eb4034781f3d0))
+
+# [13.0.0-next.15](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.14...v13.0.0-next.15) (2021-11-23)
+
+
+### Bug Fixes
+
+* **treelistv2:** la treelist ne sélectionne pas sur le mousedown DEJS-1028 ([d006da5](https://github.com/DSI-HUG/dejajs-components/commit/d006da5c1b94a9965c2ce3aa0e0c404677f3f6c5))
+
+# [13.0.0-next.14](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.13...v13.0.0-next.14) (2021-11-22)
 
 
 ### Bug Fixes
 
 * clean demo ([d6a7884](https://github.com/DSI-HUG/dejajs-components/commit/d6a78843c95805867367758e8f0d7508e9e1ba39))
-* fix bundle analyzer commands [skip ci] ([d253746](https://github.com/DSI-HUG/dejajs-components/commit/d253746f3309217dbba64b38aee7ced3ce426ac2))
+
+# [13.0.0-next.13](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.12...v13.0.0-next.13) (2021-11-19)
+
+
+### Bug Fixes
+
+* revert try fix importcost plugin failure with date-fns-utils.ts/locale import, not working ([3aca0f4](https://github.com/DSI-HUG/dejajs-components/commit/3aca0f4600c3d8c0c2c994f789418f02bc835c98))
+
+# [13.0.0-next.12](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.11...v13.0.0-next.12) (2021-11-19)
+
+
+### Bug Fixes
+
+* try fix importcost plugin failure with date-fns-utils.ts/locale import ([30fc029](https://github.com/DSI-HUG/dejajs-components/commit/30fc02906cdf83066cff63dd5fe2552ceec61fb9))
+
+# [13.0.0-next.11](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.10...v13.0.0-next.11) (2021-11-18)
+
+# [13.0.0-next.10](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.9...v13.0.0-next.10) (2021-11-18)
+
+# [13.0.0-next.9](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.8...v13.0.0-next.9) (2021-11-18)
+
+# [13.0.0-next.8](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.7...v13.0.0-next.8) (2021-11-17)
+
+
+### Bug Fixes
+
 * fix lazy-loader service ([11f805c](https://github.com/DSI-HUG/dejajs-components/commit/11f805c0fad77a2c87fe9778939a33349a96eb5c))
 * fix lazy-loader service ([a89888d](https://github.com/DSI-HUG/dejajs-components/commit/a89888d12a9669ea3a2c948621b340cd3a3a16a5))
-* **input-autosize.directive:** fix numeric stepper with input-autosize ([14a98e4](https://github.com/DSI-HUG/dejajs-components/commit/14a98e46b72d56c6cd2ba68736a591083b39f346))
-* **input-autosize.directive:** fix numeric stepper with input-autosize ([8625cd4](https://github.com/DSI-HUG/dejajs-components/commit/8625cd4c53c6b6c4ca6fa1b38ce935e27b99a587))
-* inputAutosize and inputAutosizeFormField ([4694ceb](https://github.com/DSI-HUG/dejajs-components/commit/4694ceb57ea588da0e389e428e1964dc19777379))
-* **monaco-editor:** fix monaco editor dependency even if not used ([16f9fa6](https://github.com/DSI-HUG/dejajs-components/commit/16f9fa6f678bac36479b5623fc453a46b0549f26))
-* **numeric-stepper-v2:** add plus minus icons ([411f212](https://github.com/DSI-HUG/dejajs-components/commit/411f212e2b460db3c2ad83f8c07f8bcda4107d22))
-* **numeric-stepper-v2:** fix alignments and size ([71700e4](https://github.com/DSI-HUG/dejajs-components/commit/71700e4e05917e8dec8ab159dc93bb01beee0102))
-* **numeric-stepper-v2:** fix label spacing if no values inlay and hover ([6243669](https://github.com/DSI-HUG/dejajs-components/commit/6243669a0ab25a9b10357fa084a44235f9bdcc6b))
-* **numeric-stepper-v2:** precompute positions if the mouse is over when the control is created ([4508377](https://github.com/DSI-HUG/dejajs-components/commit/4508377ba65a3bd38b3d232b118b806ce72904d9))
-* **numeric-stepper.component:** add a showOnInit input for some special usages ([9c962b1](https://github.com/DSI-HUG/dejajs-components/commit/9c962b11ec312ef17620b8367be2c4e8aa63dbeb))
-* **numeric-stepper.component:** add a showOnInit input for some special usages ([b15fcfd](https://github.com/DSI-HUG/dejajs-components/commit/b15fcfd3dbe95527d487c72365080ea97566935c))
-* **numeric-stepper:** fix model become string if started value is undefined ([f26145b](https://github.com/DSI-HUG/dejajs-components/commit/f26145b0e026a351683574aa7b3a54d45f8dd685))
-* **numeric-stepper:** original position cause visibility of the shadow ([94a2932](https://github.com/DSI-HUG/dejajs-components/commit/94a2932b9c527e48db67ffd347b76b1eca0ae702))
-* peer dependencies ([2c8f198](https://github.com/DSI-HUG/dejajs-components/commit/2c8f19831cbe530e05ff7aefa91bb7c632f545a0))
-* replace some deprecated code ([9362270](https://github.com/DSI-HUG/dejajs-components/commit/9362270ce2069444045fd5df5c2549b36f2f7d9e))
-* revert try fix importcost plugin failure with date-fns-utils.ts/locale import, not working ([3aca0f4](https://github.com/DSI-HUG/dejajs-components/commit/3aca0f4600c3d8c0c2c994f789418f02bc835c98))
+
+# [13.0.0-next.7](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.6...v13.0.0-next.7) (2021-11-17)
+
+# [13.0.0-next.6](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.5...v13.0.0-next.6) (2021-11-12)
+
+
+### Bug Fixes
+
 * sass exports ([2e9187b](https://github.com/DSI-HUG/dejajs-components/commit/2e9187b5f662ffd314cd289f1fa348a991fdf4e9))
+
+# [13.0.0-next.5](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.4...v13.0.0-next.5) (2021-11-12)
+
+
+### Bug Fixes
+
 * sass exports ([11a2841](https://github.com/DSI-HUG/dejajs-components/commit/11a28416a69e2dbf0e9df9da8cbf81e5111fe6ad))
-* **time-picker:** fix clear minutes or hours cause an invalid date crash ([82d1291](https://github.com/DSI-HUG/dejajs-components/commit/82d129127bf8bf9fe7ed57521f81be939219b000))
-* **time-picker:** fix height and alignment in a inline form row ([655e800](https://github.com/DSI-HUG/dejajs-components/commit/655e800001a5cbc5b1310af6bd6e90d7a079331e))
-* **treelist:** fix query event when query deleted ([5f4c7ca](https://github.com/DSI-HUG/dejajs-components/commit/5f4c7ca5b3ffcd04e6a40aa06752bd581822648a))
-* **treelist:** fix query event when query deleted ([904cfb0](https://github.com/DSI-HUG/dejajs-components/commit/904cfb01db8e3cf90088142612f68ce2801c3a39))
-* **treelist:** fix query event when query deleted ([d0158f6](https://github.com/DSI-HUG/dejajs-components/commit/d0158f603bde20353daa790019d92731a1e9bc5a))
-* **treelist:** np on delete ([4f49b45](https://github.com/DSI-HUG/dejajs-components/commit/4f49b454de720727a08e2b9defdbdd61c1128450))
-* **treelistV2:** fix query getter ([0ceb457](https://github.com/DSI-HUG/dejajs-components/commit/0ceb4576e8222508f0d9a9134fc9447ca49f267f))
-* **treelistv2:** la treelist ne sélectionne pas sur le mousedown DEJS-1028 ([e312ea9](https://github.com/DSI-HUG/dejajs-components/commit/e312ea9154e6686f70963052dc2eb4034781f3d0))
-* **treelistv2:** la treelist ne sélectionne pas sur le mousedown DEJS-1028 ([d006da5](https://github.com/DSI-HUG/dejajs-components/commit/d006da5c1b94a9965c2ce3aa0e0c404677f3f6c5))
-* try fix importcost plugin failure with date-fns-utils.ts/locale import ([30fc029](https://github.com/DSI-HUG/dejajs-components/commit/30fc02906cdf83066cff63dd5fe2552ceec61fb9))
+
+# [13.0.0-next.4](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.3...v13.0.0-next.4) (2021-11-11)
+
+
+### Bug Fixes
+
+* peer dependencies ([2c8f198](https://github.com/DSI-HUG/dejajs-components/commit/2c8f19831cbe530e05ff7aefa91bb7c632f545a0))
 * try to fix theming import from another project ([3dc76de](https://github.com/DSI-HUG/dejajs-components/commit/3dc76de3a88a03aaf19ed36a8f07ccc4c771fe02))
+
+# [13.0.0-next.3](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.2...v13.0.0-next.3) (2021-11-11)
+
+# [13.0.0-next.2](https://github.com/DSI-HUG/dejajs-components/compare/v13.0.0-next.1...v13.0.0-next.2) (2021-11-02)
+
+
+### Bug Fixes
+
+* replace some deprecated code ([9362270](https://github.com/DSI-HUG/dejajs-components/commit/9362270ce2069444045fd5df5c2549b36f2f7d9e))
+
+# [13.0.0-next.1](https://github.com/DSI-HUG/dejajs-components/compare/v12.6.0...v13.0.0-next.1) (2021-11-01)
+
+
+### Bug Fixes
+
+* fix bundle analyzer commands [skip ci] ([d253746](https://github.com/DSI-HUG/dejajs-components/commit/d253746f3309217dbba64b38aee7ced3ce426ac2))
 * update to rxjs 7 [skip ci] ([789e63c](https://github.com/DSI-HUG/dejajs-components/commit/789e63cb5dc3fd93b8e8f08dccd4a58260e31e4b))
 
 
@@ -173,82 +385,12 @@
 
 ### Features
 
-* .DO NOT MERGE, sample for Victor ([731e9bc](https://github.com/DSI-HUG/dejajs-components/commit/731e9bc6e47fdd0cd5bb40b6733a888eb85b7aed))
-* add input-autosize.directive, fix numeric-stepper with inputAutosize directive ([20c4bc9](https://github.com/DSI-HUG/dejajs-components/commit/20c4bc98718ddc0c6b0ff3a2fa2d00b328cbb3b7))
 * husky 7 [skip ci] ([febfc85](https://github.com/DSI-HUG/dejajs-components/commit/febfc8568f2f605fcb0ab8534849fd91d34d25dc))
-* intégration du material-date-picker en prévision du remplacement du deja DEJS-1023 ([6239e28](https://github.com/DSI-HUG/dejajs-components/commit/6239e28b59ea2135faa6042aecbcd39a53e994e3))
-* making 12.8 form ng13 modifications ([a29bcd7](https://github.com/DSI-HUG/dejajs-components/commit/a29bcd72e9a2fb810673f9dd364577595265dd28))
 
 
 ### BREAKING CHANGES
 
 * init dejajs version 13
-
-## [12.7.2](https://github.com/DSI-HUG/dejajs-components/compare/v12.7.1...v12.7.2) (2022-01-21)
-
-## [12.7.2-develop.1](https://github.com/DSI-HUG/dejajs-components/compare/v12.7.1...v12.7.2-develop.1) (2022-01-21)
-
-## [12.7.1](https://github.com/DSI-HUG/dejajs-components/compare/v12.7.0...v12.7.1) (2022-01-21)
-
-## [12.7.1-develop.1](https://github.com/DSI-HUG/dejajs-components/compare/v12.7.0...v12.7.1-develop.1) (2022-01-21)
-
-# [12.7.0](https://github.com/DSI-HUG/dejajs-components/compare/v12.6.1...v12.7.0) (2022-01-21)
-
-
-### Features
-
-* fix publish workflow and force version to 12.7 ([6d3464e](https://github.com/DSI-HUG/dejajs-components/commit/6d3464e84fdb431eb4040ce0056e2532a5a659f4))
-
-# [12.7.0-develop.1](https://github.com/DSI-HUG/dejajs-components/compare/v12.6.2-develop.1...v12.7.0-develop.1) (2022-01-21)
-
-## [12.6.2-develop.1](https://github.com/DSI-HUG/dejajs-components/compare/v12.6.1...v12.6.2-develop.1) (2022-01-21)
-
-
-### Features
-
-* fix publish workflow and force version to 12.7 ([6d3464e](https://github.com/DSI-HUG/dejajs-components/commit/6d3464e84fdb431eb4040ce0056e2532a5a659f4))
-
-## [12.6.1](https://github.com/DSI-HUG/dejajs-components/compare/v12.6.0...v12.6.1) (2022-01-21)
-
-
-### Bug Fixes
-
-* **date-picker:** improve datepicker responsiveness and add compact design (DEJS-1040) ([d59cfa0](https://github.com/DSI-HUG/dejajs-components/commit/d59cfa0ec8a19e94ed458b27ea7e4ab82afc7a31))
-* **datepicker:** fix actions position and numeric stepper value visibilitiy (DEJS-1040) ([652d6cc](https://github.com/DSI-HUG/dejajs-components/commit/652d6cc349e92bf74ad3145ff263afd454c626c8))
-* **numeric-stepper:** fix arrow alignment ([1b4bda4](https://github.com/DSI-HUG/dejajs-components/commit/1b4bda4620d74810ae08f476189f09b11c240183))
-* **numeric-stepper:** fix arrow alignment ([d4ab1b1](https://github.com/DSI-HUG/dejajs-components/commit/d4ab1b1ff335bcd5798800e8380980ec351bc768))
-* **popup-tray:** avoid NPE on dialog without componentInstance ([542d994](https://github.com/DSI-HUG/dejajs-components/commit/542d9943e08cd627d704b3c2c7d3a4c55faa17e7))
-* **time-picker:** fix the infinite loop when unsetting hours or minutes (DEJS-1040) ([f6922c1](https://github.com/DSI-HUG/dejajs-components/commit/f6922c1621c8f88ca73b73748c21818c234a97d4))
-
-## [12.6.1-develop.4](https://github.com/DSI-HUG/dejajs-components/compare/v12.6.1-develop.3...v12.6.1-develop.4) (2022-01-21)
-
-
-### Bug Fixes
-
-* **date-picker:** improve datepicker responsiveness and add compact design (DEJS-1040) ([d59cfa0](https://github.com/DSI-HUG/dejajs-components/commit/d59cfa0ec8a19e94ed458b27ea7e4ab82afc7a31))
-* **datepicker:** fix actions position and numeric stepper value visibilitiy (DEJS-1040) ([652d6cc](https://github.com/DSI-HUG/dejajs-components/commit/652d6cc349e92bf74ad3145ff263afd454c626c8))
-* **time-picker:** fix the infinite loop when unsetting hours or minutes (DEJS-1040) ([f6922c1](https://github.com/DSI-HUG/dejajs-components/commit/f6922c1621c8f88ca73b73748c21818c234a97d4))
-
-## [12.6.1-develop.3](https://github.com/DSI-HUG/dejajs-components/compare/v12.6.1-develop.2...v12.6.1-develop.3) (2021-11-10)
-
-
-### Bug Fixes
-
-* **popup-tray:** avoid NPE on dialog without componentInstance ([542d994](https://github.com/DSI-HUG/dejajs-components/commit/542d9943e08cd627d704b3c2c7d3a4c55faa17e7))
-
-## [12.6.1-develop.2](https://github.com/DSI-HUG/dejajs-components/compare/v12.6.1-develop.1...v12.6.1-develop.2) (2021-10-27)
-
-
-### Bug Fixes
-
-* **numeric-stepper:** fix arrow alignment ([1b4bda4](https://github.com/DSI-HUG/dejajs-components/commit/1b4bda4620d74810ae08f476189f09b11c240183))
-
-## [12.6.1-develop.1](https://github.com/DSI-HUG/dejajs-components/compare/v12.6.0...v12.6.1-develop.1) (2021-10-27)
-
-
-### Bug Fixes
-
-* **numeric-stepper:** fix arrow alignment ([d4ab1b1](https://github.com/DSI-HUG/dejajs-components/commit/d4ab1b1ff335bcd5798800e8380980ec351bc768))
 
 # [12.6.0](https://github.com/DSI-HUG/dejajs-components/compare/v12.5.0...v12.6.0) (2021-10-26)
 
