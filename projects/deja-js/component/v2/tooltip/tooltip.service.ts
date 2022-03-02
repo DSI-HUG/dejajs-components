@@ -13,8 +13,8 @@ import { AbstractLazyModule, LazyLoaderService, subscribeWith } from '@deja-js/c
 import { merge } from 'lodash-es';
 import { debounceTime, delay, EMPTY, filter, fromEvent, map, mergeWith, Observable, shareReplay, Subject, switchMap, tap, withLatestFrom } from 'rxjs';
 
-import { TooltipComponent } from './tooltip.component';
 import { TooltipConfig } from './tooltip.model';
+import { TooltipComponentInterface } from './tooltip-component.interface';
 
 
 export abstract class TooltipService<D> {
@@ -152,7 +152,7 @@ export abstract class TooltipService<D> {
         this.close$.next();
     }
 
-    protected openRef$(tooltipData: D, triggerElement: HTMLElement, tooltipConfig: Partial<TooltipConfig<D>>): Observable<MatDialogRef<TooltipComponent, void>> {
+    protected openRef$(tooltipData: D, triggerElement: HTMLElement, tooltipConfig: Partial<TooltipConfig<D>>): Observable<MatDialogRef<TooltipComponentInterface, void>> {
         return this.lazyLoaderService.loadModule$(this.getModule()).pipe(
             switchMap(moduleInfos => {
                 const config = merge({}, this.tooltipConfig, tooltipConfig || {} as Partial<MatDialogConfig<D>>);
@@ -162,7 +162,7 @@ export abstract class TooltipService<D> {
                 // injector is private in MatDialog
                 // eslint-disable-next-line dot-notation
                 this.dialog['_injector'] = moduleInfos.injector;
-                const dialogRef = this.dialog.open<TooltipComponent, D, void>(moduleInfos.module.componentType, config);
+                const dialogRef = this.dialog.open<TooltipComponentInterface, D, void>(moduleInfos.module.componentType, config);
                 return dialogRef.afterOpened().pipe(
                     map(() => dialogRef)
                 );
@@ -261,5 +261,5 @@ export abstract class TooltipService<D> {
         );
     }
 
-    protected abstract getModule(): Promise<Type<AbstractLazyModule<TooltipComponent>>>;
+    protected abstract getModule(): Promise<Type<AbstractLazyModule<TooltipComponentInterface>>>;
 }

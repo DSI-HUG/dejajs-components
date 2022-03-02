@@ -6,11 +6,8 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Directive, ElementRef } from '@angular/core';
+import { ElementRef } from '@angular/core';
 
-@Directive()
-export abstract class TooltipComponent {
-    public constructor(
-        public elementRef: ElementRef<HTMLElement>
-    ) { }
+export interface TooltipComponentInterface {
+    elementRef: ElementRef<HTMLElement>;
 }
