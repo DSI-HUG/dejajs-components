@@ -98,9 +98,13 @@ export abstract class TooltipService<D> {
     public open$(triggerElement: HTMLElement, tooltipData: D, tooltipConfig?: TooltipConfig<D>): Observable<void> {
         this.close();
 
+        const additionalPanelClass = (tooltipConfig?.panelClass && tooltipConfig.panelClass instanceof Array && tooltipConfig.panelClass)
+            || (tooltipConfig?.panelClass && typeof tooltipConfig?.panelClass === 'string' && [tooltipConfig?.panelClass])
+            || [];
+
         const config = merge(tooltipConfig, {
             hasBackdrop: false,
-            panelClass: ['tooltip-overlay', 'no-padding-dialog', 'tooltip-opening']
+            panelClass: ['tooltip-overlay', 'no-padding-dialog', 'tooltip-opening', ...additionalPanelClass]
         } as TooltipConfig<D>);
 
 
