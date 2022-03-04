@@ -1,3 +1,10 @@
+# [12.14.0](https://github.com/DSI-HUG/dejajs-components/compare/v12.13.7...v12.14.0) (2022-03-04)
+
+
+### Features
+
+* **DEJS-1053:** time-picker - add controls + autofocus + select on ([818da76](https://github.com/DSI-HUG/dejajs-components/commit/818da7632a836f6a8949d37d0211ef05cad18608))
+
 ## [12.13.7](https://github.com/DSI-HUG/dejajs-components/compare/v12.13.6...v12.13.7) (2022-03-04)
 
 
