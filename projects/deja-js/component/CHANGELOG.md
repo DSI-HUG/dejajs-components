@@ -1,3 +1,10 @@
+## [12.13.7](https://github.com/DSI-HUG/dejajs-components/compare/v12.13.6...v12.13.7) (2022-03-04)
+
+
+### Bug Fixes
+
+* **tooltip:** fix mandatory hideDelay && panel class ([d9930d2](https://github.com/DSI-HUG/dejajs-components/commit/d9930d2b7b2a77e0493bec1a4c1c67d7fba805cb))
+
 ## [12.13.6](https://github.com/DSI-HUG/dejajs-components/compare/v12.13.5...v12.13.6) (2022-03-02)
 
 
