@@ -7,7 +7,7 @@
  */
 
 import { BooleanInput, coerceBooleanProperty, coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Optional, Output, Self, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, Optional, Output, Self, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { Destroy } from '@deja-js/component/core';
 import { set } from 'date-fns';
@@ -26,10 +26,21 @@ export type TimePickerDisplayMode = 'fullTime' | 'fullTimeWithHoursDisabled' | '
     encapsulation: ViewEncapsulation.None
 })
 export class DejaTimePickerComponent extends Destroy implements ControlValueAccessor {
+    @ViewChild('hours') public hours: ElementRef<HTMLInputElement>;
+    @ViewChild('minutes') public minutes: ElementRef<HTMLInputElement>;
+
     @Output() public readonly timeChange = new EventEmitter<Date>();
 
     /** Display mode for the time-picker */
     @Input() public mode: TimePickerDisplayMode = 'fullTime';
+
+    @Input()
+    public set autoFocus(value: BooleanInput) {
+        this._autoFocus = coerceBooleanProperty(value);
+    }
+
+    @Input() public defaultPlaceholderHours = '_ _';
+    @Input() public defaultPlaceholderMinutes = '_ _';
 
     @Input()
     public set time(value: Date) {
@@ -69,6 +80,7 @@ export class DejaTimePickerComponent extends Destroy implements ControlValueAcce
     public _step = 1;
     private _disabled = false;
     private _value: Date;
+    private _autoFocus = true;
 
     public constructor(
         private changeDetectorRef: ChangeDetectorRef,
@@ -84,19 +96,31 @@ export class DejaTimePickerComponent extends Destroy implements ControlValueAcce
             debounceTime(10),
             distinctUntilChanged(),
             map(hours => {
+                let isEvent = false;
                 if (typeof hours === 'object') {
                     const value = (hours.target as HTMLInputElement).value;
                     hours = value !== undefined ? parseInt(value, 10) : undefined as number;
+                    isEvent = true;
                 }
-                return !isNaN(hours) ? hours : 0;
+                return {
+                    hours: !isNaN(hours) ? hours : 0,
+                    isEvent
+                };
             }),
             takeUntil(this.destroyed$)
-        ).subscribe(hours => {
+        ).subscribe(({ hours, isEvent }) => {
             const value = this.value?.getTime();
             const clone = value ? new Date(value) : set(new Date(), { hours: 0, minutes: 0, seconds: 0 });
             clone.setHours(hours);
             this.value = clone;
             this.changeDetectorRef.markForCheck();
+
+            if (isEvent && this._autoFocus) {
+                this.minutes.nativeElement.focus({
+                    preventScroll: true
+                });
+                this.minutes.nativeElement.select();
+            }
         });
 
         this.onMinutesChange$.pipe(
@@ -124,6 +148,45 @@ export class DejaTimePickerComponent extends Destroy implements ControlValueAcce
         });
     }
 
+    public onKeyDown($event: KeyboardEvent, mode: 'hours' | 'minutes'): void {
+        // Get input element
+        const inputElement = mode === 'hours' ? this.hours.nativeElement : this.minutes.nativeElement;
+        if ($event.key?.toLowerCase() === 'a' && $event.ctrlKey) {
+            inputElement.select();
+        } else if ($event.key && !['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Backspace', 'Delete', 'Tab', 'Enter', 'Control', 'Shift'].includes($event.key)) {
+            // Set regex
+            const regex = mode === 'hours' ? /^(\d|[01]\d|2[0123])$/ : /^(\d|[012345]\d)$/;
+
+            // Get the selection in input element
+            const [selectionStart, selectionEnd] = [inputElement.selectionStart, inputElement.selectionEnd].sort((a, b) => a - b);
+            const selectionDiff = selectionEnd - selectionStart;
+
+            // Get the current value in input element and update it with the new touched key
+            const inputValue = inputElement.value || '';
+            const inputValueArr = Array.from(inputValue);
+            inputValueArr.splice(selectionStart, selectionDiff, $event.key);
+            const newInputValue = inputValueArr.join('');
+
+            // Prevent event if the time is not valid
+            if (!regex.test(newInputValue)) {
+                $event.stopPropagation();
+                $event.preventDefault();
+            } else if (this._autoFocus && mode === 'hours' && (parseFloat(newInputValue) >= 3 || newInputValue.length === 2)) {
+                this.onHoursChange$.next($event);
+            }
+        }
+    }
+
+    public onClick(mode: 'hours' | 'minutes'): void {
+        if (this._autoFocus) {
+            if (mode === 'hours') {
+                this.hours.nativeElement.select();
+            } else {
+                this.minutes.nativeElement.select();
+            }
+        }
+    }
+
     // ************* ControlValueAccessor Implementation **************
     /** set accessor including call the onchange callback */
     public set value(v: Date) {
@@ -142,7 +205,7 @@ export class DejaTimePickerComponent extends Destroy implements ControlValueAcce
     /** From ControlValueAccessor interface */
     public writeValue(value: Date): void {
         if ((value || null) !== (this._value || null)) {
-            this._value = value && new Date(value.getTime());
+            this._value = value?.getTime() ? new Date(value.getTime()) : null;
             this.changeDetectorRef.markForCheck();
         }
     }
