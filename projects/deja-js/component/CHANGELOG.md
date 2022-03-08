@@ -1,3 +1,10 @@
+# [12.15.0](https://github.com/DSI-HUG/dejajs-components/compare/v12.14.0...v12.15.0) (2022-03-08)
+
+
+### Features
+
+* add cache class ([784d571](https://github.com/DSI-HUG/dejajs-components/commit/784d57119049baa45cbb104df404790796e1fe90))
+
 # [12.14.0](https://github.com/DSI-HUG/dejajs-components/compare/v12.13.7...v12.14.0) (2022-03-04)
 
 
