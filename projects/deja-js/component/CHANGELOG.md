@@ -1,3 +1,16 @@
+# [13.3.0](https://github.com/DSI-HUG/dejajs-components/compare/v13.2.0...v13.3.0) (2022-03-08)
+
+
+### Bug Fixes
+
+* **tooltip:** fix mandatory hideDelay && panel class ([d9930d2](https://github.com/DSI-HUG/dejajs-components/commit/d9930d2b7b2a77e0493bec1a4c1c67d7fba805cb))
+
+
+### Features
+
+* add cache class ([784d571](https://github.com/DSI-HUG/dejajs-components/commit/784d57119049baa45cbb104df404790796e1fe90))
+* **DEJS-1053:** time-picker - add controls + autofocus + select on ([818da76](https://github.com/DSI-HUG/dejajs-components/commit/818da7632a836f6a8949d37d0211ef05cad18608))
+
 # [13.3.0-develop.3](https://github.com/DSI-HUG/dejajs-components/compare/v13.3.0-develop.2...v13.3.0-develop.3) (2022-03-08)
 
 
