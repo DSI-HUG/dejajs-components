@@ -1,3 +1,10 @@
+# [13.3.0-develop.3](https://github.com/DSI-HUG/dejajs-components/compare/v13.3.0-develop.2...v13.3.0-develop.3) (2022-03-08)
+
+
+### Features
+
+* add cache class ([784d571](https://github.com/DSI-HUG/dejajs-components/commit/784d57119049baa45cbb104df404790796e1fe90))
+
 # [13.3.0-develop.2](https://github.com/DSI-HUG/dejajs-components/compare/v13.3.0-develop.1...v13.3.0-develop.2) (2022-03-04)
 
 
