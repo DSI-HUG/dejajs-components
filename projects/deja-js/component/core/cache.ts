@@ -1,0 +1,58 @@
+import { catchError, Observable, throwError } from 'rxjs';
+
+export interface CacheEntry<T> {
+    timeStamp: number;
+    data$: T;
+}
+
+export class Cache<T, K = string> extends Map<K, CacheEntry<T>> {
+
+    public constructor(public duty = 86400000) {
+        super();
+    }
+
+    public clear(timeStamp?: number): void {
+        this.forEach((value, key) => {
+            if (!timeStamp || (value.timeStamp && value.timeStamp <= timeStamp)) {
+                this.delete(key);
+            }
+        });
+    }
+
+    public getCache(key: K, defaultValueFn?: (timeStamp: number) => T): T {
+        const now = Date.now();
+
+        // clear obsolete caches
+        this.clear(now);
+
+        let entry = super.get(key);
+        if (!entry && defaultValueFn) {
+            super.set(key, entry = {
+                timeStamp: this.duty ? now + this.duty : 0,
+                data$: defaultValueFn(now)
+            });
+        }
+        return entry?.data$;
+    }
+
+    public setCache(key: K, value: T): void {
+        super.set(key, {
+            timeStamp: this.duty ? Date.now() + this.duty : 0,
+            data$: value
+        });
+    }
+}
+
+export class ObservableCache<T, K = string> extends Cache<Observable<T>, K> {
+    // eslint-disable-next-line rxjs/finnish
+    public getCache(key: K, defaultValueFn?: (timeStamp: number) => Observable<T>): Observable<T> {
+        const data$ = super.getCache(key, defaultValueFn);
+        return data$.pipe(
+            catchError((err: unknown) => {
+                // Clear cache entry in case of observable failure
+                this.delete(key);
+                return throwError(() => err);
+            })
+        );
+    }
+}
