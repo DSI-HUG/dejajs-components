@@ -1,3 +1,10 @@
+# [12.16.0](https://github.com/DSI-HUG/dejajs-components/compare/v12.15.0...v12.16.0) (2022-03-09)
+
+
+### Features
+
+* **DEJS-1053:** set time to today with keyboard shortcut + avoid npe ([300bf73](https://github.com/DSI-HUG/dejajs-components/commit/300bf73a89fb656c505225bcee34d477597f3ddb))
+
 # [12.15.0](https://github.com/DSI-HUG/dejajs-components/compare/v12.14.0...v12.15.0) (2022-03-08)
 
 
