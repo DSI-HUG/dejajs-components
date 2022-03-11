@@ -1,3 +1,10 @@
+## [12.16.1](https://github.com/DSI-HUG/dejajs-components/compare/v12.16.0...v12.16.1) (2022-03-11)
+
+
+### Bug Fixes
+
+* **numeric-stepper.component:** fix zindex ([9025aa2](https://github.com/DSI-HUG/dejajs-components/commit/9025aa251540aa05f240387f5d44680227cdb1f1))
+
 # [12.16.0](https://github.com/DSI-HUG/dejajs-components/compare/v12.15.0...v12.16.0) (2022-03-09)
 
 
