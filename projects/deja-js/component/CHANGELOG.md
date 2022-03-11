@@ -1,3 +1,15 @@
+# [13.4.0-develop.1](https://github.com/DSI-HUG/dejajs-components/compare/v13.3.0...v13.4.0-develop.1) (2022-03-11)
+
+
+### Bug Fixes
+
+* **numeric-stepper.component:** fix zindex ([9025aa2](https://github.com/DSI-HUG/dejajs-components/commit/9025aa251540aa05f240387f5d44680227cdb1f1))
+
+
+### Features
+
+* **DEJS-1053:** set time to today with keyboard shortcut + avoid npe ([300bf73](https://github.com/DSI-HUG/dejajs-components/commit/300bf73a89fb656c505225bcee34d477597f3ddb))
+
 # [13.3.0](https://github.com/DSI-HUG/dejajs-components/compare/v13.2.0...v13.3.0) (2022-03-08)
 
 
