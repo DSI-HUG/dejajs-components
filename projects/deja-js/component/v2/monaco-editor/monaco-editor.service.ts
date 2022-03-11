@@ -57,7 +57,7 @@ export class MonacoEditorService {
     public constructor(zone: NgZone) {
         this.monacoApi$ = new Observable<MonacoApi>(subscriber => {
             const wnd = window as unknown;
-            type Require1 = ((keys: string[], f: () => void) => void);
+            type Require1 = ((keys: ReadonlyArray<string>, f: () => void) => void);
             interface Require2 {
                 config: (options: { paths: { vs: string } }) => void;
             }

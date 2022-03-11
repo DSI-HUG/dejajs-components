@@ -164,8 +164,7 @@
             <div>Multi selection example</div>
             <div class="flexLayout">
                 <span class="flex45p flexLayout flexColumn">
-                    <tree-list multiSelect textField="naqme" valueField="code" [selectedModels]="multiselectModel" (selectedChange)="multiselectModelChange($event.models)" [models]="countriesForMultiselect">
-                    </tree-list>
+                    <tree-list multiSelect textField="naqme" valueField="code" [selectedModels]="multiselectModel" (selectedChange)="multiselectModelChange($any($event).models)" [models]="countriesForMultiselect"></tree-list>
                 </span>
                 <span class="flexLayout flexColumn flex45p flexOffset5p">
                     <h4>Multi selection shortcuts :</h4>

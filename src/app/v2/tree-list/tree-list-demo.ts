@@ -142,7 +142,7 @@ export class TreeListDemoComponent extends Destroy {
                     item.label = child.label;
                     item.items = new Array<Item<unknown>>();
                 }
-                item.items.push(child);
+                item.items = [...item.items, child];
                 return item;
             }, new Item<unknown>()))),
             toArray(),

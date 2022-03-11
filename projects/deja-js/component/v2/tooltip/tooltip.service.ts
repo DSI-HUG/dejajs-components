@@ -20,7 +20,7 @@ import { TooltipComponentInterface } from './tooltip-component.interface';
 export abstract class TooltipService<D> {
     protected close$ = new Subject<void>();
 
-    protected positions: ConnectedPosition[] = [
+    protected positions: ReadonlyArray<ConnectedPosition> = [
         {
             originX: 'center',
             originY: 'bottom',
@@ -100,7 +100,7 @@ export abstract class TooltipService<D> {
 
         const additionalPanelClass = (tooltipConfig?.panelClass && tooltipConfig.panelClass instanceof Array && tooltipConfig.panelClass)
             || (tooltipConfig?.panelClass && typeof tooltipConfig?.panelClass === 'string' && [tooltipConfig?.panelClass])
-            || [];
+            || new Array<string>();
 
         const config = merge(tooltipConfig, {
             hasBackdrop: false,

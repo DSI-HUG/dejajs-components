@@ -16,7 +16,7 @@ import { BehaviorSubject, combineLatestWith, delay, distinctUntilChanged, filter
 
 export type NgModelType = 'item' | 'model' | 'value';
 
-export type NgControlType<T> = Item<T> | Item<T>[] | T | T[] | string | string[];
+export type NgControlType<T> = Item<T> | ReadonlyArray<Item<T>> | T | ReadonlyArray<T> | string | ReadonlyArray<string>;
 
 /** Composant de liste évoluée avec gestion de viewport et templating */
 @Component({
@@ -82,7 +82,7 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
     public listElementId: string;
     public itemService: ItemService<T>;
 
-    private _selectedItems: Item<T>[];
+    private _selectedItems: ReadonlyArray<Item<T>>;
     private ngModelType$ = new BehaviorSubject<NgModelType>('value');
     private _ngModelType: NgModelType = 'value';
     private writeValue$ = new ReplaySubject<NgControlType<T>>(1);
@@ -117,7 +117,7 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
     }
 
     @ContentChildren(ItemComponent)
-    public set options(value: ItemComponent[]) {
+    public set options(value: ReadonlyArray<ItemComponent>) {
         if (value?.length) {
             this.itemService.options$.next(value);
         }
@@ -140,24 +140,24 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
 
     /** Définit la liste des éléments */
     @Input()
-    public set items(items: Item<T>[]) {
+    public set items(items: ReadonlyArray<Item<T>>) {
         delete this.hintLabel;
         this.itemService.items$.next(items);
     }
 
     /** Définit la liste des éléments (tout type d'objet métier) */
-    @Input() public set models(models: T[]) {
+    @Input() public set models(models: ReadonlyArray<T>) {
         this.itemService.models$.next(models);
     }
 
     /** Définit la liste des éléments sélectionnés en mode multiselect */
     @Input()
-    public set selectedItems(value: Item<T>[]) {
+    public set selectedItems(value: ReadonlyArray<Item<T>>) {
         this.itemService.setSelectedItems(value);
     }
 
     /** Retourne la liste des éléments sélectionnés en mode multiselect */
-    public get selectedItems(): Item<T>[] {
+    public get selectedItems(): ReadonlyArray<Item<T>> {
         return this._selectedItems;
     }
 
@@ -185,12 +185,12 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
 
     /** Définit la liste des models sélectionnés en mode multiselect */
     @Input()
-    public set selectedModels(value: T[]) {
+    public set selectedModels(value: ReadonlyArray<T>) {
         this.itemService.setSelectedModels(value);
     }
 
     /** Retourne la liste des models sélectionnés en mode multiselect */
-    public get selectedModels(): T[] {
+    public get selectedModels(): ReadonlyArray<T> {
         return this.selectedItems?.map(itm => itm.model);
     }
 
@@ -207,12 +207,12 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
 
     /** Définit la liste des models sélectionnés en mode multiselect */
     @Input()
-    public set selectedValues(value: string[]) {
+    public set selectedValues(value: ReadonlyArray<string>) {
         this.itemService.setSelectedValues(value);
     }
 
     /** Retourne la liste des models sélectionnés en mode multiselect */
-    public get selectedValues(): string[] {
+    public get selectedValues(): ReadonlyArray<string> {
         return this.selectedItems?.map(itm => itm.id);
     }
 
@@ -243,11 +243,11 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
         return this._query;
     }
 
-    @Input() public set selectingItems(value: (items: Item<T>[]) => Observable<Item<T>[]>) {
+    @Input() public set selectingItems(value: (items: ReadonlyArray<Item<T>>) => Observable<ReadonlyArray<Item<T>>>) {
         this.itemService.selectingItems = value;
     }
 
-    @Input() public set unSelectingItems(value: (items: Item<T>[]) => Observable<Item<T>[]>) {
+    @Input() public set unSelectingItems(value: (items: ReadonlyArray<Item<T>>) => Observable<ReadonlyArray<Item<T>>>) {
         this.itemService.unSelectingItems = value;
     }
 
@@ -452,13 +452,13 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
             } else if (multiSelect) {
                 switch (modelType) {
                     case 'item':
-                        this.selectedItems = value as Item<T>[];
+                        this.selectedItems = value as ReadonlyArray<Item<T>>;
                         break;
                     case 'model':
-                        this.selectedModels = value as T[];
+                        this.selectedModels = value as ReadonlyArray<T>;
                         break;
                     default:
-                        this.selectedValues = value as string[];
+                        this.selectedValues = value as ReadonlyArray<string>;
                 }
             } else {
                 switch (modelType) {
