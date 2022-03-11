@@ -26,8 +26,7 @@ import { MouseDroppableDirective } from './mouse-droppable.directive';
         MouseDragDropCursorComponent,
         MouseDraggableDirective,
         MouseDroppableDirective
-    ],
-    providers: []
+    ]
 })
 export class MouseDragDropModule { }
 

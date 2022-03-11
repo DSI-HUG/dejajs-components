@@ -22,9 +22,9 @@ import { ItemComponent } from './item.component';
  */
 @Injectable()
 export class ItemService<T> {
-    public items$ = new ReplaySubject<Item<T>[]>(1);
-    public models$ = new ReplaySubject<T[]>(1);
-    public options$ = new ReplaySubject<ItemComponent[]>(1);
+    public items$ = new ReplaySubject<ReadonlyArray<Item<T>>>(1);
+    public models$ = new ReplaySubject<ReadonlyArray<T>>(1);
+    public options$ = new ReplaySubject<ReadonlyArray<ItemComponent>>(1);
 
     public childrenField$ = new BehaviorSubject<string>('items');
     public textField$ = new BehaviorSubject<string>('label');
@@ -33,17 +33,17 @@ export class ItemService<T> {
     public query$ = new BehaviorSubject<RegExp | string>('');
     public minSearchLength$ = new BehaviorSubject<number>(0);
 
-    public itemList$: Observable<Item<T>[]>;
-    public flatItemList$: Observable<Item<T>[]>;
+    public itemList$: Observable<ReadonlyArray<Item<T>>>;
+    public flatItemList$: Observable<ReadonlyArray<Item<T>>>;
     public refreshFlatItemList$ = new BehaviorSubject<void>(undefined);
-    public filteredItemList$: Observable<Item<T>[]>;
+    public filteredItemList$: Observable<ReadonlyArray<Item<T>>>;
     public refreshFilterItemList$ = new BehaviorSubject<void>(undefined);
-    public visibleItemList$: Observable<Item<T>[]>;
+    public visibleItemList$: Observable<ReadonlyArray<Item<T>>>;
     public refreshVisibleItemList$ = new BehaviorSubject<void>(undefined);
-    public selectedItems$: Observable<Item<T>[]>;
+    public selectedItems$: Observable<ReadonlyArray<Item<T>>>;
 
-    public selectingItems: (items: Item<T>[]) => Observable<Item<T>[]>;
-    public unSelectingItems: (items: Item<T>[]) => Observable<Item<T>[]>;
+    public selectingItems: (items: ReadonlyArray<Item<T>>) => Observable<ReadonlyArray<Item<T>>>;
+    public unSelectingItems: (items: ReadonlyArray<Item<T>>) => Observable<ReadonlyArray<Item<T>>>;
 
     private refreshSelection$ = new BehaviorSubject<RefreshSelectionParams<T>>({});
 
@@ -70,7 +70,7 @@ export class ItemService<T> {
 
         const itemsFromModels$ = this.models$.pipe(
             combineLatestWith(this.valueField$, this.textField$, this.childrenField$),
-            map(([models, valueField, textField, childrenField]) => (models && models instanceof Array && this.mapToItem(models, valueField, textField, childrenField)) || []),
+            map(([models, valueField, textField, childrenField]) => (models && models instanceof Array && this.mapToItem(models, valueField, textField, childrenField)) || new Array<Item<T>>()),
             shareReplay({ bufferSize: 1, refCount: false })
         );
 
@@ -106,15 +106,15 @@ export class ItemService<T> {
         this.flatItemList$ = this.itemList$.pipe(
             combineLatestWith(this.refreshFlatItemList$),
             map(([items]) => {
-                const addItems = (itms: Item<T>[], depth: number): Array<Item<T>> => itms.reduce((a, item) => {
+                const addItems = (itms: ReadonlyArray<Item<T>>, depth: number): Array<Item<T>> => itms.reduce((a, item) => {
                     item.depth = depth;
                     a.push(item);
                     if (item.items?.length) {
                         return [...a, ...addItems(item.items, depth + 1)];
                     }
                     return a;
-                }, [] as Item<T>[]);
-                return (items && addItems(items, 0)) || [];
+                }, new Array<Item<T>>());
+                return (items && addItems(items, 0)) || new Array<Item<T>>();
             }),
             tap(() => {
                 this.previousQuery = undefined;
@@ -133,7 +133,7 @@ export class ItemService<T> {
             switchMap(([flatItemList, query, minSearchLength, searchField]) => {
                 if (minSearchLength > 0 && (!query || typeof query === 'string' && query.length < minSearchLength)) {
                     this.previousQuery = null;
-                    return of([] as Item<T>[]);
+                    return of(new Array<Item<T>>());
                 }
 
                 if (!query) {
@@ -253,7 +253,7 @@ export class ItemService<T> {
                 delete refreshSelection.selectModels;
                 delete refreshSelection.selectValues;
 
-                let itemsToChange: Item<T>[];
+                let itemsToChange: Array<Item<T>>;
 
                 if (unselect) {
                     const itemList = unselect === 'all' ? items : unselect;
@@ -262,7 +262,7 @@ export class ItemService<T> {
                         return !(item.selecting ?? true);
                     });
                 } else {
-                    itemsToChange = [] as Item<T>[];
+                    itemsToChange = new Array<Item<T>>();
                 }
 
                 if (select) {
@@ -314,7 +314,7 @@ export class ItemService<T> {
                     })
                 );
             }),
-            startWith([] as Item<T>[]),
+            startWith(new Array<Item<T>>()),
             shareReplay({ bufferSize: 1, refCount: false })
         );
     }
@@ -326,7 +326,7 @@ export class ItemService<T> {
      * @param childrenField (optional) Champs à traiter comme enfants.
      * @return Structure mapée
      */
-    public mapToItem(mods: T[], valueField: string, textField: string, childrenField?: string): Item<T>[] {
+    public mapToItem(mods: ReadonlyArray<T>, valueField: string, textField: string, childrenField?: string): ReadonlyArray<Item<T>> {
         return mods.map(model => {
             const item = new Item<T>();
             item.model = model;
@@ -346,7 +346,7 @@ export class ItemService<T> {
                 }
 
                 if (childrenField) {
-                    const children = this.extractValueField(model, childrenField) as T[];
+                    const children = this.extractValueField(model, childrenField) as ReadonlyArray<T>;
                     if (children && children instanceof Array) {
                         item.items = this.mapToItem(children, valueField, textField, childrenField);
                     }
@@ -384,42 +384,42 @@ export class ItemService<T> {
     /** Déselectionne les éléments spécifiés
      * @param items Liste des éléments à désélectionner.
      */
-    public unSelectItems(items: Item<T>[]): void {
+    public unSelectItems(items: ReadonlyArray<Item<T>>): void {
         this.refreshSelection$.next({ unselectItems: items });
     }
 
     /** Sélectionne les éléments spécifiés
      * @param items Liste des éléments à sélectionner.
      */
-    public selectItems(items: Item<T>[]): void {
+    public selectItems(items: ReadonlyArray<Item<T>>): void {
         this.refreshSelection$.next({ selectItems: items });
     }
 
     /** Set la selection sur les éléments spécifiés
      * @param items Liste des éléments à sélectionner.
      */
-    public setSelectedItems(items: Item<T>[]): void {
+    public setSelectedItems(items: ReadonlyArray<Item<T>>): void {
         this.refreshSelection$.next({ unselectItems: 'all', selectItems: items });
     }
 
     /** Set la selection sur les éléments spécifiés
      * @param items Liste des modèles des éléments à sélectionner.
      */
-    public setSelectedModels(models: T[]): void {
+    public setSelectedModels(models: ReadonlyArray<T>): void {
         this.refreshSelection$.next({ unselectItems: 'all', selectModels: models });
     }
 
     /** Set la selection sur les ids des éléments spécifiés
      * @param values Liste des ids des éléments à sélectionner.
      */
-    public setSelectedValues(values: string[]): void {
+    public setSelectedValues(values: ReadonlyArray<string>): void {
         this.refreshSelection$.next({ unselectItems: 'all', selectValues: values });
     }
 
     /** Change l'état de sélection de l'élément spécifié.
      * @param items Liste des éléments à modifier.
      */
-    public toggleSelect(items: Item<T>[]): void {
+    public toggleSelect(items: ReadonlyArray<Item<T>>): void {
         this.refreshSelection$.next({ toggle: items });
     }
 
@@ -512,13 +512,13 @@ interface Comparable<T> {
 }
 
 interface RefreshSelectionParams<T> {
-    toggle?: Item<T>[];
-    selectItems?: Item<T>[] | 'all';
+    toggle?: ReadonlyArray<Item<T>>;
+    selectItems?: ReadonlyArray<Item<T>> | 'all';
     checkSelectable?: boolean;
     selectParents?: boolean;
-    unselectItems?: Item<T>[] | 'all';
-    selectModels?: T[];
-    selectValues?: string[];
+    unselectItems?: ReadonlyArray<Item<T>> | 'all';
+    selectModels?: ReadonlyArray<T>;
+    selectValues?: ReadonlyArray<string>;
 }
 
 export interface IndexedItem<T> extends Item<T>, Record<string, unknown> { }

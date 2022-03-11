@@ -11,6 +11,6 @@ import { Item } from './item';
 export class ItemEvent<T> {
     public item: Item<T>;
     public model: T;
-    public items: Item<T>[];
-    public models: T[];
+    public items: ReadonlyArray<Item<T>>;
+    public models: ReadonlyArray<T>;
 }
