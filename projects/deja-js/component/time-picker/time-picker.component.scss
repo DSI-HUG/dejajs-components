@@ -16,6 +16,10 @@ deja-time-picker {
 
     mat-form-field[deja-numeric-stepper-form-field] {
         width: 48px;
+
+        .mat-input-element {
+            width: auto;
+        }
     }
 
     .time-separator {
