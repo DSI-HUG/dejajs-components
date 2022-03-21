@@ -1,9 +1,4 @@
 {
-    "ngPackage": {
-        "lib": {
-            "entryFile": "./index.ts"
-        }
-    },
     "peerDependencies": {
         "ngx-mask": "11.1.4"
     }
