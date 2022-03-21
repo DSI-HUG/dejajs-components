@@ -34,7 +34,7 @@ export interface EditorOptions {
      * Render vertical lines at the specified columns.
      * Defaults to empty array.
      */
-    rulers?: number[];
+    rulers?: ReadonlyArray<number>;
     /**
      * A string containing the word separators used when doing word navigation.
      * Defaults to `~!@#$%^&*()-=+[{]}\\|;:\'",.<>/?

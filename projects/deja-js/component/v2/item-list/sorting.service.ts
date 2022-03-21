@@ -29,7 +29,7 @@ export class SortingService {
      * @param sortInfos Modèle de tri à appliquer.
      * @return Liste triée.
      */
-    public sort<T>(list: T[], sortInfo: SortInfos | SortInfos[]): T[] {
+    public sort<T>(list: Array<T>, sortInfo: SortInfos | ReadonlyArray<SortInfos>): Array<T> {
         if (list?.length) {
             const sortInfos = sortInfo instanceof Array ? sortInfo : [sortInfo];
             let i = sortInfos.length;
@@ -51,11 +51,11 @@ export class SortingService {
      * @param childrenField Champ à utiliser pour la recherche dans les enfants d'un parent.
      * @return Observable résolue par la fonction.
      */
-    public sortTree<T>(tree: T[], sortInfo: SortInfos | SortInfos[], childrenField = 'items'): T[] {
+    public sortTree<T>(tree: Array<T>, sortInfo: SortInfos | ReadonlyArray<SortInfos>, childrenField = 'items'): Array<T> {
         return this.sort<T>(tree, sortInfo).map(child => {
             const indexed = child as Record<string, unknown>;
             if (indexed?.[childrenField] && indexed?.[childrenField] instanceof Array) {
-                this.sortTree(indexed[childrenField] as T[], sortInfo, childrenField);
+                this.sortTree(indexed[childrenField] as Array<T>, sortInfo, childrenField);
             }
             return child;
         });

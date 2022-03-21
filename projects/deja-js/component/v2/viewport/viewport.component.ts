@@ -17,7 +17,7 @@ export type ViewPortScrollStyleType = 'scrollbar' | 'buttons';
 
 export class ViewPortItemClassEvent<T> {
     public item: ViewPortItem<T>;
-    public classes: string[];
+    public classes: Array<string>;
 }
 
 @Component({
@@ -58,7 +58,7 @@ export class ViewPortComponent<T> extends Destroy {
 
     /** Set the list of models to render inside the viewport control */
     @Input()
-    public set models(models: T[]) {
+    public set models(models: ReadonlyArray<T>) {
         this.items = models ? models.map(model => ({
             model: model
         } as ViewPortItem<T>)) : [];
@@ -66,7 +66,7 @@ export class ViewPortComponent<T> extends Destroy {
 
     /** Set the list of items to render inside the viewport control */
     @Input()
-    public set items(items: ViewPortItem<T>[]) {
+    public set items(items: ReadonlyArray<ViewPortItem<T>>) {
         this.viewPortService.items$.next(items);
     }
 

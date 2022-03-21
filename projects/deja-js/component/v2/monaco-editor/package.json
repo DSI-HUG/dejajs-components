@@ -1,9 +1,4 @@
 {
-    "ngPackage": {
-        "lib": {
-            "entryFile": "./index.ts"
-        }
-    },
     "peerDependencies": {
         "monaco-editor": "0.21.2"
     }

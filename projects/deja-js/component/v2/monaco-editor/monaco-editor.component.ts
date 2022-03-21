@@ -69,11 +69,11 @@ export class MonacoEditorComponent {
      * Defaults to empty array.
      */
     @Input()
-    public set rulers(value: number[]) {
+    public set rulers(value: ReadonlyArray<number>) {
         this.updateOptions({ rulers: value } as EditorOptions);
     }
 
-    public get rulers(): number[] {
+    public get rulers(): ReadonlyArray<number> {
         return this.options.rulers;
     }
 

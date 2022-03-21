@@ -1,9 +1,4 @@
 {
-    "ngPackage": {
-        "lib": {
-            "entryFile": "./index.ts"
-        }
-    },
     "peerDependencies": {
         "lodash-es": "^4.17.20",
         "date-fns": "~2.16.1"

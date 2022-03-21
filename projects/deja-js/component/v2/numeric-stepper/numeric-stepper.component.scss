@@ -105,7 +105,7 @@
 
             .mat-form-field-label-wrapper,
             input {
-                z-index: 10001;
+                z-index: 10003;
             }
 
             input {
@@ -125,7 +125,7 @@
 
     deja-numeric-stepper {
         position: relative;
-        z-index: 10000;
+        z-index: 10002;
 
         .arrow,
         .shadow {
@@ -140,7 +140,7 @@
             justify-content: center;
             align-items: center;
             box-sizing: border-box;
-            z-index: 10002;
+            z-index: 10004;
             height: 32px;
             width: 32px;
 

@@ -151,7 +151,11 @@ export class DejaTimePickerComponent extends Destroy implements ControlValueAcce
     public onKeyDown($event: KeyboardEvent, mode: 'hours' | 'minutes'): void {
         // Get input element
         const inputElement = mode === 'hours' ? this.hours.nativeElement : this.minutes.nativeElement;
-        if ($event.key?.toLowerCase() === 'a' && $event.ctrlKey) {
+        if ($event.key?.toLowerCase() === 'd') {
+            $event.stopPropagation();
+            $event.preventDefault();
+            this.value = new Date();
+        } else if ($event.key?.toLowerCase() === 'a' && $event.ctrlKey) {
             inputElement.select();
         } else if ($event.key && !['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Backspace', 'Delete', 'Tab', 'Enter', 'Control', 'Shift'].includes($event.key)) {
             // Set regex
@@ -205,7 +209,7 @@ export class DejaTimePickerComponent extends Destroy implements ControlValueAcce
     /** From ControlValueAccessor interface */
     public writeValue(value: Date): void {
         if ((value || null) !== (this._value || null)) {
-            this._value = value?.getTime() ? new Date(value.getTime()) : null;
+            this._value = value && value instanceof Date ? new Date(value.getTime()) : null;
             this.changeDetectorRef.markForCheck();
         }
     }

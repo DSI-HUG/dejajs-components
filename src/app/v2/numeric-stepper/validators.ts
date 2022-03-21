@@ -7,7 +7,7 @@
  */
 
 import { AbstractControl } from '@angular/forms';
-export const numberValidator = (control: AbstractControl): string[] => {
+export const numberValidator = (control: AbstractControl): Array<string> => {
     const val = +control.value;
     if (isNaN(val)) {
         return ['Not a number'];

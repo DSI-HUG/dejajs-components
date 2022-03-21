@@ -26,7 +26,7 @@ export class Item<T> implements ViewPortItem<T> {
     /** Retourne la profondeur de l'élément dans la hierarchie. */
     public depth?: number;
     /** Enfants */
-    public items?: Item<T>[];
+    public items?: ReadonlyArray<Item<T>>;
 
     public dragged?: boolean;
     /** Usage interne. */
