@@ -10,7 +10,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Injectable } from '@angular/core';
 import { DiacriticService } from '@deja-js/component/core';
-import { BehaviorSubject, combineLatestWith, filter, map, mergeWith, Observable, of, ReplaySubject, shareReplay, startWith, switchMap, take, tap } from 'rxjs';
+import { BehaviorSubject, combineLatestWith, filter, map, mergeWith, Observable, of, ReplaySubject, shareReplay, startWith, switchMap, take, tap, withLatestFrom } from 'rxjs';
 
 import { Item } from './item';
 import { ItemComponent } from './item.component';
@@ -236,8 +236,9 @@ export class ItemService<T> {
 
         this.selectedItems$ = this.visibleItemList$.pipe(
             combineLatestWith(this.valueField$, this.refreshSelection$),
-            filter(([items]) => items?.length > 0),
-            switchMap(([items, valueField, refreshSelection]) => {
+            withLatestFrom(this.flatItemList$),
+            filter(([_, flatItemList]) => flatItemList?.length > 0),
+            switchMap(([[visibleItemList, valueField, refreshSelection], flatItemList]) => {
                 const select = refreshSelection.selectItems;
                 const unselect = refreshSelection.unselectItems;
                 const toggle = refreshSelection.toggle;
@@ -256,8 +257,8 @@ export class ItemService<T> {
                 let itemsToChange: Array<Item<T>>;
 
                 if (unselect) {
-                    const itemList = unselect === 'all' ? items : unselect;
-                    itemsToChange = itemList.filter(item => {
+                    const list = unselect === 'all' ? flatItemList : unselect;
+                    itemsToChange = list.filter(item => {
                         item.selecting = item.selected ? false : undefined;
                         return !(item.selecting ?? true);
                     });
@@ -265,9 +266,9 @@ export class ItemService<T> {
                     itemsToChange = new Array<Item<T>>();
                 }
 
-                if (select) {
+                if (select && visibleItemList?.length > 0) {
                     if (select === 'all') {
-                        itemsToChange = items.filter(item => {
+                        itemsToChange = visibleItemList.filter(item => {
                             item.selecting = ((selectParents || !item.items) && (!checkSelectable || item.isSelectable)) || item.selecting;
                             return item.selecting !== undefined;
                         });
@@ -279,15 +280,15 @@ export class ItemService<T> {
                     }
                 }
 
-                if (selectModels) {
-                    itemsToChange = [...itemsToChange, ...items.filter(item => {
+                if (selectModels && visibleItemList?.length > 0) {
+                    itemsToChange = [...itemsToChange, ...visibleItemList.filter(item => {
                         item.selecting = ((!checkSelectable || item.isSelectable) && selectModels.some(model => this.compareModels(model, item.model, valueField))) || item.selecting;
                         return item.selecting !== undefined;
                     })];
                 }
 
-                if (selectValues) {
-                    itemsToChange = [...itemsToChange, ...items.filter(item => {
+                if (selectValues && visibleItemList?.length > 0) {
+                    itemsToChange = [...itemsToChange, ...visibleItemList.filter(item => {
                         item.selecting = ((!checkSelectable || item.isSelectable) && selectValues.some(value => value === item.id)) || item.selecting;
                         return item.selecting !== undefined;
                     })];
@@ -310,7 +311,7 @@ export class ItemService<T> {
                     map(unselectable => {
                         unselectable?.forEach(item => item.selected = false);
                         itemsToChange.forEach(item => delete item.selecting);
-                        return items.filter(item => item.selected);
+                        return visibleItemList.filter(item => item.selected);
                     })
                 );
             }),
