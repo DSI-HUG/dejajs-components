@@ -1,3 +1,10 @@
+# [13.5.0](https://github.com/DSI-HUG/dejajs-components/compare/v13.4.0...v13.5.0) (2022-03-24)
+
+
+### Bug Fixes
+
+* **treelist:** treelist v2 fix deselection on hidden items when filter is applied ([22921ec](https://github.com/DSI-HUG/dejajs-components/commit/22921ec4420c9c8dee7d278b04312601dad2d759))
+
 ## [13.4.1-develop.1](https://github.com/DSI-HUG/dejajs-components/compare/v13.4.0...v13.4.1-develop.1) (2022-03-22)
 
 
