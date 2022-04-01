@@ -164,7 +164,7 @@ export abstract class TooltipService<D> {
                 config.minWidth = config.minWidth || '100px';
 
                 // injector is private in MatDialog
-                // eslint-disable-next-line dot-notation
+                // eslint-disable-next-line @typescript-eslint/dot-notation
                 this.dialog['_injector'] = moduleInfos.injector;
                 const dialogRef = this.dialog.open<TooltipComponentInterface, D, void>(moduleInfos.module.componentType, config);
                 return dialogRef.afterOpened().pipe(

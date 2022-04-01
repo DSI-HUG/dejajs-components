@@ -148,8 +148,10 @@ export class DejaColorPickerComponent implements ControlValueAccessor {
         this.value = color;
     }
 
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     public getStyle(): { 'background-color': string } {
         const backgroundColor = this.value?.toHex();
+        // eslint-disable-next-line @typescript-eslint/naming-convention
         return backgroundColor ? { 'background-color': backgroundColor } : null;
     }
 

@@ -77,7 +77,7 @@ describe('DejaMarkdownComponent', () => {
 
     it('should process http error', () => {
         component.url = 'aWrongUrl';
-        httpMock.expectOne('aWrongUrl').error(new ErrorEvent('Error: some error'));
+        httpMock.expectOne('aWrongUrl').error(new ProgressEvent('Error: some error'));
 
         fixture.detectChanges();
         // console.log(fixture.nativeElement.innerText);

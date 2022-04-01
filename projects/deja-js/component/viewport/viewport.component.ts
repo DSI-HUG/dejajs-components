@@ -64,12 +64,12 @@ export class DejaViewPortComponent extends Destroy {
     }
 
     @ViewChild('down')
-    public set downButton(element: ElementRef) {
+    public set downButton(element: ElementRef<HTMLElement>) {
         this.downButton$.next(element?.nativeElement || null);
     }
 
     @ViewChild('up')
-    public set upButton(element: ElementRef) {
+    public set upButton(element: ElementRef<HTMLElement>) {
         this.upButton$.next(element?.nativeElement || null);
     }
 

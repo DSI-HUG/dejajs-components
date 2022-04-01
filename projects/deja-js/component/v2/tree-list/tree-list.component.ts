@@ -252,12 +252,12 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
     }
 
     @ViewChild('listElement', { static: true })
-    public set listElememtRef(elem: ElementRef) {
+    public set listElememtRef(elem: ElementRef<HTMLElement>) {
         this.listElement$.next(elem?.nativeElement);
     }
 
     @ViewChild('inputelement', { static: false })
-    public set inputElememtRef(elem: ElementRef) {
+    public set inputElememtRef(elem: ElementRef<HTMLInputElement>) {
         this.inputElement$.next(elem?.nativeElement);
     }
 

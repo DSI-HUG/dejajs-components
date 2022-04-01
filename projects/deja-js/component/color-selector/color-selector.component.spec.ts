@@ -123,7 +123,7 @@ describe('DejaColorSelector', () => {
         fixture.detectChanges();
         void fixture.whenRenderingDone().then(() => {
             const elements = fixture.debugElement.queryAll(By.css('deja-color-fab'));
-            sendMouseEvent(elements[8].nativeElement, 'mousemove', 5, 5);
+            sendMouseEvent(elements[8].nativeElement as HTMLElement, 'mousemove', 5, 5);
 
             timer(200).subscribe(() => {
                 const activeElements = fixture.debugElement.queryAll(By.css('deja-color-fab[active]'));

@@ -113,6 +113,7 @@ export class MediaService implements OnDestroy {
         mediaDefinitions.forEach(mediaDefinition => {
             const { alias, mediaQuery } = mediaDefinition;
             this.mql[alias] = window.matchMedia(mediaQuery);
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
             this.mql[alias].addEventListener('change', this.onMqlEvent.bind(this, alias));
             if (this.mql[alias].matches) {
                 this.mediaChanged$ = new BehaviorSubject(alias);

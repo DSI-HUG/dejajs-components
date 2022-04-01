@@ -110,7 +110,7 @@ describe('DejaTooltipComponent', () => {
 
         void fixture.whenRenderingDone().then(() => {
             const tooltipDirectiveDebugElement = fixture.debugElement.query(By.directive(DejaTooltipDirective));
-            sendMouseEvent(tooltipDirectiveDebugElement.nativeElement, 'mouseenter', 0, 0);
+            sendMouseEvent(tooltipDirectiveDebugElement.nativeElement as HTMLElement, 'mouseenter', 0, 0);
             fixture.detectChanges();
 
             timer(1000).subscribe(() => {
@@ -119,7 +119,7 @@ describe('DejaTooltipComponent', () => {
                     const tooltip = document.querySelector<HTMLElement>('#tooltip');
                     void expect(tooltip?.innerText).toEqual(DejaTooltipContainerComponent.TOOLTIPTEXT);
 
-                    sendMouseEvent(tooltipDirectiveDebugElement.nativeElement, 'mousemove', 0, 200);
+                    sendMouseEvent(tooltipDirectiveDebugElement.nativeElement as HTMLElement, 'mousemove', 0, 200);
                     fixture.detectChanges();
                     // eslint-disable-next-line rxjs/no-nested-subscribe
                     timer(500).subscribe(() => {
@@ -145,7 +145,7 @@ describe('DejaTooltipComponent', () => {
             fixture.detectChanges();
 
             const tooltipDirectiveDebugElement = fixture.debugElement.query(By.directive(DejaTooltipDirective));
-            sendMouseEvent(tooltipDirectiveDebugElement.nativeElement, 'mouseenter', 0, 0);
+            sendMouseEvent(tooltipDirectiveDebugElement.nativeElement as HTMLElement, 'mouseenter', 0, 0);
             fixture.detectChanges();
 
             timer(1000).subscribe(() => {
@@ -170,7 +170,7 @@ describe('DejaTooltipComponent', () => {
             fixture.detectChanges();
 
             const tooltipDirectiveDebugElement = fixture.debugElement.query(By.directive(DejaTooltipDirective));
-            sendMouseEvent(tooltipDirectiveDebugElement.nativeElement, 'mouseenter', 0, 0);
+            sendMouseEvent(tooltipDirectiveDebugElement.nativeElement as HTMLElement, 'mouseenter', 0, 0);
             fixture.detectChanges();
 
             timer(1000).subscribe(() => {
