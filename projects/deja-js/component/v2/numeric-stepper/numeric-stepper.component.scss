@@ -26,6 +26,10 @@
 
     &[deja-numeric-stepper-form-field="horizontal-inlay"] {
         &:not(.disabled) {
+            input:not([inputAutosize]) {
+                width: calc(100% - 64px);
+            }
+
             &:hover {
                 &:not([float-label="always"]) {
                     .mat-form-field-label.mat-empty {
