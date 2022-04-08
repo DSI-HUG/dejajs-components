@@ -31,7 +31,7 @@ export abstract class DialogService<ReturnType, DataType> {
                     config.minWidth = config.minWidth || '400px';
 
                     // injector is private in MatDialog
-                    // eslint-disable-next-line dot-notation
+                    // eslint-disable-next-line @typescript-eslint/dot-notation
                     this.dialog['_injector'] = moduleInfos.injector;
                     this.dialogRef = this.dialog.open<unknown, DataType, ReturnType>(moduleInfos.module.componentType, config);
 

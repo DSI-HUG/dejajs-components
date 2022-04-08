@@ -54,6 +54,7 @@ export class GroupingService {
                     if (children[0]?.[childrenField]) {
                         return groupTree$(children, curDepth + 1).map(() => treeItem);
                     } else {
+                        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
                         return this.groupChildren$(children, groupInfo, curDepth, childrenField).pipe(map(groupedChildren => {
                             treeItem[childrenField] = groupedChildren;
                             return treeItem;

@@ -814,6 +814,7 @@ export abstract class ItemListBase<T> extends Destroy {
 
             const childrenField = this.getItemListService().childrenField;
             if (model[childrenField]) {
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
                 (<any>itemBase)[childrenField] = this.mapToIItemBase(model[childrenField], selected);
             } else {
                 itemBase.selected = selected || undefined;

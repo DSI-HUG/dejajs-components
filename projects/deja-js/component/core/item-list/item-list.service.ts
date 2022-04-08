@@ -1043,7 +1043,7 @@ export class ItemListService<T> {
         const field = (<any>item)[searchField];
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
         const value = typeof field === 'function' ? field() : field || this.getTextValue(item, searchField);
-        return value && regExp.test((new DiacriticService).remove(value));
+        return value && regExp.test((new DiacriticService).remove(value as string));
     }
 
     /** Retourne une liste groupée si un modèle de groupe interne est spécifié.

@@ -530,7 +530,7 @@ export class DejaEditorComponent extends Destroy implements OnChanges, AfterView
             return {
                 textNode: node,
                 firstNodeIsText: firstNodeIsText,
-                toReplace: this.extractFirstWord(node.getText(), reverse)
+                toReplace: this.extractFirstWord(node.getText() as string, reverse)
             };
         }
         return null;

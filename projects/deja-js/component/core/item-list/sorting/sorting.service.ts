@@ -72,6 +72,7 @@ export class SortingService {
                 if (!child || !child[childrenField]) {
                     return of(child);
                 }
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
                 return this.sortTree$(child[childrenField], sortInfos, childrenField).pipe(
                     map(sortedList => {
                         child[childrenField] = sortedList;

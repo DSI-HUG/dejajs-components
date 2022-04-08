@@ -64,7 +64,7 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
     @Output() public readonly viewPortChanged = new EventEmitter<IViewPort>();
 
     /** Internal use */
-    @ViewChild('inputelement') public input: ElementRef;
+    @ViewChild('inputelement') public input: ElementRef<HTMLInputElement>;
 
     @HostBinding('attr.disabled') public _disabled: boolean = null;
 
@@ -160,6 +160,7 @@ export class DejaTreeListComponent extends ItemListBase<unknown> implements Afte
             map(value => this.getVirtualSelectedEntities(value)),
             // eslint-disable-next-line @typescript-eslint/no-unsafe-return
             map(value => (value instanceof Array && value) || (value && [value]) || [] as unknown[]),
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
             tap(values => super.setSelectedItems(values)));
 
         const selectModels$ = this.writeValue$.pipe(
