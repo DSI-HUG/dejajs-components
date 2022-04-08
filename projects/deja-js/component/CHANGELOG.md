@@ -1,3 +1,12 @@
+# [13.6.0](https://github.com/DSI-HUG/dejajs-components/compare/v13.5.0...v13.6.0) (2022-04-08)
+
+
+### Bug Fixes
+
+* **material-colors:** correct license ([9043a7f](https://github.com/DSI-HUG/dejajs-components/commit/9043a7f0fd6c0347ccfb2f0e3faedb0bdf3b9f1b))
+* **numeric-stepper:** correct behavior when input value is null ([08082b3](https://github.com/DSI-HUG/dejajs-components/commit/08082b3e769ece2e905fb22372a8afb2ce66be43))
+* **numeric-stepper:** correct css for horizontal-inlay ([0f41a82](https://github.com/DSI-HUG/dejajs-components/commit/0f41a82657a128f037da0cdd78135bcc9c940c46))
+
 # [13.6.0-develop.2](https://github.com/DSI-HUG/dejajs-components/compare/v13.6.0-develop.1...v13.6.0-develop.2) (2022-04-07)
 
 
