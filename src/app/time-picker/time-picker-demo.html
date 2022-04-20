@@ -22,7 +22,7 @@
                 <div>
                     <h3>With initial hours and minutes (09:05)</h3>
                     <div class="flex-layout-center">
-                        <deja-time-picker [ngModel]="date1" (ngModelChange)="date1Changed($event)" mode="fullTime"></deja-time-picker>
+                        <deja-time-picker appearance="legacy" [ngModel]="date1" (ngModelChange)="date1Changed($event)" mode="fullTime"></deja-time-picker>
                     </div>
                     <p>Selected : {{ date1 | date:'HH:mm' }}</p>
                 </div>

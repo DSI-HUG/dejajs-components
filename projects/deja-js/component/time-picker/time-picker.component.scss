@@ -4,7 +4,7 @@ deja-time-picker {
     align-items: baseline;
     justify-content: center;
 
-    &:not([inform]) {
+    &:not([inform]) .mat-form-field-appearance-outline {
         .mat-form-field-wrapper {
             padding-bottom: 0;
 

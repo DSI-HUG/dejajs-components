@@ -9,6 +9,7 @@
 import { BooleanInput, coerceBooleanProperty, coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, Optional, Output, Self, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
+import { MatFormFieldAppearance } from '@angular/material/form-field';
 import { Destroy } from '@deja-js/component/core';
 import { set } from 'date-fns';
 import { debounceTime, distinctUntilChanged, map, Subject, takeUntil } from 'rxjs';
@@ -33,6 +34,8 @@ export class DejaTimePickerComponent extends Destroy implements ControlValueAcce
 
     /** Display mode for the time-picker */
     @Input() public mode: TimePickerDisplayMode = 'fullTime';
+
+    @Input() public appearance: MatFormFieldAppearance = 'outline';
 
     @Input()
     public set autoFocus(value: BooleanInput) {
