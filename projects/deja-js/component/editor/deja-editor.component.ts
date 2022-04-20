@@ -387,10 +387,13 @@ export class DejaEditorComponent extends Destroy implements OnChanges, AfterView
     }
 
     public setFocus(): void {
-        if (this.instance) {
+        if (this.instance?.status === 'ready') {
             this.instance.focus();
         } else {
-            this.host.nativeElement.focus();
+            this.ready.pipe(
+                take(1),
+                takeUntil(this.destroyed$)
+            ).subscribe(() => this.instance.focus());
         }
     }
 
