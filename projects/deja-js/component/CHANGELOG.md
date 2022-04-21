@@ -1,3 +1,10 @@
+# [13.7.0-develop.2](https://github.com/DSI-HUG/dejajs-components/compare/v13.7.0-develop.1...v13.7.0-develop.2) (2022-04-21)
+
+
+### Bug Fixes
+
+* **editor:** wait editor ready before applying focus (DEJS-1066) ([f113d32](https://github.com/DSI-HUG/dejajs-components/commit/f113d328c4c2b269f8259ff83278a997891c5c53))
+
 # [13.7.0-develop.1](https://github.com/DSI-HUG/dejajs-components/compare/v13.6.0...v13.7.0-develop.1) (2022-04-20)
 
 
