@@ -5,19 +5,17 @@
  *  Use of this source code is governed by an Apache-2.0 license that can be
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
-
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, forwardRef, Input, NgZone, OnChanges, OnDestroy, Output, SimpleChanges, ViewChild, ViewEncapsulation } from '@angular/core';
+import { coerceBooleanProperty, coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, forwardRef, Input, NgZone, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Destroy } from '@deja-js/component/core';
 import { cloneDeep } from 'lodash-es';
-import { delay, first, from, Subscription, take, takeUntil, tap, timer } from 'rxjs';
+import { debounceTime, delay, first, from, merge, ReplaySubject, Subject, Subscription, switchMap, take, takeUntil, tap } from 'rxjs';
 
 import { DejaEditorService } from './deja-editor.service';
 
@@ -43,9 +41,8 @@ import { DejaEditorService } from './deja-editor.service';
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class DejaEditorComponent extends Destroy implements OnChanges, AfterViewInit, OnDestroy, ControlValueAccessor {
+export class DejaEditorComponent extends Destroy implements OnChanges, OnInit, AfterViewInit, OnDestroy, ControlValueAccessor {
     @Input() public config: any;
-    @Input() public debounce: string;
 
     // eslint-disable-next-line @angular-eslint/no-output-native
     @Output() public readonly change = new EventEmitter();
@@ -62,9 +59,15 @@ export class DejaEditorComponent extends Destroy implements OnChanges, AfterView
     public debounceTimeout$sub: Subscription;
 
     private _readonly: boolean;
+    private _debounce = 0;
     private _inline = true;
     private _ready: boolean;
     private onDataChangeListener: any;
+    private focus$ = new ReplaySubject<void>(1);
+    private disabled$ = new ReplaySubject<boolean>(1);
+    private onCkeditorChange$ = new Subject<void>();
+    private writeValue$ = new ReplaySubject<string>(1);
+    private _value = '';
 
     @Input()
     public set readonly(value: boolean) {
@@ -84,7 +87,9 @@ export class DejaEditorComponent extends Destroy implements OnChanges, AfterView
         return this._inline;
     }
 
-    private _value = '';
+    @Input() public set debounce(debounce: NumberInput) {
+        this._debounce = coerceNumberProperty(debounce);
+    }
 
     /**
      * Constructor
@@ -112,6 +117,30 @@ export class DejaEditorComponent extends Destroy implements OnChanges, AfterView
         if (changes.readonly && this.instance) {
             this.instance.setReadOnly(changes.readonly.currentValue);
         }
+    }
+
+    public ngOnInit(): void {
+        this.ready.pipe(
+            switchMap(() =>
+                merge(
+                    this.focus$.pipe(
+                        tap(() => this.instance.focus())
+                    ),
+                    this.disabled$.pipe(
+                        tap(value => this.disabled.emit(value)),
+                        tap(value => this.instance.setReadOnly(value))
+                    ),
+                    this.onCkeditorChange$.pipe(
+                        debounceTime(this._debounce),
+                        tap(() => this.updateValue())
+                    ),
+                    this.writeValue$.pipe(
+                        tap(value => this.updateCkeditorInstanceValue(value))
+                    )
+                )
+            ),
+            takeUntil(this.destroyed$)
+        ).subscribe();
     }
 
     /**
@@ -271,22 +300,7 @@ export class DejaEditorComponent extends Destroy implements OnChanges, AfterView
      */
     public writeValue(value: string): void {
         this._value = value;
-        if (!this.destroyed$.closed) {
-            timer(0).pipe( // See DEJS-728 that explain usage of async method
-                takeUntil(this.destroyed$)
-            ).subscribe(() => {
-                if (this.instance) {
-                    this.onDataChangeListener?.removeListener(); // The data change listener must be removed before setting the data,
-                    // valueAccessor.onChange is called by the data change listener and must not be subsequently called on writeValue call which fire
-                    // the data change event by calling instance.setData.
-                    this.instance.setData(value, () => {
-                        this.registerChangeListener();
-                    });
-                } else {
-                    this.host.nativeElement.value = value;
-                }
-            });
-        }
+        this.writeValue$.next(value);
     }
 
     // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -304,20 +318,7 @@ export class DejaEditorComponent extends Destroy implements OnChanges, AfterView
     }
 
     public setDisabledState(isDisabled: boolean): void {
-        this.readonly = isDisabled;
-        this.disabled.next(isDisabled);
-        if (this._ready) {
-            if (this.instance) {
-                this.instance.setReadOnly(isDisabled);
-            }
-        } else if (!this.destroyed$.closed) {
-            this.ready.pipe(
-                take(1),
-                takeUntil(this.destroyed$)
-            ).subscribe(() => {
-                this.instance.setReadOnly(this.readonly);
-            });
-        }
+        this.disabled$.next(isDisabled);
     }
 
     /**
@@ -387,31 +388,13 @@ export class DejaEditorComponent extends Destroy implements OnChanges, AfterView
     }
 
     public setFocus(): void {
-        if (this.instance) {
-            this.instance.focus();
-        } else {
-            this.host.nativeElement.focus();
-        }
+        this.focus$.next();
     }
 
     private registerChangeListener(): void {
         // CKEditor change event
         this.onDataChangeListener = this.instance.on('change', () => {
-            // Debounce update
-            if (this.debounce) {
-                const debounce = parseInt(this.debounce, 10);
-                this.debounceTimeout$sub?.unsubscribe();
-                this.debounceTimeout$sub = timer(debounce).pipe(
-                    takeUntil(this.destroyed$)
-                ).subscribe(() => {
-                    this.updateValue();
-                    this.debounceTimeout$sub = null;
-                });
-
-                // Live update
-            } else {
-                this.updateValue();
-            }
+            this.onCkeditorChange$.next();
         });
     }
 
@@ -610,6 +593,20 @@ export class DejaEditorComponent extends Destroy implements OnChanges, AfterView
             const tmpRange = this.instance.getSelection().getRanges()[0];
             tmpRange.setStartAfter(node.textNode);
             tmpRange.select();
+        }
+    }
+
+    private updateCkeditorInstanceValue(value: string): void {
+        if (this.instance) {
+            this.onDataChangeListener?.removeListener();
+            // The data change listener must be removed before setting the data,
+            // valueAccessor.onChange is called by the data change listener and must not be subsequently called on writeValue call which fire
+            // the data change event by calling instance.setData.
+            this.instance.setData(value, () => {
+                this.registerChangeListener();
+            });
+        } else {
+            this.host.nativeElement.value = value;
         }
     }
 }

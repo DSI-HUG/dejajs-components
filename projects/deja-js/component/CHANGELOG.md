@@ -1,3 +1,22 @@
+# [13.7.0-develop.2](https://github.com/DSI-HUG/dejajs-components/compare/v13.7.0-develop.1...v13.7.0-develop.2) (2022-04-21)
+
+
+### Bug Fixes
+
+* **editor:** wait editor ready before applying focus (DEJS-1066) ([f113d32](https://github.com/DSI-HUG/dejajs-components/commit/f113d328c4c2b269f8259ff83278a997891c5c53))
+
+# [13.7.0-develop.1](https://github.com/DSI-HUG/dejajs-components/compare/v13.6.0...v13.7.0-develop.1) (2022-04-20)
+
+
+### Bug Fixes
+
+* **editor:** wait editor ready before applying focus (DEJS-1066) ([21fdb8e](https://github.com/DSI-HUG/dejajs-components/commit/21fdb8e94b913269f2eda3e80a41534abbfc1c3b))
+
+
+### Features
+
+* **numeric-stepper:** adapt numeric stepper horizontal layout to legacy mat-form-fields (DEJS-1067) ([8fc04b6](https://github.com/DSI-HUG/dejajs-components/commit/8fc04b682c0207963f473ac326d147c76df7ea52))
+
 # [13.6.0](https://github.com/DSI-HUG/dejajs-components/compare/v13.5.0...v13.6.0) (2022-04-08)
 
 
