@@ -13,7 +13,7 @@ jobs:
       - name: Checkout sources
         uses: actions/checkout@v3
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.DSI_HUG_BOT_GITHUB_TOKEN }}
 
       - name: Setup node
         uses: actions/setup-node@v3
@@ -37,14 +37,18 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.DSI_HUG_BOT_GITHUB_TOKEN }}
+          GIT_AUTHOR_NAME: dsi-hug-bot
+          GIT_AUTHOR_EMAIL: jean-baptiste.petit@hcuge.ch
+          GIT_COMMITTER_NAME: dsi-hug-bot
+          GIT_COMMITTER_EMAIL: jean-baptiste.petit@hcuge.ch
         run: npm run release:ci
 
       - name: Merge release back to develop
         if: github.ref == 'refs/heads/master'
         uses: everlytic/branch-merge@1.1.2
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.DSI_HUG_BOT_GITHUB_TOKEN }}
           source_ref: 'master'
           target_branch: 'develop'
           commit_message_template: 'merge branch {source_ref} of github.com:DSI-HUG/dejajs-components into {target_branch} [skip ci]'
