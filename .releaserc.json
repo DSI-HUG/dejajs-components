@@ -51,7 +51,6 @@
         [
             "@semantic-release/npm",
             {
-                "npmPublish": false,
                 "pkgRoot": "dist/deja-js/component"
             }
         ],
