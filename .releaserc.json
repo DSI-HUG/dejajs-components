@@ -3,7 +3,8 @@
         "master",
         {
             "name": "develop",
-            "prerelease": "develop"
+            "prerelease": "develop",
+            "channel": "beta"
         }
     ],
     "plugins": [
@@ -51,7 +52,6 @@
         [
             "@semantic-release/npm",
             {
-                "npmPublish": false,
                 "pkgRoot": "dist/deja-js/component"
             }
         ],
