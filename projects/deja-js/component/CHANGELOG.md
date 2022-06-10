@@ -1,3 +1,17 @@
+# [13.8.0-develop.4](https://github.com/DSI-HUG/dejajs-components/compare/v13.8.0-develop.3...v13.8.0-develop.4) (2022-06-10)
+
+# [13.8.0-develop.3](https://github.com/DSI-HUG/dejajs-components/compare/v13.8.0-develop.2...v13.8.0-develop.3) (2022-06-09)
+
+# [13.8.0-develop.2](https://github.com/DSI-HUG/dejajs-components/compare/v13.8.0-develop.1...v13.8.0-develop.2) (2022-06-09)
+
+# [13.8.0-develop.1](https://github.com/DSI-HUG/dejajs-components/compare/v13.7.0...v13.8.0-develop.1) (2022-06-09)
+
+
+### Bug Fixes
+
+* **ci:** protected branch update failed ([ea1f6de](https://github.com/DSI-HUG/dejajs-components/commit/ea1f6deadfcea52e06261a8607d1a209e6282e0b))
+* **ci:** protected branch update failed ([76d51a7](https://github.com/DSI-HUG/dejajs-components/commit/76d51a79139168f1429e6a073d0fe4145bf950be))
+
 # [13.7.0](https://github.com/DSI-HUG/dejajs-components/compare/v13.6.0...v13.7.0) (2022-04-25)
 
 
