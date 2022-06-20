@@ -162,10 +162,8 @@ export abstract class TooltipService<D> {
                 const config = merge({}, this.tooltipConfig, tooltipConfig || {} as Partial<MatDialogConfig<D>>);
                 config.data = tooltipData || {} as D;
                 config.minWidth = config.minWidth || '100px';
+                config.injector = moduleInfos.injector;
 
-                // injector is private in MatDialog
-                // eslint-disable-next-line @typescript-eslint/dot-notation
-                this.dialog['_injector'] = moduleInfos.injector;
                 const dialogRef = this.dialog.open<TooltipComponentInterface, D, void>(moduleInfos.module.componentType, config);
                 return dialogRef.afterOpened().pipe(
                     map(() => dialogRef)

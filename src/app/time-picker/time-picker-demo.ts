@@ -7,7 +7,7 @@
  */
 
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewEncapsulation } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MAT_DATE_FORMATS } from '@angular/material/core';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 
@@ -46,9 +46,9 @@ export class DejaTimePickerDemoComponent {
     public date6 = new Date();
     public date7 = new Date(2021, 4, 28, 12, 55, 0);
     public disable6 = true;
-    public dateForm: FormGroup;
+    public dateForm: UntypedFormGroup;
 
-    public constructor(private changeDetectorRef: ChangeDetectorRef, private fb: FormBuilder) {
+    public constructor(private changeDetectorRef: ChangeDetectorRef, private fb: UntypedFormBuilder) {
         this.dateForm = this.fb.group({
             date7: [this.date7]
         });

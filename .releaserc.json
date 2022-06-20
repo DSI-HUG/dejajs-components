@@ -2,9 +2,9 @@
     "branches": [
         "master",
         {
-            "name": "develop",
-            "prerelease": "develop",
-            "channel": "beta"
+            "name": "next",
+            "prerelease": "next",
+            "channel": "next"
         }
     ],
     "plugins": [
@@ -13,7 +13,7 @@
                 "preset": "angular",
                 "releaseRules": [{
                         "breaking": true,
-                        "release": "minor"
+                        "release": "major"
                     },
                     {
                         "type": "docs",
@@ -34,7 +34,7 @@
                     },
                     {
                         "type": "chore",
-                        "release": "minor"
+                        "release": "major"
                     }
                 ],
                 "parserOpts": {

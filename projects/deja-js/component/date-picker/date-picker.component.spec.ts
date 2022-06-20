@@ -71,7 +71,7 @@ describe('DejaDatePickerContainerComponent', () => {
         void expect(component.mask).toEqual(mask);
     });
 
-    it('should display date and time', waitForAsync(() => {
+    it('should display date and time', done => {
         component.format = null;
         component.layout = 'datetime';
         component.formatChanged$.pipe(
@@ -79,18 +79,19 @@ describe('DejaDatePickerContainerComponent', () => {
         ).subscribe(format => {
             void expect(format).toEqual('yyyy/MM/dd HH:mm');
             datePickerTestingUtils.testDone();
+            done();
         });
 
         spyOn(datePickerTestingUtils, 'testDone');
         fixture.detectChanges();
         component.ngOnInit();
-        return fixture.whenStable().then(() => {
+        void fixture.whenStable().then(() => {
             // eslint-disable-next-line @typescript-eslint/unbound-method
             void expect(datePickerTestingUtils.testDone).toHaveBeenCalled();
         });
-    }));
+    });
 
-    it('should display time', waitForAsync(() => {
+    it('should display time', done => {
         component.format = null;
         component.layout = 'timeonly';
         component.formatChanged$.pipe(
@@ -98,16 +99,17 @@ describe('DejaDatePickerContainerComponent', () => {
         ).subscribe(format => {
             void expect(format).toEqual('HH:mm');
             datePickerTestingUtils.testDone();
+            done();
         });
 
         spyOn(datePickerTestingUtils, 'testDone');
         fixture.detectChanges();
         component.ngOnInit();
-        return fixture.whenStable().then(() => {
+        void fixture.whenStable().then(() => {
             // eslint-disable-next-line @typescript-eslint/unbound-method
             void expect(datePickerTestingUtils.testDone).toHaveBeenCalled();
         });
-    }));
+    });
 
     it('Should be disabled even if disabled is set as a string', () => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access

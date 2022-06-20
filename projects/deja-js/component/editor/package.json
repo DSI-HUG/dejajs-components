@@ -1,6 +1,0 @@
-{
-    "peerDependencies": {
-        "ckeditor": "~4.11.0",
-        "lodash-es": "^4.17.20"
-    }
-}

@@ -8,7 +8,7 @@
 
 import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { timer } from 'rxjs';
@@ -25,9 +25,9 @@ class DejaTimePickerContainerComponent {
     @ViewChild(DejaTimePickerComponent) public timePicker: DejaTimePickerComponent;
 
     public dateValue = new Date(2021, 4, 12, 9, 55);
-    public dateForm: FormGroup;
+    public dateForm: UntypedFormGroup;
 
-    public constructor(private fb: FormBuilder) {
+    public constructor(private fb: UntypedFormBuilder) {
         this.dateForm = this.fb.group({
             dateValue: this.dateValue
         });
@@ -49,7 +49,7 @@ describe('DejaTimePickerComponent', () => {
                 DejaTimePickerModule,
                 ReactiveFormsModule
             ],
-            providers: [FormBuilder]
+            providers: [UntypedFormBuilder]
         }).compileComponents();
 
         fixture = TestBed.createComponent(DejaTimePickerContainerComponent);
