@@ -13,7 +13,7 @@
                 "preset": "angular",
                 "releaseRules": [{
                         "breaking": true,
-                        "release": "major"
+                        "release": "minor"
                     },
                     {
                         "type": "docs",
@@ -34,7 +34,7 @@
                     },
                     {
                         "type": "chore",
-                        "release": "major"
+                        "release": "minor"
                     }
                 ],
                 "parserOpts": {
