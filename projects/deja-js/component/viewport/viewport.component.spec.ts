@@ -13,7 +13,7 @@ import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { IViewPort, IViewPortItem, ViewPortService } from '@deja-js/component/core/item-list';
-import { debounceTime, delay, filter, Observable, tap } from 'rxjs';
+import { debounceTime, delay, filter, Observable, take, tap } from 'rxjs';
 
 import { DejaViewPortModule } from './index';
 import { DejaViewPortComponent } from './viewport.component';
@@ -385,7 +385,8 @@ describe('DejaViewPortComponent', () => {
         let pass = 0;
 
         viewPortService.viewPortResult$.pipe(
-            debounceTime(100)
+            debounceTime(100),
+            take(2)
         ).subscribe(vp => {
             // Bind view port
             fixture.detectChanges();

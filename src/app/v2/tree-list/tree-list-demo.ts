@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 import { ChangeDetectorRef, Component, ViewChild, ViewEncapsulation } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { Destroy } from '@deja-js/component/core';
 import { GroupingService } from '@deja-js/component/core/item-list';
 import { Item, SortInfos, SortingService } from '@deja-js/component/v2/item-list';
@@ -58,8 +58,8 @@ export class TreeListDemoComponent extends Destroy {
     public deepCountries$: Observable<DeepCountry[]>;
     public countriesForMultiselect: Country[];
     public multiselectModel: Country[];
-    public fruitForm: FormGroup;
-    public fruitFormModels: FormGroup;
+    public fruitForm: UntypedFormGroup;
+    public fruitFormModels: UntypedFormGroup;
     public fruits$: Observable<string[]>;
     public countries$: Observable<Country[]>;
     public countryItems$: Observable<Item<Country>[]>;
@@ -118,7 +118,7 @@ export class TreeListDemoComponent extends Destroy {
         public newsService: NewsService,
         public groupingService: GroupingService,
         public sortingService: SortingService,
-        private fb: FormBuilder
+        private fb: UntypedFormBuilder
     ) {
         super();
         this.multiselectModel = JSON.parse('[{"naqme":"ÅlandIslands","code":"AX","label":"ÅlandIslands","depth":0,"odd":true,"selected":true},{"naqme":"AmericanSamoa","code":"AS","label":"AmericanSamoa","depth":0,"odd":false,"selected":true},{"naqme":"Argentina","code":"AR","label":"Argentina","depth":0,"odd":false,"selected":true},{"naqme":"ChristmasIsland","code":"CX","label":"ChristmasIsland","depth":0,"odd":false,"selected":true},{"naqme":"Egypt","code":"EG","label":"Egypt","depth":0,"odd":true,"selected":true},{"naqme":"Dominica","code":"DM","label":"Dominica","depth":0,"odd":false,"selected":true}]') as Country[];

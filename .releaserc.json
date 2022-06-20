@@ -2,9 +2,9 @@
     "branches": [
         "master",
         {
-            "name": "develop",
-            "prerelease": "develop",
-            "channel": "beta"
+            "name": "next",
+            "prerelease": "next",
+            "channel": "next"
         }
     ],
     "plugins": [

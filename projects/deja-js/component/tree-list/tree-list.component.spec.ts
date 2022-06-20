@@ -881,7 +881,7 @@ describe('DejaTreeListByModelContainerComponent', () => {
         const fixture = TestBed.createComponent(DejaTreeListByModelContainerComponent);
 
         observeModelViewPort$(fixture).pipe(
-            debounceTime(100)
+            take(2)
         ).subscribe(vp => {
             fixture.detectChanges();
             let event: Event;

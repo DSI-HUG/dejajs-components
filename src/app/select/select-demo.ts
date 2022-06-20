@@ -7,7 +7,7 @@
  */
 
 import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { Destroy } from '@deja-js/component/core';
 import { IItemBase, IItemTree, IViewPortItem } from '@deja-js/component/core/item-list';
 import { DejaSelectComponent } from '@deja-js/component/select';
@@ -48,8 +48,8 @@ export class SelectDemoComponent extends Destroy {
     public dialogResponse$: Subject<string> = new Subject<string>();
     public readonlyMultiSelect = false;
     public disableMultiSelect = false;
-    public fruitForm: FormGroup;
-    public fruitFormModels: FormGroup;
+    public fruitForm: UntypedFormGroup;
+    public fruitFormModels: UntypedFormGroup;
     public fruits$: Observable<string[]>;
 
     // eslint-disable-next-line rxjs/finnish
@@ -78,7 +78,7 @@ export class SelectDemoComponent extends Destroy {
         return this._dialogVisible;
     }
 
-    public constructor(private changeDetectorRef: ChangeDetectorRef, private countriesService: CountriesService, public countriesListService: CountriesListService, newsService: NewsService, private fb: FormBuilder) {
+    public constructor(private changeDetectorRef: ChangeDetectorRef, private countriesService: CountriesService, public countriesListService: CountriesListService, newsService: NewsService, private fb: UntypedFormBuilder) {
         super();
 
         this.multiselectModel = JSON.parse('[{"naqme":"ÅlandIslands","code":"AX","displayName":"ÅlandIslands","depth":0,"odd":true,"selected":true},{"naqme":"AmericanSamoa","code":"AS","displayName":"AmericanSamoa","depth":0,"odd":false,"selected":true},{"naqme":"Argentina","code":"AR","displayName":"Argentina","depth":0,"odd":false,"selected":true},{"naqme":"ChristmasIsland","code":"CX","displayName":"ChristmasIsland","depth":0,"odd":false,"selected":true},{"naqme":"Egypt","code":"EG","displayName":"Egypt","depth":0,"odd":true,"selected":true},{"naqme":"Dominica","code":"DM","displayName":"Dominica","depth":0,"odd":false,"selected":true}]') as unknown[];

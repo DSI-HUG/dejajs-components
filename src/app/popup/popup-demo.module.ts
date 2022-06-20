@@ -47,10 +47,6 @@ import { PopupDemoButtonComponent } from './popup-demo-button/popup-demo-button.
         MatToolbarModule,
         MatTooltipModule,
         routing
-    ],
-    entryComponents: [
-        DejaPopupCustomDemoComponent,
-        DummyComponent
     ]
 })
 export class DejaPopupDemoModule { }

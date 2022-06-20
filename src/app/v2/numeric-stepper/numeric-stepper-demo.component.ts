@@ -7,7 +7,7 @@
  */
 
 import { ChangeDetectorRef, Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Destroy } from '@deja-js/component/core';
 import { debounceTime, distinctUntilChanged, map, Subject, takeUntil } from 'rxjs';
 
@@ -30,12 +30,12 @@ export class DejaNumericStepperDemoComponent extends Destroy {
     public value6min = 0;
     public value6max = 20;
 
-    public numberForm: FormGroup;
+    public numberForm: UntypedFormGroup;
     public onInput1Change$ = new Subject<Event>();
 
     public constructor(
         private changeDetectorRef: ChangeDetectorRef,
-        private fb: FormBuilder
+        private fb: UntypedFormBuilder
     ) {
         super();
 

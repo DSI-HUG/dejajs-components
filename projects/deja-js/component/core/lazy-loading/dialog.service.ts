@@ -29,10 +29,7 @@ export abstract class DialogService<ReturnType, DataType> {
                 switchMap(moduleInfos => {
                     const config = { ...matDialogConfig || {}, ...dialogConfig };
                     config.minWidth = config.minWidth || '400px';
-
-                    // injector is private in MatDialog
-                    // eslint-disable-next-line @typescript-eslint/dot-notation
-                    this.dialog['_injector'] = moduleInfos.injector;
+                    config.injector = moduleInfos.injector;
                     this.dialogRef = this.dialog.open<unknown, DataType, ReturnType>(moduleInfos.module.componentType, config);
 
                     return this.dialogRef.afterClosed();

@@ -7,7 +7,7 @@
  */
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -21,11 +21,11 @@ import { DejaNumericStepperComponent } from './numeric-stepper.component';
                 <deja-numeric-stepper (increment)="numberValue = numberValue + step" (decrement)="numberValue = numberValue - step"></deja-numeric-stepper></mat-form-field>`
 })
 class DejaNumericStepperContainerComponent {
-    public numberForm: FormGroup;
+    public numberForm: UntypedFormGroup;
     public numberValue = 30;
     public step = 10;
 
-    public constructor(private fb: FormBuilder) {
+    public constructor(private fb: UntypedFormBuilder) {
         this.numberForm = this.fb.group({
             numberValue: this.numberValue
         });
@@ -47,7 +47,7 @@ describe('DejaNumericStepperComponent', () => {
                 DejaNumericStepperModule,
                 ReactiveFormsModule
             ],
-            providers: [FormBuilder]
+            providers: [UntypedFormBuilder]
         }).compileComponents();
 
         fixture = TestBed.createComponent(DejaNumericStepperContainerComponent);
