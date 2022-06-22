@@ -7,7 +7,7 @@
  */
 
 import { Component } from '@angular/core';
-import { UntypedFormControl, Validators } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import { DejaNumericStepperComponent } from '@deja-js/component/numeric-stepper';
 
 @Component({
@@ -17,7 +17,7 @@ import { DejaNumericStepperComponent } from '@deja-js/component/numeric-stepper'
 })
 export class DejaNumericStepperDemoComponent {
     public tabIndex = 1;
-    public control = new UntypedFormControl(null, Validators.required);
+    public control = new FormControl(null as number, Validators.required);
 
     public focus(numStepper: DejaNumericStepperComponent): void {
         numStepper.setFocus();

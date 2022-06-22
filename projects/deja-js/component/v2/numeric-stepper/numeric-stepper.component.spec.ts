@@ -7,12 +7,17 @@
  */
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ControlsOf } from '@deja-js/component/core';
 
 import { DejaNumericStepperModule } from '.';
 import { DejaNumericStepperComponent } from './numeric-stepper.component';
+
+interface NumberForm {
+    numberValue: number;
+}
 
 @Component({
     selector: 'DejaNumericStepperContainerComponent',
@@ -21,11 +26,11 @@ import { DejaNumericStepperComponent } from './numeric-stepper.component';
                 <deja-numeric-stepper (increment)="numberValue = numberValue + step" (decrement)="numberValue = numberValue - step"></deja-numeric-stepper></mat-form-field>`
 })
 class DejaNumericStepperContainerComponent {
-    public numberForm: UntypedFormGroup;
+    public numberForm: FormGroup<ControlsOf<NumberForm>>;
     public numberValue = 30;
     public step = 10;
 
-    public constructor(private fb: UntypedFormBuilder) {
+    public constructor(private fb: FormBuilder) {
         this.numberForm = this.fb.group({
             numberValue: this.numberValue
         });
@@ -47,7 +52,7 @@ describe('DejaNumericStepperComponent', () => {
                 DejaNumericStepperModule,
                 ReactiveFormsModule
             ],
-            providers: [UntypedFormBuilder]
+            providers: [FormBuilder]
         }).compileComponents();
 
         fixture = TestBed.createComponent(DejaNumericStepperContainerComponent);

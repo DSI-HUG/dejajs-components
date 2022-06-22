@@ -1,22 +1,22 @@
 {
     "extends": "../tsconfig.json",
     "compilerOptions": {
-      "outDir": "../out-tsc/spec",
-      "types": [
-        "jasmine",
-        "node",
-        "ckeditor"
-      ]
+        "outDir": "../out-tsc/spec",
+        "types": [
+            "jasmine",
+            "node",
+            "ckeditor"
+        ]
     },
     "angularCompilerOptions": {
         "enableIvy": true
     },
     "files": [
-      "test.ts",
-      "polyfills.ts"
+        "test.ts",
+        "polyfills.ts"
     ],
     "include": [
-      "**/*.spec.ts",
-      "**/*.d.ts"
+        "**/*.spec.ts",
+        "**/*.d.ts"
     ]
 }
