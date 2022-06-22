@@ -1,0 +1,7 @@
+<mat-tab-group [selectedIndex]="tabIndex" (selectedTabChange)="tabIndex = $event.index">
+    <mat-tab label="EXAMPLES"> </mat-tab>
+</mat-tab-group>
+
+<div *ngIf="tabIndex === 0" class="example">
+    <button mat-button (click)="openFormDialog$.next()">Ouverture d'un dialogue lazy avec un formulaire</button>
+</div>

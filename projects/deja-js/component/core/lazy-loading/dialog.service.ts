@@ -6,6 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
+import { Dialog } from '@angular/cdk/dialog';
 import { Type } from '@angular/core';
 import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material/dialog';
 import { Observable, ReplaySubject, switchMap, take, throttleTime } from 'rxjs';
@@ -29,7 +30,11 @@ export abstract class DialogService<ReturnType, DataType> {
                 switchMap(moduleInfos => {
                     const config = { ...matDialogConfig || {}, ...dialogConfig };
                     config.minWidth = config.minWidth || '400px';
-                    config.injector = moduleInfos.injector;
+
+                    // injector is private in MatDialog
+                    // eslint-disable-next-line @typescript-eslint/dot-notation
+                    this.dialog['_dialog'] = moduleInfos.injector.get(Dialog);
+
                     this.dialogRef = this.dialog.open<unknown, DataType, ReturnType>(moduleInfos.module.componentType, config);
 
                     return this.dialogRef.afterClosed();

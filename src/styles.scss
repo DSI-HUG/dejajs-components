@@ -76,4 +76,56 @@ body {
         /* Non-prefixed version, currently
         not supported by any browser */
     }
+
+    .no-padding-dialog .mat-dialog-container {
+        padding: 0;
+
+        .mat-dialog-content {
+            margin: 0;
+        }
+    }
+
+    .mat-dialog-container {
+        padding: 0;
+
+        .mat-dialog-content {
+            margin: 0;
+        }
+
+        .dialog-toolbar {
+            display: flex;
+            justify-content: space-between;
+
+            .dialog-title {
+                padding: 0 1rem 0 0;
+            }
+
+            .dialog-action {
+                display: flex;
+                justify-content: baseline;
+                align-items: center;
+                cursor: pointer;
+                font-size: 85%;
+                opacity: 0.9;
+            }
+        }
+
+        .dialog-container {
+            padding: 1rem;
+            max-height: 65vh;
+            max-width: 90vw;
+            overflow: auto;
+        }
+
+        .dialog-buttons {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding: 0.7rem;
+
+            .mat-button {
+                margin: 0 0.5rem;
+            }
+        }
+    }
 }

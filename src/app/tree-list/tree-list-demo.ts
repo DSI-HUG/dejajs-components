@@ -6,8 +6,8 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 import { ChangeDetectorRef, Component, ViewChild, ViewEncapsulation } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
-import { Destroy } from '@deja-js/component/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { ControlsOf, Destroy } from '@deja-js/component/core';
 import { GroupingService, IItemBase, IItemTree, IViewPortItem } from '@deja-js/component/core/item-list';
 import { IDejaDragEvent } from '@deja-js/component/dragdrop';
 import { IDejaMouseDraggableContext, IDejaMouseDroppableContext, IDropCursorInfos } from '@deja-js/component/mouse-dragdrop';
@@ -36,6 +36,10 @@ interface ViewPortInfo {
     value: string;
 }
 
+interface FruitForm {
+    fruitName: string;
+}
+
 @Component({
     providers: [CountriesListService],
     encapsulation: ViewEncapsulation.None,
@@ -58,8 +62,8 @@ export class DejaTreeListDemoComponent extends Destroy {
     public countriesForMultiselect: Country[];
     public onDemandGroupedCountries: ICountryGroup[];
     public multiselectModel: IItemTree<unknown>[];
-    public fruitForm: UntypedFormGroup;
-    public fruitFormModels: UntypedFormGroup;
+    public fruitForm: FormGroup<ControlsOf<FruitForm>>;
+    public fruitFormModels: FormGroup<ControlsOf<FruitForm>>;
     public fruits$: Observable<string[]>;
     public countries$: Observable<Country[]>;
     public groupedCountries: ICountryGroup[];
@@ -105,7 +109,7 @@ export class DejaTreeListDemoComponent extends Destroy {
         public countriesListService: CountriesListService,
         public newsService: NewsService,
         public groupingService: GroupingService,
-        private fb: UntypedFormBuilder
+        private fb: FormBuilder
     ) {
         super();
         this.multiselectModel = JSON.parse('[{"naqme":"ÅlandIslands","code":"AX","displayName":"ÅlandIslands","depth":0,"odd":true,"selected":true},{"naqme":"AmericanSamoa","code":"AS","displayName":"AmericanSamoa","depth":0,"odd":false,"selected":true},{"naqme":"Argentina","code":"AR","displayName":"Argentina","depth":0,"odd":false,"selected":true},{"naqme":"ChristmasIsland","code":"CX","displayName":"ChristmasIsland","depth":0,"odd":false,"selected":true},{"naqme":"Egypt","code":"EG","displayName":"Egypt","depth":0,"odd":true,"selected":true},{"naqme":"Dominica","code":"DM","displayName":"Dominica","depth":0,"odd":false,"selected":true}]') as IItemTree<unknown>[];

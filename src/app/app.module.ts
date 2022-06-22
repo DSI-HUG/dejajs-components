@@ -11,6 +11,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
@@ -37,6 +38,7 @@ import { routing } from './app.routes';
         HttpClientModule,
         MatButtonModule,
         MatButtonToggleModule,
+        MatDialogModule,
         MatIconModule,
         MatListModule,
         MatMenuModule,

@@ -7,11 +7,18 @@
  */
 
 import { ChangeDetectorRef, Component } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { Destroy } from '@deja-js/component/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ControlsOf, Destroy } from '@deja-js/component/core';
 import { debounceTime, distinctUntilChanged, map, Subject, takeUntil } from 'rxjs';
 
 import { numberValidator } from './validators';
+
+interface NumberForm {
+    numberValue3: number;
+    numberValue4: number;
+    numberValue5: number;
+    numberValue6: number;
+}
 
 @Component({
     selector: 'deja-numeric-stepper-demo',
@@ -30,20 +37,20 @@ export class DejaNumericStepperDemoComponent extends Destroy {
     public value6min = 0;
     public value6max = 20;
 
-    public numberForm: UntypedFormGroup;
+    public numberForm: FormGroup<ControlsOf<NumberForm>>;
     public onInput1Change$ = new Subject<Event>();
 
     public constructor(
         private changeDetectorRef: ChangeDetectorRef,
-        private fb: UntypedFormBuilder
+        formBuilder: FormBuilder
     ) {
         super();
 
-        this.numberForm = this.fb.group({
-            numberValue3: [{ value: this.value3, disabled: false }, numberValidator],
-            numberValue4: [this.value4, [Validators.required, numberValidator]],
-            numberValue5: [this.value5, numberValidator],
-            numberValue6: [this.value6, numberValidator]
+        this.numberForm = formBuilder.group<ControlsOf<NumberForm>>({
+            numberValue3: formBuilder.control({ value: this.value3, disabled: false }, numberValidator),
+            numberValue4: formBuilder.control(this.value4, [Validators.required, numberValidator]),
+            numberValue5: formBuilder.control(this.value5, numberValidator),
+            numberValue6: formBuilder.control(this.value6, numberValidator)
         });
 
         this.onInput1Change$.pipe(
