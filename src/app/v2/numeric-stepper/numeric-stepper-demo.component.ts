@@ -8,7 +8,7 @@
 
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ControlsOf, Destroy } from '@deja-js/component/core';
+import { Destroy } from '@deja-js/component/core';
 import { debounceTime, distinctUntilChanged, map, Subject, takeUntil } from 'rxjs';
 
 import { numberValidator } from './validators';
@@ -46,7 +46,7 @@ export class DejaNumericStepperDemoComponent extends Destroy {
     ) {
         super();
 
-        this.numberForm = formBuilder.group<ControlsOf<NumberForm>>({
+        this.numberForm = formBuilder.group({
             numberValue3: formBuilder.control({ value: this.value3, disabled: false }, numberValidator),
             numberValue4: formBuilder.control(this.value4, [Validators.required, numberValidator]),
             numberValue5: formBuilder.control(this.value5, numberValidator),

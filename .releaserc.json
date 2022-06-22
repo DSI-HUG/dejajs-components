@@ -36,10 +36,7 @@
                         "type": "chore",
                         "release": "minor"
                     }
-                ],
-                "parserOpts": {
-                    "noteKeywords": []
-                }
+                ]
             }
         ],
         "@semantic-release/release-notes-generator",
