@@ -1,3 +1,10 @@
+# [14.0.0-next.2](https://github.com/DSI-HUG/dejajs-components/compare/v14.0.0-next.1...v14.0.0-next.2) (2022-06-22)
+
+
+### Bug Fixes
+
+* fix lazy loading and add demo, remove untyped forms ([36de100](https://github.com/DSI-HUG/dejajs-components/commit/36de10051d55c5f6725ac436306016621ad1317d))
+
 # [14.0.0-next.1](https://github.com/DSI-HUG/dejajs-components/compare/v13.7.0...v14.0.0-next.1) (2022-06-20)
 
 
