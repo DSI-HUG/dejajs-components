@@ -9,7 +9,7 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { BooleanInput, coerceBooleanProperty, coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
 import { AfterContentInit, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ContentChildren, DoCheck, ElementRef, EventEmitter, HostBinding, Input, OnDestroy, Optional, Output, Self, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
-import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
+import { ControlValueAccessor, FormControl, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
 import { CanDisable, CanUpdateErrorState, ErrorStateMatcher } from '@angular/material/core';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
@@ -1261,7 +1261,7 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
         const oldState = this.errorState;
         const parent = this.parentFormGroup || this.parentForm;
         const matcher = this.errorStateMatcher || this.defaultErrorStateMatcher;
-        const control = this.ngControl ? this.ngControl.control as UntypedFormControl : null;
+        const control = this.ngControl ? this.ngControl.control as FormControl : null;
         const newState = matcher.isErrorState(control, parent);
 
         if (newState !== oldState) {

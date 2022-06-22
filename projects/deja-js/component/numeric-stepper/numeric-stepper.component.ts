@@ -9,7 +9,7 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { BooleanInput, coerceBooleanProperty, coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DoCheck, ElementRef, EventEmitter, HostBinding, Input, OnChanges, OnDestroy, Optional, Output, Self, ViewChild } from '@angular/core';
-import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm, UntypedFormControl, ValidationErrors, Validator, ValidatorFn } from '@angular/forms';
+import { ControlValueAccessor, FormControl, FormGroupDirective, NgControl, NgForm, ValidationErrors, Validator, ValidatorFn } from '@angular/forms';
 import { CanUpdateErrorState, ErrorStateMatcher } from '@angular/material/core';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { _MatInputMixinBase, DejaChildValidatorDirective, DejaTextMetricsService } from '@deja-js/component/core';
@@ -23,7 +23,7 @@ export interface RangeError {
     };
 }
 
-export const createCounterRangeValidator = (comp: DejaNumericStepperComponent) => (c: UntypedFormControl): RangeError => {
+export const createCounterRangeValidator = (comp: DejaNumericStepperComponent) => (c: FormControl): RangeError => {
     const err = {
         rangeError: {
             given: c.value,
@@ -262,7 +262,7 @@ export class DejaNumericStepperComponent extends _MatInputMixinBase implements C
         this.fm.stopMonitoring(this.elementRef.nativeElement);
     }
 
-    public validate(c: UntypedFormControl): ValidationErrors {
+    public validate(c: FormControl): ValidationErrors {
         return this.validateFn(c) || c.validator?.(c);
     }
 
