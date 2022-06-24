@@ -50,7 +50,8 @@ export class StyleEditorDialogComponent extends Destroy {
         });
     }
 
-    public createModelFromForm(values: Partial<StyleEditorDialogForm>): StyleConfig {
+    public createModelFromForm(): StyleConfig {
+        const values = this.formGroup.getRawValue();
         return {
             borderWidth: Math.min(Math.max(values.borderWidth, this.min), this.max) * this.widthStep,
             borderColor: values.borderColor?.toHex(),
@@ -58,3 +59,4 @@ export class StyleEditorDialogComponent extends Destroy {
         } as StyleConfig;
     }
 }
+

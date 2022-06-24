@@ -41,6 +41,8 @@ interface FruitForm {
     fruitName: string;
 }
 
+type FruiFormControls = ControlsOf<FruitForm>;
+
 @Component({
     providers: [CountriesListService],
     encapsulation: ViewEncapsulation.None,
@@ -62,8 +64,8 @@ export class TreeListDemoComponent extends Destroy {
     public deepCountries$: Observable<DeepCountry[]>;
     public countriesForMultiselect: Country[];
     public multiselectModel: Country[];
-    public fruitForm: FormGroup<ControlsOf<FruitForm>>;
-    public fruitFormModels: FormGroup<ControlsOf<FruitForm>>;
+    public fruitForm: FormGroup<FruiFormControls>;
+    public fruitFormModels: FormGroup<FruiFormControls>;
     public fruits$: Observable<string[]>;
     public countries$: Observable<Country[]>;
     public countryItems$: Observable<Item<Country>[]>;
@@ -295,9 +297,10 @@ export class TreeListDemoComponent extends Destroy {
             fruitName: ['', [cheeseValidator]]
         });
 
-        this.fruitFormModels = this.formBuilder.group({
-            fruitName: ['']
+        const fruitFormModels = this.formBuilder.group({
+            fruitName: ''
         });
+        this.fruitFormModels = fruitFormModels;
 
         this.itemExpand$.pipe(
             delay(1000),
