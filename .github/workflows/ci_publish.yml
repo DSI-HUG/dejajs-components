@@ -39,9 +39,9 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.DSI_HUG_BOT_GITHUB_TOKEN }}
           GIT_AUTHOR_NAME: dsi-hug-bot
-          GIT_AUTHOR_EMAIL: jean-baptiste.petit@hcuge.ch
+          GIT_AUTHOR_EMAIL: dsi-hug-github@hcuge.ch
           GIT_COMMITTER_NAME: dsi-hug-bot
-          GIT_COMMITTER_EMAIL: jean-baptiste.petit@hcuge.ch
+          GIT_COMMITTER_EMAIL: dsi-hug-github@hcuge.ch
         run: npm run release:ci
 
       - name: Merge release back to develop
