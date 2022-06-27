@@ -1,3 +1,10 @@
+# [13.8.0-develop.5](https://github.com/DSI-HUG/dejajs-components/compare/v13.8.0-develop.4...v13.8.0-develop.5) (2022-06-27)
+
+
+### Bug Fixes
+
+* **time-picker:** update model without debounce in case of blur ([876817f](https://github.com/DSI-HUG/dejajs-components/commit/876817fd393ddac5d1091a5fd2607114808176ab))
+
 # [13.8.0-develop.6](https://github.com/DSI-HUG/dejajs-components/compare/v13.8.0-develop.5...v13.8.0-develop.6) (2022-06-21)
 
 
