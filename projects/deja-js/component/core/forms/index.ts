@@ -6,10 +6,15 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { FormArray, FormControl, FormGroup } from '@angular/forms';
+import { FormArray, FormControl, ɵElement } from '@angular/forms';
 
 export type ControlsOf<T> = {
-    [K in keyof T]: T[K] extends Array<infer U> ? FormArray<FormGroup<ControlsOf<U>>> : T[K] extends Record<string, unknown> ? FormGroup<ControlsOf<T[K]>> : FormControl<T[K]>;
+    [K in keyof T]:
+    T[K] extends Array<infer U> ? FormArray<FormControl<U>> :
+        T[K] extends Array<infer U> | undefined ? FormArray<FormControl<U>> :
+            T[K] extends ReadonlyArray<infer U> ? FormArray<FormControl<U>> :
+                T[K] extends ReadonlyArray<infer U> | undefined ? FormArray<FormControl<U>> :
+                    ɵElement<T[K], never>;
 };
 
 export * from './input-mixin';
