@@ -1,6 +1,7 @@
 name: Deploy docs to GitHub Pages
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - master
@@ -38,4 +39,4 @@ jobs:
           github_token: ${{ secrets.DSI_HUG_BOT_GITHUB_TOKEN }}
           publish_dir: ./dist/demo
           user_name: dsi-hug-bot
-          user_email: jean-baptiste.petit@hcuge.ch
+          user_email: dsi-hug-github@hcuge.ch

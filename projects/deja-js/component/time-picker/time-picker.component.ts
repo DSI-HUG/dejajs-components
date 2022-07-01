@@ -12,7 +12,7 @@ import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { MatFormFieldAppearance } from '@angular/material/form-field';
 import { Destroy } from '@deja-js/component/core';
 import { set } from 'date-fns';
-import { debounceTime, distinctUntilChanged, map, Subject, takeUntil } from 'rxjs';
+import { debounce, distinctUntilChanged, map, Subject, takeUntil, timer } from 'rxjs';
 
 export type TimePickerDisplayMode = 'fullTime' | 'fullTimeWithHoursDisabled' | 'fullTimeWithMinutesDisabled' | 'hoursOnly' | 'minutesOnly';
 
@@ -96,7 +96,7 @@ export class DejaTimePickerComponent extends Destroy implements ControlValueAcce
         }
 
         this.onHoursChange$.pipe(
-            debounceTime(10),
+            debounce(hours => timer(typeof hours === 'object' ? 0 : 10)),
             distinctUntilChanged(),
             map(hours => {
                 let isEvent = false;
@@ -127,7 +127,7 @@ export class DejaTimePickerComponent extends Destroy implements ControlValueAcce
         });
 
         this.onMinutesChange$.pipe(
-            debounceTime(10),
+            debounce(minutes => timer(typeof minutes === 'object' ? 0 : 10)),
             distinctUntilChanged(),
             map(minutes => {
                 if (typeof minutes === 'object') {
