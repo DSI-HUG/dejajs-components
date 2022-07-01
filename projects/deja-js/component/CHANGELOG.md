@@ -1,3 +1,13 @@
+# [14.0.0-next.2](https://github.com/DSI-HUG/dejajs-components/compare/v14.0.0-next.1...v14.0.0-next.2) (2022-07-01)
+
+
+### Bug Fixes
+
+* controlsOf ([746f4d2](https://github.com/DSI-HUG/dejajs-components/commit/746f4d2654d326cc0d1e4ee1580b23cb4eff1e86))
+* fix lazy loading and add demo, remove untyped forms ([36de100](https://github.com/DSI-HUG/dejajs-components/commit/36de10051d55c5f6725ac436306016621ad1317d))
+* fix lazy loading and add demo, remove untyped forms ([8156e3a](https://github.com/DSI-HUG/dejajs-components/commit/8156e3a3c09ee4c6c4aaa338d6d0e61811b80176))
+* **time-picker:** update model without debounce in case of blur ([876817f](https://github.com/DSI-HUG/dejajs-components/commit/876817fd393ddac5d1091a5fd2607114808176ab))
+
 # [14.0.0-next.3](https://github.com/DSI-HUG/dejajs-components/compare/v14.0.0-next.2...v14.0.0-next.3) (2022-06-22)
 
 
