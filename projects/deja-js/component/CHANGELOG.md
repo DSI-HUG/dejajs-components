@@ -1,3 +1,12 @@
+# [14.0.0-next.4](https://github.com/DSI-HUG/dejajs-components/compare/v14.0.0-next.3...v14.0.0-next.4) (2022-07-05)
+
+
+### Bug Fixes
+
+* controlsOf ([746f4d2](https://github.com/DSI-HUG/dejajs-components/commit/746f4d2654d326cc0d1e4ee1580b23cb4eff1e86))
+* **time-picker:** update model without debounce in case of blur ([876817f](https://github.com/DSI-HUG/dejajs-components/commit/876817fd393ddac5d1091a5fd2607114808176ab))
+* try fix injector for dialogs ([5158419](https://github.com/DSI-HUG/dejajs-components/commit/5158419f5a996bac0b939809f6f46b78c5e40bfa))
+
 # [14.0.0-next.2](https://github.com/DSI-HUG/dejajs-components/compare/v14.0.0-next.1...v14.0.0-next.2) (2022-07-01)
 
 
