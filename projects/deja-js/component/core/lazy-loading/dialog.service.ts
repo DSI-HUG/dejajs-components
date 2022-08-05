@@ -41,7 +41,7 @@ export abstract class DialogService<ReturnType, DataType> {
 
     public openDialog$(dialogData?: DataType, dialogConfig?: MatDialogConfig<DataType>): Observable<ReturnType> {
         dialogConfig = dialogConfig || {};
-        dialogConfig.data = dialogData || {} as DataType;
+        dialogConfig.data = dialogData ?? {} as DataType;
         this.openDialogSub$.next(dialogConfig);
         return this.dialogResponse$;
     }
