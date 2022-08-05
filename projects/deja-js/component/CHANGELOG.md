@@ -1,3 +1,10 @@
+# [14.0.0-next.6](https://github.com/DSI-HUG/dejajs-components/compare/v14.0.0-next.5...v14.0.0-next.6) (2022-08-05)
+
+
+### Bug Fixes
+
+* fix dialog datatype for empty string or zero ([b4e7cc3](https://github.com/DSI-HUG/dejajs-components/commit/b4e7cc302db45e7ff21f7161893ec73fa8962dc5))
+
 # [14.0.0-next.5](https://github.com/DSI-HUG/dejajs-components/compare/v14.0.0-next.4...v14.0.0-next.5) (2022-07-22)
 
 
