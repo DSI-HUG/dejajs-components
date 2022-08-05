@@ -1,3 +1,10 @@
+# [14.0.0-next.5](https://github.com/DSI-HUG/dejajs-components/compare/v14.0.0-next.4...v14.0.0-next.5) (2022-07-22)
+
+
+### Bug Fixes
+
+* controlsOf ([85e9945](https://github.com/DSI-HUG/dejajs-components/commit/85e994542ff2582b62b78e7f2c87b5c4f15693c6))
+
 # [14.0.0-next.4](https://github.com/DSI-HUG/dejajs-components/compare/v14.0.0-next.3...v14.0.0-next.4) (2022-07-05)
 
 
