@@ -1,8 +1,42 @@
-:host { 
+deja-splitter-demo {
     .container {
         position: relative;
         height: 300px;
         width: 100%;
     }
-}
 
+    .mat-tab-group {
+        display: flex;
+        height: 100%;
+
+        .mat-tab-body-wrapper {
+            flex: 1;
+            .mat-tab-body.fixed-height {
+                overflow: hidden;
+
+                .mat-tab-body-content {
+                    overflow: hidden;
+                    padding: 5px;
+
+                    .mat-card {
+                        height: calc(100% - 10px);
+                        margin: 0;
+                        display: flex;
+                        flex-direction: column;
+
+                        .mat-card-content {
+                            flex: 1;
+
+                            deja-splitter {
+                                display: flex;
+                                width: 100%;
+                                height: 100%;
+                                overflow: hidden;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
