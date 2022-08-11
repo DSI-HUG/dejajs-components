@@ -7,7 +7,9 @@
  */
 
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostBinding, Input, OnChanges, OnDestroy, Output, Renderer2, SimpleChanges, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostBinding, Inject, InjectionToken, Input, OnChanges, OnDestroy, Optional, Output, Renderer2, SimpleChanges, ViewEncapsulation } from '@angular/core';
+import { Destroy } from '@deja-js/component/core';
+import { debounceTime, Subject, takeUntil } from 'rxjs';
 
 import { IAreaData } from './area-data.model';
 import { Point } from './point.model';
@@ -15,6 +17,9 @@ import { SplitAreaDirective } from './split-area.directive';
 
 const gutterSize = 'gutterSize';
 const disabled = 'disabled';
+
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export const DEJA_SPLITTER_REFRESH_DEBOUNCE_TIME = new InjectionToken<string>('DEJA_SPLITTER_REFRESH_DEBOUNCE_TIME');
 
 /**
  * Splitter Component for Angular
@@ -28,7 +33,7 @@ const disabled = 'disabled';
     styleUrls: ['./splitter.component.scss'],
     templateUrl: './splitter.component.html'
 })
-export class DejaSplitterComponent implements OnChanges, OnDestroy {
+export class DejaSplitterComponent extends Destroy implements OnChanges, OnDestroy {
     /**
      * Direction of the split
      * Can be `horizontal` or `vertical`
@@ -60,6 +65,8 @@ export class DejaSplitterComponent implements OnChanges, OnDestroy {
      * Event triggered when the user stop to drag the cursor
      */
     @Output() public readonly dragEnd = new EventEmitter<number[]>(false);
+
+    public readonly refresh$ = new Subject<void>();
 
     /**
      * Host Binding
@@ -114,9 +121,84 @@ export class DejaSplitterComponent implements OnChanges, OnDestroy {
     /**
      * Constructor
      */
-    public constructor(private cdRef: ChangeDetectorRef,
+    public constructor(
         private elementRef: ElementRef<HTMLElement>,
-        private renderer: Renderer2) {
+        private renderer: Renderer2,
+        @Inject(DEJA_SPLITTER_REFRESH_DEBOUNCE_TIME) @Optional() refreshDebounceTime: number,
+        cdRef: ChangeDetectorRef
+    ) {
+        super();
+        if (!refreshDebounceTime) {
+            refreshDebounceTime = 100;
+        }
+
+        this.refresh$.pipe(
+            debounceTime(refreshDebounceTime),
+            takeUntil(this.destroyed$)
+        ).subscribe(() => {
+            this.stopDragging();
+
+            // ORDERS: Set css 'order' property depending on user input or added order
+            const nbCorrectOrder = this._areas.filter(a => a.orderUser !== null && !isNaN(a.orderUser)).length;
+            if (nbCorrectOrder === this._areas.length) {
+                this._areas.sort((a, b) => +a.orderUser - +b.orderUser);
+            }
+
+            this._areas.forEach((a, i) => {
+                a.order = i * 2;
+                a.component.setStyle('order', a.order);
+            });
+
+            // SIZES: Set css 'flex-basis' property depending on user input or equal sizes
+            const totalSize = this._areas.map(a => a.sizeUser).reduce((acc, s) => acc + s, 0);
+            const toBeDefined = this._areas.filter(a => !a.sizeUser || isNaN(a.sizeUser));
+
+            if ((totalSize < 99.99 || totalSize > 100.01) && this._areas.length > 1) {
+                if (toBeDefined.length === 0) {
+                    // Map to 100%
+                    this._areas.forEach(a => {
+                        const adjustedSize = Number(a.sizeUser) * 100 / totalSize;
+                        a.size = adjustedSize;
+                    });
+                } else if (totalSize < 99.99) {
+                    // Share the remaining size to the undefined areas
+                    let remain = (100 - totalSize);
+                    let toBeDefinedLength = toBeDefined.length;
+                    toBeDefined.forEach(a => {
+                        const size = remain / toBeDefinedLength--;
+                        a.size = size;
+                        remain -= size;
+                    });
+                    this._areas
+                        .filter(a => a.sizeUser && !isNaN(a.sizeUser))
+                        .forEach(a => a.size = Number(a.sizeUser));
+                } else {
+                    const size = Number((100 / this._areas.length).toFixed(3));
+                    this._areas.forEach(a => a.size = size);
+                }
+            } else if (totalSize === 0 && this._areas.length === 1) {
+                this._areas[0].size = 100;
+            } else {
+                this._areas.forEach(a => {
+                    a.size = Number(a.sizeUser);
+                });
+            }
+
+            // Check min size
+            this.setContainerSize();
+            if (this.containerSize) {
+                this._areas.forEach(a => {
+                    const sizePx = a.size * this.containerSize / 100;
+                    if (sizePx < a.minPixel) {
+                        const minPercent = a.minPixel ? (a.minPixel + 5) / this.containerSize * 100 : 0;
+                        a.size = minPercent;
+                    }
+                });
+            }
+
+            this.refreshStyleSizes();
+            cdRef.markForCheck();
+        });
     }
 
     /**
@@ -124,7 +206,7 @@ export class DejaSplitterComponent implements OnChanges, OnDestroy {
      */
     public ngOnChanges(changes: SimpleChanges): void {
         if (changes[gutterSize] || changes[disabled]) {
-            this.refresh();
+            this.refresh$.next();
         }
     }
 
@@ -152,7 +234,7 @@ export class DejaSplitterComponent implements OnChanges, OnDestroy {
             minPixel
         });
 
-        this.refresh();
+        this.refresh$.next();
     }
 
     /**
@@ -170,7 +252,7 @@ export class DejaSplitterComponent implements OnChanges, OnDestroy {
             item.sizeUser = sizeUser;
             item.minPixel = minPixel;
 
-            this.refresh();
+            this.refresh$.next();
         }
     }
 
@@ -186,7 +268,7 @@ export class DejaSplitterComponent implements OnChanges, OnDestroy {
             this._areas.splice(index, 1);
             this._areas.forEach((a, i) => a.order = i * 2);
 
-            this.refresh();
+            this.refresh$.next();
         }
     }
 
@@ -209,8 +291,7 @@ export class DejaSplitterComponent implements OnChanges, OnDestroy {
             return;
         }
 
-        const prop = (this.direction === 'horizontal') ? 'offsetWidth' : 'offsetHeight';
-        this.containerSize = this.elementRef.nativeElement[prop];
+        this.setContainerSize();
         this.areaAsize = this.containerSize * areaA.size / 100;
         this.areaBsize = this.containerSize * areaB.size / 100;
 
@@ -230,57 +311,6 @@ export class DejaSplitterComponent implements OnChanges, OnDestroy {
 
         this.isDragging = true;
         this.notify('start');
-    }
-
-    public refresh(): void {
-        this.stopDragging();
-
-        // ORDERS: Set css 'order' property depending on user input or added order
-        const nbCorrectOrder = this._areas.filter(a => a.orderUser !== null && !isNaN(a.orderUser)).length;
-        if (nbCorrectOrder === this._areas.length) {
-            this._areas.sort((a, b) => +a.orderUser - +b.orderUser);
-        }
-
-        this._areas.forEach((a, i) => {
-            a.order = i * 2;
-            a.component.setStyle('order', a.order);
-        });
-
-        // SIZES: Set css 'flex-basis' property depending on user input or equal sizes
-        const totalSize = this._areas.map(a => a.sizeUser).reduce((acc, s) => acc + s, 0);
-        const toBeDefined = this._areas.filter(a => !a.sizeUser || isNaN(a.sizeUser));
-
-        if ((totalSize < 99.99 || totalSize > 100.01) && this._areas.length > 1) {
-            if (toBeDefined.length === 0) {
-                // Map to 100%
-                this._areas.forEach(a => {
-                    const adjustedSize = Number(a.sizeUser) * 100 / totalSize;
-                    a.size = adjustedSize;
-                });
-            } else if (totalSize < 99.99) {
-                // Share the remaining size to the undefined areas
-                let remain = (100 - totalSize);
-                let toBeDefinedLength = toBeDefined.length;
-                toBeDefined.forEach(a => {
-                    const size = remain / toBeDefinedLength--;
-                    a.size = size;
-                    remain -= size;
-                });
-                this._areas
-                    .filter(a => a.sizeUser && !isNaN(a.sizeUser))
-                    .forEach(a => a.size = Number(a.sizeUser));
-            } else {
-                const size = Number((100 / this._areas.length).toFixed(3));
-                this._areas.forEach(a => a.size = size);
-            }
-        } else if (totalSize === 0 && this._areas.length === 1) {
-            this._areas[0].size = 100;
-        } else {
-            this._areas.forEach(a => a.size = Number(a.sizeUser));
-        }
-
-        this.refreshStyleSizes();
-        this.cdRef.markForCheck();
     }
 
     private refreshStyleSizes(): void {
@@ -367,5 +397,10 @@ export class DejaSplitterComponent implements OnChanges, OnDestroy {
             default:
                 return null;
         }
+    }
+
+    private setContainerSize(): void {
+        const prop = (this.direction === 'horizontal') ? 'offsetWidth' : 'offsetHeight';
+        this.containerSize = this.elementRef.nativeElement[prop];
     }
 }
