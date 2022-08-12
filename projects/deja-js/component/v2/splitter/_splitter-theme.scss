@@ -1,10 +1,11 @@
-@use '@angular/material' as mat;
+@use '@angular/material'as mat;
+
 @mixin splitter-theme($theme) {
     $background: map-get($theme, background);
 
     deja-splitter {
 
-        split-gutter {
+        .split-gutter {
             background-color: mat.get-color-from-palette($background, app-bar);
         }
     }

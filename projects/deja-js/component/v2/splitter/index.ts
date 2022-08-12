@@ -10,19 +10,16 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 
 import { SplitAreaDirective } from './split-area.directive';
-import { SplitGutterDirective } from './split-gutter.directive';
 import { DejaSplitterComponent } from './splitter.component';
 
 @NgModule({
     declarations: [
         DejaSplitterComponent,
-        SplitAreaDirective,
-        SplitGutterDirective
+        SplitAreaDirective
     ],
     exports: [
         DejaSplitterComponent,
-        SplitAreaDirective,
-        SplitGutterDirective
+        SplitAreaDirective
     ],
     imports: [
         CommonModule
@@ -33,5 +30,4 @@ export class DejaSplitterModule {
 }
 
 export * from './split-area.directive';
-export * from './split-gutter.directive';
 export * from './splitter.component';

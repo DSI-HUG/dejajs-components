@@ -13,7 +13,7 @@ import { coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
 import { Directive, ElementRef, HostBinding, Input } from '@angular/core';
 
 import { SplitArea } from './area-data.model';
-import { SplitterDirection } from './splitter.component';
+import { SplitterDirection } from './splitter-direction-type';
 
 /**
  * Directive representing a panel in a Splitter Component
@@ -27,7 +27,7 @@ export class SplitAreaDirective implements SplitArea {
     public order: number;
 
     @HostBinding('style.flex-basis.%')
-    private _size: number | null = null;
+    protected _size: number | null = null;
 
     public direction = 'horizontal' as SplitterDirection;
 
@@ -40,7 +40,9 @@ export class SplitAreaDirective implements SplitArea {
     }
 
     public get size(): number {
-        return this._size;
+        const parentElement = this.elementRef.nativeElement.parentElement;
+        const parentSizeInPixels = this.direction === 'horizontal' ? parentElement.offsetWidth : parentElement.offsetHeight;
+        return 100 * this.sizeinPixels / parentSizeInPixels;
     }
 
     public get sizeinPixels(): number {

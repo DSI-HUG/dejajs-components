@@ -12,8 +12,7 @@ import { Destroy } from '@deja-js/component/core';
 import { filter, fromEvent, map, mergeWith, of, Subject, switchMap, takeUntil, tap } from 'rxjs';
 
 import { SplitAreaDirective } from './split-area.directive';
-
-export type SplitterDirection = 'horizontal' | 'vertical';
+import { SplitterDirection } from './splitter-direction-type';
 
 interface DraggingEvent {
     event: MouseEvent | TouchEvent;
@@ -77,12 +76,15 @@ export class DejaSplitterComponent extends Destroy {
         this.ensureDirections();
     }
 
+    @HostBinding('attr.direction')
+    private _direction = 'horizontal' as SplitterDirection;
+
+    @HostBinding('attr.disabled')
+    private _disabled = null as boolean;
+
     protected startDragging$ = new Subject<DraggingEvent>();
 
     protected areas = new Array<SplitAreaDirective>() as ReadonlyArray<SplitAreaDirective>;
-
-    private _direction = 'horizontal' as SplitterDirection;
-    private _disabled = false;
 
     /** Retourne ou definit si le selecteur est desactivé. */
     @Input()

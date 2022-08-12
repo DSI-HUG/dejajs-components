@@ -68,7 +68,7 @@ describe('DejaSplitterContainerComponent', () => {
     it('should be able to drag and drop the splitter gutter and change the size', done => {
         fixture.detectChanges();
         void fixture.whenStable().then(() => {
-            const gutterDebugElement = fixture.debugElement.query(By.css('split-gutter'));
+            const gutterDebugElement = fixture.debugElement.query(By.css('.split-gutter'));
             const gutterElement = gutterDebugElement.nativeElement as HTMLElement;
             const areaDebugElements = fixture.debugElement.queryAll(By.css('split-area'));
             const leftAreaElement = areaDebugElements[0].nativeElement as HTMLElement;
@@ -108,7 +108,7 @@ describe('DejaSplitterContainerComponent', () => {
     it('should be able to drag and drop the splitter until the min size', done => {
         fixture.detectChanges();
         void fixture.whenStable().then(() => {
-            const gutterDebugElement = fixture.debugElement.query(By.css('split-gutter'));
+            const gutterDebugElement = fixture.debugElement.query(By.css('.split-gutter'));
             const gutterElement = gutterDebugElement.nativeElement as HTMLElement;
             const areaDebugElements = fixture.debugElement.queryAll(By.css('split-area'));
             const leftAreaElement = areaDebugElements[0].nativeElement as HTMLElement;
