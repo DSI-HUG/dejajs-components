@@ -6,15 +6,15 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Component } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 
 @Component({
     selector: 'deja-splitter-demo',
     styleUrls: [
         './splitter-demo.scss'
     ],
-    templateUrl: './splitter-demo.html'
+    templateUrl: './splitter-demo.html',
+    encapsulation: ViewEncapsulation.None
 })
 export class DejaSplitterDemoComponent {
-    public tabIndex = 1;
 }

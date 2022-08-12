@@ -1,3 +1,19 @@
+# [14.0.0-next.8](https://github.com/DSI-HUG/dejajs-components/compare/v14.0.0-next.7...v14.0.0-next.8) (2022-08-11)
+
+
+### Bug Fixes
+
+* **splitter:** when refresh we check the min area size ([ecd442e](https://github.com/DSI-HUG/dejajs-components/commit/ecd442e70b8d8048af323731067b7429e7e94235))
+
+# [14.0.0-next.7](https://github.com/DSI-HUG/dejajs-components/compare/v14.0.0-next.6...v14.0.0-next.7) (2022-08-08)
+
+# [14.0.0-next.6](https://github.com/DSI-HUG/dejajs-components/compare/v14.0.0-next.5...v14.0.0-next.6) (2022-08-05)
+
+
+### Bug Fixes
+
+* fix dialog datatype for empty string or zero ([b4e7cc3](https://github.com/DSI-HUG/dejajs-components/commit/b4e7cc302db45e7ff21f7161893ec73fa8962dc5))
+
 # [14.0.0-next.5](https://github.com/DSI-HUG/dejajs-components/compare/v14.0.0-next.4...v14.0.0-next.5) (2022-07-22)
 
 
