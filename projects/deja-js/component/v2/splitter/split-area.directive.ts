@@ -12,7 +12,6 @@
 import { coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
 import { Directive, ElementRef, HostBinding, Input } from '@angular/core';
 
-import { SplitArea } from './area-data.model';
 import { SplitterDirection } from './splitter-direction-type';
 
 /**
@@ -21,7 +20,7 @@ import { SplitterDirection } from './splitter-direction-type';
 @Directive({
     selector: 'split-area'
 })
-export class SplitAreaDirective implements SplitArea {
+export class SplitAreaDirective {
 
     @HostBinding('style.order')
     public order: number;

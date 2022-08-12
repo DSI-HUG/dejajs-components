@@ -9,7 +9,7 @@
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChildren, ElementRef, EventEmitter, HostBinding, Input, Output, QueryList, ViewEncapsulation } from '@angular/core';
 import { Destroy } from '@deja-js/component/core';
-import { filter, fromEvent, map, mergeWith, of, Subject, switchMap, takeUntil, tap } from 'rxjs';
+import { filter, fromEvent, map, mergeWith, of, shareReplay, Subject, switchMap, takeUntil, tap } from 'rxjs';
 
 import { SplitAreaDirective } from './split-area.directive';
 import { SplitterDirection } from './splitter-direction-type';
@@ -105,13 +105,6 @@ export class DejaSplitterComponent extends Destroy {
     ) {
         super();
 
-        const stopDragging$ = fromEvent(document, 'mouseup').pipe(
-            mergeWith(fromEvent(document, 'touchend'), fromEvent(document, 'touchcancel')),
-            tap(() => {
-                this.dragEnd.emit();
-            })
-        );
-
         this.startDragging$.pipe(
             filter(() => !this.disabled),
             switchMap(draggingEvent => {
@@ -122,17 +115,30 @@ export class DejaSplitterComponent extends Destroy {
                 }
 
                 const mouseEvent = draggingEvent.event as MouseEvent;
-                const startPos = this.direction === 'horizontal' ? mouseEvent.pageX : mouseEvent.pageY;
+                const startPos = this.direction === 'horizontal' ? mouseEvent.pageX || mouseEvent.screenX : mouseEvent.pageY || mouseEvent.screenY;
                 const containerSizeInPixels = this.direction === 'horizontal' ? elementRef.nativeElement.offsetWidth : elementRef.nativeElement.offsetHeight;
                 const startSizeInPixelsA = areaA.sizeinPixels;
                 const startSizeInPixelsB = areaB.sizeinPixels;
 
                 this.dragStart.emit();
 
-                return fromEvent<MouseEvent>(document, 'mousemove').pipe(
+                const mouseMove$ = fromEvent<MouseEvent>(document, 'mousemove').pipe(
+                    shareReplay({ bufferSize: 1, refCount: true })
+                );
+
+                const stopDragging$ = mouseMove$.pipe(
+                    filter(event => event.buttons !== 1),
+                    mergeWith(fromEvent(document, 'mouseup'), fromEvent(document, 'touchend'), fromEvent(document, 'touchcancel')),
+                    tap(() => {
+                        this.dragEnd.emit();
+                    })
+                );
+
+                return mouseMove$.pipe(
+                    filter(event => event.buttons === 1),
                     mergeWith(fromEvent<MouseEvent>(document, 'touchmove')),
                     map(event => {
-                        const pos = this.direction === 'horizontal' ? event.pageX : event.pageY;
+                        const pos = this.direction === 'horizontal' ? event.pageX || event.screenX : event.pageY || event.screenY;
                         const diffInPixels = startPos - pos;
                         areaA.size = Math.min(100, Math.max(0, 100 * (startSizeInPixelsA - diffInPixels) / containerSizeInPixels));
                         areaB.size = Math.min(100, Math.max(0, 100 * (startSizeInPixelsB + diffInPixels) / containerSizeInPixels));

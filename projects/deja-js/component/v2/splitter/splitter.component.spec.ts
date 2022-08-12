@@ -17,10 +17,10 @@ import { DejaSplitterComponent } from './splitter.component';
     selector: 'DejaSplitterContainerComponent',
     // eslint-disable-next-line @angular-eslint/component-max-inline-declarations
     template: `<deja-splitter [direction]="'horizontal'">
-                <split-area [size]="25" order="1" minSizePixel="100" (lockEvents)="lockEvents" (unlockEvents)="unlockEvents">
+                <split-area size="25" order="1" minSizePixel="100">
                     <p>Lorem ipsum dolor sit amet...</p>
                 </split-area>
-                <split-area [size]="75" minSizePixel="100">
+                <split-area size="75" minSizePixel="100">
                     <p>Sed ut perspiciatis unde omnis iste natus erro...</p>
                 </split-area>
             </deja-splitter>`
@@ -99,8 +99,8 @@ describe('DejaSplitterContainerComponent', () => {
             sendMouseEvent(gutterElement, 'mousedown', 328, 78, 1);
             sendMouseEvent(gutterElement.ownerDocument, 'mousemove', 428, 78, 1);
             sendMouseEvent(gutterElement.ownerDocument, 'mouseup', 428, 78, 0);
-            void expect(leftAreaElement.clientWidth).toBe(415);
-            void expect(rightAreaElement.clientWidth).toBe(855);
+            void expect(leftAreaElement.clientWidth).toBe(418);
+            void expect(rightAreaElement.clientWidth).toBe(852);
             done();
         });
     }, 10000);
