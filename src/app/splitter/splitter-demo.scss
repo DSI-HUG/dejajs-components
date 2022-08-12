@@ -1,8 +1,12 @@
-:host { 
+:host {
     .container {
         position: relative;
         height: 300px;
         width: 100%;
+
+        deja-splitter {
+            height: 100%;
+            width: 100%;
+        }
     }
 }
-

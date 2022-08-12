@@ -1,0 +1,20 @@
+deja-splitter {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    overflow: hidden;
+
+    split-gutter {
+        flex-grow: 0;
+        flex-shrink: 0;
+        background-position: 50%;
+        background-repeat: no-repeat;
+    }
+
+    split-area {
+        flex-grow: 0;
+        flex-shrink: 1;
+        height: 100%;
+        overflow: hidden;
+    }
+}

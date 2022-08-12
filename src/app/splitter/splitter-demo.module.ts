@@ -12,7 +12,7 @@ import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { DejaSplitterModule } from '@deja-js/component/splitter';
+import { DejaSplitterModule } from '@deja-js/component/v2/splitter';
 
 import { DejaMarkdownModule } from '../../component/markdown/index';
 import { DejaSplitterDemoComponent } from './splitter-demo';
