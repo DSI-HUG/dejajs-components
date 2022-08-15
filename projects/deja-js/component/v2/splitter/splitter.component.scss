@@ -5,9 +5,7 @@ deja-splitter {
     overflow: hidden;
 
     split-area {
-        flex-grow: 0;
-        flex-shrink: 1;
-        height: 100%;
+        flex: 1 1 auto;
         overflow: hidden;
 
         &[splitting] * {
@@ -25,18 +23,30 @@ deja-splitter {
         background-image: none;
     }
 
-    &[direction="horizontal"]:not([disabled]) {
-        .split-gutter {
-            cursor: col-resize;
-            content: " ";
-            background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==");
+    &[direction="horizontal"] {
+        split-area {
+            width: 100%;
+        }
+
+        &:not([disabled]) {
+            .split-gutter {
+                cursor: col-resize;
+                content: " ";
+                background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==");
+            }
         }
     }
 
-    &[direction="vertical"]:not([disabled]) {
-        .split-gutter {
-            cursor: row-resize;
-            background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAFCAMAAABl/6zIAAAABlBMVEUAAADMzMzIT8AyAAAAAXRSTlMAQObYZgAAABRJREFUeAFjYGRkwIMJSeMHlBkOABP7AEGzSuPKAAAAAElFTkSuQmCC");
+    &[direction="vertical"] {
+        split-area {
+            height: 100%;
+        }
+
+        &:not([disabled]) {
+            .split-gutter {
+                cursor: row-resize;
+                background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAFCAMAAABl/6zIAAAABlBMVEUAAADMzMzIT8AyAAAAAXRSTlMAQObYZgAAABRJREFUeAFjYGRkwIMJSeMHlBkOABP7AEGzSuPKAAAAAElFTkSuQmCC");
+            }
         }
     }
 }
