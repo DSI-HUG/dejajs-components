@@ -33,6 +33,7 @@
 @use '../v2/mouse-dragdrop/mouse-dragdrop-theme'as mouseDragdrop2Theme;
 @use '../v2/tree-list/tree-list-theme'as treeList2Theme;
 @use '../v2/viewport/viewport-theme'as viewport2Theme;
+@use '../v2/splitter/splitter-theme'as splitter2Theme;
 
 /** Font icons */
 @import '~@fontsource/material-icons';
@@ -61,6 +62,7 @@
     @include selectTheme.select-theme($custom-theme);
     @include sidenavTheme.sidenav-theme($custom-theme);
     @include splitterTheme.splitter-theme($custom-theme);
+    @include splitter2Theme.splitter-theme($custom-theme);
     @include tooltipTheme.tooltip-theme($custom-theme);
     @include treeListTheme.tree-list-theme($custom-theme);
     @include viewportTheme.viewport-theme($custom-theme);

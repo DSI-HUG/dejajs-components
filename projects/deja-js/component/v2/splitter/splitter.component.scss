@@ -1,0 +1,42 @@
+deja-splitter {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    overflow: hidden;
+
+    split-area {
+        flex-grow: 0;
+        flex-shrink: 1;
+        height: 100%;
+        overflow: hidden;
+
+        &[splitting] * {
+            user-select: none;
+        }
+    }
+
+    .split-gutter {
+        flex-grow: 0;
+        flex-shrink: 0;
+        background-position: 50%;
+        background-repeat: no-repeat;
+        content: none;
+        cursor: default;
+        background-image: none;
+    }
+
+    &[direction="horizontal"]:not([disabled]) {
+        .split-gutter {
+            cursor: col-resize;
+            content: " ";
+            background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==");
+        }
+    }
+
+    &[direction="vertical"]:not([disabled]) {
+        .split-gutter {
+            cursor: row-resize;
+            background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAFCAMAAABl/6zIAAAABlBMVEUAAADMzMzIT8AyAAAAAXRSTlMAQObYZgAAABRJREFUeAFjYGRkwIMJSeMHlBkOABP7AEGzSuPKAAAAAElFTkSuQmCC");
+        }
+    }
+}

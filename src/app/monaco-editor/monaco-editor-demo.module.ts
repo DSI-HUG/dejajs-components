@@ -16,7 +16,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterModule, Routes } from '@angular/router';
 import { DejaMonacoEditorModule } from '@deja-js/component/monaco-editor';
-import { DejaSplitterModule } from '@deja-js/component/splitter';
+import { DejaSplitterModule } from '@deja-js/component/v2/splitter';
 
 import { DejaMarkdownModule } from '../../component/markdown/index';
 import { DejaMonacoEditorDemoComponent } from './monaco-editor-demo.component';

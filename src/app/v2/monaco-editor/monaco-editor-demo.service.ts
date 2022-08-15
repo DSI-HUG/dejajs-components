@@ -21,6 +21,7 @@ export class MonacoEditorDemoService {
 
     public getFile$(filename: string): Observable<string> {
         return this.httpClient.get(`assets/datas/monaco/${filename}`, { observe: 'body', responseType: 'text' }).pipe(
-            map(response => response));
+            map(response => response)
+        );
     }
 }
