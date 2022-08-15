@@ -9,7 +9,7 @@
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChildren, ElementRef, EventEmitter, HostBinding, Input, Output, QueryList, ViewEncapsulation } from '@angular/core';
 import { Destroy } from '@deja-js/component/core';
-import { filter, fromEvent, map, mergeWith, of, shareReplay, Subject, switchMap, takeUntil, tap } from 'rxjs';
+import { filter, fromEvent, map, mergeWith, of, shareReplay, Subject, switchMap, take, takeUntil, tap } from 'rxjs';
 
 import { SplitAreaDirective } from './split-area.directive';
 import { SplitterDirection } from './splitter-direction-type';
@@ -76,6 +76,9 @@ export class DejaSplitterComponent extends Destroy {
         this.ensureDirections();
     }
 
+    @HostBinding('attr.splitting')
+    protected splitting = null as boolean;
+
     @HostBinding('attr.direction')
     private _direction = 'horizontal' as SplitterDirection;
 
@@ -110,11 +113,11 @@ export class DejaSplitterComponent extends Destroy {
             switchMap(draggingEvent => {
                 const areaA = this.areas.find(a => a.order === draggingEvent.index - 1);
                 const areaB = this.areas.find(a => a.order === draggingEvent.index + 1);
+                const mouseEvent = draggingEvent.event as MouseEvent;
                 if (!areaA || !areaB) {
-                    return of(draggingEvent);
+                    return of(mouseEvent);
                 }
 
-                const mouseEvent = draggingEvent.event as MouseEvent;
                 const startPos = this.direction === 'horizontal' ? mouseEvent.pageX || mouseEvent.screenX : mouseEvent.pageY || mouseEvent.screenY;
                 const containerSizeInPixels = this.direction === 'horizontal' ? elementRef.nativeElement.offsetWidth : elementRef.nativeElement.offsetHeight;
                 const startSizeInPixelsA = areaA.sizeinPixels;
@@ -129,29 +132,36 @@ export class DejaSplitterComponent extends Destroy {
                 const stopDragging$ = mouseMove$.pipe(
                     filter(event => event.buttons !== 1),
                     mergeWith(fromEvent(document, 'mouseup'), fromEvent(document, 'touchend'), fromEvent(document, 'touchcancel')),
-                    tap(() => {
+                    map(event => {
                         this.dragEnd.emit();
-                    })
+                        return event as MouseEvent;
+                    }),
+                    shareReplay({ bufferSize: 1, refCount: true })
                 );
 
-                return mouseMove$.pipe(
+                const drag$ = mouseMove$.pipe(
                     filter(event => event.buttons === 1),
                     mergeWith(fromEvent<MouseEvent>(document, 'touchmove')),
-                    map(event => {
+                    tap(event => {
                         const pos = this.direction === 'horizontal' ? event.pageX || event.screenX : event.pageY || event.screenY;
                         const diffInPixels = startPos - pos;
                         areaA.size = Math.min(100, Math.max(0, 100 * (startSizeInPixelsA - diffInPixels) / containerSizeInPixels));
                         areaB.size = Math.min(100, Math.max(0, 100 * (startSizeInPixelsB + diffInPixels) / containerSizeInPixels));
-                        changeDetectorRef.markForCheck();
                         this.dragProgress.emit();
-                        return draggingEvent;
                     }),
                     takeUntil(stopDragging$)
                 );
+
+                return stopDragging$.pipe(
+                    take(1),
+                    mergeWith(drag$)
+                );
             }),
             takeUntil(this.destroyed$)
-        ).subscribe(draggingEvent => {
-            draggingEvent.event.preventDefault();
+        ).subscribe(event => {
+            event.preventDefault();
+            this.splitting = event.type !== 'mouseup' && event.type !== 'touchend' && event.type !== 'touchcancel' || null;
+            changeDetectorRef.markForCheck();
             return false;
         });
     }

@@ -9,6 +9,10 @@ deja-splitter {
         flex-shrink: 1;
         height: 100%;
         overflow: hidden;
+
+        &[splitting] * {
+            user-select: none;
+        }
     }
 
     .split-gutter {
