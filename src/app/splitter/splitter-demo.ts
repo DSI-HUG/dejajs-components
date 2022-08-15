@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Component, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 
 @Component({
     selector: 'deja-splitter-demo',
@@ -14,7 +14,9 @@ import { Component, ViewEncapsulation } from '@angular/core';
         './splitter-demo.scss'
     ],
     templateUrl: './splitter-demo.html',
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
+
 })
 export class DejaSplitterDemoComponent {
 }
