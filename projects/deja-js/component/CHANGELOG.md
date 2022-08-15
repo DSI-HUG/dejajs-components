@@ -1,3 +1,10 @@
+# [14.0.0-next.10](https://github.com/DSI-HUG/dejajs-components/compare/v14.0.0-next.9...v14.0.0-next.10) (2022-08-15)
+
+
+### Bug Fixes
+
+* **splitterV2:** fix binding and style ([8e02d32](https://github.com/DSI-HUG/dejajs-components/commit/8e02d32a2e51cef86b8ecacf6135ecf2daa3c363))
+
 # [14.0.0-next.9](https://github.com/DSI-HUG/dejajs-components/compare/v14.0.0-next.8...v14.0.0-next.9) (2022-08-15)
 
 
