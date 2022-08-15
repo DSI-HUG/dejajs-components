@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
+import { BooleanInput, coerceBooleanProperty, coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChildren, ElementRef, EventEmitter, HostBinding, Input, Output, QueryList, ViewEncapsulation } from '@angular/core';
 import { Destroy } from '@deja-js/component/core';
 import { filter, fromEvent, map, mergeWith, of, shareReplay, Subject, switchMap, take, takeUntil, tap } from 'rxjs';
@@ -32,11 +32,6 @@ interface DraggingEvent {
     templateUrl: './splitter.component.html'
 })
 export class DejaSplitterComponent extends Destroy {
-    /**
-     * Size of the gutter in pixels
-     * By default `10px`
-     */
-    @Input() public gutterSize = 10;
     /**
      * Event triggered when the user start to drag the cursor
      */
@@ -64,6 +59,19 @@ export class DejaSplitterComponent extends Destroy {
         return this._direction;
     }
 
+    /**
+    * Size of the gutter in pixels
+    * By default `10px`
+    */
+    @Input()
+    public set gutterSize(gutterSize: NumberInput) {
+        this._gutterSize = coerceNumberProperty(gutterSize);
+    }
+
+    public get gutterSize(): NumberInput {
+        return this._gutterSize;
+    }
+
     @HostBinding('style.flex-direction')
     protected get styleFlexDirection(): string {
         return this.direction === 'horizontal' ? 'row' : 'column';
@@ -88,6 +96,8 @@ export class DejaSplitterComponent extends Destroy {
     protected startDragging$ = new Subject<DraggingEvent>();
 
     protected areas = new Array<SplitAreaDirective>() as ReadonlyArray<SplitAreaDirective>;
+
+    private _gutterSize = 10;
 
     /** Retourne ou definit si le selecteur est desactivé. */
     @Input()

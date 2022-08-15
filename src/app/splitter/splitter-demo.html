@@ -1,8 +1,7 @@
 <mat-tab-group [selectedIndex]="2">
     <mat-tab label="API REFERENCE">
         <mat-card class="demo-card demo-basic">
-            <deja-markdown
-                [url]="'https://raw.githubusercontent.com/DSI-HUG/dejajs-components/develop/projects/deja-js/component/splitter/readme.md'">
+            <deja-markdown [url]="'https://raw.githubusercontent.com/DSI-HUG/dejajs-components/develop/projects/deja-js/component/splitter/readme.md'">
             </deja-markdown>
         </mat-card>
     </mat-tab>
@@ -78,17 +77,17 @@
         <mat-card class="demo-card">
             <mat-toolbar color="primary">Vertical splitter</mat-toolbar>
             <mat-card-content class="no-padding">
-                <deja-splitter #dejaSplitter [direction]="'vertical'">
-                    <split-area [size]="1" [minSizePixel]="58">
+                <deja-splitter #dejaSplitter direction="vertical" gutterSize="0">
+                    <split-area size="1" minSizePixel="58">
                         Test 1
                     </split-area>
-                    <split-area [size]="48" [minSizePixel]="0">
+                    <split-area size="48" minSizePixel="0">
                         Test 2
                     </split-area>
-                    <split-area [size]="1" [minSizePixel]="30">
+                    <split-area size="1" minSizePixel="30">
                         Test 3
                     </split-area>
-                    <split-area [size]="50" [minSizePixel]="0">
+                    <split-area size="50" minSizePixel="0">
                         Test 4
                     </split-area>
                 </deja-splitter>
