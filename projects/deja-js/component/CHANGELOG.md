@@ -1,3 +1,16 @@
+# [14.0.0-next.9](https://github.com/DSI-HUG/dejajs-components/compare/v14.0.0-next.8...v14.0.0-next.9) (2022-08-15)
+
+
+### Bug Fixes
+
+* **splitterV2:** fix compile and simplify ([d149a30](https://github.com/DSI-HUG/dejajs-components/commit/d149a3070dd1fad10f7e07d19c03d3e2cbe3de5c))
+* **splitterV2:** fix user selection ([2b2a1f3](https://github.com/DSI-HUG/dejajs-components/commit/2b2a1f3e2ff72de270f523c14050978f325bd3da))
+
+
+### Features
+
+* splitter V2 ([f275d54](https://github.com/DSI-HUG/dejajs-components/commit/f275d544222427526af3cd29dff3eec4bc0ab03b))
+
 # [14.0.0-next.8](https://github.com/DSI-HUG/dejajs-components/compare/v14.0.0-next.7...v14.0.0-next.8) (2022-08-11)
 
 
