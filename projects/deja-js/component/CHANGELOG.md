@@ -1,3 +1,5 @@
+# [14.0.0-develop.2](https://github.com/DSI-HUG/dejajs-components/compare/v14.0.0-develop.1...v14.0.0-develop.2) (2022-08-26)
+
 # [14.0.0-develop.1](https://github.com/DSI-HUG/dejajs-components/compare/v13.8.0-develop.6...v14.0.0-develop.1) (2022-08-26)
 
 
