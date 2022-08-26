@@ -1,6 +1,7 @@
 name: Deploy docs to GitHub Pages
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - master
@@ -12,28 +13,30 @@ jobs:
     steps:
       - name: Checkout sources
         uses: actions/checkout@v3
-        
+
       - name: Setup node
         uses: actions/setup-node@v3
         with:
           node-version: 14.x
           registry-url: https://registry.npmjs.org/
           cache: npm
-          
+
       - name: Install latest npm
         run: npm install -g npm@latest
-        
+
       - name: Install dependencies
         run: npm clean-install
-        
+
       - name: Build lib
         run: npm run build:lib
-        
+
       - name: Build demo
         run: npm run build
-        
+
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.DSI_HUG_BOT_GITHUB_TOKEN }}
           publish_dir: ./dist/demo
+          user_name: dsi-hug-bot
+          user_email: dsi-hug-github@hcuge.ch

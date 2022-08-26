@@ -7,7 +7,7 @@
  */
 import { ChangeDetectorRef, Component, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { Destroy } from '@deja-js/component/core';
+import { ControlsOf, Destroy } from '@deja-js/component/core';
 import { GroupingService, IItemBase, IItemTree, IViewPortItem } from '@deja-js/component/core/item-list';
 import { IDejaDragEvent } from '@deja-js/component/dragdrop';
 import { IDejaMouseDraggableContext, IDejaMouseDroppableContext, IDropCursorInfos } from '@deja-js/component/mouse-dragdrop';
@@ -36,6 +36,10 @@ interface ViewPortInfo {
     value: string;
 }
 
+interface FruitForm {
+    fruitName: string;
+}
+
 @Component({
     providers: [CountriesListService],
     encapsulation: ViewEncapsulation.None,
@@ -58,8 +62,8 @@ export class DejaTreeListDemoComponent extends Destroy {
     public countriesForMultiselect: Country[];
     public onDemandGroupedCountries: ICountryGroup[];
     public multiselectModel: IItemTree<unknown>[];
-    public fruitForm: FormGroup;
-    public fruitFormModels: FormGroup;
+    public fruitForm: FormGroup<ControlsOf<FruitForm>>;
+    public fruitFormModels: FormGroup<ControlsOf<FruitForm>>;
     public fruits$: Observable<string[]>;
     public countries$: Observable<Country[]>;
     public groupedCountries: ICountryGroup[];

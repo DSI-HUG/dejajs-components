@@ -117,6 +117,7 @@ export class DejaSplitterComponent implements OnChanges, OnDestroy {
     public constructor(private cdRef: ChangeDetectorRef,
         private elementRef: ElementRef<HTMLElement>,
         private renderer: Renderer2) {
+        console.warn('@deja-js/component/splitter is deprecated, and will be removed in a further version. Please use @deja-js/component/v2/splitter instead.');
     }
 
     /**

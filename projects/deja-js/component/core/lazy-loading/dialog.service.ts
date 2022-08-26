@@ -27,12 +27,10 @@ export abstract class DialogService<ReturnType, DataType> {
             take(1),
             switchMap(dialogConfig => this.lazyLoaderService.loadModule$(this.getModule()).pipe(
                 switchMap(moduleInfos => {
-                    const config = { ...matDialogConfig || {}, ...dialogConfig };
+                    const config = { ...matDialogConfig || {} as MatDialogConfig<DataType>, ...dialogConfig };
                     config.minWidth = config.minWidth || '400px';
+                    config.injector = moduleInfos.injector;
 
-                    // injector is private in MatDialog
-                    // eslint-disable-next-line @typescript-eslint/dot-notation
-                    this.dialog['_injector'] = moduleInfos.injector;
                     this.dialogRef = this.dialog.open<unknown, DataType, ReturnType>(moduleInfos.module.componentType, config);
 
                     return this.dialogRef.afterClosed();
@@ -43,7 +41,7 @@ export abstract class DialogService<ReturnType, DataType> {
 
     public openDialog$(dialogData?: DataType, dialogConfig?: MatDialogConfig<DataType>): Observable<ReturnType> {
         dialogConfig = dialogConfig || {};
-        dialogConfig.data = dialogData || {} as DataType;
+        dialogConfig.data = dialogData ?? {} as DataType;
         this.openDialogSub$.next(dialogConfig);
         return this.dialogResponse$;
     }

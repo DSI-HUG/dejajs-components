@@ -10,6 +10,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewEncapsulatio
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MAT_DATE_FORMATS } from '@angular/material/core';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
+import { ControlsOf } from '@deja-js/component/core';
 
 export const myFormats = {
     parse: {
@@ -23,6 +24,9 @@ export const myFormats = {
     }
 };
 
+interface DateForm {
+    date7: Date;
+}
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -46,7 +50,7 @@ export class DejaTimePickerDemoComponent {
     public date6 = new Date();
     public date7 = new Date(2021, 4, 28, 12, 55, 0);
     public disable6 = true;
-    public dateForm: FormGroup;
+    public dateForm: FormGroup<ControlsOf<DateForm>>;
 
     public constructor(private changeDetectorRef: ChangeDetectorRef, private fb: FormBuilder) {
         this.dateForm = this.fb.group({

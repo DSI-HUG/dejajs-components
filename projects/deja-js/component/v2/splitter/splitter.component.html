@@ -1,0 +1,5 @@
+<ng-content></ng-content>
+<ng-template ngFor let-area [ngForOf]="areas" let-index="index" let-last="last">
+    <div class="split-gutter" *ngIf="last === false" [style.order]="index*2+1" [style.flex-basis.px]="gutterSize" (mousedown)="startDragging$.next({ event: $event, index: index*2+1 })" (touchstart)="startDragging$.next({ event: $event, index: index*2+1 })">
+    </div>
+</ng-template>

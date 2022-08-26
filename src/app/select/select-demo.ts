@@ -8,7 +8,7 @@
 
 import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { Destroy } from '@deja-js/component/core';
+import { ControlsOf, Destroy } from '@deja-js/component/core';
 import { IItemBase, IItemTree, IViewPortItem } from '@deja-js/component/core/item-list';
 import { DejaSelectComponent } from '@deja-js/component/select';
 import { delay, map, Observable, of, Subject, Subscription, take, takeUntil, tap } from 'rxjs';
@@ -18,6 +18,10 @@ import { CountriesService, Country } from '../services/countries.service';
 import { CountriesListService } from '../services/countries-list.service';
 import { NewsService } from '../services/news.service';
 import { cheeseValidator } from './validators';
+
+interface FruitForm {
+    fruitName: string;
+}
 
 @Component({
     providers: [CountriesListService],
@@ -48,8 +52,8 @@ export class SelectDemoComponent extends Destroy {
     public dialogResponse$: Subject<string> = new Subject<string>();
     public readonlyMultiSelect = false;
     public disableMultiSelect = false;
-    public fruitForm: FormGroup;
-    public fruitFormModels: FormGroup;
+    public fruitForm: FormGroup<ControlsOf<FruitForm>>;
+    public fruitFormModels: FormGroup<ControlsOf<FruitForm>>;
     public fruits$: Observable<string[]>;
 
     // eslint-disable-next-line rxjs/finnish

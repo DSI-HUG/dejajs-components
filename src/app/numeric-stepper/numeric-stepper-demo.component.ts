@@ -17,7 +17,7 @@ import { DejaNumericStepperComponent } from '@deja-js/component/numeric-stepper'
 })
 export class DejaNumericStepperDemoComponent {
     public tabIndex = 1;
-    public control = new FormControl(null, Validators.required);
+    public control = new FormControl(null as number, Validators.required);
 
     public focus(numStepper: DejaNumericStepperComponent): void {
         numStepper.setFocus();

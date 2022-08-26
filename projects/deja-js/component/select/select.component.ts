@@ -901,12 +901,9 @@ export class DejaSelectComponent extends ItemListBase<unknown> implements CanUpd
         fromEvent<Event>(this.htmlInputElement, 'click').pipe(
             filter(() => !this.dropdownVisible && !this.disabled),
             takeUntil(this.destroyed$)
-        ).subscribe(event => {
+        ).subscribe(_event => {
             if (this.isModeSelect) {
                 this.showDropDown();
-            } else {
-                this.htmlInputElement.select();
-                this.filter$.next(event);
             }
         });
 

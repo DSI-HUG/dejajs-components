@@ -13,7 +13,12 @@ import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { timer } from 'rxjs';
 
+import { ControlsOf } from '../core';
 import { DejaTimePickerComponent, DejaTimePickerModule } from '.';
+
+interface DateForm {
+    dateValue: Date;
+}
 
 @Component({
     selector: 'DejaTimePickerContainerComponent',
@@ -25,7 +30,7 @@ class DejaTimePickerContainerComponent {
     @ViewChild(DejaTimePickerComponent) public timePicker: DejaTimePickerComponent;
 
     public dateValue = new Date(2021, 4, 12, 9, 55);
-    public dateForm: FormGroup;
+    public dateForm: FormGroup<ControlsOf<DateForm>>;
 
     public constructor(private fb: FormBuilder) {
         this.dateForm = this.fb.group({

@@ -7,7 +7,7 @@
  */
 import { ChangeDetectorRef, Component, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { Destroy } from '@deja-js/component/core';
+import { ControlsOf, Destroy } from '@deja-js/component/core';
 import { GroupingService } from '@deja-js/component/core/item-list';
 import { Item, SortInfos, SortingService } from '@deja-js/component/v2/item-list';
 import { DropCursorInfos, MouseDraggableContext, MouseDroppableContext } from '@deja-js/component/v2/mouse-dragdrop';
@@ -37,6 +37,10 @@ interface ViewPortInfo {
     value: string;
 }
 
+interface FruitForm {
+    fruitName: string;
+}
+
 @Component({
     providers: [CountriesListService],
     encapsulation: ViewEncapsulation.None,
@@ -58,8 +62,8 @@ export class TreeListDemoComponent extends Destroy {
     public deepCountries$: Observable<DeepCountry[]>;
     public countriesForMultiselect: Country[];
     public multiselectModel: Country[];
-    public fruitForm: FormGroup;
-    public fruitFormModels: FormGroup;
+    public fruitForm: FormGroup<ControlsOf<FruitForm>>;
+    public fruitFormModels: FormGroup<ControlsOf<FruitForm>>;
     public fruits$: Observable<string[]>;
     public countries$: Observable<Country[]>;
     public countryItems$: Observable<Item<Country>[]>;
@@ -118,7 +122,7 @@ export class TreeListDemoComponent extends Destroy {
         public newsService: NewsService,
         public groupingService: GroupingService,
         public sortingService: SortingService,
-        private fb: FormBuilder
+        private formBuilder: FormBuilder
     ) {
         super();
         this.multiselectModel = JSON.parse('[{"naqme":"ÅlandIslands","code":"AX","label":"ÅlandIslands","depth":0,"odd":true,"selected":true},{"naqme":"AmericanSamoa","code":"AS","label":"AmericanSamoa","depth":0,"odd":false,"selected":true},{"naqme":"Argentina","code":"AR","label":"Argentina","depth":0,"odd":false,"selected":true},{"naqme":"ChristmasIsland","code":"CX","label":"ChristmasIsland","depth":0,"odd":false,"selected":true},{"naqme":"Egypt","code":"EG","label":"Egypt","depth":0,"odd":true,"selected":true},{"naqme":"Dominica","code":"DM","label":"Dominica","depth":0,"odd":false,"selected":true}]') as Country[];
@@ -287,11 +291,11 @@ export class TreeListDemoComponent extends Destroy {
             shareReplay({ bufferSize: 1, refCount: false })
         );
 
-        this.fruitForm = this.fb.group({
+        this.fruitForm = this.formBuilder.group({
             fruitName: ['', [cheeseValidator]]
         });
 
-        this.fruitFormModels = this.fb.group({
+        this.fruitFormModels = this.formBuilder.group({
             fruitName: ['']
         });
 

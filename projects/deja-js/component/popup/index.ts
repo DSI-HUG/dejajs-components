@@ -36,7 +36,6 @@ import { DejaPopupService } from './service/popup.service';
         DejaPopupToolbarComponent,
         DejaPopupTrayComponent
     ],
-    entryComponents: [DejaPopupActionsComponent, DejaPopupAdvancedComponent, DejaPopupComponent],
     exports: [
         DejaPopupActionsComponent,
         DejaPopupAdvancedComponent,

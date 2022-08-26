@@ -383,7 +383,8 @@ describe('ViewPortComponent', () => {
         viewPortService.viewPort$.pipe(
             delay(1),
             tap(() => fixture.detectChanges(true)),
-            debounceTime(10)
+            debounceTime(10),
+            take(2)
         ).subscribe(vp => {
             // Bind view port
             fixture.detectChanges();

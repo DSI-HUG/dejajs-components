@@ -14,8 +14,12 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { FormGroupDirective, NgControl, NgForm } from '@angular/forms';
 import { _Constructor, CanUpdateErrorState, ErrorStateMatcher, mixinErrorState } from '@angular/material/core';
+import { Subject } from 'rxjs';
 
 export class MatInputBase {
+    // eslint-disable-next-line rxjs/finnish
+    public stateChanges: Subject<void>;
+
     public constructor(
         public _defaultErrorStateMatcher: ErrorStateMatcher,
         public _parentForm: NgForm,

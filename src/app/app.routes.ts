@@ -19,6 +19,7 @@ const routes: Routes = [
     { path: 'date-picker', loadChildren: () => import('./date-picker/date-picker-demo.module').then(m => m.DejaDatePickerDemoModule), data: { title: 'Date Picker' } },
     { path: 'editor', loadChildren: () => import('./editor/editor-demo.module').then(m => m.DejaEditorDemoModule), data: { title: 'Editor' } },
     { path: 'iframe', loadChildren: () => import('./iframe/iframe-demo.module').then(m => m.DejaIframeDemoModule), data: { title: 'Iframe' } },
+    { path: 'lazy-dialog', loadChildren: () => import('./lazy-dialog/lazy-dialog-demo.module').then(m => m.LazyDialogDemoModule), data: { title: 'Lazy Dialog' } },
     { path: 'message-box', loadChildren: () => import('./message-box/message-box-demo.module').then(m => m.DejaMessageBoxDemoModule), data: { title: 'Message Box' } },
     { path: 'monaco-editor', loadChildren: () => import('./monaco-editor/monaco-editor-demo.module').then(m => m.MonacoEditorDemoModule), data: { title: 'Monaco Editor' } },
     { path: 'numeric-stepper', loadChildren: () => import('./numeric-stepper/numeric-stepper-demo.module').then(m => m.DejaNumericStepperDemoModule), data: { title: 'Numeric Stepper' } },

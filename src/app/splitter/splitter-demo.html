@@ -1,80 +1,97 @@
-<mat-tab-group [selectedIndex]="tabIndex" (selectedTabChange)="tabIndex = $event.index">
-    <!--<mat-tab label="OVERVIEW">-->
-    <!--<mat-card class="demo-card demo-basic">-->
-    <!--TODO-->
-    <!--</mat-card>-->
-    <!--</mat-tab>-->
-    <mat-tab label="API REFERENCE"></mat-tab>
-    <mat-tab label="EXAMPLES"></mat-tab>
+<mat-tab-group [selectedIndex]="2">
+    <mat-tab label="API REFERENCE">
+        <mat-card class="demo-card demo-basic">
+            <deja-markdown [url]="'https://raw.githubusercontent.com/DSI-HUG/dejajs-components/develop/projects/deja-js/component/splitter/readme.md'">
+            </deja-markdown>
+        </mat-card>
+    </mat-tab>
+    <mat-tab label="EXAMPLES">
+        <div>
+            <mat-card class="demo-card">
+                <mat-toolbar color="primary">Horizontal splitter</mat-toolbar>
+                <mat-card-content class="no-padding">
+                    <div class="container">
+                        <deja-splitter direction="horizontal" order="1">
+                            <split-area size="25" minSizePixel="100">
+                                <p>Lorem ipsum dolor sit amet...</p>
+                            </split-area>
+                            <split-area size="75" minSizePixel="100">
+                                <p>Sed ut perspiciatis unde omnis iste natus erro...</p>
+                            </split-area>
+                        </deja-splitter>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+
+            <mat-card class="demo-card">
+                <mat-toolbar color="primary">Vertical splitter</mat-toolbar>
+                <mat-card-content class="no-padding">
+                    <div class="container">
+                        <deja-splitter direction="vertical">
+                            <split-area size="25">
+                                <p>Lorem ipsum dolor sit amet...</p>
+                            </split-area>
+                            <split-area size="75">
+                                <p>Sed ut perspiciatis unde omnis iste natus erro...</p>
+                            </split-area>
+                        </deja-splitter>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+
+            <mat-card class="demo-card">
+                <mat-toolbar color="primary">Multiple splitter</mat-toolbar>
+                <mat-card-content class="no-padding">
+                    <div class="container">
+                        <deja-splitter direction="horizontal">
+                            <split-area size="40">
+                                <deja-splitter direction="vertical">
+                                    <split-area size="30">
+                                        <p>Lorem ipsum dolor sit amet...</p>
+                                    </split-area>
+                                    <split-area size="40">
+                                        <p>Sed ut perspiciatis unde omnis iste natus erro...</p>
+                                    </split-area>
+                                    <split-area size="30">
+                                        <p>Lorem ipsum dolor sit amet...</p>
+                                    </split-area>
+                                </deja-splitter>
+                            </split-area>
+                            <split-area size="60">
+                                <deja-splitter direction="vertical">
+                                    <split-area size="50">
+                                        <p>Lorem ipsum dolor sit amet...</p>
+                                    </split-area>
+                                    <split-area size="50">
+                                        <p>Sed ut perspiciatis unde omnis iste natus erro...</p>
+                                    </split-area>
+                                </deja-splitter>
+                            </split-area>
+                        </deja-splitter>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+    </mat-tab>
+    <mat-tab label="EXAMPLE FULL PAGE" bodyClass="fixed-height">
+        <mat-card class="demo-card">
+            <mat-toolbar color="primary">Vertical splitter</mat-toolbar>
+            <mat-card-content class="no-padding">
+                <deja-splitter #dejaSplitter direction="vertical">
+                    <split-area size="1" minSizePixel="58">
+                        Test 1
+                    </split-area>
+                    <split-area size="48" minSizePixel="0">
+                        Test 2
+                    </split-area>
+                    <split-area size="1" minSizePixel="30">
+                        Test 3
+                    </split-area>
+                    <split-area size="50" minSizePixel="0">
+                        Test 4
+                    </split-area>
+                </deja-splitter>
+            </mat-card-content>
+        </mat-card>
+    </mat-tab>
 </mat-tab-group>
-
-<mat-card class="demo-card demo-basic" *ngIf="tabIndex === 0">
-    <deja-markdown [url]="'https://raw.githubusercontent.com/DSI-HUG/dejajs-components/develop/projects/deja-js/component/splitter/readme.md'"></deja-markdown>
-</mat-card>
-
-<div *ngIf="tabIndex === 1">
-    <mat-card class="demo-card">
-        <mat-toolbar color="primary">Horizontal splitter</mat-toolbar>
-        <mat-card-content class="no-padding">
-            <div class="container">
-                <deja-splitter [direction]="'horizontal'" order="1">
-                    <split-area [size]="25" minSizePixel="100">
-                        <p>Lorem ipsum dolor sit amet...</p>
-                    </split-area>
-                    <split-area [size]="75" minSizePixel="100">
-                        <p>Sed ut perspiciatis unde omnis iste natus erro...</p>
-                    </split-area>
-                </deja-splitter>
-            </div>
-        </mat-card-content>
-    </mat-card>
-
-    <mat-card class="demo-card">
-        <mat-toolbar color="primary">Vertical splitter</mat-toolbar>
-        <mat-card-content class="no-padding">
-            <div class="container">
-                <deja-splitter [direction]="'vertical'">
-                    <split-area [size]="25">
-                        <p>Lorem ipsum dolor sit amet...</p>
-                    </split-area>
-                    <split-area [size]="75">
-                        <p>Sed ut perspiciatis unde omnis iste natus erro...</p>
-                    </split-area>
-                </deja-splitter>
-            </div>
-        </mat-card-content>
-    </mat-card>
-
-    <mat-card class="demo-card">
-        <mat-toolbar color="primary">Multiple splitter</mat-toolbar>
-        <mat-card-content class="no-padding">
-            <div class="container">
-                <deja-splitter [direction]="'horizontal'">
-                    <split-area [size]="40">
-                        <deja-splitter [direction]="'vertical'">
-                            <split-area [size]="30">
-                                <p>Lorem ipsum dolor sit amet...</p>
-                            </split-area>
-                            <split-area [size]="40">
-                                <p>Sed ut perspiciatis unde omnis iste natus erro...</p>
-                            </split-area>
-                            <split-area [size]="30">
-                                <p>Lorem ipsum dolor sit amet...</p>
-                            </split-area>
-                        </deja-splitter>
-                    </split-area>
-                    <split-area [size]="60">
-                        <deja-splitter [direction]="'vertical'">
-                            <split-area [size]="50">
-                                <p>Lorem ipsum dolor sit amet...</p>
-                            </split-area>
-                            <split-area [size]="50">
-                                <p>Sed ut perspiciatis unde omnis iste natus erro...</p>
-                            </split-area>
-                        </deja-splitter>
-                    </split-area>
-                </deja-splitter>
-            </div>
-        </mat-card-content>
-    </mat-card>
-</div>

@@ -1,0 +1,36 @@
+<mat-toolbar class="dialog-toolbar" color="primary">
+    <span class="dialog-title">Modifier l'apparence du groupe</span>
+    <em class="dialog-action material-icons" [mat-dialog-close]="null">close</em>
+</mat-toolbar>
+
+<form [formGroup]="formGroup" id="dialog-container" class="dialog-container">
+    <div class="border-dimensions">
+        <div class="border-width">
+            <h4>Border Width:</h4>
+            <mat-form-field appearance="outline">
+                <input matInput type="number" autocomplete="off" formControlName="borderWidth" [min]="min" [max]="max" #borderWidthStepper="matInput" />
+                <deja-numeric-stepper layout="horizontal-inlay" [input]="borderWidthStepper"></deja-numeric-stepper>
+            </mat-form-field>
+        </div>
+        <div class="border-positions">
+            <h4>Border Position:</h4>
+            <mat-checkbox color="primary" formControlName="topBorder">Top</mat-checkbox>
+            <mat-checkbox color="primary" formControlName="rightBorder">Right</mat-checkbox>
+            <mat-checkbox color="primary" formControlName="bottomBorder">Bottom</mat-checkbox>
+            <mat-checkbox color="primary" formControlName="leftBorder">Left</mat-checkbox>
+        </div>
+    </div>
+    <div class="border-color">
+        <h4>Color Selection:</h4>
+        <deja-color-selector [colors]="materialColorService.colors" formControlName="borderColor"></deja-color-selector>
+    </div>
+</form>
+
+<div class="dialog-buttons">
+    <button type="button" mat-button id="cancelbtn" [mat-dialog-close]="null" color="primary">
+        Cancel
+    </button>
+    <button type="button" mat-stroked-button id="okbtn" [mat-dialog-close]="createModelFromForm(formGroup.value)" color="primary">
+        ok
+    </button>
+</div>

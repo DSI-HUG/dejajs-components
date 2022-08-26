@@ -14,8 +14,6 @@ import { DejaIframeDemoComponent } from './iframe-demo/iframe-demo.component';
     imports: [
         CommonModule,
         routing
-    ],
-    entryComponents: [
     ]
 })
 export class DejaIframeDemoModule {

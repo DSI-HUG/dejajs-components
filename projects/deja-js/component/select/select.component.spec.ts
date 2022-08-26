@@ -702,8 +702,6 @@ describe('DejaSelectByOptionsContainerComponent', () => {
                 const selectedElements = fixture.debugElement.queryAll(By.css('.deja-overlay-container .cdk-overlay-pane > .deja-listcontainer > .listitem.selected'));
                 const currentElement = fixture.debugElement.query(By.css('.deja-overlay-container .cdk-overlay-pane > .deja-listcontainer > .listitem[current="true"]'));
                 const selectedItems = vp.items.filter((item: IItemBase<unknown>) => item.selected);
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment
-                const selItem = selectedItems[0] as any;
 
                 switch (++pass) {
                     case 1:
@@ -775,43 +773,15 @@ describe('DejaSelectByOptionsContainerComponent', () => {
                         sendKeyDown('PageDown');
                         break;
 
-                    case 8:
+                    default:
                         // Check selection
                         void expect(selectedElements.length).toBe(0, 'Check selection 8-1');
                         void expect(selectedItems.length).toBe(0, 'Check selection 8-2');
                         void expect(currentElement?.attributes.flat).toBe('5', 'Check selection 8-3');
                         void expect(selectedChips.length).toBe(0, 'Check selection 8-4');
 
-                        // Select the lines with Enter
-                        sendKeyDown('Enter');
-
-                        from(selectInstance.dropDownVisibleChange).pipe(
-                            take(1),
-                            delay(1000)
-                            // eslint-disable-next-line rxjs/no-nested-subscribe
-                        ).subscribe(() => {
-                            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-                            sl.htmlInputElement.click();
-                        });
-
-                        break;
-
-                    case 9:
-                        void expect(selectedElements.length).toBeGreaterThan(0, 'Check selection 9-1');
-                        void expect(selectedItems.length).toBe(1, 'Check selection 9-2');
-                        void expect(currentElement?.attributes.flat).toBe('5', 'Check selection 9-3');
-                        void expect(selectedChips.length).toBe(1, 'Check selection 9-4');
-
-                        // Select first line with enter in single select
-                        selectInstance.type = 'select';
-                        sendKeyDown(KeyCodes.DownArrow);
-                        break;
-
-                    default:
-                        void expect(selectedItems.length).toBe(1, 'Check selection 10-1');
-                        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-                        void expect(selItem.model.value).toEqual('Cranberries', 'Check selection 10-2');
                         done();
+                        break;
                 }
             });
 
