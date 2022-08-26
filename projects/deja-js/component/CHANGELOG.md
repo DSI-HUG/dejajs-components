@@ -1,3 +1,35 @@
+# [14.0.0-develop.1](https://github.com/DSI-HUG/dejajs-components/compare/v13.8.0-develop.6...v14.0.0-develop.1) (2022-08-26)
+
+
+### Bug Fixes
+
+* controlsOf ([85e9945](https://github.com/DSI-HUG/dejajs-components/commit/85e994542ff2582b62b78e7f2c87b5c4f15693c6))
+* controlsOf ([746f4d2](https://github.com/DSI-HUG/dejajs-components/commit/746f4d2654d326cc0d1e4ee1580b23cb4eff1e86))
+* fix demo [skip ci] ([672b5b7](https://github.com/DSI-HUG/dejajs-components/commit/672b5b7a0b5edd4536a204ea45c5e146c70951f2))
+* fix dialog datatype for empty string or zero ([b4e7cc3](https://github.com/DSI-HUG/dejajs-components/commit/b4e7cc302db45e7ff21f7161893ec73fa8962dc5))
+* fix lazy loading and add demo, remove untyped forms ([36de100](https://github.com/DSI-HUG/dejajs-components/commit/36de10051d55c5f6725ac436306016621ad1317d))
+* fix lazy loading and add demo, remove untyped forms ([8156e3a](https://github.com/DSI-HUG/dejajs-components/commit/8156e3a3c09ee4c6c4aaa338d6d0e61811b80176))
+* **splitterV2:** fix binding and style ([8e02d32](https://github.com/DSI-HUG/dejajs-components/commit/8e02d32a2e51cef86b8ecacf6135ecf2daa3c363))
+* **splitterV2:** fix compile and simplify ([d149a30](https://github.com/DSI-HUG/dejajs-components/commit/d149a3070dd1fad10f7e07d19c03d3e2cbe3de5c))
+* **splitterV2:** fix user selection ([2b2a1f3](https://github.com/DSI-HUG/dejajs-components/commit/2b2a1f3e2ff72de270f523c14050978f325bd3da))
+* **splitter:** when refresh we check the min area size ([ecd442e](https://github.com/DSI-HUG/dejajs-components/commit/ecd442e70b8d8048af323731067b7429e7e94235))
+* try fix injector for dialogs ([5158419](https://github.com/DSI-HUG/dejajs-components/commit/5158419f5a996bac0b939809f6f46b78c5e40bfa))
+
+
+### chore
+
+* update ng14 ([5cea025](https://github.com/DSI-HUG/dejajs-components/commit/5cea0256f874807cabf7505c88cbf947ccf8c135))
+
+
+### Features
+
+* splitter V2 ([f275d54](https://github.com/DSI-HUG/dejajs-components/commit/f275d544222427526af3cd29dff3eec4bc0ab03b))
+
+
+### BREAKING CHANGES
+
+* init dejajs version 14
+
 # [14.0.0-next.10](https://github.com/DSI-HUG/dejajs-components/compare/v14.0.0-next.9...v14.0.0-next.10) (2022-08-15)
 
 
