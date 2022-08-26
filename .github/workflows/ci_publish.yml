@@ -3,8 +3,7 @@ name: Publish
 on:
   push:
     branches:
-      - develop
-      - master
+      - 13.x.x
 
 jobs:
   ci_publish:
@@ -43,12 +42,3 @@ jobs:
           GIT_COMMITTER_NAME: dsi-hug-bot
           GIT_COMMITTER_EMAIL: dsi-hug-github@hcuge.ch
         run: npm run release:ci
-
-      - name: Merge release back to develop
-        if: github.ref == 'refs/heads/master'
-        uses: everlytic/branch-merge@1.1.2
-        with:
-          github_token: ${{ secrets.DSI_HUG_BOT_GITHUB_TOKEN }}
-          source_ref: 'master'
-          target_branch: 'develop'
-          commit_message_template: 'merge branch {source_ref} of github.com:DSI-HUG/dejajs-components into {target_branch} [skip ci]'
