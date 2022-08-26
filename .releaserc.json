@@ -13,28 +13,28 @@
                 "preset": "angular",
                 "releaseRules": [{
                         "breaking": true,
-                        "release": "minor"
+                        "release": "major"
                     },
                     {
                         "type": "docs",
                         "scope": "README",
-                        "release": "patch"
+                        "release": "major"
                     },
                     {
                         "type": "refactor",
-                        "release": "patch"
+                        "release": "major"
                     },
                     {
                         "type": "style",
-                        "release": "patch"
+                        "release": "major"
                     },
                     {
                         "type": "ci",
-                        "release": "patch"
+                        "release": "major"
                     },
                     {
                         "type": "chore",
-                        "release": "minor"
+                        "release": "major"
                     }
                 ],
                 "parserOpts": {
