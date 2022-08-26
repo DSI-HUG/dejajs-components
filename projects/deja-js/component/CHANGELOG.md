@@ -1,3 +1,15 @@
+# [14.0.0](https://github.com/DSI-HUG/dejajs-components/compare/v13.8.0...v14.0.0) (2022-08-26)
+
+
+### Continuous Integration
+
+* publish 14.0.0 ([3367446](https://github.com/DSI-HUG/dejajs-components/commit/3367446ca3f2cdfa0f0e7844bf8c9d224e9a4de3))
+
+
+### BREAKING CHANGES
+
+* dejajs version 14
+
 # [13.8.0](https://github.com/DSI-HUG/dejajs-components/compare/v13.7.0...v13.8.0) (2022-08-26)
 
 
