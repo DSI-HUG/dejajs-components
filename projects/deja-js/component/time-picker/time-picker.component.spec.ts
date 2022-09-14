@@ -6,60 +6,66 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Component, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ControlsOf } from '@deja-js/component/core';
 import { timer } from 'rxjs';
 
-import { ControlsOf } from '../core';
-import { DejaTimePickerComponent, DejaTimePickerModule } from '.';
+import { DejaTimePickerModule } from './index';
+import { DejaTimePickerComponent } from './time-picker.component';
 
-interface DateForm {
+interface DateFormValues {
     dateValue: Date;
 }
 
+type DateFormControls = ControlsOf<DateFormValues>;
+
+interface DurationFormControls {
+    durationValue: FormControl<Duration>;
+}
+
 @Component({
-    selector: 'DejaTimePickerContainerComponent',
+    selector: 'DejaTimePickerWithDateContainerComponent',
+    changeDetection: ChangeDetectionStrategy.OnPush,
     template: `<form [formGroup]="dateForm">
                 <deja-time-picker formControlName="dateValue" [step]="5"></deja-time-picker>
                 </form>`
 })
-class DejaTimePickerContainerComponent {
+class DejaTimePickerWithDateContainerComponent {
     @ViewChild(DejaTimePickerComponent) public timePicker: DejaTimePickerComponent;
 
-    public dateValue = new Date(2021, 4, 12, 9, 55);
-    public dateForm: FormGroup<ControlsOf<DateForm>>;
+    public dateForm: FormGroup<DateFormControls>;
 
-    public constructor(private fb: FormBuilder) {
-        this.dateForm = this.fb.group({
-            dateValue: this.dateValue
+    public constructor() {
+        this.dateForm = new FormGroup<DateFormControls>({
+            dateValue: new FormControl(new Date(2021, 4, 12, 9, 55))
         });
     }
 }
 
-describe('DejaTimePickerComponent', () => {
+describe('DejaTimePickerDateComponent', () => {
     let component: DejaTimePickerComponent;
-    let containerComponent: DejaTimePickerContainerComponent;
-    let fixture: ComponentFixture<DejaTimePickerContainerComponent>;
+    let containerComponent: DejaTimePickerWithDateContainerComponent;
+    let fixture: ComponentFixture<DejaTimePickerWithDateContainerComponent>;
 
     beforeEach(waitForAsync(() => {
         void TestBed.configureTestingModule({
             declarations: [
-                DejaTimePickerContainerComponent
+                DejaTimePickerWithDateContainerComponent
             ],
             imports: [
                 BrowserAnimationsModule,
                 DejaTimePickerModule,
                 ReactiveFormsModule
-            ],
-            providers: [FormBuilder]
+            ]
         }).compileComponents();
 
-        fixture = TestBed.createComponent(DejaTimePickerContainerComponent);
+        fixture = TestBed.createComponent(DejaTimePickerWithDateContainerComponent);
         component = fixture.debugElement.query(By.directive(DejaTimePickerComponent)).componentInstance as DejaTimePickerComponent;
-        containerComponent = fixture.debugElement.componentInstance as DejaTimePickerContainerComponent;
+        containerComponent = fixture.debugElement.componentInstance as DejaTimePickerWithDateContainerComponent;
         fixture.detectChanges();
     }));
 
@@ -110,7 +116,7 @@ describe('DejaTimePickerComponent', () => {
         const hoursElement = fixture.componentInstance.timePicker.hours.nativeElement;
         const minutesElement = fixture.componentInstance.timePicker.minutes.nativeElement;
 
-        // Add a new caracter in existing value
+        // Add a new character in existing value
         const $event = new KeyboardEvent('keydown', { key: '1', cancelable: true });
         void expect($event.key).toEqual('1');
         fixture.componentInstance.timePicker.onKeyDown($event, 'hours');
@@ -155,6 +161,154 @@ describe('DejaTimePickerComponent', () => {
             void expect(minutesElement).toEqual(document.activeElement as HTMLInputElement);
             void expect(hoursElement.value).toEqual('12');
             void expect(minutesElement.value).toEqual('55');
+            void expect(0).toEqual(minutesElement.selectionStart);
+            void expect(2).toEqual(minutesElement.selectionEnd);
+            done();
+        });
+    });
+});
+
+@Component({
+    selector: 'DejaTimePickerWithDurationContainerComponent',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    template: `
+        <form [formGroup]="durationForm">
+            <deja-time-picker formControlName="durationValue"></deja-time-picker>
+        </form>`
+})
+class DejaTimePickerWithDurationContainerComponent {
+    @ViewChild(DejaTimePickerComponent) public timePicker: DejaTimePickerComponent;
+
+    public durationForm: FormGroup<DurationFormControls>;
+
+    public constructor() {
+        this.durationForm = new FormGroup<DurationFormControls>({
+            durationValue: new FormControl({
+                hours: 35,
+                minutes: 5
+            } as Duration)
+        });
+    }
+}
+
+describe('DejaTimePickerDurationComponent', () => {
+    let component: DejaTimePickerComponent;
+    let containerComponent: DejaTimePickerWithDurationContainerComponent;
+    let fixture: ComponentFixture<DejaTimePickerWithDurationContainerComponent>;
+
+    beforeEach(waitForAsync(() => {
+        void TestBed.configureTestingModule({
+            declarations: [
+                DejaTimePickerWithDurationContainerComponent
+            ],
+            imports: [
+                BrowserAnimationsModule,
+                DejaTimePickerModule,
+                ReactiveFormsModule
+            ]
+        }).compileComponents();
+
+        fixture = TestBed.createComponent(DejaTimePickerWithDurationContainerComponent);
+        component = fixture.debugElement.query(By.directive(DejaTimePickerComponent)).componentInstance as DejaTimePickerComponent;
+        containerComponent = fixture.debugElement.componentInstance as DejaTimePickerWithDurationContainerComponent;
+        fixture.detectChanges();
+    }));
+
+    it('should create the component', () => {
+        void expect(component).toBeTruthy();
+        void expect(containerComponent).toBeTruthy();
+    });
+
+    it('should display a specific duration', () => {
+        const hoursElement = fixture.debugElement.query(By.css('deja-time-picker > .hours input')).nativeElement as HTMLInputElement;
+        const minutesElement = fixture.debugElement.query(By.css('deja-time-picker > .minutes input')).nativeElement as HTMLInputElement;
+
+        fixture.detectChanges();
+
+        void expect(hoursElement.value).toEqual('35');
+        void expect(minutesElement.value).toEqual('05');
+    });
+
+    it('should update the inputs', done => {
+        const hoursInputElement = fixture.debugElement.query(By.css('deja-time-picker > .hours input')).nativeElement as HTMLInputElement;
+        const minutesInputElement = fixture.debugElement.query(By.css('deja-time-picker > .minutes input')).nativeElement as HTMLInputElement;
+
+        containerComponent.durationForm.controls.durationValue.patchValue({
+            hours: 23,
+            minutes: 20
+        } as Duration);
+
+        fixture.detectChanges();
+
+        void fixture.whenRenderingDone().then(() => {
+            timer(200).subscribe(() => {
+                void expect(hoursInputElement.value).toEqual('23');
+                void expect(minutesInputElement.value).toEqual('20');
+                done();
+            });
+        });
+    });
+
+    it('should disable both hours and minutes mat form fields', () => {
+        const hoursMinutesFields = fixture.debugElement.query(By.css('deja-time-picker mat-form-field')).nativeElement as HTMLInputElement;
+        component.disabled = true;
+
+        fixture.detectChanges();
+
+        void expect(hoursMinutesFields.className).toContain('disabled');
+    });
+
+    it('should focus on minutes after set hours', done => {
+        fixture.detectChanges();
+
+        const hoursElement = fixture.componentInstance.timePicker.hours.nativeElement;
+        const minutesElement = fixture.componentInstance.timePicker.minutes.nativeElement;
+
+        // Add a new character in existing value
+        const $event = new KeyboardEvent('keydown', { key: '1', cancelable: true });
+        void expect($event.key).toEqual('1');
+        fixture.componentInstance.timePicker.onKeyDown($event, 'hours');
+        void expect($event.defaultPrevented).toBeTruthy();
+        void expect(hoursElement.value).toEqual('35');
+        void expect(minutesElement.value).toEqual('05');
+
+        // Select and reset with a new value
+        hoursElement.select();
+        fixture.detectChanges();
+        const $event2 = new KeyboardEvent('keydown', { key: '1', cancelable: true });
+        fixture.componentInstance.timePicker.onKeyDown($event2, 'hours');
+        void expect($event2.defaultPrevented).toBeFalsy();
+        hoursElement.value = '1';
+        void expect(hoursElement.value).toEqual('1');
+        void expect(minutesElement.value).toEqual('05');
+        void expect(document.activeElement).toEqual(hoursElement);
+
+        // Select 12h and change the focus
+        hoursElement.select();
+        fixture.detectChanges();
+        const $event3 = {
+            target: hoursElement,
+            key: '2',
+            cancelable: true
+        } as unknown as KeyboardEvent;
+        void expect(hoursElement).toEqual($event3.target as HTMLInputElement);
+
+        fixture.componentInstance.timePicker.onKeyDown($event2, 'hours');
+        void expect($event2.defaultPrevented).toBeFalsy();
+        hoursElement.value = '12';
+        void expect(hoursElement.value).toEqual('12');
+        void expect(minutesElement.value).toEqual('05');
+        void expect(document.activeElement).toEqual(hoursElement);
+        void expect((fixture.componentInstance.timePicker as unknown as { _autoFocus: boolean })._autoFocus).toBeTruthy();
+        fixture.componentInstance.timePicker.onHoursChange$.next($event3);
+
+        timer(200).subscribe(() => {
+            fixture.detectChanges();
+            void expect(document.activeElement).toBeDefined();
+            void expect(minutesElement).toBeDefined();
+            void expect(minutesElement).toEqual(document.activeElement as HTMLInputElement);
+            void expect(hoursElement.value).toEqual('12');
+            void expect(minutesElement.value).toEqual('05');
             void expect(0).toEqual(minutesElement.selectionStart);
             void expect(2).toEqual(minutesElement.selectionEnd);
             done();

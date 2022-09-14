@@ -1,7 +1,7 @@
 <!-- Hours -->
 <mat-form-field [appearance]="appearance" class="hours" [class.disabled]="disabled || mode === 'fullTimeWithHoursDisabled'" [style.display]="mode === 'minutesOnly' ? 'none' : 'block'" floatLabel="never">
-    <input #hours matInput type="text" [ngModel]="value?.getHours() | number:'2.'" (change)="onHoursChange$.next($event)" (keydown)="onKeyDown($event, 'hours')" [disabled]="disabled || mode === 'fullTimeWithHoursDisabled'" [maxLength]="2" autocomplete="off" [placeholder]="defaultPlaceholderHours" (click)="onClick('hours')" />
-    <deja-numeric-stepper (increment)="onHoursChange$.next((value?.getHours() || 0) + 1)" (decrement)="onHoursChange$.next((value?.getHours() || 0) - 1)"></deja-numeric-stepper>
+    <input #hours matInput type="text" [ngModel]="hoursValue | number:'2.'" (change)="onHoursChange$.next($event)" (keydown)="onKeyDown($event, 'hours')" [disabled]="disabled || mode === 'fullTimeWithHoursDisabled'" [maxLength]="2" autocomplete="off" [placeholder]="defaultPlaceholderHours" (click)="onClick('hours')" />
+    <deja-numeric-stepper (increment)="incrementValue('hours')" (decrement)="decrementValue('hours')"></deja-numeric-stepper>
 </mat-form-field>
 
 <!-- Separator -->
@@ -9,6 +9,6 @@
 
 <!-- Minutes -->
 <mat-form-field [appearance]="appearance" class="minutes" [class.disabled]="disabled || mode === 'fullTimeWithMinutesDisabled'" [style.display]="mode === 'hoursOnly' ? 'none' : 'block'" floatLabel="never">
-    <input #minutes matInput type="text" [ngModel]="value?.getMinutes() | number:'2.'" (change)="onMinutesChange$.next($event)" (keydown)="onKeyDown($event, 'minutes')" [disabled]="disabled || mode === 'fullTimeWithMinutesDisabled'" [maxLength]="2" autocomplete="off" [placeholder]="defaultPlaceholderMinutes" (click)="onClick('minutes')" />
-    <deja-numeric-stepper (increment)="onMinutesChange$.next((value?.getMinutes() || 0) + _step)" (decrement)="onMinutesChange$.next((value?.getMinutes() || 0) - _step)"></deja-numeric-stepper>
+    <input #minutes matInput type="text" [ngModel]="minutesValue | number:'2.'" (change)="onMinutesChange$.next($event)" (keydown)="onKeyDown($event, 'minutes')" [disabled]="disabled || mode === 'fullTimeWithMinutesDisabled'" [maxLength]="2" autocomplete="off" [placeholder]="defaultPlaceholderMinutes" (click)="onClick('minutes')" />
+    <deja-numeric-stepper (increment)="incrementValue('minutes')" (decrement)="decrementValue('minutes')"></deja-numeric-stepper>
 </mat-form-field>
