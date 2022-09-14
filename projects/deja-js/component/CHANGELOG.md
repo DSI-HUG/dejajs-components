@@ -1,3 +1,15 @@
+# [14.1.0-develop.1](https://github.com/DSI-HUG/dejajs-components/compare/v14.0.0...v14.1.0-develop.1) (2022-09-14)
+
+
+### Bug Fixes
+
+* **time-picker:** remove readonly mode (wrong implementation) ([61dbe5f](https://github.com/DSI-HUG/dejajs-components/commit/61dbe5f2cff2dda1da605de4dc4cf8d7500e5660))
+
+
+### Features
+
+* **time-picker:** add duration to time-picker ([82623b9](https://github.com/DSI-HUG/dejajs-components/commit/82623b94d7b1b7ae50a0ffe84decc32e159114e8))
+
 # [14.0.0](https://github.com/DSI-HUG/dejajs-components/compare/v13.8.0...v14.0.0) (2022-08-26)
 
 
