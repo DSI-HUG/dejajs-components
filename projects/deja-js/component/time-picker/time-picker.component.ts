@@ -14,7 +14,7 @@ import { Destroy } from '@deja-js/component/core';
 import { isSameHour, set } from 'date-fns';
 import { debounce, distinctUntilChanged, map, Subject, takeUntil, timer } from 'rxjs';
 
-export type TimePickerDisplayMode = 'fullTime' | 'fullTimeWithHoursDisabled' | 'fullTimeWithMinutesDisabled' | 'hoursOnly' | 'minutesOnly' | 'readOnly';
+export type TimePickerDisplayMode = 'fullTime' | 'fullTimeWithHoursDisabled' | 'fullTimeWithMinutesDisabled' | 'hoursOnly' | 'minutesOnly';
 
 export type DateOrDuration = Date | Duration;
 
@@ -234,7 +234,7 @@ export class DejaTimePickerComponent extends Destroy implements ControlValueAcce
     }
 
     public get minutesValue(): number {
-        if (!this.value || (this.forceNullValue && ['readOnly', 'fullTimeWithHoursDisabled'].includes(this.mode) && this.control.pristine)) {
+        if (!this.value || (this.forceNullValue && this.mode === 'fullTimeWithHoursDisabled' && this.control.pristine)) {
             return null;
         }
         return this.value instanceof Date ? this.value.getMinutes() : this.value.minutes;
