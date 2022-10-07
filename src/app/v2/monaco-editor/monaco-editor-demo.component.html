@@ -55,6 +55,17 @@
     </mat-card>
 </div>
 
+<form [formGroup]="jsonContentForm" *ngIf="jsonContentForm">
+    <mat-card class="demo-card demo-basic">
+        <mat-toolbar color="primary">Modification d'un fichier JSON via Reactive Form</mat-toolbar>
+        <mat-card-content>
+            <div class="viewer">
+                <monaco-editor formControlName="query" [folding]="true" language="json"></monaco-editor>
+            </div>
+        </mat-card-content>
+    </mat-card>
+</form>
+
 <div *ngIf="tabIndex === 2">
     <mat-card class="demo-card demo-basic">
         <mat-toolbar color="primary">

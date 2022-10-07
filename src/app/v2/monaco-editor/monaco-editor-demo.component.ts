@@ -7,11 +7,13 @@
  */
 
 import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { Destroy } from '@deja-js/component/core';
 import { Language } from '@deja-js/component/v2/monaco-editor';
 import { takeUntil } from 'rxjs';
 
 import { MonacoEditorDemoService } from './monaco-editor-demo.service';
+
 
 @Component({
     selector: 'monaco-editor-demo',
@@ -25,6 +27,7 @@ export class MonacoEditorDemoComponent extends Destroy implements OnInit {
     public xmlContentToCompare: string;
     public jsonContent: string;
     public jsonContentToCompare: Language;
+    public jsonContentForm: FormGroup;
 
     public dynamicContent: string;
     public dynamicLanguage: Language;
@@ -48,7 +51,12 @@ export class MonacoEditorDemoComponent extends Destroy implements OnInit {
 
         this.fileService.getFile$('jsonFile.json').pipe(
             takeUntil(this.destroyed$)
-        ).subscribe(val => this.jsonContent = val);
+        ).subscribe(val => {
+            this.jsonContent = val;
+            this.jsonContentForm = new FormGroup({
+                query: new FormControl(val)
+            });
+        });
 
         this.fileService.getFile$('jsonFileToCompare.json').pipe(
             takeUntil(this.destroyed$)
