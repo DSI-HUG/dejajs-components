@@ -22,7 +22,7 @@ import { MonacoEditorControlModule } from './monaco-editor-control/monaco-editor
         MonacoEditorControlModule
     ]
 })
-export class MonacoEditorModule { }
+export class MonacoEditorModule {}
 
 export * from './options/editor-options.model';
 export * from './options/editor-scrollbar-options.model';
