@@ -1,3 +1,11 @@
+# [14.1.0-develop.2](https://github.com/DSI-HUG/dejajs-components/compare/v14.1.0-develop.1...v14.1.0-develop.2) (2022-10-12)
+
+
+### Features
+
+* monaco-editor v2 with reactive form support ([12cc485](https://github.com/DSI-HUG/dejajs-components/commit/12cc485f467bd3440d0881a0a01bf83479a53cb8))
+* monaco-editor v2 with reactive form support ([406fb6a](https://github.com/DSI-HUG/dejajs-components/commit/406fb6a91ad8a1ec3afafdc1dc3df1d9c90b43c9))
+
 # [14.1.0-develop.1](https://github.com/DSI-HUG/dejajs-components/compare/v14.0.0...v14.1.0-develop.1) (2022-09-14)
 
 
