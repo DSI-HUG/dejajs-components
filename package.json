@@ -70,7 +70,7 @@
         "@commitlint/cli": "~17.0.3",
         "@commitlint/config-conventional": "~17.0.3",
         "@hug/eslint-config": "~8.0.0",
-        "@qiwi/multi-semantic-release": "~3.16.0",
+        "@qiwi/multi-semantic-release": "~6.5.1",
         "@semantic-release/changelog": "~6.0.1",
         "@semantic-release/git": "~10.0.1",
         "@types/ckeditor4": "~4.16.4",
