@@ -1,3 +1,10 @@
+# [14.1.0-develop.3](https://github.com/DSI-HUG/dejajs-components/compare/v14.1.0-develop.2...v14.1.0-develop.3) (2022-10-27)
+
+
+### Features
+
+* **deja-editor:** upgrade to ckeditor 4.20.0 which fix destroy errors (DEJS-1108) ([e433676](https://github.com/DSI-HUG/dejajs-components/commit/e4336765e89542e14b11c4abe2663fb758d46f42))
+
 # [14.1.0-develop.2](https://github.com/DSI-HUG/dejajs-components/compare/v14.1.0-develop.1...v14.1.0-develop.2) (2022-10-12)
 
 
