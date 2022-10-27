@@ -5,7 +5,7 @@
         "types": [
             "jasmine",
             "node",
-            "ckeditor"
+            "ckeditor4"
         ]
     },
     "angularCompilerOptions": {

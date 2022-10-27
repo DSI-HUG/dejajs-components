@@ -15,12 +15,10 @@ import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, E
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Destroy } from '@deja-js/component/core';
 import { cloneDeep } from 'lodash-es';
-import { debounceTime, delay, first, from, merge, ReplaySubject, Subject, Subscription, switchMap, take, takeUntil, tap } from 'rxjs';
+import { debounceTime, delay, from, merge, ReplaySubject, Subject, Subscription, switchMap, take, takeUntil, tap } from 'rxjs';
 
 import { DejaEditorService } from './deja-editor.service';
 
-/// <reference path="@types/ckeditor/index.d.ts" />
-// declare let CKEDITOR: unknown;
 
 /**
  * CKEditor component
@@ -55,19 +53,20 @@ export class DejaEditorComponent extends Destroy implements OnChanges, OnInit, A
 
     @ViewChild('host', { static: true }) public host: ElementRef;
 
-    public instance: any;
+    public instance: CKEDITOR.editor;
     public debounceTimeout$sub: Subscription;
 
     private _readonly: boolean;
     private _debounce = 0;
     private _inline = true;
-    private _ready: boolean;
     private onDataChangeListener: any;
     private focus$ = new ReplaySubject<void>(1);
     private disabled$ = new ReplaySubject<boolean>(1);
     private onCkeditorChange$ = new Subject<void>();
     private writeValue$ = new ReplaySubject<string>(1);
     private _value = '';
+    private isDestroyed = false;
+    private registeredListeners = new Map<string, (evt: CKEDITOR.eventInfo) => void>();
 
     @Input()
     public set readonly(value: boolean) {
@@ -148,40 +147,13 @@ export class DejaEditorComponent extends Destroy implements OnChanges, OnInit, A
      */
     public ngOnDestroy(): void {
         super.ngOnDestroy();
-
+        this.isDestroyed = true;
+        this.cleanListeners();
         this.focus.complete();
         this.blur.complete();
         this.change.complete();
         this.disabled.complete();
-        if (this.instance) {
-            this.instance.focusManager.blur(true);
-            if (this._ready) {
-                try {
-                    // Workaround for a ckEditor bug
-                    this.instance.destroy();
-                } catch (e) {
-                    console.warn(e, 'Error occurred when destroying ckEditor instance');
-                }
-                this.ready.complete();
-                this.instance = null;
-            } else {
-                this.ready.pipe(
-                    first()
-                    // Do not use takeUntil here because we need to wait the ready event to clean CKEditor instance.
-                    // Here this.destroyed$ already emitted so we never subscribe and this lead to a 'object unsubscribed' error
-                    // eslint-disable-next-line rxjs-angular/prefer-takeuntil
-                ).subscribe(() => {
-                    try {
-                        // Workaround for a ckEditor bug
-                        this.instance.destroy();
-                    } catch (e) {
-                        console.warn(e, 'Error occurred when destroying ckEditor instance');
-                    }
-                    this.instance = null;
-                    this.ready.complete();
-                });
-            }
-        }
+        this.instance?.destroy();
     }
 
     /**
@@ -273,20 +245,19 @@ export class DejaEditorComponent extends Destroy implements OnChanges, OnInit, A
             this.instance.setData(this.value);
 
             // listen for instanceReady event
-            this.instance.on('instanceReady', (evt: Event) => {
-                this._ready = true;
+            this.listenEvent('instanceReady', evt => {
                 // send the evt to the EventEmitter
                 this.ready.emit(evt);
             });
 
             // CKEditor blur event
-            this.instance.on('blur', (evt: Event) => {
+            this.listenEvent('blur', evt => {
                 this.blur.emit(evt);
                 this.onTouched();
             });
 
             // CKEditor focus event
-            this.instance.on('focus', (evt: Event) => {
+            this.listenEvent('focus', evt => {
                 if (!this.readonly) {
                     this.focus.emit(evt);
                 }
@@ -393,7 +364,7 @@ export class DejaEditorComponent extends Destroy implements OnChanges, OnInit, A
 
     private registerChangeListener(): void {
         // CKEditor change event
-        this.onDataChangeListener = this.instance.on('change', () => {
+        this.onDataChangeListener = this.listenEvent('change', () => {
             this.onCkeditorChange$.next();
         });
     }
@@ -597,16 +568,27 @@ export class DejaEditorComponent extends Destroy implements OnChanges, OnInit, A
     }
 
     private updateCkeditorInstanceValue(value: string): void {
-        if (this.instance) {
+        if (this.instance && !this.isDestroyed) {
             this.onDataChangeListener?.removeListener();
             // The data change listener must be removed before setting the data,
             // valueAccessor.onChange is called by the data change listener and must not be subsequently called on writeValue call which fire
             // the data change event by calling instance.setData.
-            this.instance.setData(value, () => {
-                this.registerChangeListener();
+            this.instance.setData(value, {
+                callback: (): void => {
+                    this.registerChangeListener();
+                }
             });
         } else {
             this.host.nativeElement.value = value;
         }
+    }
+
+    private listenEvent(eventType: string, callback: (evt: CKEDITOR.eventInfo) => void): void {
+        this.instance.on(eventType, callback);
+        this.registeredListeners.set(eventType, callback);
+    }
+
+    private cleanListeners(): void {
+        this.registeredListeners.forEach((callback, eventType) => this.instance?.removeListener(eventType, callback));
     }
 }
