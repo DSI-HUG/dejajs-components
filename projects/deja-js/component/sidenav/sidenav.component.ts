@@ -32,6 +32,9 @@ export class DejaSidenavComponent extends Destroy implements OnInit {
     @Input()
     public headerIcon = 'face';
 
+    @Input()
+    public openOnMediaChange = true;
+
     public title: string;
     public mode = 'side';
     public _showToolbar = false;
@@ -44,18 +47,21 @@ export class DejaSidenavComponent extends Destroy implements OnInit {
         private changeDetectorRef: ChangeDetectorRef
     ) {
         super();
-
-        this.mediaService.mediaChanged$.pipe(
-            takeUntil(this.destroyed$)
-        ).subscribe(alias => {
-            this.sidenavService.hidden = alias === 'xs';
-            this.sidenavService.opened = alias === 'lg' || alias === 'xl';
-            this.sidenavService.mode = alias === 'xs' ? 'over' : 'side';
-            this.changeDetectorRef.markForCheck();
-        });
     }
 
     public ngOnInit(): void {
+
+        if (this.openOnMediaChange) {
+            this.mediaService.mediaChanged$.pipe(
+                takeUntil(this.destroyed$)
+            ).subscribe(alias => {
+                this.sidenavService.hidden = alias === 'xs';
+                this.sidenavService.opened = alias === 'lg' || alias === 'xl';
+                this.sidenavService.mode = alias === 'xs' ? 'over' : 'side';
+                this.changeDetectorRef.markForCheck();
+            });
+        }
+
         // Initialize
         this.title = this.getActivatedRouteLastChild().data.title as string;
 
