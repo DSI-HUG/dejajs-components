@@ -1,0 +1,17 @@
+<mat-toolbar class="dialog-toolbar" color="primary">
+    <span class="dialog-title">Confirmer</span>
+    <em class="dialog-action material-icons" mat-dialog-close="cancel">close</em>
+</mat-toolbar>
+
+<div class="dialog-container">
+    <div [innerHTML]="dialogParam"></div>
+</div>
+
+<div class="dialog-buttons">
+    <button type="button" mat-button mat-dialog-close="cancel" color="primary">
+        Cancel
+    </button>
+    <button type="button" mat-stroked-button mat-dialog-close="ok" color="primary">
+        OK
+    </button>
+</div>

@@ -12,6 +12,7 @@ import { DejaColorSelectorModule } from '@deja-js/component/color-selector';
 import { AbstractLazyModule } from '@deja-js/component/core';
 import { DejaNumericStepperModule } from '@deja-js/component/v2/numeric-stepper';
 
+import { StyleEditorService } from './style-editor.service';
 import { StyleEditorDialogComponent } from './style-editor-dialog.component';
 
 @NgModule({
@@ -33,7 +34,8 @@ import { StyleEditorDialogComponent } from './style-editor-dialog.component';
     ],
     exports: [
         StyleEditorDialogComponent
-    ]
+    ],
+    providers: [StyleEditorService]
 })
 export class StyleEditorDialogModule extends AbstractLazyModule<StyleEditorDialogComponent> {
     public constructor() {
