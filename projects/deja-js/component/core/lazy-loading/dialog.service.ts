@@ -25,7 +25,7 @@ export abstract class DialogService<ReturnType, DataType> {
         this.dialogResponse$ = this.openDialogSub$.pipe(
             throttleTime(10),
             take(1),
-            switchMap(dialogConfig => this.lazyLoaderService.loadModule$(this.getModule()).pipe(
+            switchMap(dialogConfig => this.lazyLoaderService.loadModule$(this.getModule(), dialogConfig.injector).pipe(
                 switchMap(moduleInfos => {
                     const config = { ...matDialogConfig || {} as MatDialogConfig<DataType>, ...dialogConfig };
                     config.minWidth = config.minWidth || '400px';
