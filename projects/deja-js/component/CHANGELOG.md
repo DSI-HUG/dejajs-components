@@ -1,3 +1,11 @@
+# [14.1.0-develop.9](https://github.com/DSI-HUG/dejajs-components/compare/v14.1.0-develop.8...v14.1.0-develop.9) (2022-11-25)
+
+
+### Bug Fixes
+
+* add possibility to specify parentInjector when open lazyloading module ([1843da3](https://github.com/DSI-HUG/dejajs-components/commit/1843da363cfa73673e9fbbf8947b2759f5f57e15))
+* **dialog-service:** test service inject in sub dialog components ([c4afbc2](https://github.com/DSI-HUG/dejajs-components/commit/c4afbc252bee7849008354df08833805d03754df))
+
 # [14.1.0-develop.8](https://github.com/DSI-HUG/dejajs-components/compare/v14.1.0-develop.7...v14.1.0-develop.8) (2022-11-23)
 
 # [14.1.0-develop.7](https://github.com/DSI-HUG/dejajs-components/compare/v14.1.0-develop.6...v14.1.0-develop.7) (2022-11-14)
