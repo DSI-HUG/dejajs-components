@@ -4,8 +4,10 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ControlsOf, Destroy } from '@deja-js/component/core';
 import { Color, MaterialColorService } from '@deja-js/component/core/graphics';
+import { takeUntil } from 'rxjs';
 
 import { StyleConfig, StyleConfigBorderDirection } from './style-config.model';
+import { StyleEditorPrintService } from './style-editor-print.service';
 
 export interface StyleEditorDialogForm {
     borderWidth: number;
@@ -33,7 +35,8 @@ export class StyleEditorDialogComponent extends Destroy {
 
     public constructor(
         @Inject(MAT_DIALOG_DATA) public params: StyleConfig,
-        injector: Injector,
+        public syleEditorPrintService: StyleEditorPrintService,
+        private injector: Injector,
         formBuilder: FormBuilder
     ) {
         super();
@@ -48,6 +51,14 @@ export class StyleEditorDialogComponent extends Destroy {
             bottomBorder: this.params && (this.params.borderDirection & StyleConfigBorderDirection.bottom) !== 0,
             leftBorder: this.params && (this.params.borderDirection & StyleConfigBorderDirection.left) !== 0
         });
+
+        syleEditorPrintService.messageDialogResult$.pipe(
+            takeUntil(this.destroyed$)
+        ).subscribe();
+    }
+
+    public openMessageBoxDialog(): void {
+        this.syleEditorPrintService.openMessageDialog$.next({ message: 'My message', injector: this.injector });
     }
 
     public createModelFromForm(values: Partial<StyleEditorDialogForm>): StyleConfig {

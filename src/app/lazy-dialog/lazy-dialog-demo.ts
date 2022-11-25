@@ -10,8 +10,8 @@ import { Component } from '@angular/core';
 import { Destroy } from '@deja-js/component/core';
 import { map, Subject, switchMap, takeUntil } from 'rxjs';
 
-import { StyleConfig } from './dialog-with-form/style-config.model';
-import { StyleEditorDialogService } from './dialog-with-form/style-editor-dialog.service';
+import { StyleConfig } from './style-editor-dialog/style-config.model';
+import { StyleEditorDialogService } from './style-editor-dialog/style-editor-dialog.service';
 
 @Component({
     selector: 'lazy-dialog-demo',

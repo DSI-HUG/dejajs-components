@@ -27,10 +27,13 @@
 </form>
 
 <div class="dialog-buttons">
+    <button type="button" mat-button id="confirmbtn" (click)="openMessageBoxDialog()" color="primary">
+        Confirm
+    </button>
     <button type="button" mat-button id="cancelbtn" [mat-dialog-close]="null" color="primary">
         Cancel
     </button>
     <button type="button" mat-stroked-button id="okbtn" [mat-dialog-close]="createModelFromForm(formGroup.value)" color="primary">
-        ok
+        OK
     </button>
 </div>
