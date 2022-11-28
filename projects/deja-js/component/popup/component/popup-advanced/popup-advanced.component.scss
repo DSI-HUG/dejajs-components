@@ -17,7 +17,7 @@ deja-popup-advanced {
             cursor: grabbing;
         }
 
-        .mat-dialog-content {
+        .mat-mdc-dialog-content {
             height: 100%;
             // width: 100%;
             flex: 1 1 auto;
@@ -49,11 +49,11 @@ deja-popup-advanced {
             }
         }
 
-        .mat-dialog-actions {
+        .mat-mdc-dialog-actions {
             flex: 1 1 auto;
             padding-bottom: 18px;
 
-            &.mat-dialog-actions:last-child {
+            &.mat-mdc-dialog-actions:last-child {
                 margin: 0 24px !important;
             }
         }

@@ -6,11 +6,12 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
+// eslint-disable-next-line unused-imports/no-unused-imports
 import { Directive, ElementRef } from '@angular/core';
 
 @Directive({
     selector: 'deja-sidenav-menu-separator, [deja-sidenav-menu-separator]'
-})
+    })
 export class DejaSidenavMenuSeparatorDirective {
     public constructor(el: ElementRef<HTMLElement>) {
         Object.assign(el.nativeElement.style, {

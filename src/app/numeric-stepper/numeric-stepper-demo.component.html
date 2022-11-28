@@ -3,15 +3,15 @@
     <mat-tab label="EXAMPLES"></mat-tab>
 </mat-tab-group>
 
-<mat-card class="demo-card demo-basic" *ngIf="tabIndex === 0">
+<mat-card appearance="outlined" class="demo-card demo-basic" *ngIf="tabIndex === 0">
     <deja-markdown [url]="'https://raw.githubusercontent.com/DSI-HUG/dejajs-components/develop/projects/deja-js/component/numeric-stepper/readme.md'"></deja-markdown>
 </mat-card>
 
 <div *ngIf="tabIndex === 1">
-    <mat-card class="demo-card">
+    <mat-card appearance="outlined" class="demo-card">
         <mat-toolbar color="primary">Numeric Stepper</mat-toolbar>
         <mat-card-content>
-            <mat-form-field appearance="standard">
+            <mat-form-field>
                 <mat-label>With unit standard</mat-label>
                 <deja-numeric-stepper placeholder="With unit" [min]="1" [max]="10" unit="kms" [formControl]="control"></deja-numeric-stepper>
             </mat-form-field>

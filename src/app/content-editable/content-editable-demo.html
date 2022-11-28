@@ -8,11 +8,11 @@
     <mat-tab label="EXAMPLES"></mat-tab>
 </mat-tab-group>
 
-<mat-card class="demo-card demo-basic" *ngIf="tabIndex === 0">
+<mat-card appearance="outlined" class="demo-card demo-basic" *ngIf="tabIndex === 0">
     <deja-markdown [url]="'https://raw.githubusercontent.com/DSI-HUG/dejajs-components/develop/projects/deja-js/component/content-editable/readme.md'"></deja-markdown>
 </mat-card>
 
-<mat-card class="demo-card demo-basic" *ngIf="tabIndex === 1">
+<mat-card appearance="outlined" class="demo-card demo-basic" *ngIf="tabIndex === 1">
     <mat-toolbar color="primary">Content Editable Demo</mat-toolbar>
     <mat-card-content>
         <mat-checkbox color="primary" [(ngModel)]="designMode">Design Mode&nbsp;</mat-checkbox>

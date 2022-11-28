@@ -10,27 +10,33 @@ deja-splitter-demo {
         }
     }
 
-    .mat-tab-group {
+    .mat-mdc-tab-group {
         display: flex;
         height: 100%;
-
+        /* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version. */
+        /* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version. */
+        /* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version. */
+        /* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version. */
+        /* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version. */
         .mat-tab-body-wrapper {
             flex: 1;
 
-            .mat-tab-body.fixed-height {
+            .mat-mdc-tab-body.fixed-height {
                 overflow: hidden;
-
+                /* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version. */
+                /* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version. */
+                /* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version. */
                 .mat-tab-body-content {
                     overflow: hidden;
                     padding: 5px;
 
-                    .mat-card {
+                    .mat-mdc-card {
                         height: calc(100% - 10px);
                         margin: 0;
                         display: flex;
                         flex-direction: column;
 
-                        .mat-card-content {
+                        .mat-mdc-card-content {
                             flex: 1;
 
                             deja-splitter {

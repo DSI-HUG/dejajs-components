@@ -34,18 +34,18 @@ import { DejaPopupAction, DejaPopupComponent } from '@deja-js/component/popup';
     // eslint-disable-next-line @angular-eslint/component-max-inline-declarations
     styles: [
         `
-        :host{
-            overflow: hidden;
-        }
-        .deja-popup-custom-content{
-            overflow: auto;
-            height: 300px;
-            padding: 0 1rem;
-        }
-        .deja-popup-custom-actions{
-            padding: 1rem;
-        }
-        `
+                          :host{
+                              overflow: hidden;
+                          }
+                          .deja-popup-custom-content{
+                              overflow: auto;
+                              height: 300px;
+                              padding: 0 1rem;
+                          }
+                          .deja-popup-custom-actions{
+                              padding: 1rem;
+                          }
+                          `
     ]
 })
 export class DejaPopupCustomDemoComponent extends DejaPopupComponent implements OnInit {

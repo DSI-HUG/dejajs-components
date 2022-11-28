@@ -1,15 +1,26 @@
 @use '@angular/material' as mat;
 @mixin tabs-theme($theme) {
     $primary: map-get($theme, primary);
-
+    /* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version. */
+    /* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version. */
+    /* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version. */
+    /* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version. */
+    /* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version. */
+    /* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version. */
     mat-tab-group {
         &[multi-lines] {
+            /* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version. */
+            /* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version. */
             .mat-tab-labels {
                 flex-wrap: wrap;
             }
         }
 
-        .mat-tab-header {
+        .mat-mdc-tab-header {
+            /* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version. */
+            /* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version. */
+            /* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version. */
+            /* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version. */
             .mat-tab-label {
                 font-size: 80%;
                 height: auto;
@@ -29,7 +40,8 @@
                     transition: all 500ms ease;
                     width: 0;
                 }
-
+                /* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version. */
+                /* TODO(mdc-migration): The following rule targets internal classes of tabs that may no longer apply for the MDC version. */
                 &.mat-tab-label-active {
                     &:after {
                         left: 0;

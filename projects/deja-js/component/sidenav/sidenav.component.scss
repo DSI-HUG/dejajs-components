@@ -28,16 +28,12 @@ deja-sidenav {
             }
 
             deja-sidenav-menu {
-                .mat-list-item {
-                    .mat-list-item-content {
+                .mat-mdc-list-item {
+                    .mdc-list-item__content {
                         justify-content: flex-end;
 
-                        .mat-list-icon {
+                        .mat-icon {
                             padding: 0;
-                        }
-
-                        .mat-list-text {
-                            display: none;
                         }
                     }
                 }
@@ -108,8 +104,16 @@ deja-sidenav {
             deja-sidenav-menu {
 
                 // overflow-y: auto;
-                .mat-list-item {
+                .mat-mdc-list-item {
+
+                    /* TODO(mdc-migration): The following rule targets internal classes of list that may no longer apply for the MDC version.*/
+                    /* TODO(mdc-migration): The following rule targets internal classes of list that may no longer apply for the MDC version.*/
+                    /* TODO(mdc-migration): The following rule targets internal classes of list that may no longer apply for the MDC version.*/
+                    /* TODO(mdc-migration): The following rule targets internal classes of list that may no longer apply for the MDC version.*/
                     .mat-list-item-content {
+
+                        /* TODO(mdc-migration): The following rule targets internal classes of list that may no longer apply for the MDC version.*/
+                        /* TODO(mdc-migration): The following rule targets internal classes of list that may no longer apply for the MDC version.*/
                         .mat-list-text {
                             padding-left: 32px;
                             font-size: 14px;

@@ -7,7 +7,7 @@
  */
 
 import { ComponentType } from '@angular/cdk/portal';
-import { Injectable, TemplateRef } from '@angular/core';
+import { TemplateRef } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { BehaviorSubject, map, Observable } from 'rxjs';
 
@@ -19,7 +19,6 @@ import { DejaPopupBase } from '../model/popup-base.class';
 import { DejaPopupConfig } from '../model/popup-config.model';
 import { DejaPopupReponse } from '../model/popup-response.model';
 
-@Injectable()
 export class DejaPopupService extends MatDialog {
     public defaultActionComponent: ComponentType<unknown> = DejaPopupActionsComponent;
 

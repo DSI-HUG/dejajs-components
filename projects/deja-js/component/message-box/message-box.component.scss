@@ -11,7 +11,7 @@ deja-message-box {
         display: block;
         border-radius: 3px;
 
-        >.mat-card-title {
+        >.mat-mdc-card-title {
             text-transform: uppercase;
             align-items: center;
             display: flex;
@@ -30,7 +30,7 @@ deja-message-box {
             }
         }
 
-        >.mat-card-content {
+        >.mat-mdc-card-content {
             margin: 0;
             padding: 0.75rem;
             overflow: hidden;
@@ -50,7 +50,7 @@ deja-message-box {
             }
         }
 
-        >.mat-card-actions {
+        >.mat-mdc-card-actions {
             align-items: center;
             display: flex;
             justify-content: flex-end;
@@ -67,7 +67,7 @@ deja-message-box {
             padding: 0;
             position: relative;
 
-            >.mat-card-title {
+            >.mat-mdc-card-title {
                 align-items: center;
                 display: flex;
                 flex: 0 0 auto;
@@ -81,13 +81,13 @@ deja-message-box {
                 }
             }
 
-            >.mat-card-content {
+            >.mat-mdc-card-content {
                 align-self: center;
                 flex: 1 1 auto;
                 padding: 0.75rem;
             }
 
-            >.mat-card-actions {
+            >.mat-mdc-card-actions {
                 margin: 0;
                 padding: 0;
                 position: absolute;

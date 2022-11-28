@@ -32,13 +32,16 @@
                         box-shadow: 0px 2px 4px rgba(mat.get-color-from-palette($warn), 0.3);
                     }
                 }
-
+                /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
+                /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
                 .mat-form-field-flex {
                     background-color: mat.get-color-from-palette($background);
                 }
             }
 
             &:hover {
+                /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
+                /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
                 .mat-form-field-flex {
                     background-color: transparent;
                 }

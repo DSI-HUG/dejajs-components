@@ -3,7 +3,7 @@
     flex-direction: column;
     overflow: hidden;
 
-    .mat-tab-group{
+    .mat-mdc-tab-group{
         flex: 0 0 auto;
     }
 
@@ -17,7 +17,7 @@
             flex: 0 0 auto;
         }
 
-        .mat-card-content {
+        .mat-mdc-card-content {
             flex: 1 1 auto;
             display: flex;
             flex-direction: column;
@@ -33,7 +33,7 @@
                 align-items: center;
                 justify-content: flex-start;
 
-                .mat-checkbox {
+                .mat-mdc-checkbox {
                     padding: 0.5rem;
                 }
                 

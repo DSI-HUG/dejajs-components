@@ -3,7 +3,7 @@
     <mat-tab label="EXAMPLES"></mat-tab>
 </mat-tab-group>
 
-<mat-card class="demo-card demo-basic" *ngIf="tabIndex === 0">
+<mat-card appearance="outlined" class="demo-card demo-basic" *ngIf="tabIndex === 0">
     <deja-markdown [url]="'https://raw.githubusercontent.com/DSI-HUG/dejajs-components/develop/projects/deja-js/component/tiles/readme.txt'"></deja-markdown>
 </mat-card>
 
@@ -22,7 +22,7 @@
         </deja-message-box>
     </deja-snackbar>
 </ng-template>
-<mat-card class="demo-card demo-basic" *ngIf="tabIndex === 1">
+<mat-card appearance="outlined" class="demo-card demo-basic" *ngIf="tabIndex === 1">
     <mat-toolbar color="primary">Tiles Demo</mat-toolbar>
     <mat-card-content id="actions">
         <mat-checkbox [(ngModel)]="designMode">Design Mode</mat-checkbox>

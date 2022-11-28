@@ -3,12 +3,12 @@
     <mat-tab label="EXAMPLES"></mat-tab>
 </mat-tab-group>
 
-<mat-card class="demo-card demo-basic" *ngIf="tabIndex === 0">
+<mat-card appearance="outlined" class="demo-card demo-basic" *ngIf="tabIndex === 0">
     TODO
     <!-- <deja-markdown [url]="'https://raw.githubusercontent.com/DSI-HUG/dejajs-components/develop/projects/deja-js/component/snackbar/readme.md'"></deja-markdown> -->
 </mat-card>
 
-<mat-card class="demo-card" *ngIf="tabIndex === 1">
+<mat-card appearance="outlined" class="demo-card" *ngIf="tabIndex === 1">
     <mat-toolbar color="primary">Manage app sidenav</mat-toolbar>
     <mat-card-content class="listContainer">
         <button mat-raised-button color="primary" (click)="toggle()">Toggle</button>

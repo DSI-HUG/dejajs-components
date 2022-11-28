@@ -8,19 +8,19 @@
     <mat-tab label="EXAMPLES"></mat-tab>
 </mat-tab-group>
 
-<mat-card class="demo-card demo-basic" *ngIf="tabIndex === 0">
+<mat-card appearance="outlined" class="demo-card demo-basic" *ngIf="tabIndex === 0">
     <deja-markdown [url]="'https://raw.githubusercontent.com/DSI-HUG/dejajs-components/develop/projects/deja-js/component/range/readme.md'"></deja-markdown>
 </mat-card>
 
 <div *ngIf="tabIndex === 1">
-    <mat-card class="demo-card">
+    <mat-card appearance="outlined" class="demo-card">
         <mat-toolbar color="primary">Default template : Read Only</mat-toolbar>
         <mat-card-content>
             <deja-range [(ngModel)]="readOnlyRanges"></deja-range>
         </mat-card-content>
     </mat-card>
 
-    <mat-card class="demo-card">
+    <mat-card appearance="outlined" class="demo-card">
         <mat-toolbar color="primary">Default template : Movable separator, with an array of accepted intervals</mat-toolbar>
         <mat-card-content>
             <deja-range [(ngModel)]="rangesWithInterval" [readOnly]="false" [selected]="1" [step]="steps">
@@ -28,7 +28,7 @@
         </mat-card-content>
     </mat-card>
 
-    <mat-card class="demo-card">
+    <mat-card appearance="outlined" class="demo-card">
         <mat-toolbar color="primary">Default template : Movable separator, with a numeric step</mat-toolbar>
         <mat-card-content>
             <deja-range [(ngModel)]="ranges" [readOnly]="false" [step]="2.5" #dejaRange (errorFeedback)="errorFeed.emit($event)">
@@ -42,7 +42,7 @@
         </mat-card-content>
     </mat-card>
 
-    <mat-card class="demo-card">
+    <mat-card appearance="outlined" class="demo-card">
         <mat-toolbar color="primary">Custom template : Movable separator, with a function based step, logarithmic interpolation bewtween the model (weight) and the inner model</mat-toolbar>
         <mat-card-content>
             <deja-range id="custom-range" [(ngModel)]="weights" (ngModelChange)="computeRangeFromWeight()" [readOnly]="false" [selected]="0" [step]="stepFn" (errorFeedback)="errorFeed.emit($event)" #dejaWeight>

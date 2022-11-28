@@ -6,10 +6,11 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
+// eslint-disable-next-line unused-imports/no-unused-imports
 import { Directive } from '@angular/core';
 
 @Directive({
     selector: 'deja-sidenav-menu, [deja-sidenav-menu]'
-})
+    })
 export class DejaSidenavMenuDirective {
 }

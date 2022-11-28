@@ -8,13 +8,26 @@
     tree-list {
         &.ng-invalid {
             #input {
+                /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
+                /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
+                /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
+                /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
+                /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
+                /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
                 .mat-form-field-wrapper {
+                    /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
+                    /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
+                    /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
+                    /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
                     .mat-form-field-underline {
+                        /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
+                        /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
                         .mat-form-field-ripple {
                             background-color: mat.get-color-from-palette($warn);
                         }
                     }
-
+                    /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
+                    /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
                     .mat-form-field-label {
                         color: mat.get-color-from-palette($warn) !important;
                     }

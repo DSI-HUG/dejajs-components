@@ -1,5 +1,7 @@
-[deja-numeric-stepper-container] .mat-form-field,
+[deja-numeric-stepper-container] .mat-mdc-form-field,
 [deja-numeric-stepper-form-field] {
+    /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
+    /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
     .mat-form-field-infix {
         display: inline-flex;
         justify-content: center;
@@ -11,11 +13,15 @@
         &:not(.disabled) {
 
             &:hover {
+                /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
+                /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
                 .mat-form-field-label-wrapper {
                     opacity: 0 !important;
                 }
 
                 &.mat-form-field-invalid {
+                    /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
+                    /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
                     .mat-form-field-subscript-wrapper {
                         visibility: hidden;
                     }
@@ -32,17 +38,23 @@
 
             &:hover {
                 &:not([float-label="always"]) {
+                    /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
+                    /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
                     .mat-form-field-label.mat-empty {
                         padding-left: 23px
                     }
                 }
 
                 &[inputAutosizeFormField] {
+                    /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
+                    /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
                     .mat-form-field-infix {
                         padding: 1em 23px;
                     }
 
                     &.mat-form-field-appearance-outline {
+                        /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
+                        /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
                         .mat-form-field-infix {
                             padding: 1em 18px;
                         }
@@ -88,7 +100,7 @@
         -moz-appearance: textfield !important;
     }
 
-    .mat-input-element {
+    .mat-mdc-input-element {
         text-align: center;
     }
 
@@ -100,13 +112,15 @@
             .shadow {
                 opacity: 1;
             }
-
+            /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
+            /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
             .mat-form-field-outline,
             .mat-form-field-outline-thick,
             .mat-form-field-underline {
                 opacity: 0 !important;
             }
-
+            /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
+            /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
             .mat-form-field-label-wrapper,
             input {
                 z-index: 10003;

@@ -3,12 +3,12 @@
     <mat-tab label="EXAMPLES"></mat-tab>
 </mat-tab-group>
 
-<mat-card class="demo-card demo-basic" *ngIf="tabIndex === 0">
+<mat-card appearance="outlined" class="demo-card demo-basic" *ngIf="tabIndex === 0">
     <deja-markdown [url]="'https://raw.githubusercontent.com/DSI-HUG/dejajs-components/develop/projects/deja-js/component/v2/numeric-stepper/readme.md'"></deja-markdown>
 </mat-card>
 
 <div *ngIf="tabIndex === 1">
-    <mat-card class="demo-card">
+    <mat-card appearance="outlined" class="demo-card">
         <mat-toolbar color="primary">Numeric Stepper in Material Form Field with different appearances</mat-toolbar>
         <mat-card-content>
             <div deja-numeric-stepper-container>
@@ -20,14 +20,14 @@
                 </mat-form-field>
             </div>
             <div>
-                <mat-form-field appearance="legacy">
+                <mat-form-field>
                     <mat-label>Legacy</mat-label>
                     <input matInput type="number" [ngModel]="value1" (change)="onInput1Change$.next($event)" #numericStepper="ngModel" #model4n="matInput"/>
                     <deja-numeric-stepper [input]="model4n"></deja-numeric-stepper>
                 </mat-form-field>
             </div>
             <div>
-                <mat-form-field appearance="standard">
+                <mat-form-field>
                     <mat-label>Standard</mat-label>
                     <input matInput type="text" [ngModel]="value1 | number:'.1-2'" (change)="onInput1Change$.next($event)" />
                     <deja-numeric-stepper (increment)="value1 = value1 + 5" (decrement)="value1 = value1 - 5"></deja-numeric-stepper>
@@ -42,7 +42,7 @@
             </div>
         </mat-card-content>
     </mat-card>
-    <mat-card class="demo-card">
+    <mat-card appearance="outlined" class="demo-card">
         <mat-toolbar color="primary">Numeric Stepper with validator</mat-toolbar>
         <mat-card-content>
             <div [formGroup]="numberForm">
@@ -55,7 +55,7 @@
                 </mat-form-field>
             </div>
             <div [formGroup]="numberForm">
-                <mat-form-field appearance="legacy" [style.width.px]="80">
+                <mat-form-field [style.width.px]="80">
                     <mat-label>Legacy</mat-label>
                     <!-- Increment/Decrement are linked to ngControl -->
                     <deja-numeric-stepper [input]="model4"></deja-numeric-stepper>
@@ -64,7 +64,7 @@
                 </mat-form-field>
             </div>
             <div [formGroup]="numberForm">
-                <mat-form-field appearance="standard" [style.width.px]="80">
+                <mat-form-field [style.width.px]="80">
                     <mat-label>Standard</mat-label>
                     <deja-numeric-stepper (increment)="changeValue5(2)" (decrement)="changeValue5(-2)"></deja-numeric-stepper>
                     <input matInput type="text" formControlName="numberValue5" />
@@ -83,7 +83,7 @@
         </mat-card-content>
     </mat-card>
 
-    <mat-card class="demo-card">
+    <mat-card appearance="outlined" class="demo-card">
         <mat-toolbar color="primary">Numeric Stepper with horizontal layout</mat-toolbar>
         <mat-card-content>
             <div [formGroup]="numberForm">
@@ -96,7 +96,7 @@
                 </mat-form-field>
             </div>
             <div [formGroup]="numberForm">
-                <mat-form-field appearance="legacy" [style.width.px]="80">
+                <mat-form-field [style.width.px]="80">
                     <mat-label>Legacy</mat-label>
                     <deja-numeric-stepper layout="horizontal" [input]="model4h"></deja-numeric-stepper>
                     <input matInput type="number" formControlName="numberValue4" #model4h="matInput"/>
@@ -104,7 +104,7 @@
                 </mat-form-field>
             </div>
             <div [formGroup]="numberForm">
-                <mat-form-field appearance="standard" [style.width.px]="80">
+                <mat-form-field [style.width.px]="80">
                     <mat-label>Standard</mat-label>
                     <deja-numeric-stepper layout="horizontal" (increment)="changeValue5(2)" (decrement)="changeValue5(-2)"></deja-numeric-stepper>
                     <input matInput type="text" formControlName="numberValue5" />
@@ -122,7 +122,7 @@
         </mat-card-content>
     </mat-card>
 
-    <mat-card class="demo-card">
+    <mat-card appearance="outlined" class="demo-card">
         <mat-toolbar color="primary">Numeric Stepper with inlay horizontal layout</mat-toolbar>
         <mat-card-content>
             <div [formGroup]="numberForm">
@@ -135,7 +135,7 @@
                 </mat-form-field>
             </div>
             <div [formGroup]="numberForm">
-                <mat-form-field appearance="legacy">
+                <mat-form-field>
                     <mat-label>Legacy</mat-label>
                     <deja-numeric-stepper layout="horizontal-inlay" [input]="model4h"></deja-numeric-stepper>
                     <input matInput inputAutosize type="number" formControlName="numberValue4" #model4h="matInput"/>
@@ -143,7 +143,7 @@
                 </mat-form-field>
             </div>
             <div [formGroup]="numberForm">
-                <mat-form-field appearance="standard">
+                <mat-form-field>
                     <mat-label>Standard</mat-label>
                     <deja-numeric-stepper layout="horizontal-inlay" (increment)="changeValue5(2)" (decrement)="changeValue5(-2)"></deja-numeric-stepper>
                     <input matInput inputAutosize type="text" formControlName="numberValue5" />

@@ -1,7 +1,7 @@
 @mixin deja-popup() {
 	[class^='deja-popup-pane-'],
 	[class*=' deja-popup-pane-'] {
-		.mat-dialog-container {
+		.mat-mdc-dialog-container {
 			padding: 0;
 			height: 100%;
 		}

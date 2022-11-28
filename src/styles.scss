@@ -9,7 +9,16 @@
 @use './app/home/home-theme'as homeTest;
 
 @mixin create-theme($color1, $color2, $dark: false) {
-    @include mat.core(); // Define color scheme
+    // TODO(v15): As of v15 mat.legacy-core no longer includes default typography styles.
+//  The following line adds:
+//    1. Default typography styles for all components
+//    2. Styles for typography hierarchy classes (e.g. .mat-headline-1)
+//  If you specify typography styles for the components you use elsewhere, you should delete this line.
+//  If you don't need the default component typographies but still want the hierarchy styles,
+//  you can delete this line and instead use:
+//    `@include mat.legacy-typography-hierarchy(mat.define-typography-config());`
+@include mat.all-component-typographies();
+@include mat.core(); // Define color scheme
 
     $primary: mat.define-palette($color1);
     $accent: mat.define-palette($color2);
@@ -77,18 +86,18 @@ body {
         not supported by any browser */
     }
 
-    .no-padding-dialog .mat-dialog-container {
+    .no-padding-dialog .mat-mdc-dialog-container {
         padding: 0;
 
-        .mat-dialog-content {
+        .mat-mdc-dialog-content {
             margin: 0;
         }
     }
 
-    .mat-dialog-container {
+    .mat-mdc-dialog-container {
         padding: 0;
 
-        .mat-dialog-content {
+        .mat-mdc-dialog-content {
             margin: 0;
         }
 
@@ -123,7 +132,7 @@ body {
             align-items: center;
             padding: 0.7rem;
 
-            .mat-button {
+            .mat-mdc-button {
                 margin: 0 0.5rem;
             }
         }

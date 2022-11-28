@@ -9,12 +9,12 @@
     <mat-tab label="AUTO RESIZE"></mat-tab>
 </mat-tab-group>
 
-<mat-card class="demo-card demo-basic" *ngIf="tabIndex === 0">
+<mat-card appearance="outlined" class="demo-card demo-basic" *ngIf="tabIndex === 0">
     <deja-markdown [url]="'https://raw.githubusercontent.com/DSI-HUG/dejajs-components/develop/projects/deja-js/component/monaco-editor/readme.md'"></deja-markdown>
 </mat-card>
 
 <div *ngIf="tabIndex === 1">
-    <mat-card class="demo-card demo-basic">
+    <mat-card appearance="outlined" class="demo-card demo-basic">
         <mat-toolbar color="primary">
             Modification d'un fichier XML
             <span flex></span>
@@ -27,7 +27,7 @@
         </mat-card-content>
     </mat-card>
 
-    <mat-card class="demo-card demo-basic">
+    <mat-card appearance="outlined" class="demo-card demo-basic">
         <mat-toolbar color="primary">Comparaison d'un fichier XML</mat-toolbar>
         <mat-card-content>
             <div class="viewer">
@@ -36,7 +36,7 @@
         </mat-card-content>
     </mat-card>
 
-    <mat-card class="demo-card demo-basic">
+    <mat-card appearance="outlined" class="demo-card demo-basic">
         <mat-toolbar color="primary">Modification d'un fichier JSON</mat-toolbar>
         <mat-card-content>
             <div class="viewer">
@@ -45,7 +45,7 @@
         </mat-card-content>
     </mat-card>
 
-    <mat-card class="demo-card demo-basic">
+    <mat-card appearance="outlined" class="demo-card demo-basic">
         <mat-toolbar color="primary">Comparaison d'un fichier JSON</mat-toolbar>
         <mat-card-content>
             <div class="viewer">
@@ -56,7 +56,7 @@
 </div>
 
 <div *ngIf="tabIndex === 2">
-    <mat-card class="demo-card demo-basic">
+    <mat-card appearance="outlined" class="demo-card demo-basic">
         <mat-toolbar color="primary">
             Resize auto
         </mat-toolbar>
@@ -79,7 +79,7 @@
         </mat-card-content>
     </mat-card>
 
-    <mat-card class="demo-card demo-basic">
+    <mat-card appearance="outlined" class="demo-card demo-basic">
         <mat-toolbar color="primary">
             Modification du text et du language
         </mat-toolbar>

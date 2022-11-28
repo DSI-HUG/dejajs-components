@@ -8,12 +8,12 @@
     <mat-tab label="EXAMPLES"></mat-tab>
 </mat-tab-group>
 
-<mat-card class="demo-card demo-basic" *ngIf="tabIndex === 0">
+<mat-card appearance="outlined" class="demo-card demo-basic" *ngIf="tabIndex === 0">
     <deja-markdown [url]="'https://raw.githubusercontent.com/DSI-HUG/dejajs-components/develop/projects/deja-js/component/circular-picker/readme.md'"></deja-markdown>
 </mat-card>
 
 <div *ngIf="tabIndex === 1">
-    <mat-card class="demo-card">
+    <mat-card appearance="outlined" class="demo-card">
         <mat-toolbar color="primary">Complex Circular-picker width custom labels</mat-toolbar>
         <mat-card-content id="complex-wrapper" class="listContainer">
             <deja-circular-picker [ranges]="ranges41" [outerLabels]="true" id="outside">
@@ -25,7 +25,7 @@
             </deja-circular-picker>
         </mat-card-content>
     </mat-card>
-    <mat-card class="demo-card">
+    <mat-card appearance="outlined" class="demo-card">
         <mat-toolbar color="primary">Circular-picker demo simple - Range 1 to 20 (inside and outside labels)</mat-toolbar>
         <mat-card-content class="listContainer">
             <div>
@@ -38,7 +38,7 @@
             </div>
         </mat-card-content>
     </mat-card>
-    <mat-card class="demo-card">
+    <mat-card appearance="outlined" class="demo-card">
         <mat-toolbar color="primary">Circular-picker demo multiple range (inside labels)</mat-toolbar>
         <mat-card-content class="listContainer">
             <deja-circular-picker [(ngModel)]="sms" [ranges]="ranges3">

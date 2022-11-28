@@ -3,10 +3,10 @@
     <mat-tab label="EXAMPLES"></mat-tab>
 </mat-tab-group>
 
-<mat-card class="demo-card demo-basic" *ngIf="tabIndex === 0">
+<mat-card appearance="outlined" class="demo-card demo-basic" *ngIf="tabIndex === 0">
     TODO
 </mat-card>
-<mat-card class="demo-card demo-basic" *ngIf="tabIndex === 1">
+<mat-card appearance="outlined" class="demo-card demo-basic" *ngIf="tabIndex === 1">
     <mat-toolbar color="primary">Tag Component</mat-toolbar>
     <mat-card-content>
         <deja-tag [(ngModel)]="values" placeholder="Add tags"></deja-tag>

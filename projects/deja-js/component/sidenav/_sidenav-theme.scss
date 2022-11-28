@@ -1,4 +1,5 @@
-@use '@angular/material' as mat;
+@use '@angular/material'as mat;
+
 @mixin sidenav-theme($theme) {
     $primary: map-get($theme, primary);
     $background: map-get($theme, background);
@@ -28,23 +29,17 @@
                 deja-sidenav-menu {
                     border-right: 1px solid mat.get-color-from-palette($foreground, divider);
 
-                    .mat-list-item {
+                    .mat-mdc-list-item {
                         &.active {
-
-                            .mat-list-icon,
-                            .mat-list-text {
-                                color: mat.get-color-from-palette($primary) !important;
-                            }
+                            color: mat.get-color-from-palette($primary) !important;
                         }
 
-                        .mat-list-item-content {
-                            .mat-list-icon {
-                                color: mat.get-color-from-palette($foreground, icons)
-                            }
+                        .mat-icon {
+                            color: mat.get-color-from-palette($foreground, icons)
+                        }
 
-                            .mat-list-text {
-                                color: mat.get-color-from-palette($foreground, text)
-                            }
+                        .mat-list-text {
+                            color: mat.get-color-from-palette($foreground, text)
                         }
                     }
                 }

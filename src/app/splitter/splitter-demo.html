@@ -1,13 +1,13 @@
 <mat-tab-group [selectedIndex]="2">
     <mat-tab label="API REFERENCE">
-        <mat-card class="demo-card demo-basic">
+        <mat-card appearance="outlined" class="demo-card demo-basic">
             <deja-markdown [url]="'https://raw.githubusercontent.com/DSI-HUG/dejajs-components/develop/projects/deja-js/component/splitter/readme.md'">
             </deja-markdown>
         </mat-card>
     </mat-tab>
     <mat-tab label="EXAMPLES">
         <div>
-            <mat-card class="demo-card">
+            <mat-card appearance="outlined" class="demo-card">
                 <mat-toolbar color="primary">Horizontal splitter</mat-toolbar>
                 <mat-card-content class="no-padding">
                     <div class="container">
@@ -23,7 +23,7 @@
                 </mat-card-content>
             </mat-card>
 
-            <mat-card class="demo-card">
+            <mat-card appearance="outlined" class="demo-card">
                 <mat-toolbar color="primary">Vertical splitter</mat-toolbar>
                 <mat-card-content class="no-padding">
                     <div class="container">
@@ -39,7 +39,7 @@
                 </mat-card-content>
             </mat-card>
 
-            <mat-card class="demo-card">
+            <mat-card appearance="outlined" class="demo-card">
                 <mat-toolbar color="primary">Multiple splitter</mat-toolbar>
                 <mat-card-content class="no-padding">
                     <div class="container">
@@ -74,7 +74,7 @@
         </div>
     </mat-tab>
     <mat-tab label="EXAMPLE FULL PAGE" bodyClass="fixed-height">
-        <mat-card class="demo-card">
+        <mat-card appearance="outlined" class="demo-card">
             <mat-toolbar color="primary">Vertical splitter</mat-toolbar>
             <mat-card-content class="no-padding">
                 <deja-splitter #dejaSplitter direction="vertical">

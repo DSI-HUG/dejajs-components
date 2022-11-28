@@ -1,7 +1,8 @@
 app-style-editor-dialog {
     #dialog-container {
         padding: 0.5rem 1rem;
-
+        /* TODO(mdc-migration): The following rule targets internal classes of checkbox that may no longer apply for the MDC version. */
+        /* TODO(mdc-migration): The following rule targets internal classes of checkbox that may no longer apply for the MDC version. */
         mat-checkbox label {
             margin-bottom: 0.2rem;
         }
@@ -25,7 +26,8 @@ app-style-editor-dialog {
             }
         }
     }
-
+    /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
+    /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
     mat-form-field>div.mat-form-field-wrapper {
         padding-bottom: .5rem !important;
     }

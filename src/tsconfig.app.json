@@ -12,8 +12,7 @@
         "strictInjectionParameters": true,
         "enableResourceInlining": true,
         "strictTemplates": true,
-        "strictAttributeTypes": true,
-        "enableIvy": true
+        "strictAttributeTypes": true
     },
     "files": [
         "main.ts",
