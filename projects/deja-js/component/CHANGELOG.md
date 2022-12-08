@@ -1,3 +1,50 @@
+# [14.1.0-develop.10](https://github.com/DSI-HUG/dejajs-components/compare/v14.1.0-develop.9...v14.1.0-develop.10) (2022-12-08)
+
+# [14.1.0-develop.9](https://github.com/DSI-HUG/dejajs-components/compare/v14.1.0-develop.8...v14.1.0-develop.9) (2022-11-25)
+
+
+### Bug Fixes
+
+* add possibility to specify parentInjector when open lazyloading module ([1843da3](https://github.com/DSI-HUG/dejajs-components/commit/1843da363cfa73673e9fbbf8947b2759f5f57e15))
+* **dialog-service:** test service inject in sub dialog components ([c4afbc2](https://github.com/DSI-HUG/dejajs-components/commit/c4afbc252bee7849008354df08833805d03754df))
+
+# [14.1.0-develop.8](https://github.com/DSI-HUG/dejajs-components/compare/v14.1.0-develop.7...v14.1.0-develop.8) (2022-11-23)
+
+# [14.1.0-develop.7](https://github.com/DSI-HUG/dejajs-components/compare/v14.1.0-develop.6...v14.1.0-develop.7) (2022-11-14)
+
+# [14.1.0-develop.6](https://github.com/DSI-HUG/dejajs-components/compare/v14.1.0-develop.5...v14.1.0-develop.6) (2022-10-31)
+
+# [14.1.0-develop.5](https://github.com/DSI-HUG/dejajs-components/compare/v14.1.0-develop.4...v14.1.0-develop.5) (2022-10-31)
+
+# [14.1.0-develop.4](https://github.com/DSI-HUG/dejajs-components/compare/v14.1.0-develop.3...v14.1.0-develop.4) (2022-10-31)
+
+# [14.1.0-develop.3](https://github.com/DSI-HUG/dejajs-components/compare/v14.1.0-develop.2...v14.1.0-develop.3) (2022-10-27)
+
+
+### Features
+
+* **deja-editor:** upgrade to ckeditor 4.20.0 which fix destroy errors (DEJS-1108) ([e433676](https://github.com/DSI-HUG/dejajs-components/commit/e4336765e89542e14b11c4abe2663fb758d46f42))
+
+# [14.1.0-develop.2](https://github.com/DSI-HUG/dejajs-components/compare/v14.1.0-develop.1...v14.1.0-develop.2) (2022-10-12)
+
+
+### Features
+
+* monaco-editor v2 with reactive form support ([12cc485](https://github.com/DSI-HUG/dejajs-components/commit/12cc485f467bd3440d0881a0a01bf83479a53cb8))
+* monaco-editor v2 with reactive form support ([406fb6a](https://github.com/DSI-HUG/dejajs-components/commit/406fb6a91ad8a1ec3afafdc1dc3df1d9c90b43c9))
+
+# [14.1.0-develop.1](https://github.com/DSI-HUG/dejajs-components/compare/v14.0.0...v14.1.0-develop.1) (2022-09-14)
+
+
+### Bug Fixes
+
+* **time-picker:** remove readonly mode (wrong implementation) ([61dbe5f](https://github.com/DSI-HUG/dejajs-components/commit/61dbe5f2cff2dda1da605de4dc4cf8d7500e5660))
+
+
+### Features
+
+* **time-picker:** add duration to time-picker ([82623b9](https://github.com/DSI-HUG/dejajs-components/commit/82623b94d7b1b7ae50a0ffe84decc32e159114e8))
+
 # [14.0.0](https://github.com/DSI-HUG/dejajs-components/compare/v13.8.0...v14.0.0) (2022-08-26)
 
 

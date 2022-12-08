@@ -7,7 +7,8 @@
  */
 
 import { BooleanInput, coerceBooleanProperty, coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Optional, Output, Self, ViewEncapsulation } from '@angular/core';
+import { ControlValueAccessor, NgControl } from '@angular/forms';
 
 import { MonacoEditorService } from './monaco-editor.service';
 import { EditorOptions, FontWeight, Language, LineNumbers, RenderLineHighlight, RenderWhitespace, SnippetSuggestions } from './options/editor-options.model';
@@ -27,7 +28,7 @@ import { EditorScrollbarOptions } from './options/editor-scrollbar-options.model
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MonacoEditorComponent {
+export class MonacoEditorComponent implements ControlValueAccessor {
     @Output() public readonly valueChange = new EventEmitter<string>();
 
     @Input()
@@ -909,11 +910,15 @@ export class MonacoEditorComponent {
     private _valueToCompare: string;
 
     public constructor(
-        public monacoEditorService: MonacoEditorService
+        public monacoEditorService: MonacoEditorService,
+        @Self() @Optional() public control: NgControl
     ) {
         this.options = {
             automaticLayout: true
         } as EditorOptions;
+        if (this.control) {
+            this.control.valueAccessor = this;
+        }
     }
 
     public updateOptions(options: EditorOptions): void {
@@ -923,5 +928,23 @@ export class MonacoEditorComponent {
     public onValueChange(value: string): void {
         this.value = value;
         this.valueChange.next(value);
+    }
+
+    public onTouchedCallback = (): void => undefined;
+    public onChangeCallback = (_: string): void => undefined;
+
+    /** From ControlValueAccessor interface */
+    public writeValue(value: string): void {
+        this.value = value;
+    }
+
+    /** From ControlValueAccessor interface */
+    public registerOnChange(fn: (_a: unknown) => void): void {
+        this.onChangeCallback = fn;
+    }
+
+    /** From ControlValueAccessor interface */
+    public registerOnTouched(fn: () => void): void {
+        this.onTouchedCallback = fn;
     }
 }

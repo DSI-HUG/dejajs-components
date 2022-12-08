@@ -31,10 +31,10 @@ export class LazyLoaderService {
     public constructor(private injector: Injector) {
     }
 
-    public loadModule$<T extends AbstractLazyModule<unknown>>(path: Promise<Type<T>>): Observable<LoadModuleInfos<T>> {
+    public loadModule$<T extends AbstractLazyModule<unknown>>(path: Promise<Type<T>>, parentInjector?: Injector): Observable<LoadModuleInfos<T>> {
         return from(path).pipe(
             map(elementModuleOrFactory => {
-                const injector = createInjector(elementModuleOrFactory, this.injector);
+                const injector = createInjector(elementModuleOrFactory, parentInjector || this.injector);
                 return {
                     injector,
                     module: injector.get(elementModuleOrFactory)

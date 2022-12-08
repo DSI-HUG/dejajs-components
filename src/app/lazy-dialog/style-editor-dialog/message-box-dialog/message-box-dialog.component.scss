@@ -1,0 +1,10 @@
+app-message-box-dialog {
+    padding-top: 1rem;
+
+    .dialog-container {
+        display: flex;
+        flex-direction: column;
+        margin: 1rem 1rem 0.5rem 1rem;
+        max-height: 80vh;
+    }
+}
