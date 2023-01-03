@@ -1,3 +1,10 @@
+## [14.1.1-develop.1](https://github.com/DSI-HUG/dejajs-components/compare/v14.1.0...v14.1.1-develop.1) (2023-01-03)
+
+
+### Bug Fixes
+
+* **media.service:** fix np on media.service.ts ([2a84e64](https://github.com/DSI-HUG/dejajs-components/commit/2a84e64f665ad4a36a713623d654608cd5e9ae6f))
+
 # [14.1.0](https://github.com/DSI-HUG/dejajs-components/compare/v14.0.0...v14.1.0) (2022-12-08)
 
 
