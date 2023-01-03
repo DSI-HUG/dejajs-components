@@ -1,3 +1,10 @@
+## [14.1.1-develop.2](https://github.com/DSI-HUG/dejajs-components/compare/v14.1.1-develop.1...v14.1.1-develop.2) (2023-01-03)
+
+
+### Bug Fixes
+
+* fix deprecated import ([e670263](https://github.com/DSI-HUG/dejajs-components/commit/e670263e2e64c8546a8817fdf9ca33932430331d))
+
 ## [14.1.1-develop.1](https://github.com/DSI-HUG/dejajs-components/compare/v14.1.0...v14.1.1-develop.1) (2023-01-03)
 
 
