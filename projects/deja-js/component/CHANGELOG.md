@@ -1,3 +1,10 @@
+# [14.2.0-develop.1](https://github.com/DSI-HUG/dejajs-components/compare/v14.1.1-develop.2...v14.2.0-develop.1) (2023-02-01)
+
+
+### Bug Fixes
+
+* **timePicker:** init milliseconds to 0 (DEJS-1129) ([5eee4f5](https://github.com/DSI-HUG/dejajs-components/commit/5eee4f50d8b90b56c89fceb4dfb681aeb43d0f73))
+
 ## [14.1.1-develop.2](https://github.com/DSI-HUG/dejajs-components/compare/v14.1.1-develop.1...v14.1.1-develop.2) (2023-01-03)
 
 
