@@ -36,7 +36,7 @@
 @use '../v2/splitter/splitter-theme'as splitter2Theme;
 
 /** Font icons */
-@import '~@fontsource/material-icons';
+@import '@fontsource/material-icons';
 
 @mixin deja-theme($custom-theme) {
     @include chipsTheme.chips-theme($custom-theme);

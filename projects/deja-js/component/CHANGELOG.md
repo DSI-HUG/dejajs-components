@@ -1,3 +1,26 @@
+# [14.2.0-develop.2](https://github.com/DSI-HUG/dejajs-components/compare/v14.2.0-develop.1...v14.2.0-develop.2) (2023-02-09)
+
+# [14.2.0-develop.1](https://github.com/DSI-HUG/dejajs-components/compare/v14.1.1-develop.2...v14.2.0-develop.1) (2023-02-01)
+
+
+### Bug Fixes
+
+* **timePicker:** init milliseconds to 0 (DEJS-1129) ([5eee4f5](https://github.com/DSI-HUG/dejajs-components/commit/5eee4f50d8b90b56c89fceb4dfb681aeb43d0f73))
+
+## [14.1.1-develop.2](https://github.com/DSI-HUG/dejajs-components/compare/v14.1.1-develop.1...v14.1.1-develop.2) (2023-01-03)
+
+
+### Bug Fixes
+
+* fix deprecated import ([e670263](https://github.com/DSI-HUG/dejajs-components/commit/e670263e2e64c8546a8817fdf9ca33932430331d))
+
+## [14.1.1-develop.1](https://github.com/DSI-HUG/dejajs-components/compare/v14.1.0...v14.1.1-develop.1) (2023-01-03)
+
+
+### Bug Fixes
+
+* **media.service:** fix np on media.service.ts ([2a84e64](https://github.com/DSI-HUG/dejajs-components/commit/2a84e64f665ad4a36a713623d654608cd5e9ae6f))
+
 # [14.1.0](https://github.com/DSI-HUG/dejajs-components/compare/v14.0.0...v14.1.0) (2022-12-08)
 
 

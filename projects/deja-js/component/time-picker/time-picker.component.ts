@@ -130,7 +130,7 @@ export class DejaTimePickerComponent extends Destroy implements ControlValueAcce
             takeUntil(this.destroyed$)
         ).subscribe(({ hours, isEvent }) => {
             if (!this.value) {
-                this.value = this.dataType === 'date' ? set(new Date(), { hours, minutes: 0, seconds: 0 }) : { hours, minutes: 0 } as Duration;
+                this.value = this.dataType === 'date' ? set(new Date(), { hours, minutes: 0, seconds: 0, milliseconds: 0 }) : { hours, minutes: 0 } as Duration;
             } else if (this.value instanceof Date) {
                 const value = this.value?.getTime();
                 const clone = new Date(value);
@@ -165,7 +165,7 @@ export class DejaTimePickerComponent extends Destroy implements ControlValueAcce
             takeUntil(this.destroyed$)
         ).subscribe(minutes => {
             if (!this.value) {
-                this.value = this.dataType === 'date' ? set(new Date(), { hours: 0, minutes, seconds: 0 }) : { hours: 0, minutes } as Duration;
+                this.value = this.dataType === 'date' ? set(new Date(), { hours: 0, minutes, seconds: 0, milliseconds: 0 }) : { hours: 0, minutes } as Duration;
             } else if (this.value instanceof Date) {
                 const newValue = new Date(this.value.getTime());
                 if (minutes < 0) {

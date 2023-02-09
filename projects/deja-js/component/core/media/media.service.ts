@@ -120,6 +120,10 @@ export class MediaService implements OnDestroy {
             }
         });
 
+        if (!this.mediaChanged$) {
+            this.mediaChanged$ = new BehaviorSubject('lg');
+        }
+
         this.isMobile$ = this.mediaChanged$.pipe(
             map(alias => alias === 'xs' || alias === 'sm'),
             distinctUntilChanged()
