@@ -30,6 +30,8 @@
     .deja-popup-toolbar-spacer {
         flex: 1;
         cursor: grab;
+        overflow: hidden;
+        text-overflow: ellipsis;
 
         .mat-icon {
             vertical-align: sub;
