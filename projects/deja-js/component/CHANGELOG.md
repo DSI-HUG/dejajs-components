@@ -1,3 +1,10 @@
+# [14.3.0-develop.1](https://github.com/DSI-HUG/dejajs-components/compare/v14.2.0...v14.3.0-develop.1) (2023-04-04)
+
+
+### Bug Fixes
+
+* **popup-toolbar:** avoid title overflowing container and hiding buttons (DEJS-1143) ([64a6014](https://github.com/DSI-HUG/dejajs-components/commit/64a6014077671d8bf6142d9eb05f435d7652a305))
+
 # [14.2.0](https://github.com/DSI-HUG/dejajs-components/compare/v14.1.0...v14.2.0) (2023-02-09)
 
 
