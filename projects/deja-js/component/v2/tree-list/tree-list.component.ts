@@ -91,7 +91,7 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
     private listElement$ = new ReplaySubject<HTMLElement>(1);
     private inputElement$ = new ReplaySubject<HTMLInputElement>(1);
     private raiseChangeCallback = false;
-    private _currentItem: Item<T>;
+    private _currentItem: Item<T> | undefined;
     private _pageSize = 0;
     private filterExpression = '';
     private _maxHeight: number;
@@ -163,23 +163,23 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
 
     /** Définit l'élément sélectionné en mode single select */
     @Input()
-    public set selectedItem(value: Item<T>) {
+    public set selectedItem(value: Item<T> | undefined) {
         this.itemService.setSelectedItems(value && [value]);
     }
 
     /** Retourne l'éléments sélectionné en mode single select */
-    public get selectedItem(): Item<T> {
+    public get selectedItem(): Item<T> | undefined {
         return this.selectedItems?.[0];
     }
 
     /** Définit le model sélectionné en mode single select */
     @Input()
-    public set selectedModel(value: T) {
+    public set selectedModel(value: T | undefined) {
         this.itemService.setSelectedModels(value && [value]);
     }
 
     /** Retourne le model sélectionné en mode single select */
-    public get selectedModel(): T {
+    public get selectedModel(): T | undefined {
         return this.selectedModels?.[0];
     }
 
@@ -196,12 +196,12 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
 
     /** Définit le model sélectionné en mode single select */
     @Input()
-    public set selectedValue(value: string) {
+    public set selectedValue(value: string | undefined) {
         this.itemService.setSelectedValues(value && [value]);
     }
 
     /** Retourne le model sélectionné en mode single select */
-    public get selectedValue(): string {
+    public get selectedValue(): string | undefined {
         return this.selectedValues?.[0];
     }
 
@@ -292,12 +292,12 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
 
     /** Définit la ligne courant ou ligne active */
     @Input()
-    public set currentItem(item: Item<T>) {
+    public set currentItem(item: Item<T> | undefined) {
         this._currentItem = item;
     }
 
     /** Retourne la ligne courant ou ligne active */
-    public get currentItem(): Item<T> {
+    public get currentItem(): Item<T> | undefined {
         return this._currentItem;
     }
 
