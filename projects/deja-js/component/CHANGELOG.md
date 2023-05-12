@@ -1,3 +1,10 @@
+# [14.4.0-develop.2](https://github.com/DSI-HUG/dejajs-components/compare/v14.4.0-develop.1...v14.4.0-develop.2) (2023-05-12)
+
+
+### Features
+
+* range, add trackby for range component ([e1bcf5f](https://github.com/DSI-HUG/dejajs-components/commit/e1bcf5fa7ee67e5d8aa15d9cb7089f226b8f5d1b))
+
 # [14.4.0-develop.1](https://github.com/DSI-HUG/dejajs-components/compare/v14.3.0...v14.4.0-develop.1) (2023-05-12)
 
 
