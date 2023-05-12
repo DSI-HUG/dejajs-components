@@ -1,3 +1,10 @@
+# [14.4.0-develop.1](https://github.com/DSI-HUG/dejajs-components/compare/v14.3.0...v14.4.0-develop.1) (2023-05-12)
+
+
+### Features
+
+* tiles.component.html, add tryBy property ([72b495e](https://github.com/DSI-HUG/dejajs-components/commit/72b495eca745520455a5a55896480078838bd4a0))
+
 # [14.3.0](https://github.com/DSI-HUG/dejajs-components/compare/v14.2.0...v14.3.0) (2023-04-20)
 
 
