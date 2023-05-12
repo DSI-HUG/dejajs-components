@@ -10,6 +10,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/unbound-method */
 import { coerceBooleanProperty, coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, forwardRef, Input, NgZone, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -19,6 +20,17 @@ import { debounceTime, delay, from, merge, ReplaySubject, Subject, Subscription,
 
 import { DejaEditorService } from './deja-editor.service';
 
+interface EventInfo {
+    data: any;
+    editor: any;
+    listenerData: any;
+    name: string;
+    sender: { [key: string]: any };
+
+    cancel: () => void;
+    removeListener: () => void;
+    stop: () => void;
+}
 
 /**
  * CKEditor component
@@ -40,7 +52,7 @@ import { DejaEditorService } from './deja-editor.service';
     encapsulation: ViewEncapsulation.None
 })
 export class DejaEditorComponent extends Destroy implements OnChanges, OnInit, AfterViewInit, OnDestroy, ControlValueAccessor {
-    @Input() public config: any;
+    @Input() public config: CKEDITOR.config;
 
     // eslint-disable-next-line @angular-eslint/no-output-native
     @Output() public readonly change = new EventEmitter();
@@ -51,7 +63,7 @@ export class DejaEditorComponent extends Destroy implements OnChanges, OnInit, A
     @Output() public readonly focus = new EventEmitter();
     @Output() public readonly disabled = new EventEmitter<boolean>();
 
-    @ViewChild('host', { static: true }) public host: ElementRef;
+    @ViewChild('host', { static: true }) public host: ElementRef<HTMLTextAreaElement>;
 
     public instance: CKEDITOR.editor;
     public debounceTimeout$sub: Subscription;
@@ -114,7 +126,7 @@ export class DejaEditorComponent extends Destroy implements OnChanges, OnInit, A
 
     public ngOnChanges(changes: SimpleChanges): void {
         if (changes.readonly && this.instance) {
-            this.instance.setReadOnly(changes.readonly.currentValue);
+            this.instance.setReadOnly(this.readonly);
         }
     }
 
@@ -199,7 +211,7 @@ export class DejaEditorComponent extends Destroy implements OnChanges, OnInit, A
      * CKEditor init
      */
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    public ckeditorInit(config: any): void {
+    public ckeditorInit(config: CKEDITOR.config): void {
         if (typeof CKEDITOR === 'undefined') {
             console.warn('CKEditor 4.x is missing (http://ckeditor.com/)');
         } else {
@@ -216,7 +228,7 @@ export class DejaEditorComponent extends Destroy implements OnChanges, OnInit, A
             if (!config.on) {
                 config.on = {};
             }
-            config.on.key = (event: any): void => {
+            config.on.key = (event: EventInfo): void => {
                 // Override CTRL+A event. Native one cause editor switch on first try
                 if (event.data.code === 1114177) {
                     // CTRL + A
@@ -545,7 +557,7 @@ export class DejaEditorComponent extends Destroy implements OnChanges, OnInit, A
         if (index !== -1) {
             const beforeText = node.textNode.getText().substring(0, index);
             // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
-            const afterText = node.textNode.getText().substring(index + node.toReplace.length);
+            const afterText = node.textNode.getText().substring(index + node.toReplace.length) as string | Text;
             node.textNode.setText(beforeText);
             // Wrap into a span otherwise methode createFromHtml will only take the html element :
             // For instance if replace is 'abc<br/>def', createFromHtml will create an html text element with abc only
@@ -554,14 +566,17 @@ export class DejaEditorComponent extends Destroy implements OnChanges, OnInit, A
                 replace,
                 CKEDITOR.ENTER_BR
             ))}</span>`);
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
             newElement.insertAfter(node.textNode);
             // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
             if (node.textNode.getText().substring(index + node.toReplace.length)) {
                 const end = new CKEDITOR.dom.text(afterText);
                 end.insertAfter(newElement);
             }
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
             this.instance.getSelection().selectElement(node.textNode);
             const tmpRange = this.instance.getSelection().getRanges()[0];
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
             tmpRange.setStartAfter(node.textNode);
             tmpRange.select();
         }
