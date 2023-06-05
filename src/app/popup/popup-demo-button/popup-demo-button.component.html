@@ -1,6 +1,0 @@
-<button *ngIf="data; else noData" type="button" mat-icon-button [color]="data.buttonColor" (click)="onClick($event)">
-    <mat-icon [matTooltip]="data.iconTooltip">{{ data.iconName }}</mat-icon>
-</button>
-<ng-template #noData>
-    No data injected!
-</ng-template>

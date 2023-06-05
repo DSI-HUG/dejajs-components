@@ -16,11 +16,11 @@ import { ViewPortItem } from '@deja-js/component/v2/viewport';
 import { BehaviorSubject, combineLatestWith, delay, filter, groupBy, map, mergeMap, Observable, of, range, reduce, shareReplay, Subject, Subscription, switchMap, take, takeUntil, tap, toArray, withLatestFrom } from 'rxjs';
 
 import { News } from '../../common/news.model';
-import { cheeseValidator } from '../../select/validators';
 import { CountriesService, Country } from '../../services/countries.service';
 import { CountriesListService } from '../../services/countries-list.service';
 import { Folder, FoldersService } from '../../services/folders.service';
 import { NewsService } from '../../services/news.service';
+import { cheeseValidator } from './validators';
 
 
 interface DeepCountry {
@@ -47,11 +47,8 @@ interface FruitForm {
     selector: 'tree-list-demo',
     styleUrls: ['./tree-list-demo.scss'],
     templateUrl: './tree-list-demo.html'
-})
+    })
 export class TreeListDemoComponent extends Destroy {
-    @ViewChild('news') private newsList: TreeListComponent<News>;
-    @ViewChild('onexpand') private onExpandList: TreeListComponent<unknown>;
-
     public fruct = 'Apricots';
     public fructs = [] as string[];
     public fructItems = [] as Item<unknown>[];
@@ -113,6 +110,9 @@ export class TreeListDemoComponent extends Destroy {
     public get dialogVisible(): boolean {
         return this._dialogVisible;
     }
+
+    @ViewChild('news') private newsList: TreeListComponent<News>;
+    @ViewChild('onexpand') private onExpandList: TreeListComponent<unknown>;
 
     public constructor(
         private changeDetectorRef: ChangeDetectorRef,
