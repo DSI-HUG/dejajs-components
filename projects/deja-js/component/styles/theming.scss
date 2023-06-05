@@ -16,10 +16,8 @@
 @use '../color-picker/color-picker-theme'as colorPickerTheme;
 @use '../loaders/list-loader-theme'as listLoaderTheme;
 @use '../message-box/message-box-theme'as messageBoxTheme;
-@use '../mouse-dragdrop/mouse-dragdrop-theme'as mouseDragdropTheme;
 @use '../range/range-theme'as rangeTheme;
 @use '../sidenav/sidenav-theme'as sidenavTheme;
-@use '../splitter/splitter-theme'as splitterTheme;
 @use '../tooltip/tooltip-theme'as tooltipTheme;
 @use '../v2/numeric-stepper/numeric-stepper-theme'as numericStepper2Theme;
 @use '../v2/mouse-dragdrop/mouse-dragdrop-theme'as mouseDragdrop2Theme;
@@ -43,10 +41,8 @@
     @include materialTheme.deja-material-theme($custom-theme);
     @include menuTheme.menu-theme($custom-theme);
     @include messageBoxTheme.message-box-theme($custom-theme);
-    @include mouseDragdropTheme.mouse-dragdrop-theme($custom-theme);
     @include rangeTheme.range-theme($custom-theme);
     @include sidenavTheme.sidenav-theme($custom-theme);
-    @include splitterTheme.splitter-theme($custom-theme);
     @include splitter2Theme.splitter-theme($custom-theme);
     @include tooltipTheme.tooltip-theme($custom-theme);
     @include mouseDragdrop2Theme.mouse-dragdrop-2-theme($custom-theme);

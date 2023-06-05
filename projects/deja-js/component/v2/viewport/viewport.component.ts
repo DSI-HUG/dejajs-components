@@ -26,17 +26,15 @@ export class ViewPortItemClassEvent<T> {
     selector: 'viewport',
     styleUrls: ['./viewport.component.scss'],
     templateUrl: './viewport.component.html'
-})
+    })
 export class ViewPortComponent<T> extends Destroy {
     @HostBinding('attr.buttons') public hasButtons: boolean = null;
     @HostBinding('attr.horizontal') public isHorizontal: boolean = null;
 
     /** Permet de définir un template d'élément par binding */
-    @Input() public viewPortItemTemplateExternal: TemplateRef<T>;
+    @Input() public viewPortItemTemplateExternal: TemplateRef<unknown>;
 
     @Output() public readonly itemClass = new EventEmitter<ViewPortItemClassEvent<T>>();
-
-    @ContentChild('viewPortItemTemplate') private viewPortItemTemplateInternal: TemplateRef<T>;
 
     public hasUpButton: boolean = null;
     public hasDownButton: boolean = null;
@@ -46,6 +44,8 @@ export class ViewPortComponent<T> extends Destroy {
 
     private _buttonsStep: NumberInput;
     private reloadViewPort$ = new BehaviorSubject<void>(null);
+
+    @ContentChild('viewPortItemTemplate') private viewPortItemTemplateInternal: TemplateRef<unknown>;
 
     @Input()
     public set buttonsStep(value: NumberInput) {
@@ -109,7 +109,7 @@ export class ViewPortComponent<T> extends Destroy {
         this.buttons$.next(buttons);
     }
 
-    public get viewPortItemTemplate(): TemplateRef<T> {
+    public get viewPortItemTemplate(): TemplateRef<unknown> {
         return this.viewPortItemTemplateExternal || this.viewPortItemTemplateInternal;
     }
 
