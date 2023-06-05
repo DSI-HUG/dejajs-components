@@ -9,7 +9,7 @@
 import { CdkDragEnd, Point } from '@angular/cdk/drag-drop';
 import { ComponentPortal, Portal } from '@angular/cdk/portal';
 import { AfterViewInit, Component, ElementRef, Inject, Injector, OnInit, Renderer2, ViewEncapsulation } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA, MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
 import { DomSanitizer } from '@angular/platform-browser';
 import { takeUntil, timer } from 'rxjs';
 

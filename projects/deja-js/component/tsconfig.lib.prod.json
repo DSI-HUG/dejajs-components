@@ -5,7 +5,6 @@
         "emitDecoratorMetadata": false,
     },
     "angularCompilerOptions": {
-        "enableIvy": true,
         "compilationMode": "partial"
     }
 }

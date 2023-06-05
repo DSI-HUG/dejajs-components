@@ -7,7 +7,7 @@
  */
 
 import { Directive, ElementRef, NgZone, OnInit } from '@angular/core';
-import { MatInput } from '@angular/material/input';
+import { MatLegacyInput as MatInput } from '@angular/material/legacy-input';
 import { Destroy } from '@deja-js/component/core';
 import { debounceTime, fromEvent, mergeWith, of, startWith, takeUntil } from 'rxjs';
 

@@ -11,8 +11,8 @@ import { BooleanInput, coerceBooleanProperty, coerceNumberProperty, NumberInput 
 import { AfterContentInit, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ContentChildren, DoCheck, ElementRef, EventEmitter, HostBinding, Input, OnDestroy, Optional, Output, Self, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, FormControl, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
 import { CanDisable, CanUpdateErrorState, ErrorStateMatcher } from '@angular/material/core';
-import { MatFormFieldControl } from '@angular/material/form-field';
-import { MatInput } from '@angular/material/input';
+import { MatLegacyFormFieldControl as MatFormFieldControl } from '@angular/material/legacy-form-field';
+import { MatLegacyInput as MatInput } from '@angular/material/legacy-input';
 import { IDejaChipsComponentCloseEvent } from '@deja-js/component/chips';
 import { DejaChildValidatorDirective, DejaConnectionPositionPair, KeyCodes, MediaService } from '@deja-js/component/core';
 import { DejaItemComponent, DejaItemEvent, DejaItemsEvent, GroupingService, IFindItemResult, IItemBase, IItemTree, ItemListBase, ItemListService, IViewListResult, IViewPort, SortingService, ViewPortService } from '@deja-js/component/core/item-list';

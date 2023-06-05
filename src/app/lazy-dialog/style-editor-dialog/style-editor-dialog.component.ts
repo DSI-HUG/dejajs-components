@@ -1,7 +1,7 @@
 /* eslint-disable no-bitwise */
 import { ChangeDetectionStrategy, Component, Inject, Injector, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
 import { ControlsOf, Destroy } from '@deja-js/component/core';
 import { Color, MaterialColorService } from '@deja-js/component/core/graphics';
 import { takeUntil } from 'rxjs';

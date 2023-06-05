@@ -7,7 +7,7 @@
  */
 import { ComponentType } from '@angular/cdk/portal';
 import { TemplateRef } from '@angular/core';
-import { MatDialogConfig } from '@angular/material/dialog';
+import { MatLegacyDialogConfig as MatDialogConfig } from '@angular/material/legacy-dialog';
 import { SafeResourceUrl } from '@angular/platform-browser';
 import { BehaviorSubject } from 'rxjs';
 

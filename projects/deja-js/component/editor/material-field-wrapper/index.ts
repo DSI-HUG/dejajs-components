@@ -7,7 +7,7 @@
  */
 
 import { NgModule } from '@angular/core';
-import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatLegacyFormFieldModule as MatFormFieldModule } from '@angular/material/legacy-form-field';
 
 import { DejaEditorComponent } from '../deja-editor.component';
 import { DejaEditorModule } from '../deja-editor.module';

@@ -8,7 +8,7 @@
 
 import { TemplatePortal } from '@angular/cdk/portal';
 import { ChangeDetectorRef, Component, TemplateRef, ViewChild, ViewContainerRef } from '@angular/core';
-import { DialogPosition } from '@angular/material/dialog';
+import { LegacyDialogPosition as DialogPosition } from '@angular/material/legacy-dialog';
 import { DejaMessageBoxAction, DejaMessageBoxType, Destroy } from '@deja-js/component/core';
 import { Color } from '@deja-js/component/core/graphics';
 import { DejaPopupAction, DejaPopupButton, DejaPopupConfig, DejaPopupCustomAction, DejaPopupReponse, DejaPopupService } from '@deja-js/component/popup';

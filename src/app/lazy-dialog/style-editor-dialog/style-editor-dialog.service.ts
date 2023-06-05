@@ -1,5 +1,5 @@
 import { Injectable, Type } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { AbstractLazyModule, DialogService, LazyLoaderService } from '@deja-js/component/core';
 
 import { StyleConfig } from './style-config.model';

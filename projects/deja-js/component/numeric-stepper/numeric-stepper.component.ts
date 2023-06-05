@@ -11,7 +11,7 @@ import { BooleanInput, coerceBooleanProperty, coerceNumberProperty, NumberInput 
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DoCheck, ElementRef, EventEmitter, HostBinding, Input, OnChanges, OnDestroy, Optional, Output, Self, ViewChild } from '@angular/core';
 import { ControlValueAccessor, FormControl, FormGroupDirective, NgControl, NgForm, ValidationErrors, Validator, ValidatorFn } from '@angular/forms';
 import { CanUpdateErrorState, ErrorStateMatcher } from '@angular/material/core';
-import { MatFormFieldControl } from '@angular/material/form-field';
+import { MatLegacyFormFieldControl as MatFormFieldControl } from '@angular/material/legacy-form-field';
 import { _MatInputMixinBase, DejaChildValidatorDirective, DejaTextMetricsService } from '@deja-js/component/core';
 import { Subject } from 'rxjs';
 

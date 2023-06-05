@@ -1,5 +1,5 @@
 import { Injectable, Type } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatLegacyDialog as MatDialog } from '@angular/material/legacy-dialog';
 import { AbstractLazyModule, LazyLoaderService } from '@deja-js/component/core';
 import { TooltipComponentInterface, TooltipConfig, TooltipService } from '@deja-js/component/v2/tooltip';
 

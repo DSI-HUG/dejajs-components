@@ -8,7 +8,7 @@
 
 import { ComponentPortal, Portal } from '@angular/cdk/portal';
 import { Directive, ElementRef, Injector, OnInit, Renderer2 } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
 import { Destroy } from '@deja-js/component/core';
 import { filter, Subscription, take, takeUntil, tap } from 'rxjs';
 

@@ -8,9 +8,6 @@
             "ckeditor4"
         ]
     },
-    "angularCompilerOptions": {
-        "enableIvy": true
-    },
     "files": [
         "test.ts",
         "polyfills.ts"

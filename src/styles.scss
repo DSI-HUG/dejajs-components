@@ -9,7 +9,16 @@
 @use './app/home/home-theme'as homeTest;
 
 @mixin create-theme($color1, $color2, $dark: false) {
-    @include mat.core(); // Define color scheme
+    // TODO(v15): As of v15 mat.legacy-core no longer includes default typography styles.
+//  The following line adds:
+//    1. Default typography styles for all components
+//    2. Styles for typography hierarchy classes (e.g. .mat-headline-1)
+//  If you specify typography styles for the components you use elsewhere, you should delete this line.
+//  If you don't need the default component typographies but still want the hierarchy styles,
+//  you can delete this line and instead use:
+//    `@include mat.legacy-typography-hierarchy(mat.define-legacy-typography-config());`
+@include mat.all-legacy-component-typographies();
+@include mat.legacy-core(); // Define color scheme
 
     $primary: mat.define-palette($color1);
     $accent: mat.define-palette($color2);
@@ -20,7 +29,7 @@
         $theme: mat.define-dark-theme($primary, $accent, $warn); // Include theme styles for core and each component used in the app.
     }
 
-    @include mat.all-component-themes($theme);
+    @include mat.all-legacy-component-themes($theme);
     @include dejaTheme.deja-theme($theme);
     // @include deja-menu();
     // @include deja-tree-list-borders();

@@ -10,7 +10,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
+import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
 import { DejaChildValidatorModule } from '@deja-js/component/core';
 import { ItemModule } from '@deja-js/component/v2/item-list';
 import { ViewPortModule } from '@deja-js/component/v2/viewport';
