@@ -8,7 +8,7 @@
 
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { DiacriticService } from '@deja-js/component/core';
 import { BehaviorSubject, combineLatestWith, filter, map, mergeWith, Observable, of, ReplaySubject, shareReplay, startWith, switchMap, take, tap, withLatestFrom } from 'rxjs';
 
@@ -49,8 +49,9 @@ export class ItemService<T> {
 
     private previousQuery: string;
 
-    public constructor(private diacriticService: DiacriticService) {
+    private diacriticService = inject(DiacriticService);
 
+    public constructor() {
         const itemsFromOptions$ = this.options$.pipe(
             map(options => {
                 const items = options.map(option => {
@@ -433,7 +434,7 @@ export class ItemService<T> {
             element = element.parentElement;
         }
 
-        if (!element || !element.hasAttribute('flat')) {
+        if (!element?.hasAttribute('flat')) {
             return undefined;
         }
 

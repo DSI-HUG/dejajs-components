@@ -7,19 +7,21 @@
  */
 
 import { Injectable } from '@angular/core';
-import { IItemBase, ItemListService } from '@deja-js/component/core/item-list';
-import { Observable } from 'rxjs';
+import { Item, ItemService } from '@deja-js/component/v2/item-list';
+import { map, Observable } from 'rxjs';
 
-import { CountriesService } from './countries.service';
+import { CountriesService, Country } from './countries.service';
 
 @Injectable()
-export class CountriesListService extends ItemListService<unknown> {
+export class CountriesListService extends ItemService<Country> {
     public constructor(private countriesService: CountriesService) {
         super();
     }
 
     // Override for lazy loading
-    protected getItemList$(query?: RegExp | string): Observable<IItemBase<unknown>[]> {
-        return this.countriesService.getCountries$(query as string);
+    protected getItemList$(query?: RegExp | string): Observable<Item<Country>[]> {
+        return this.countriesService.getCountries$(query as string).pipe(
+            map(countries => countries.map(country => new Item<Country>(country.code, country.displayName, country)))
+        );
     }
 }

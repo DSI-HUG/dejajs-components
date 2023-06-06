@@ -601,7 +601,7 @@ export class DejaTilesLayoutProvider extends Destroy {
     }
 
     public paste(): DejaTile[] {
-        if (!this.clipboardService || !this.clipboardService.isAvailable('tiles')) {
+        if (!this.clipboardService?.isAvailable('tiles')) {
             return new Array<DejaTile>();
         }
 

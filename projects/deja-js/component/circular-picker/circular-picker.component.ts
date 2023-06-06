@@ -357,7 +357,7 @@ export class DejaCircularPickerComponent extends Destroy implements OnInit, Cont
     }
 
     private updateCursor(): void {
-        if (!this._circularValues || !this._circularValues.length) {
+        if (!this._circularValues?.length) {
             return;
         }
         if (this._value === undefined || this._value === null) {

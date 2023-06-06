@@ -24,7 +24,6 @@ const routes: Routes = [
     { path: 'sidenav', loadChildren: () => import('./sidenav/sidenav-demo.module').then(m => m.DejaSidenavDemoModule), data: { title: 'Sidenav' } },
     { path: 'snackbar', loadChildren: () => import('./snackbar/snackbar-demo.module').then(m => m.DejaSnackbarDemoModule), data: { title: 'Snackbar' } },
     { path: 'splitter', loadChildren: () => import('./splitter/splitter-demo.module').then(m => m.DejaSplitterDemoModule), data: { title: 'Splitter' } },
-    { path: 'tag', loadChildren: () => import('./tag/tag-demo.module').then(m => m.DejaTagDemoModule), data: { title: 'Tag' } },
     { path: 'tiles', loadChildren: () => import('./tiles/tiles-demo.module').then(m => m.DejaTilesDemoModule), data: { title: 'Tiles' } },
     { path: 'time-picker', loadChildren: () => import('./time-picker/time-picker-demo.module').then(m => m.DejaTimePickerDemoModule), data: { title: 'Time Picker' } },
     { path: 'v2-numeric-stepper', loadChildren: () => import('./v2/numeric-stepper/numeric-stepper-demo.module').then(m => m.DejaNumericStepperDemoModule), data: { title: 'Numeric Stepper V2' } },

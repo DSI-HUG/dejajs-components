@@ -8,7 +8,6 @@
 import { ChangeDetectorRef, Component, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ControlsOf, Destroy } from '@deja-js/component/core';
-import { GroupingService } from '@deja-js/component/core/item-list';
 import { Item, SortInfos, SortingService } from '@deja-js/component/v2/item-list';
 import { DropCursorInfos, MouseDraggableContext, MouseDroppableContext } from '@deja-js/component/v2/mouse-dragdrop';
 import { TreeListComponent } from '@deja-js/component/v2/tree-list';
@@ -47,8 +46,11 @@ interface FruitForm {
     selector: 'tree-list-demo',
     styleUrls: ['./tree-list-demo.scss'],
     templateUrl: './tree-list-demo.html'
-    })
+})
 export class TreeListDemoComponent extends Destroy {
+    @ViewChild('news') private newsList: TreeListComponent<News>;
+    @ViewChild('onexpand') private onExpandList: TreeListComponent<unknown>;
+
     public fruct = 'Apricots';
     public fructs = [] as string[];
     public fructItems = [] as Item<unknown>[];
@@ -111,16 +113,12 @@ export class TreeListDemoComponent extends Destroy {
         return this._dialogVisible;
     }
 
-    @ViewChild('news') private newsList: TreeListComponent<News>;
-    @ViewChild('onexpand') private onExpandList: TreeListComponent<unknown>;
-
     public constructor(
         private changeDetectorRef: ChangeDetectorRef,
         private countriesService: CountriesService,
         private folderService: FoldersService,
         public countriesListService: CountriesListService,
         public newsService: NewsService,
-        public groupingService: GroupingService,
         public sortingService: SortingService,
         private formBuilder: FormBuilder
     ) {

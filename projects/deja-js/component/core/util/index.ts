@@ -8,4 +8,3 @@
 
 export * from './html-utils';
 export * from './reg-exp-utils';
-export * from './date-utils';

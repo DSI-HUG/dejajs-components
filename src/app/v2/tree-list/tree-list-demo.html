@@ -247,7 +247,9 @@
                                 <span id="title">
                                     This is a header template, click to sort the list.
                                 </span>
-                <deja-sort-indicator [sort-infos]="sortInfos$ | async"></deja-sort-indicator>
+                <span class="sort-indicator" *ngIf="sortInfos$ | async as sortInfos" [attr.sortorder]="sortInfos ? sortInfos.order : null">
+                    <mat-icon>arrow_upward</mat-icon>
+                </span>
                 </span>
                 </ng-template>
                 </tree-list>

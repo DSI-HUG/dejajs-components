@@ -96,7 +96,7 @@ export class DejaColorSelectorComponent implements ControlValueAccessor, OnDestr
             combineLatestWith(this._resetcolor$),
             takeUntil(this.destroyed$)
         ).subscribe(([colors, resetcolor]) => {
-            if (!colors || !colors.length || !resetcolor) {
+            if (!colors?.length || !resetcolor) {
                 this._resetcolor = undefined;
                 return;
             }

@@ -13,9 +13,9 @@ import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Destroy, KeyCodes } from '@deja-js/component/core';
-import { GroupingService } from '@deja-js/component/core/item-list';
 import { Item, ItemModule, SortInfos, SortingService } from '@deja-js/component/v2/item-list';
-import { debounceTime, delay, filter, Observable, take, takeUntil, tap, timer } from 'rxjs';
+import { chain } from 'lodash-es';
+import { debounceTime, delay, filter, Observable, take, tap, timer } from 'rxjs';
 
 import { ViewPort } from '../viewport';
 import { TreeListModule } from './index';
@@ -26,15 +26,12 @@ import { TreeListComponent } from './tree-list.component';
     selector: 'TreeListContainerComponent',
     template: `<tree-list style="height:500px;width:1000px;" [items]="itemList" multiSelect viewPortMode="variable" searchArea pageSize="10">
                     <ng-template #itemTemplate let-item>Item {{ item.label }}</ng-template>
-                </tree-list>`,
-    providers: [
-        GroupingService
-    ]
+                </tree-list>`
 })
 class TreeListContainerComponent extends Destroy {
     public itemList = [] as Item<unknown>[];
 
-    public constructor(groupingService: GroupingService) {
+    public constructor() {
         super();
 
         // eslint-disable-next-line prefer-spread
@@ -45,12 +42,14 @@ class TreeListContainerComponent extends Destroy {
             return item;
         });
 
-        groupingService.group$(itemList, [{ groupByField: 'size' }]).pipe(
-            take(1),
-            takeUntil(this.destroyed$)
-        ).subscribe(groupedResult => {
-            this.itemList = groupedResult as Item<unknown>[];
-        });
+        this.itemList = chain(itemList)
+            .groupBy('size')
+            .map((items, size) => {
+                const parentItem = new Item<unknown>(size, size);
+                parentItem.items = items;
+                return parentItem;
+            })
+            .value();
     }
 }
 

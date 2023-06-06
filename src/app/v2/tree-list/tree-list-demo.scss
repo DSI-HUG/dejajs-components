@@ -189,6 +189,38 @@ tree-list-demo {
     .flexOffset5p {
         margin-left: 5%;
     }
+
+    .sort-indicator {
+        display: block;
+        position: relative;
+        width: 1rem;
+
+        [sortorder] {
+            .mat-icon {
+                position: absolute;
+                right: 0;
+                top: 50%;
+                -ms-transform: translateY(-50%);
+                /* IE 9 */
+                -webkit-transform: translateY(-50%);
+                /* Chrome, Safari, Opera */
+                transform: translateY(-50%);
+                transition: all 500ms linear;
+                padding: 0.3rem;
+                zoom: 72%;
+            }
+        }
+
+        [sortorder="1"] {
+            .mat-icon {
+                -ms-transform: translateY(-50%) rotate(180deg);
+                /* IE 9 */
+                -webkit-transform: translateY(-50%) rotate(180deg);
+                /* Chrome, Safari, Opera */
+                transform: translateY(-50%) rotate(180deg);
+            }
+        }
+    }
 }
 
 .country-target-cursor {

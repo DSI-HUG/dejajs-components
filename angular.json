@@ -48,7 +48,9 @@
                         ],
                         "allowedCommonJsDependencies": [
                             "showdown",
-                            "ckeditor"
+                            "ckeditor",
+                            "json-object-mapper",
+                            "prismjs"
                         ],
                         "scripts": [],
                         "vendorChunk": true,
