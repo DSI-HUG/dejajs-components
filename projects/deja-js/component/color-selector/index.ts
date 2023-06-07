@@ -12,12 +12,11 @@ import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 
-import { DejaColorFabComponent } from './color-fab.component';
 import { DejaColorSelectorComponent } from './color-selector.component';
 
 @NgModule({
-    declarations: [DejaColorFabComponent, DejaColorSelectorComponent],
-    exports: [DejaColorFabComponent, DejaColorSelectorComponent],
+    declarations: [DejaColorSelectorComponent],
+    exports: [DejaColorSelectorComponent],
     imports: [
         CommonModule,
         FormsModule,
@@ -27,6 +26,4 @@ import { DejaColorSelectorComponent } from './color-selector.component';
 })
 export class DejaColorSelectorModule { }
 
-export * from './color-fab.class';
-export * from './color-fab.component';
 export * from './color-selector.component';

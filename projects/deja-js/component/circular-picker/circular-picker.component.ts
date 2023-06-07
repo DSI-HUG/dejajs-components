@@ -7,7 +7,7 @@
  */
 
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, Input, OnInit, Optional, Self, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, inject, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { Destroy } from '@deja-js/component/core';
 import { Circle, Position } from '@deja-js/component/core/graphics';
@@ -20,7 +20,7 @@ export enum ClockwiseFactorEnum {
     counterClockwise = 1,
 }
 
-export interface ICircularValue {
+export interface CircularValue {
     position: Position;
     value: number;
 }
@@ -43,14 +43,14 @@ export class DejaCircularPickerComponent extends Destroy implements OnInit, Cont
     @Input() public labelsDiameter = 43;
 
     /** Ranges of circular picker */
-    @Input() public ranges: ICircularRange[];
+    @Input() public ranges?: ReadonlyArray<CircularRange>;
 
     /** Template for labels inside picker. Use it to customize labels */
-    @ContentChild('labelTemplate') public labelTemplate: TemplateRef<unknown>;
+    @ContentChild('labelTemplate') public labelTemplate?: TemplateRef<unknown>;
     /** template for cursor inside picker. Use it to customize labels */
-    @ContentChild('cursorTemplate') public cursorTemplate: TemplateRef<unknown>;
+    @ContentChild('cursorTemplate') public cursorTemplate?: TemplateRef<unknown>;
 
-    @ViewChild('picker', { static: true }) private picker: ElementRef;
+    @ViewChild('picker', { static: true }) private picker?: ElementRef<HTMLElement>;
 
     private _outerLabels = false;
 
@@ -62,7 +62,7 @@ export class DejaCircularPickerComponent extends Destroy implements OnInit, Cont
      */
     @Input()
     public set outerLabels(value: BooleanInput) {
-        this._outerLabels = coerceBooleanProperty(value) || null;
+        this._outerLabels = coerceBooleanProperty(value);
     }
 
     public get outerLabels(): BooleanInput {
@@ -83,30 +83,28 @@ export class DejaCircularPickerComponent extends Destroy implements OnInit, Cont
 
     private _disabled = false;
 
-    private _value: number;
+    private _value?: number;
     private twoPi = Math.PI * 2;
 
     private _radius = 0;
-    private configs: IConfig[] = [];
-    private selectedConfig: IConfig;
+    private configs: CircularConfig[] = [];
+    private selectedConfig?: CircularConfig;
 
-    private _circularValues: ICircularValue[] = [];
+    private _circularValues: CircularValue[] = [];
 
-    private _cursor: ICircularValue;
-    private _cursorHand: {
-        width: number;
-        angle: number;
-    };
+    private _cursor?: CircularValue;
 
-    private cursorElement: HTMLElement;
+    private _cursorHand?: CursorHand;
 
-    private clickedTime: number;
+    private cursorElement?: HTMLElement;
 
-    public get cursorHand(): { width: number; angle: number } {
+    private clickedTime?: number;
+
+    public get cursorHand(): CursorHand | undefined {
         return this._cursorHand;
     }
 
-    public get cursor(): ICircularValue {
+    public get cursor(): CircularValue | undefined {
         return this._cursor;
     }
 
@@ -114,18 +112,22 @@ export class DejaCircularPickerComponent extends Destroy implements OnInit, Cont
         return this._radius;
     }
 
-    public get circularValues(): ICircularValue[] {
+    public get circularValues(): ReadonlyArray<CircularValue> {
         return this._circularValues;
     }
+
+    private elementRef = inject<ElementRef<HTMLElement>>(ElementRef<HTMLElement>);
+    private control = inject(NgControl, { optional: true, self: true });
+    private changeDetectorRef = inject(ChangeDetectorRef);
 
     /**
      * Constructor.
      * Create MouseDown & mouseMove Observables needed inside this control.
      */
-    public constructor(elementRef: ElementRef, private changeDetectorRef: ChangeDetectorRef, @Self() @Optional() public control: NgControl) {
+    public constructor() {
         super();
 
-        const element = elementRef.nativeElement as HTMLElement;
+        const element = this.elementRef.nativeElement;
 
         if (this.control) {
             this.control.valueAccessor = this;
@@ -143,7 +145,8 @@ export class DejaCircularPickerComponent extends Destroy implements OnInit, Cont
                 if (cursorElement) {
                     this.cursorElement = cursorElement;
                 } else if (valueElement) {
-                    this.value = +valueElement.getAttribute('value');
+                    const valueAttribute = valueElement.getAttribute('value');
+                    this.value = valueAttribute && +valueAttribute || undefined;
                 }
 
                 return !!cursorElement || !!valueElement;
@@ -163,10 +166,8 @@ export class DejaCircularPickerComponent extends Destroy implements OnInit, Cont
                         delete this.cursorElement;
                         delete this.clickedTime;
                         element.ownerDocument.body.className = element.ownerDocument.body.className.replace(/\bnoselect\b/, '');
-                    }));
-
-                const pickerElem = this.picker.nativeElement as HTMLElement;
-                const clientRect = pickerElem.getBoundingClientRect();
+                    })
+                );
 
                 const mouseMoveEvent$ = fromEvent<MouseEvent>(element.ownerDocument, 'mousemove');
                 return mouseMoveEvent$.pipe(
@@ -174,6 +175,11 @@ export class DejaCircularPickerComponent extends Destroy implements OnInit, Cont
                     takeUntil(cancelMouse$),
                     sampleTime(10),
                     tap(moveEvent => {
+                        const clientRect = this.picker?.nativeElement.getBoundingClientRect();
+                        if (!clientRect || !this.selectedConfig) {
+                            return;
+                        }
+
                         if (moveEvent.buttons !== 1) {
                             moveUp$.next();
                             return;
@@ -228,16 +234,16 @@ export class DejaCircularPickerComponent extends Destroy implements OnInit, Cont
         const diameter = this.fullDiameter - this.labelsDiameter; // Material standard button size
         this._radius = diameter / 2;
 
-        this.ranges.forEach(range => {
+        this.configs = this.ranges?.map(range => {
             range.interval = (range.interval) ? range.interval : 1;
             range.labelInterval = (range.labelInterval) ? range.labelInterval : 1;
             range.beginOffset = (range.beginOffset) ? range.beginOffset : Math.PI / 2;
-            this.configs.push({
+            return {
                 range: range,
                 stepAngle: this.twoPi / Math.floor((range.max - range.min + 1) / range.interval),
                 steps: Math.floor((range.max - range.min + 1) / range.interval)
-            });
-        });
+            };
+        }) || new Array<CircularConfig>();
 
         this.selectedConfig = this.configs[0];
 
@@ -247,7 +253,7 @@ export class DejaCircularPickerComponent extends Destroy implements OnInit, Cont
 
     // ************* ControlValueAccessor Implementation **************
     /** set accessor including call the onchange callback */
-    public set value(v: number) {
+    public set value(v: number | undefined) {
         if (v !== this._value) {
             this.writeValue(v);
             this.onChangeCallback(v);
@@ -255,12 +261,12 @@ export class DejaCircularPickerComponent extends Destroy implements OnInit, Cont
     }
 
     /** get accessor */
-    public get value(): number {
+    public get value(): number | undefined {
         return this._value;
     }
 
     /** From ControlValueAccessor interface */
-    public writeValue(value: number): void {
+    public writeValue(value: number | undefined): void {
         if (value !== this._value) {
             this._value = value;
             this.updateCursor();
@@ -294,7 +300,7 @@ export class DejaCircularPickerComponent extends Destroy implements OnInit, Cont
      *
      * @return value
      */
-    protected pointToValue(x: number, y: number, config: IConfig): number {
+    protected pointToValue(x: number, y: number, config: CircularConfig): number {
         const angleAtPoint: number = this.pointToAngle(x - this._radius, y - this._radius, config);
         let circleSegmentIndexAtPoint: number = config.steps - Math.ceil(angleAtPoint / config.stepAngle);
         // By having pointToAngle() to compute using a half step below the actual angle,
@@ -316,7 +322,7 @@ export class DejaCircularPickerComponent extends Destroy implements OnInit, Cont
      *
      * @return the position of value
      */
-    protected valueToPoint(value: number, radiusOffset: number, config: IConfig): Position {
+    protected valueToPoint(value: number, radiusOffset: number, config: CircularConfig): Position {
         const position = new Position();
         const valueAngle: number = this.valueToAngle(value, config);
 
@@ -326,7 +332,7 @@ export class DejaCircularPickerComponent extends Destroy implements OnInit, Cont
         return position;
     }
 
-    private pointToAngle(x: number, y: number, config: IConfig): number {
+    private pointToAngle(x: number, y: number, config: CircularConfig): number {
         return (
             -Math.atan2(y, x) // Math.atan2() returns between -Ï€ and +Ï€, but in inverted trigonometrical order...
             - config.range.beginOffset	// Correct the configured offset to compute in 'natural' trigonometrical circle
@@ -335,17 +341,17 @@ export class DejaCircularPickerComponent extends Destroy implements OnInit, Cont
         ) % this.twoPi;
     }
 
-    private valueToAngle(value: number, config: IConfig): number {
+    private valueToAngle(value: number, config: CircularConfig): number {
         const circleSegmentIndex: number = Math.floor((value - config.range.min) / config.range.interval);
         return (circleSegmentIndex * config.stepAngle * this.clockwiseFactor) + config.range.beginOffset;
     }
 
     private bind(): void {
         this._circularValues = [];
-        this.configs.forEach((config: IConfig, configNumber: number) => {
+        this.configs.forEach((config: CircularConfig, configNumber: number) => {
             // eslint-disable-next-line no-loops/no-loops
             for (let i = config.range.min; i <= config.range.max; i += (config.range.labelInterval * config.range.interval)) {
-                const val = { value: i } as ICircularValue;
+                const val = { value: i } as CircularValue;
                 const labelRadius = this.labelsDiameter / 2;
                 const configOffset = this.labelsDiameter * configNumber;
                 const labelPosition = this.valueToPoint(i, (this.outerLabels ? labelRadius + configOffset : -labelRadius - configOffset), config);
@@ -360,32 +366,31 @@ export class DejaCircularPickerComponent extends Destroy implements OnInit, Cont
         if (!this._circularValues?.length) {
             return;
         }
-        if (this._value === undefined || this._value === null) {
-            this._value = this._circularValues[0].value;
-        }
-        this.selectedConfig = this.configs.find((conf: IConfig) => this._value >= conf.range.min && this._value <= conf.range.max);
+
+        const value = this._value ?? this._circularValues[0].value;
+        this.selectedConfig = this.configs.find((conf: CircularConfig) => value >= conf.range.min && value <= conf.range.max);
         if (!this.selectedConfig) {
             this.selectedConfig = this.configs[0];
         }
         const selectedConfigIndex = this.configs.indexOf(this.selectedConfig);
         const cursorRadius: number = this.labelsDiameter / 2;
 
-        const cursorCenter = this.valueToPoint(this._value, (this.outerLabels ? cursorRadius + (this.labelsDiameter * selectedConfigIndex) : -cursorRadius - (this.labelsDiameter * selectedConfigIndex)), this.selectedConfig);
+        const cursorCenter = this.valueToPoint(value, (this.outerLabels ? cursorRadius + (this.labelsDiameter * selectedConfigIndex) : -cursorRadius - (this.labelsDiameter * selectedConfigIndex)), this.selectedConfig);
         this._cursor = {
             position: new Position((cursorCenter.left - cursorRadius), (cursorCenter.top - cursorRadius)),
-            value: this._value
+            value: value
         };
 
         this._cursorHand = {
-            angle: this.valueToAngle(this._value, this.selectedConfig),
+            angle: this.valueToAngle(value, this.selectedConfig),
             width: (this.outerLabels) ? this._radius + (this.labelsDiameter * selectedConfigIndex) : this._radius - this.labelsDiameter - (this.labelsDiameter * selectedConfigIndex)
         };
 
         this.changeDetectorRef.markForCheck();
     }
 
-    private getHtmlElement(element: HTMLElement, attr: string): HTMLElement {
-        let parentElement = element;
+    private getHtmlElement(element: HTMLElement, attr: string): HTMLElement | undefined {
+        let parentElement: HTMLElement | null = element;
 
         // eslint-disable-next-line no-loops/no-loops
         while (parentElement && !parentElement.hasAttribute(attr)) {
@@ -400,16 +405,21 @@ export class DejaCircularPickerComponent extends Destroy implements OnInit, Cont
     }
 }
 
-export interface IConfig {
-    range: ICircularRange;
+export interface CircularConfig {
+    range: CircularRange;
     steps: number;
     stepAngle: number;
 }
 
-export interface ICircularRange {
+export interface CircularRange {
     min: number;
     max: number;
-    interval?: number;
-    labelInterval?: number; // x*interval
-    beginOffset?: number;
+    interval: number;
+    labelInterval: number; // x*interval
+    beginOffset: number;
+}
+
+export interface CursorHand {
+    width: number;
+    angle: number;
 }

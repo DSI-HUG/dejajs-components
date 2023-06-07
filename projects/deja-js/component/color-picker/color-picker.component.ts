@@ -7,7 +7,7 @@
  */
 
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostBinding, Input, Optional, Output, Self, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostBinding, inject, Input, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { DejaConnectionPositionPair } from '@deja-js/component/core';
 import { Color } from '@deja-js/component/core/graphics';
@@ -23,31 +23,29 @@ import { DejaOverlayComponent } from '@deja-js/component/overlay';
     templateUrl: './color-picker.component.html'
 })
 export class DejaColorPickerComponent implements ControlValueAccessor {
-    @HostBinding('attr.disabled') public _disabled: boolean = null;
+    @HostBinding('attr.disabled') public _disabled: boolean | null = null;
 
     /** Retourne ou definit les couleurs selectionables affichées. */
-    @Input() public colors: Color[];
-
-    @Input() public resetcolor: string = null;
+    @Input() public colors?: ReadonlyArray<Color>;
 
     /** Déclenché lorsqu'une couleur est survolée par la souris. */
     @Output() public readonly colorhover = new EventEmitter();
 
     /** Overlay pane containing the options. */
-    @ViewChild(DejaOverlayComponent, { static: true }) private dejaOverlayCmp: DejaOverlayComponent;
+    @ViewChild(DejaOverlayComponent, { static: true }) private dejaOverlayCmp?: DejaOverlayComponent;
 
     /** Internal use */
     public ownerElement: HTMLElement;
 
     private _small = false;
-    private _value: Color;
+    private _value?: Color;
 
     private _isOpen = false;
 
     /** Retourne ou definit si la partie déroulante est visible. */
     @Input()
     public set isOpen(value: BooleanInput) {
-        this._isOpen = coerceBooleanProperty(value) || null;
+        this._isOpen = coerceBooleanProperty(value);
     }
 
     public get isOpen(): BooleanInput {
@@ -65,11 +63,15 @@ export class DejaColorPickerComponent implements ControlValueAccessor {
         return this._positions;
     }
 
-    public constructor(elementRef: ElementRef<HTMLElement>, @Self() @Optional() public control: NgControl, private changeDetectorRef: ChangeDetectorRef) {
+    private elementRef = inject<ElementRef<HTMLElement>>(ElementRef<HTMLElement>);
+    private control = inject(NgControl, { optional: true, self: true });
+    private changeDetectorRef = inject(ChangeDetectorRef);
+
+    public constructor() {
         if (this.control) {
             this.control.valueAccessor = this;
         }
-        this.ownerElement = elementRef.nativeElement;
+        this.ownerElement = this.elementRef.nativeElement;
     }
 
     /** Retourne ou définit la taille du bouton. */
@@ -95,7 +97,7 @@ export class DejaColorPickerComponent implements ControlValueAccessor {
 
     // ************* ControlValueAccessor Implementation **************
     // set accessor including call the onchange callback
-    public set value(value: Color) {
+    public set value(value: Color | undefined) {
         if (!Color.equals(value, this._value)) {
             this.writeValue(value);
             this.onChangeCallback(value);
@@ -103,12 +105,12 @@ export class DejaColorPickerComponent implements ControlValueAccessor {
     }
 
     // get accessor
-    public get value(): Color {
+    public get value(): Color | undefined {
         return this._value;
     }
 
     // From ControlValueAccessor interface
-    public writeValue(value: Color): void {
+    public writeValue(value: Color | undefined): void {
         this._value = value;
         this.changeDetectorRef.markForCheck();
     }
@@ -130,7 +132,7 @@ export class DejaColorPickerComponent implements ControlValueAccessor {
 
     /** Affiche le color picker. */
     public show(event: MouseEvent): boolean {
-        if (!this.disabled) {
+        if (!this.disabled && this.dejaOverlayCmp) {
             this.dejaOverlayCmp.show(event);
             this.isOpen = true;
             this.changeDetectorRef.markForCheck();
@@ -149,7 +151,7 @@ export class DejaColorPickerComponent implements ControlValueAccessor {
     }
 
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    public getStyle(): { 'background-color': string } {
+    public getStyle(): { 'background-color': string } | null {
         const backgroundColor = this.value?.toHex();
         // eslint-disable-next-line @typescript-eslint/naming-convention
         return backgroundColor ? { 'background-color': backgroundColor } : null;

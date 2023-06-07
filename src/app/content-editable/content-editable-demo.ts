@@ -17,4 +17,6 @@ export class DejaContentEditableDemoComponent {
 
     public designMode = false;
     public disabled = false;
+    public selectOnFocus = false;
+    public text: string;
 }

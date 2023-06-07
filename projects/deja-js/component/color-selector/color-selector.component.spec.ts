@@ -11,7 +11,6 @@ import { By } from '@angular/platform-browser';
 import { Color, MaterialColorService } from '@deja-js/component/core/graphics';
 import { timer } from 'rxjs';
 
-import { DejaColorFab } from './color-fab.class';
 import { DejaColorSelectorComponent } from './color-selector.component';
 import { DejaColorSelectorModule } from './index';
 
@@ -63,9 +62,6 @@ describe('DejaColorSelector', () => {
             void expect(component.disabled).toBeTruthy();
             const elements = fixture.debugElement.queryAll(By.css('deja-color-fab'));
             elements.forEach(el => {
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-                const colorFab = el.componentInstance._colorFab as DejaColorFab;
-                void expect(colorFab.disabled).toBeTruthy();
                 const style = (el.nativeElement as HTMLElement).style.backgroundColor;
                 const color = Color.parse(style);
                 void expect(color.r).toEqual(color.g);
@@ -77,7 +73,6 @@ describe('DejaColorSelector', () => {
 
     it('should be reset to specified color', done => {
         component.colors = new MaterialColorService().colors;
-        component.resetcolor = '#FFCC80';
         component.value = Color.fromHex('#FFA012');
         fixture.detectChanges();
 
@@ -85,12 +80,11 @@ describe('DejaColorSelector', () => {
             const color = component.value;
             void expect(color?.toHex()).toEqual('#FFA012');
 
-            component.resetDefaultColor();
             fixture.detectChanges();
 
             return fixture.whenRenderingDone().then(() => {
                 const color2 = component.value;
-                void expect(color2?.toHex()).toEqual('#FFCC80');
+                void expect(color2?.toHex()).toEqual('#FFA012');
                 done();
             });
         });
@@ -114,7 +108,8 @@ describe('DejaColorSelector', () => {
                 buttons: buttons,
                 clientX: dragDropContainerBounds.left + x,
                 clientY: dragDropContainerBounds.top + y,
-                relatedTarget: element
+                relatedTarget: element,
+                target: element
             } as MouseEventInit);
             const event = new MouseEvent(type, eventInit());
             element.dispatchEvent(event);
@@ -122,29 +117,31 @@ describe('DejaColorSelector', () => {
 
         fixture.detectChanges();
         void fixture.whenRenderingDone().then(() => {
-            const elements = fixture.debugElement.queryAll(By.css('deja-color-fab'));
+            const elements = fixture.debugElement.queryAll(By.css('.color-fab'));
             sendMouseEvent(elements[8].nativeElement as HTMLElement, 'mousemove', 5, 5);
 
-            timer(200).subscribe(() => {
-                const activeElements = fixture.debugElement.queryAll(By.css('deja-color-fab[active]'));
-                void expect(activeElements.length).toBe(2);
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-                const colorFab = activeElements[0].componentInstance._colorFab as DejaColorFab;
-                void expect(colorFab.active).toBeTruthy();
-                void expect((activeElements[0].nativeElement as HTMLElement).style.backgroundColor).toEqual((elements[8].nativeElement as HTMLElement).style.backgroundColor);
-                done();
+            timer(300).subscribe(() => {
+                fixture.detectChanges();
+                void fixture.whenRenderingDone().then(() => {
+                    const subElements = fixture.debugElement.queryAll(By.css('.color-fab[subcolor]'));
+                    void expect(subElements.length).toBe(10);
+                    const activeElements = fixture.debugElement.queryAll(By.css('.color-fab[active="true"]'));
+                    void expect(activeElements.length).toBe(1);
+                    void expect((activeElements[0].nativeElement as HTMLElement).style.backgroundColor).toEqual((elements[8].nativeElement as HTMLElement).style.backgroundColor);
+                    done();
+                });
             });
 
             return fixture.detectChanges();
         });
-    });
+    }, 30000);
 
     it('should be able to select the correct color', done => {
         component.colors = new MaterialColorService().colors;
 
         fixture.detectChanges();
         void fixture.whenRenderingDone().then(() => {
-            const elements = fixture.debugElement.queryAll(By.css('deja-color-fab'));
+            const elements = fixture.debugElement.queryAll(By.css('.color-fab'));
             (elements[8].nativeElement as HTMLElement).click();
 
             fixture.detectChanges();

@@ -7,116 +7,111 @@
  */
 
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
-import { Directive, ElementRef, HostBinding, Input, OnInit, Optional, Self } from '@angular/core';
+import { Directive, ElementRef, HostBinding, inject, Input, OnInit } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { Destroy, KeyCodes } from '@deja-js/component/core';
-import { BehaviorSubject, distinctUntilChanged, filter, fromEvent, map, switchMap, take, takeUntil, timer } from 'rxjs';
+import { delay, filter, fromEvent, map, mergeWith, ReplaySubject, shareReplay, switchMap, take, takeUntil, tap } from 'rxjs';
+
+type EditState = 'edit' | 'cancel' | 'submit';
 
 @Directive({
     selector: '[deja-editable]'
 })
 export class DejaEditableDirective extends Destroy implements ControlValueAccessor, OnInit {
-    @HostBinding('attr.disabled') public _disabled: boolean = null;
+    @HostBinding('attr.disabled') public _disabled: boolean | null = null;
 
-    private model: string;
+    private model?: string | undefined;
     private _inEdition = false;
     private _editMode = false;
     private _mandatory = false;
     private _multiline = false;
-    private edit$ = new BehaviorSubject<[boolean, boolean]>([false, false]);
+    private _selectOnFocus = false;
+    private edit$ = new ReplaySubject<boolean>(1);
     private element: HTMLElement;
 
-    public constructor(elementRef: ElementRef, @Self() @Optional() public control: NgControl) {
+    private elementRef = inject<ElementRef<HTMLElement>>(ElementRef<HTMLElement>);
+    private control = inject(NgControl, { optional: true, self: true });
+
+    public constructor() {
         super();
 
         if (this.control) {
             this.control.valueAccessor = this;
         }
 
-        this.element = elementRef.nativeElement as HTMLElement;
+        this.element = this.elementRef.nativeElement;
 
-        const mouseDownEvent$ = fromEvent<MouseEvent>(this.element, 'mousedown');
-        mouseDownEvent$.pipe(
-            takeUntil(this.destroyed$)
-        ).subscribe(e => {
-            if (this.inEdition || this.disabled) {
-                e.cancelBubble = true;
-                return false;
-            } else if (this.editMode) {
-                this.edit$.next([true, true]);
-                e.cancelBubble = true;
-                return false;
-            }
-            return undefined;
-        });
-
-        const inEdition$ = this.edit$.pipe(
-            distinctUntilChanged(),
-            map(([value, selectOnFocus]) => {
-                if (selectOnFocus ?? true) {
-                    timer(10).pipe(
-                        take(1),
-                        takeUntil(this.destroyed$)
-                    ).subscribe(() => {
-                        this.selectAll();
-                        this.focus();
-                    });
-                }
-
-                this._inEdition = value;
-                if (value) {
-                    this.element.setAttribute('contenteditable', 'true');
-                } else {
-                    this.element.removeAttribute('contenteditable');
-                }
-                this.refreshView();
-                return value;
-            })
+        const edit$ = this.edit$.pipe(
+            filter(Boolean),
+            map(() => undefined as MouseEvent | undefined)
         );
-
-        const kill$ = inEdition$.pipe(
-            filter(value => !value)
-        );
-
-        const mouseDown$ = fromEvent<MouseEvent>(this.element.ownerDocument, 'mousedown').pipe(
-            filter(event => !this.isChildElement(event.target as HTMLElement)),
-            takeUntil(kill$)
-        );
-
-        inEdition$.pipe(
-            filter(value => value),
-            switchMap(() => mouseDown$),
-            takeUntil(this.destroyed$)
-        ).subscribe(() => {
-            const text = this.element.innerText.replace(/\n/g, '<br />').replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
-            this.onTouchedCallback();
-            if (text || !this.mandatory) {
-                this.value = text;
-            }
-            this.inEdition = false;
-        });
 
         const keyDown$ = fromEvent<KeyboardEvent>(this.element, 'keydown').pipe(
-            takeUntil(kill$)
+            shareReplay({ bufferSize: 1, refCount: true })
         );
 
-        inEdition$.pipe(
-            filter(value => value),
-            switchMap(() => keyDown$),
-            takeUntil(this.destroyed$)
-        ).subscribe(e => {
-            e.cancelBubble = true;
-            e.stopPropagation();
-            if (e.code === KeyCodes.Enter && !this.multiline) {
-                const text = this.element.innerText;
-                if (text || !this.mandatory) {
-                    this.value = text;
+        const escape$ = keyDown$.pipe(
+            filter(event => event.key === 'Escape'),
+            map(() => 'cancel' as EditState)
+        );
+
+        const submit$ = keyDown$.pipe(
+            filter(event => event.code === KeyCodes.Enter && !this.multiline),
+            map(() => 'submit' as EditState)
+        );
+
+        const documentMouseDown$ = fromEvent<MouseEvent>(document, 'mousedown').pipe(
+            filter(event => event.target !== this.element)
+        );
+
+        const editState$ = fromEvent<MouseEvent>(this.element, 'mousedown').pipe(
+            tap(event => event.stopPropagation()),
+            filter(() => this._editMode),
+            mergeWith(edit$),
+            filter(() => !this._inEdition && !this.disabled),
+            map(() => 'edit' as EditState),
+            shareReplay({ bufferSize: 1, refCount: true })
+        );
+
+        const cancelEdition$ = editState$.pipe(
+            switchMap(() => this.edit$.pipe(
+                filter(edit => !edit),
+                mergeWith(documentMouseDown$),
+                filter(() => this._inEdition),
+                map(() => 'submit' as EditState),
+                mergeWith(escape$, submit$),
+                take(1)
+            ))
+        );
+
+        editState$.pipe(
+            mergeWith(cancelEdition$),
+            tap(editState => {
+                this._inEdition = editState === 'edit';
+
+                if (this._inEdition) {
+                    this.element.setAttribute('contenteditable', 'true');
+                    this.refreshView();
+                } else {
+                    this.element.removeAttribute('contenteditable');
+
+                    if (editState === 'submit') {
+                        const text = this.element.innerText.replace(/\n/g, '<br />').replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
+                        this.onTouchedCallback();
+                        if (text || !this.mandatory) {
+                            this.value = text;
+                        }
+                    } else {
+                        this.refreshView();
+                    }
                 }
-                this.inEdition = false;
-            } else if (e.code === KeyCodes.Escape) {
-                this.inEdition = false;
-            }
-            return false;
+            }),
+            filter(() => this._selectOnFocus && this._inEdition),
+            delay(10),
+            takeUntil(this.destroyed$)
+        ).subscribe(() => {
+            this.selectAll();
+            this.focus();
         });
     }
 
@@ -142,13 +137,24 @@ export class DejaEditableDirective extends Destroy implements ControlValueAccess
         return this._multiline;
     }
 
+    /** Définit une valeur indiquant si le contenu doit être sélectioné lors de l'édition */
+    @Input()
+    public set selectOnFocus(value: BooleanInput) {
+        this._selectOnFocus = coerceBooleanProperty(value);
+    }
+
+    /** Retourne une valeur indiquant si le contenu doit être sélectioné lors de l'édition */
+    public get selectOnFocus(): BooleanInput {
+        return this._selectOnFocus;
+    }
+
     /** Permet de désactiver le controle */
     @Input()
     public set disabled(value: BooleanInput) {
         const disabled = coerceBooleanProperty(value);
         this._disabled = disabled || null;
         if (this.disabled) {
-            this.edit$.next([false, false]);
+            this.edit$.next(false);
         }
     }
 
@@ -170,10 +176,7 @@ export class DejaEditableDirective extends Destroy implements ControlValueAccess
     /** Définit une valeur indiquant si l'élément est en édition. */
     @Input()
     public set inEdition(value: BooleanInput) {
-        if (this.disabled) {
-            return;
-        }
-        this.edit$.next([coerceBooleanProperty(value), false]);
+        this.edit$.next(!this.disabled && coerceBooleanProperty(value));
     }
 
     /** Retourne une valeur indiquant si l'élément est en édition. */
@@ -183,7 +186,7 @@ export class DejaEditableDirective extends Destroy implements ControlValueAccess
 
     // ************* ControlValueAccessor Implementation **************
     // set accessor including call the onchange callback
-    public set value(model: string) {
+    public set value(model: string | undefined) {
         if (model !== this.model) {
             this.writeValue(model);
             this.onChangeCallback(model);
@@ -191,12 +194,12 @@ export class DejaEditableDirective extends Destroy implements ControlValueAccess
     }
 
     // get accessor
-    public get value(): string {
+    public get value(): string | undefined {
         return this.model;
     }
 
     // From ControlValueAccessor interface
-    public writeValue(value: string): void {
+    public writeValue(value: string | undefined): void {
         this.model = value;
         this.refreshView();
     }
@@ -229,29 +232,21 @@ export class DejaEditableDirective extends Destroy implements ControlValueAccess
     public selectAll(): void {
         const range = document.createRange();
         range.selectNodeContents(this.element);
-        const sel = window.getSelection();
-        sel.removeAllRanges();
-        sel.addRange(range);
+        const selection = window.getSelection();
+        if (selection) {
+            selection.removeAllRanges();
+            selection.addRange(range);
+        }
     }
 
     /** Active la zone d'édition. */
     public edit(selectOnFocus?: boolean): void {
-        this.edit$.next([!this.disabled, selectOnFocus]);
+        this.selectOnFocus = selectOnFocus;
+        this.edit$.next(!this.disabled);
     }
 
     public onTouchedCallback = (): void => undefined;
     public onChangeCallback = (_a?: unknown): void => undefined;
-
-    private isChildElement(element: HTMLElement): boolean {
-        let parentElement = element;
-
-        // eslint-disable-next-line no-loops/no-loops
-        while (parentElement && parentElement !== this.element) {
-            parentElement = parentElement.parentElement;
-        }
-
-        return parentElement === this.element;
-    }
 
     private refreshView(): void {
         if (!this.model) {

@@ -14,7 +14,7 @@
 
 <div *ngIf="tabIndex === 1">
     <mat-card class="demo-card">
-        <mat-toolbar color="primary">Color Picker width backdrop - Pick a color: (selected color: {{ selectedColor.toHex() }});</mat-toolbar>
+        <mat-toolbar color="primary">Color Picker width backdrop - Pick a color: (selected color: {{ selectedColor?.toHex() }});</mat-toolbar>
         <mat-card-content id="colorpickers">
             <deja-color-picker name="1" [attr.hexx]="selectedColor && selectedColor.toHex()" class="colorpicker" [colors]="materialColors.colors" [(ngModel)]="selectedColor" (colorhover)="onColorPickerHover($event)" (ngModelChange)="onColorPickerChange($event)"></deja-color-picker>
             <deja-color-picker name="2" resetcolor="red" class="colorpicker" small [colors]="materialColors.colors" [(ngModel)]="invalidColor" (colorhover)="onColorPickerHover($event)" (ngModelChange)="onColorPickerChange($event)"></deja-color-picker>
@@ -25,8 +25,8 @@
     <mat-card class="demo-card">
         <mat-toolbar color="primary">Color Selector - Pick a color:</mat-toolbar>
         <mat-card-content>
-            <div id="hoveredColor" [style.background-color]="(hoveredColor && hoveredColor.toHex()) || selectedColor.toHex()">
-                <deja-color-selector name="4" [colors]="materialColors.colors" [(ngModel)]="selectedColor" (colorhover)="onColorPickerHover($event)" (ngModelChange)="onColorPickerChange($event)"></deja-color-selector>
+            <div id="hoveredColor" [style.background-color]="(hoveredColor && hoveredColor.toHex()) || selectedColor?.toHex()">
+                <deja-color-selector name="4" [colors]="materialColors.colors" [(ngModel)]="selectedColor" (colorHover$)="onColorPickerHover($event)" (ngModelChange)="onColorPickerChange($event)"></deja-color-selector>
             </div>
         </mat-card-content>
     </mat-card>
@@ -34,7 +34,7 @@
     <mat-card class="demo-card">
         <mat-toolbar color="primary">Color Selector - Disabled:</mat-toolbar>
         <mat-card-content id="colorpickers">
-            <deja-color-selector name="5" disabled [colors]="materialColors.colors" [(ngModel)]="selectedColor" (colorhover)="onColorPickerHover($event)" (ngModelChange)="onColorPickerChange($event)"></deja-color-selector>
+            <deja-color-selector name="5" disabled [colors]="materialColors.colors" [(ngModel)]="selectedColor" (colorHover$)="onColorPickerHover($event)" (ngModelChange)="onColorPickerChange($event)"></deja-color-selector>
         </mat-card-content>
     </mat-card>
 </div>

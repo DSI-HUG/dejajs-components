@@ -16,10 +16,11 @@
     <mat-toolbar color="primary">Content Editable Demo</mat-toolbar>
     <mat-card-content>
         <mat-checkbox color="primary" [(ngModel)]="designMode">Design Mode&nbsp;</mat-checkbox>
-        <mat-checkbox color="primary" [(ngModel)]="disabled">Disabled</mat-checkbox>
+        <mat-checkbox color="primary" [(ngModel)]="disabled">Disabled&nbsp;</mat-checkbox>
+        <mat-checkbox color="primary" [(ngModel)]="selectOnFocus">Auto select</mat-checkbox>
     </mat-card-content>
     <mat-card-content id="contentEditableContainer">
-        <div [deja-editable]="designMode" [disabled]="disabled" multiline>
+        <div [deja-editable]="designMode" [disabled]="disabled" multiline [selectOnFocus]="selectOnFocus" [(ngModel)]="text">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit.
             <br /> Mauris auctor sit amet odio et aliquet. Curabitur auctor eleifend mattis.
             <br /> Nullam sit amet quam tellus. Ut mattis tellus sed erat ultricies ornare.
@@ -27,5 +28,8 @@
             <br /> Praesent pulvinar dui nisi, a tincidunt arcu finibus sed.
             <br /> <a href="http://www.google.ch">Google</a>
         </div>
+    </mat-card-content>
+    <mat-card-content id="contentEditableModel">
+        {{text}}
     </mat-card-content>
 </mat-card>

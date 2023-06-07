@@ -168,7 +168,7 @@ export class Color {
         this._a = a;
     }
 
-    public static equals(c1: Color, c2: Color): boolean {
+    public static equals(c1: Color | undefined, c2: Color | undefined): boolean {
         return !c1 === !c2 && !c1.isEmpty() && c1.r === c2.r && c1.g === c2.g && c1.b === c2.b && c1.a === c2.a;
     }
 

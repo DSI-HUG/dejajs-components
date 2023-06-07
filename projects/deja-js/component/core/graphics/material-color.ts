@@ -10,5 +10,5 @@ import { Color } from './color';
 
 export class MaterialColor extends Color {
     public name: string;
-    public subColors = [] as MaterialColor[];
+    public subColors = new Array<MaterialColor>() as ReadonlyArray<MaterialColor>;
 }

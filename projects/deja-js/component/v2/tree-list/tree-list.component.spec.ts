@@ -14,8 +14,7 @@ import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Destroy, KeyCodes } from '@deja-js/component/core';
 import { Item, ItemModule, SortInfos, SortingService } from '@deja-js/component/v2/item-list';
-import { chain } from 'lodash-es';
-import { debounceTime, delay, filter, Observable, take, tap, timer } from 'rxjs';
+import { debounceTime, delay, filter, from, groupBy, mergeMap, Observable, reduce, shareReplay, take, tap, timer, toArray } from 'rxjs';
 
 import { ViewPort } from '../viewport';
 import { TreeListModule } from './index';
@@ -24,12 +23,12 @@ import { TreeListComponent } from './tree-list.component';
 
 @Component({
     selector: 'TreeListContainerComponent',
-    template: `<tree-list style="height:500px;width:1000px;" [items]="itemList" multiSelect viewPortMode="variable" searchArea pageSize="10">
+    template: `<tree-list style="height:500px;width:1000px;" [items]="itemList$ | async" multiSelect viewPortMode="variable" searchArea pageSize="10">
                     <ng-template #itemTemplate let-item>Item {{ item.label }}</ng-template>
                 </tree-list>`
 })
 class TreeListContainerComponent extends Destroy {
-    public itemList = [] as Item<unknown>[];
+    public itemList$: Observable<Array<Item<unknown>>>;
 
     public constructor() {
         super();
@@ -42,14 +41,19 @@ class TreeListContainerComponent extends Destroy {
             return item;
         });
 
-        this.itemList = chain(itemList)
-            .groupBy('size')
-            .map((items, size) => {
-                const parentItem = new Item<unknown>(size, size);
-                parentItem.items = items;
-                return parentItem;
-            })
-            .value();
+        this.itemList$ = from(itemList).pipe(
+            groupBy(p => p.size, { element: p => p }),
+            mergeMap(group$ => group$.pipe(reduce((item, child) => {
+                if (!item.items) {
+                    item.label = child.label;
+                    item.items = new Array<Item<unknown>>();
+                }
+                item.items = [...item.items, child];
+                return item;
+            }, new Item<unknown>()))),
+            toArray(),
+            shareReplay({ bufferSize: 1, refCount: false })
+        );
     }
 }
 

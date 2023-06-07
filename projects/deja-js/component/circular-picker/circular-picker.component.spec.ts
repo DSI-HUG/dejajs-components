@@ -11,7 +11,7 @@ import { By } from '@angular/platform-browser';
 import { delay, take, tap, timer } from 'rxjs';
 
 import { DejaCircularPickerModule } from '.';
-import { DejaCircularPickerComponent, ICircularRange } from './circular-picker.component';
+import { DejaCircularPickerComponent, CircularRange } from './circular-picker.component';
 
 describe('DejaCircularPickerComponent', () => {
     let component: DejaCircularPickerComponent;
@@ -19,11 +19,11 @@ describe('DejaCircularPickerComponent', () => {
 
     const ranges = [
         { min: 1, max: 20 }
-    ] as ICircularRange[];
+    ] as CircularRange[];
 
     const rangesWithInterval = [
         { min: 1, max: 20, labelInterval: 2 }
-    ] as ICircularRange[];
+    ] as CircularRange[];
 
     beforeEach(waitForAsync(() => {
         void TestBed.configureTestingModule({

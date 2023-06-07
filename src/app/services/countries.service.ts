@@ -25,7 +25,7 @@ export class Country {
 })
 export class CountriesService {
     private countriesDic = {} as { [code: string]: Country };
-    private materialColors: Color[];
+    private materialColors: ReadonlyArray<Color>;
 
     public constructor(private httpClient: HttpClient, materialColors: MaterialColorService) {
         this.materialColors = materialColors.getPalet('700');

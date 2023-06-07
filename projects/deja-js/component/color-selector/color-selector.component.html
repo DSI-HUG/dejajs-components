@@ -1,9 +1,8 @@
-<div class="colors-wrapper" id="basecolors">
-	<deja-color-fab basecolor small *ngFor="let clrfab of colorFabs$ | async; let index=index" [attr.index]="index" [color]="clrfab"></deja-color-fab>
+<div class="colors-wrapper" id="basecolors" [attr.disabled]="disabled || null">
+    <span class="color-fab" basecolor small *ngFor="let color of colors; let index=index" [style.background-color]="disabled ? color.grayScale.toHex() : color.toHex()" [attr.index]="index" [attr.active]="(hilightedBaseIndex$ | async) === index || null"></span>
 </div>
-<div class="colors-wrapper" id="subcolors">
-	<deja-color-fab subcolor *ngFor="let clrfab of subColorFabs$ | async; let index=index" [attr.index]="index" [style.transition-duration]="(100*index)+'ms'" [color]="clrfab"></deja-color-fab>
-</div>
-<div id="reset" *ngIf="!!_resetcolor" (click)="resetDefaultColor()" [style.background-color]="_resetcolor.toHex()">
-	<mat-icon [style.color]="getBestTextColor(_resetcolor.toHex())">undo</mat-icon>
+<div class="colors-wrapper" id="subcolors" [attr.disabled]="disabled || null" [attr.transition]="subColorsTransition$ | async">
+    <ng-container *ngIf="subColors$ | async as subColors">
+        <span class="color-fab" subcolor *ngFor="let color of subColors; let index=index" [style.background-color]="disabled ? color.grayScale.toHex() : color.toHex()" [attr.index]="index" [style.transition-duration]="(100*index)+'ms'" [attr.active]="(hilightedSubIndex$ | async) === index || null"></span>
+    </ng-container>
 </div>

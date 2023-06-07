@@ -7,7 +7,7 @@
  */
 
 import { Component } from '@angular/core';
-import { ICircularRange } from '@deja-js/component/circular-picker';
+import { CircularRange } from '@deja-js/component/circular-picker';
 
 @Component({
     selector: 'deja-circular-picker-demo',
@@ -21,16 +21,16 @@ export class DejaCircularPickerDemoComponent {
     public sms = 10;
     public ranges1 = [
         { min: 1, max: 20, labelInterval: 2 }
-    ] as ICircularRange[];
+    ] as CircularRange[];
 
     public ranges2 = [
         { min: 1, max: 20 }
-    ] as ICircularRange[];
+    ] as CircularRange[];
 
     public ranges3 = [
         { min: 1, max: 12, beginOffset: Math.PI / 3 },
         { min: 13, max: 24, beginOffset: Math.PI / 3 }
-    ] as ICircularRange[];
+    ] as CircularRange[];
 
     public ranges41 = [
         {
@@ -38,7 +38,7 @@ export class DejaCircularPickerDemoComponent {
             max: 59,
             min: 0
         }
-    ] as ICircularRange[];
+    ] as CircularRange[];
 
     public ranges42 = [
         {
@@ -49,7 +49,7 @@ export class DejaCircularPickerDemoComponent {
             max: 111,
             min: 100
         }
-    ] as ICircularRange[];
+    ] as CircularRange[];
 
     private myModel = [
         { value: 0, label: 'T0' },

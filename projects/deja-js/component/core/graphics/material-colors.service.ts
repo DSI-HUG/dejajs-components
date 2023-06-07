@@ -16,10 +16,8 @@ import { MaterialColor } from './material-color';
     providedIn: 'root'
 })
 export class MaterialColorService {
-    private _colors: MaterialColor[];
-    private palettes: {
-        [subColorName: string]: Color[];
-    };
+    private _colors: ReadonlyArray<MaterialColor>;
+    private palettes: ReadonlyMap<string, ReadonlyArray<Color>>;
 
     private palet = {
         'mat-red': {
@@ -252,44 +250,47 @@ export class MaterialColorService {
             800: '#37474f',
             900: '#263238'
         }
-    } as { [color: string]: { [nuance: string]: string }};
+    } as { [color: string]: { [nuance: string]: string } };
 
-    public get colors(): MaterialColor[] {
+    public get colors(): ReadonlyArray<MaterialColor> {
         if (!this._colors) {
-            this._colors = [] as MaterialColor[];
+            const colors = new Array<MaterialColor>;
             Object.keys(this.palet).forEach(baseColorName => {
                 const baseColor = MaterialColor.fromHex(this.palet[baseColorName]['500']) as MaterialColor;
-                baseColor.subColors = [];
-                baseColor.name = baseColorName;
-                this._colors.push(baseColor);
+                const subColors = new Array<MaterialColor>();
+                colors.push(baseColor);
                 Object.keys(this.palet[baseColorName]).forEach(subColorName => {
                     const subColor = MaterialColor.fromHex(this.palet[baseColorName][subColorName]) as MaterialColor;
                     subColor.name = subColorName;
-                    baseColor.subColors.unshift(subColor);
+                    subColors.unshift(subColor);
                 });
+                baseColor.name = baseColorName;
+                baseColor.subColors = subColors;
             });
+            this._colors = colors;
         }
         return this._colors;
     }
 
-    public getColor(name: string): {[nuance: string]: string} {
+    public getColor(name: string): { [nuance: string]: string } {
         return this.palet[name];
     }
 
-    public getPalet(subColor: string): Color[] {
+    public getPalet(subColor: string): ReadonlyArray<Color> {
         if (!this.palettes) {
-            this.palettes = {};
+            const palettes = new Map<string, Array<Color>>();
             Object.keys(this.palet).forEach(baseColorName => {
                 const baseColorObj = this.palet[baseColorName];
                 Object.keys(baseColorObj).forEach(subColorName => {
-                    if (!this.palettes[subColorName]) {
-                        this.palettes[subColorName] = [] as MaterialColor[];
+                    if (!palettes.has(subColorName)) {
+                        palettes.set(subColorName, new Array<MaterialColor>);
                     }
-                    this.palettes[subColorName].push(Color.fromHex(this.palet[baseColorName][subColorName]));
+                    palettes.get(subColorName).push(Color.fromHex(this.palet[baseColorName][subColorName]));
                 });
             });
+            this.palettes = palettes;
         }
-        return this.palettes[subColor];
+        return this.palettes.get(subColor);
     }
 
     public getColorFromText(text: string): MaterialColor {

@@ -1,6 +1,7 @@
 :host {
     display: flex;
     flex-direction: column;
+
     .colors-wrapper {
         display: flex;
         flex-direction: row;
@@ -8,20 +9,42 @@
         justify-content: center;
         flex-wrap: wrap;
         margin: 1rem 0.5rem;
-        deja-color-fab {
-            float: left;
-        }
-        #subcolors {
-            deja-color-fab {
-                opacity: 1;
-            }
-        }
-    }
-    &[sub-tr] {
-        #subcolors.colors-wrapper {
-            deja-color-fab {
+
+        &[transition] {
+            .color-fab {
                 opacity: 0;
                 transform: scale(0, 0);
+            }
+        }
+
+        .color-fab {
+            float: left;
+
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all linear .2s;
+            width: 2.5rem;
+            height: 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            margin: 0.45rem;
+
+            &[small] {
+                width: 1.65rem;
+                height: 1.65rem;
+                margin: 0.3rem;
+            }
+
+            &[active] {
+                transform: scale(1.4, 1.4);
+                transition: transform linear .2s !important;
+            }
+        }
+
+        #subcolors {
+            .color-fab {
+                opacity: 1;
             }
         }
     }
@@ -30,5 +53,11 @@
         padding: 0.5rem 0;
         cursor: pointer;
         text-align: center;
+    }
+
+    & [disabled] {
+        .color-fab {
+            cursor: default;
+        }
     }
 }

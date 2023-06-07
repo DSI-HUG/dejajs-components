@@ -69,7 +69,14 @@ describe('DejaEditableDirective', () => {
         void expect(editableInstance.inEdition).toBeTruthy();
         void expect(element.getAttribute('contenteditable')).toEqual('true');
 
+        editableInstance.inEdition = 'false';
+        fixture.detectChanges();
+
+        void expect(editableInstance.inEdition).toBeFalsy();
+        void expect(element.getAttribute('contenteditable')).toEqual(null);
+
         editableInstance.disabled = 'true';
+        editableInstance.inEdition = 'true';
         fixture.detectChanges();
 
         void expect(editableInstance.inEdition).toBeFalsy();

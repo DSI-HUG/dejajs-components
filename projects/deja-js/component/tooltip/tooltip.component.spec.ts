@@ -19,6 +19,22 @@ import { MockMediaService } from '../overlay/test/MockMediaService';
 import { DejaTooltipModule } from './index';
 import { DejaTooltipDirective } from './tooltip.directive';
 
+const tooltipText = 'Je suis un deja-tooltip';
+
+const tooltipmodel1 = {
+    text: tooltipText
+};
+
+// Asynchronous model
+const tooltipmodel2$ = of({
+    text: `${tooltipText}_$`
+}).pipe(delay(50));
+
+// Promised model
+// eslint-disable-next-line rxjs/no-topromise
+const tooltipmodel3 = tooltipmodel2$.toPromise();
+
+
 @Component({
     selector: 'DejaTooltipContainerComponent',
     // eslint-disable-next-line @angular-eslint/component-max-inline-declarations
@@ -32,26 +48,12 @@ import { DejaTooltipDirective } from './tooltip.directive';
                 </deja-tooltip>`
 })
 class DejaTooltipContainerComponent {
-    public static TOOLTIPTEXT = 'Je suis un deja-tooltip';
-
-    public static TOOLTIPMODEL1 = {
-        text: DejaTooltipContainerComponent.TOOLTIPTEXT
-    };
-
-    // Asynchronous model
-    public static TOOLTIPMODEL2$ = of({
-        text: `${DejaTooltipContainerComponent.TOOLTIPTEXT}_$`
-    }).pipe(delay(50));
-
-    // Promised model
-    // eslint-disable-next-line rxjs/no-topromise
-    public static TOOLTIPMODEL3 = DejaTooltipContainerComponent.TOOLTIPMODEL2$.toPromise();
 
     public toolTipModel: unknown;
     public tooltipVisible = false;
 
     public constructor() {
-        this.toolTipModel = DejaTooltipContainerComponent.TOOLTIPMODEL1;
+        this.toolTipModel = tooltipmodel1;
     }
 }
 
@@ -117,7 +119,7 @@ describe('DejaTooltipComponent', () => {
                 fixture.detectChanges();
                 void fixture.whenStable().then(() => {
                     const tooltip = document.querySelector<HTMLElement>('#tooltip');
-                    void expect(tooltip?.innerText).toEqual(DejaTooltipContainerComponent.TOOLTIPTEXT);
+                    void expect(tooltip?.innerText).toEqual(tooltipText);
 
                     sendMouseEvent(tooltipDirectiveDebugElement.nativeElement as HTMLElement, 'mousemove', 0, 200);
                     fixture.detectChanges();
@@ -141,7 +143,7 @@ describe('DejaTooltipComponent', () => {
 
         void fixture.whenRenderingDone().then(() => {
             const containerComponent = fixture.componentInstance;
-            containerComponent.toolTipModel = DejaTooltipContainerComponent.TOOLTIPMODEL2$;
+            containerComponent.toolTipModel = tooltipmodel2$;
             fixture.detectChanges();
 
             const tooltipDirectiveDebugElement = fixture.debugElement.query(By.directive(DejaTooltipDirective));
@@ -153,7 +155,7 @@ describe('DejaTooltipComponent', () => {
                 void fixture.whenStable().then(() => {
                     fixture.detectChanges();
                     const tooltip = document.querySelector<HTMLElement>('#tooltip');
-                    void expect(tooltip?.innerText).toEqual(`${DejaTooltipContainerComponent.TOOLTIPTEXT}_$`);
+                    void expect(tooltip?.innerText).toEqual(`${tooltipText}_$`);
                     done();
                 });
             });
@@ -166,7 +168,7 @@ describe('DejaTooltipComponent', () => {
 
         void fixture.whenRenderingDone().then(() => {
             const containerComponent = fixture.componentInstance;
-            containerComponent.toolTipModel = DejaTooltipContainerComponent.TOOLTIPMODEL3;
+            containerComponent.toolTipModel = tooltipmodel3;
             fixture.detectChanges();
 
             const tooltipDirectiveDebugElement = fixture.debugElement.query(By.directive(DejaTooltipDirective));
@@ -178,7 +180,7 @@ describe('DejaTooltipComponent', () => {
                 void fixture.whenStable().then(() => {
                     fixture.detectChanges();
                     const tooltip = document.querySelector<HTMLElement>('#tooltip');
-                    void expect(tooltip?.innerText).toEqual(`${DejaTooltipContainerComponent.TOOLTIPTEXT}_$`);
+                    void expect(tooltip?.innerText).toEqual(`${tooltipText}_$`);
                     done();
                 });
             });
