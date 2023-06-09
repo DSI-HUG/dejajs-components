@@ -36,6 +36,7 @@ export class DejaTile {
     private _pending: boolean;
     private _fading: boolean;
     private _percentBounds: Rect;
+    private _trackBy: unknown;
 
     public constructor(id?: string) {
         this._id = id || `#${DejaTile.CURRENT_ID++}`;
@@ -74,6 +75,14 @@ export class DejaTile {
 
     public get id(): string {
         return this._id;
+    }
+
+    public set trackBy(value: unknown) {
+        this._trackBy = value;
+    }
+
+    public get trackBy(): unknown {
+        return this._trackBy;
     }
 
     public set isCutted(value: boolean) {

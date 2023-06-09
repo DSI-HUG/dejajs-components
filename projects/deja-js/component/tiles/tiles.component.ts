@@ -376,6 +376,10 @@ export class DejaTilesComponent extends Destroy implements AfterViewInit, Contro
         } as MouseDroppableContext<ITileDragDropContext>;
     }
 
+    public trackBy(_index: number, tile: DejaTile): unknown {
+        return tile.trackBy || tile;
+    }
+
     public onTileClosed(tile: DejaTile): void {
         this.layoutProvider.removeTiles([tile.id]);
     }

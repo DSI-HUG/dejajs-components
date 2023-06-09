@@ -284,6 +284,10 @@ export class DejaRangeComponent extends Destroy implements ControlValueAccessor 
     // eslint-disable-next-line @typescript-eslint/naming-convention
     public _onTouchCallback = (): void => undefined;
 
+    protected trackBy(_index: number, range: IRange): unknown {
+        return range.trackBy || range;
+    }
+
     private toStep(ranges: IRange[], index: number, newMax: number): number {
 
         const range = ranges[index];

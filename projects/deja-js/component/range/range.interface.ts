@@ -12,6 +12,7 @@
 export interface IRange {
     min: number;
     max: number;
+    trackBy?: unknown;
     $width?: number;
 }
 
@@ -35,5 +36,5 @@ export interface IStepRangeEvent extends IRangeEvent {
  * IRange class implementation
  */
 export class Range implements IRange {
-    public constructor(public min: number, public max: number, public $width?: number) { }
+    public constructor(public min: number, public max: number, public $width?: number, public trackBy?: unknown) { }
 }
