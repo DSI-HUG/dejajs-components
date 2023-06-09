@@ -1,6 +1,32 @@
 CKEditor 4 Changelog
 ====================
 
+## CKEditor 4.20.2
+
+Fixed Issues:
+
+* [#439](https://github.com/ckeditor/ckeditor4/issues/439): Fixed: Incorrect <kbd>Tab</kbd> and <kbd>Shift</kbd>+<kbd>Tab</kbd> navigation for radio buttons inside the dialog.
+* [#4829](https://github.com/ckeditor/ckeditor4/issues/4829): Fixed: Undo reversed entire table content instead of a single cell. Thanks to that fix, multiple changes in a table can be undone one by one.
+* [#5396](https://github.com/ckeditor/ckeditor4/issues/5396): Fixed: Event listeners for `popstate` and `hashchange` events on the `window`, added by the [Maximize](https://ckeditor.com/cke4/addon/maximize) plugin, were not removed when destroying the editor instance.
+* [#5414](https://github.com/ckeditor/ckeditor4/issues/5414): Fixed: File and image uploaders based on the [Upload Widget plugin](https://ckeditor.com/cke4/addon/uploadwidget) and [Easy Image plugin ](https://ckeditor.com/cke4/addon/easyimage) didn't fire the [`change` event](https://ckeditor.com/docs/ckeditor4/latest/api/CKEDITOR_editor.html#event-change) upon finishing upload, resulting in passing incorrect data in form controls for integration frameworks, like [Reactive forms in Angular](https://angular.io/guide/reactive-forms).
+* [#698](https://github.com/ckeditor/ckeditor4/issues/698): Fixed: An error was thrown after applying formatting to the widget with inline editable and switching to the source mode. Thanks to [Glen](https://github.com/glen-84)!
+
+API changes:
+
+* [#3540](https://github.com/ckeditor/ckeditor4/issues/3540): The [startup data](https://ckeditor.com/docs/ckeditor4/latest/api/CKEDITOR_plugins_widget.html) passed to the widget's command is now used to also populate the widget's template.
+* [#5352](https://github.com/ckeditor/ckeditor4/issues/5352): Added the [`colorButton_contentsCss`](https://ckeditor.com/docs/ckeditor4/latest/api/CKEDITOR_config.html#cfg-colorButton_contentsCss) configuration option allowing to add custom CSS to the [Color Button](https://ckeditor.com/cke4/addon/colorbutton) menu content. Thanks to [mihilion](https://github.com/mihilion)!
+
+## CKEditor 4.20.1
+
+Fixed Issues:
+
+* [#5333](https://github.com/ckeditor/ckeditor4/issues/5333): Fixed: The original name of the uploaded image is not preserved by the [Upload Image](https://ckeditor.com/cke4/addon/uploadimage) plugin if the [Clipboard](https://ckeditor.com/cke4/addon/clipboard) plugin has enabled image handling.
+* [#2881](https://github.com/ckeditor/ckeditor4/issues/2881): Fixed: Changing table headers from "Both" to "First column" in the [Table](https://ckeditor.com/cke4/addon/table) dialog does not change the first column cell correctly.
+* [#2996](https://github.com/ckeditor/ckeditor4/issues/2996): Fixed: Table header "scope" attribute is incorrect for the "Headers: both" option in the [Table](https://ckeditor.com/cke4/addon/table) dialog.
+* [#4802](https://github.com/ckeditor/ckeditor4/issues/4802): Fixed: [Tableselection](https://ckeditor.com/cke4/addon/tableselection) caret moves to the previous cell after tabbing into the next cell and then removing its content.
+* [#5365](https://github.com/ckeditor/ckeditor4/issues/5365): Fixed: The value of the [`config.baseFloatZIndex`](https://ckeditor.com/docs/ckeditor4/latest/api/CKEDITOR_config.html#cfg-baseFloatZIndex) config variable is incorrectly applied to parent dialog when the child dialog is closed resulting in the dialog overlay covering up the dialog. Thanks to [JenoDK](https://github.com/JenoDK)!
+* [#5305](https://github.com/ckeditor/ckeditor4/issues/5305): Fixed: Anchor name can invalidly include spaces.
+
 ## CKEditor 4.20
 
 New Features:
