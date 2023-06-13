@@ -20,9 +20,9 @@ import { NG_VALIDATORS, NgControl, ValidationErrors, Validator } from '@angular/
     selector: '[deja-child-validator]'
 })
 export class DejaChildValidatorDirective implements Validator {
-    public parentControl: NgControl;
+    public parentControl?: NgControl;
 
-    public validate(): ValidationErrors {
-        return this.parentControl?.errors;
+    public validate(): ValidationErrors | null {
+        return this.parentControl?.errors || null;
     }
 }

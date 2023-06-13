@@ -18,7 +18,7 @@ import { Color, MaterialColorService } from '@deja-js/component/core/graphics';
 export class DejaColorSelectorDemoComponent {
     public tabIndex = 1;
 
-    public selectedColor: Color;
+    public selectedColor = new Color(233, 30, 99);
     public invalidColor = Color.fromHex('#D02D06');
     public hoveredColor: Color;
 

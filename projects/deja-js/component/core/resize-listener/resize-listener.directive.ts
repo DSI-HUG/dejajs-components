@@ -14,7 +14,7 @@ import { Directive, ElementRef, EventEmitter, OnDestroy, Output } from '@angular
 export class DejaResizeListenerDirective implements OnDestroy {
     @Output() public readonly sizeChanged = new EventEmitter<Event>();
     private element: HTMLElement;
-    private resizeSensor: HTMLDivElement;
+    private resizeSensor?: HTMLDivElement;
 
     public constructor(public elementRef: ElementRef) {
         this.element = elementRef.nativeElement as HTMLElement;
@@ -65,7 +65,7 @@ export class DejaResizeListenerDirective implements OnDestroy {
         const reset = (): void => {
             // set display to block, necessary otherwise hidden elements won't ever work
             const invisible = this.element.offsetWidth === 0 && this.element.offsetHeight === 0;
-            const saveDisplay = invisible && this.element.style.display;
+            const saveDisplay = invisible && this.element.style.display || undefined;
 
             if (invisible) {
                 this.element.style.display = 'block';
@@ -74,7 +74,7 @@ export class DejaResizeListenerDirective implements OnDestroy {
             expandChild.style.width = expandChild.style.height = '100000px';
             expand.scrollLeft = expand.scrollTop = shrink.scrollLeft = shrink.scrollTop = 100000;
 
-            if (invisible) {
+            if (invisible && saveDisplay) {
                 this.element.style.display = saveDisplay;
             }
         };

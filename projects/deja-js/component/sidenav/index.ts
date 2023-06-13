@@ -12,7 +12,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { DejaSlimScrollModule, MediaModule } from '@deja-js/component/core';
+import { MediaModule } from '@deja-js/component/core';
 
 import { DejaSidenavComponent } from './sidenav.component';
 import { DejaSidenavContentDirective } from './sidenav-content.directive';
@@ -37,7 +37,6 @@ import { DejaSidenavMenuSeparatorDirective } from './sidenav-separator.directive
     ],
     imports: [
         CommonModule,
-        DejaSlimScrollModule,
         MatButtonModule,
         MatIconModule,
         MatSidenavModule,

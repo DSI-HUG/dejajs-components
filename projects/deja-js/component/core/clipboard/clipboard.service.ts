@@ -15,21 +15,21 @@ import { Injectable } from '@angular/core';
     providedIn: 'root'
 })
 export class DejaClipboardService {
-    private clipboard = {} as { [key: string]: unknown };
+    private clipboard = new Map<string, unknown>();
 
     public get(key: string): unknown {
-        return this.clipboard[key];
+        return this.clipboard.get(key);
     }
 
     public set(key: string, value: unknown): void {
-        this.clipboard[key] = value;
+        this.clipboard.set(key, value);
     }
 
     public isAvailable(key: string): boolean {
-        return !!this.clipboard[key];
+        return !!this.clipboard.has(key);
     }
 
     public clear(): void {
-        this.clipboard = {};
+        this.clipboard.clear();
     }
 }

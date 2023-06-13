@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { catchError, Observable, throwError } from 'rxjs';
+import { catchError, Observable, of, throwError } from 'rxjs';
 
 export interface CacheEntry<T> {
     timeStamp: number;
@@ -27,7 +27,7 @@ export class Cache<T, K = string> extends Map<K, CacheEntry<T>> {
         });
     }
 
-    public getCache(key: K, defaultValueFn?: (timeStamp: number) => T): T {
+    public getCache(key: K, defaultValueFn?: (timeStamp: number) => T): T | undefined {
         const now = Date.now();
 
         // clear obsolete caches
@@ -51,10 +51,14 @@ export class Cache<T, K = string> extends Map<K, CacheEntry<T>> {
     }
 }
 
-export class ObservableCache<T, K = string> extends Cache<Observable<T>, K> {
+export class ObservableCache<T, K = string> extends Cache<Observable<T | undefined>, K> {
     // eslint-disable-next-line rxjs/finnish
-    public getCache(key: K, defaultValueFn?: (timeStamp: number) => Observable<T>): Observable<T> {
+    public getCache(key: K, defaultValueFn?: (timeStamp: number) => Observable<T>): Observable<T | undefined> {
         const data$ = super.getCache(key, defaultValueFn);
+        if (!data$) {
+            return of(undefined);
+        }
+
         return data$.pipe(
             catchError((err: unknown) => {
                 // Clear cache entry in case of observable failure

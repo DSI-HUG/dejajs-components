@@ -8,6 +8,6 @@
 
 import { Subject } from 'rxjs';
 
-export interface IDejaCancelableEvent extends CustomEvent {
+export interface CancelableEvent extends CustomEvent {
     cancel$: Subject<unknown>;
 }

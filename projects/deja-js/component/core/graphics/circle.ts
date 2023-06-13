@@ -9,13 +9,6 @@
 import { Position } from './position';
 import { Rect } from './rect';
 
-interface IRect {
-    left: number;
-    top: number;
-    width: number;
-    height: number;
-}
-
 export class Circle {
     /** Create e new circle instance from the center position and the radius */
     public constructor(public center: Position, public radius: number) {
@@ -31,13 +24,18 @@ export class Circle {
      * @param height    The height of the outer rectangle
      * @return A circle contained end centered inside the passed ractangle
      */
-    public static fromOuterRect(left?: number | unknown, top?: number, width?: number, height?: number): Circle {
+    public static fromOuterRect(left?: number | DOMRect, top?: number, width?: number, height?: number): Circle {
         if (typeof left === 'object') {
-            const bounds = left as IRect;
+            const bounds = left;
             left = bounds.left;
             top = bounds.top;
-            width = bounds.width;
-            height = bounds.height;
+            width = (bounds.right !== undefined && Math.max(0, bounds.right - left)) || bounds.width || 0;
+            height = (bounds.bottom !== undefined && Math.max(0, bounds.bottom - top)) || bounds.height || 0;
+        } else {
+            left ||= 0;
+            top ||= 0;
+            width ||= 0;
+            height ||= 0;
         }
         const radius = Math.min(width, height) / 2;
 

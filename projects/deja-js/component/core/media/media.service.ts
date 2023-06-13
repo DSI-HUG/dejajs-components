@@ -102,7 +102,7 @@ export const SIMPLIFIED_MEDIA_QUERY_DEFINITIONS = [
 @Injectable()
 export class MediaService implements OnDestroy {
     public isMobile$: Observable<boolean>;
-    public mediaChanged$: BehaviorSubject<string>;
+    public mediaChanged$ = new BehaviorSubject<string>('lg');
     public mql = {} as { [alias: string]: MediaQueryList };
 
     public constructor(private zone: NgZone, @Optional() @Inject(MEDIA_QUERY_DEFINITIONS) mediaDefinitions?: MediaQueryDefinition[]) {
@@ -119,10 +119,6 @@ export class MediaService implements OnDestroy {
                 this.mediaChanged$ = new BehaviorSubject(alias);
             }
         });
-
-        if (!this.mediaChanged$) {
-            this.mediaChanged$ = new BehaviorSubject('lg');
-        }
 
         this.isMobile$ = this.mediaChanged$.pipe(
             map(alias => alias === 'xs' || alias === 'sm'),

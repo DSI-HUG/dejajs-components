@@ -5,9 +5,20 @@
  *  Use of this source code is governed by an Apache-2.0 license that can be
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
-import { Component, ContentChild, ElementRef, EventEmitter, HostListener, Output } from '@angular/core';
-import { Destroy, KeyCodes } from '@deja-js/component/core';
-import { filter, fromEvent, takeUntil } from 'rxjs';
+import { Component, ElementRef, Input, Output } from '@angular/core';
+import { KeyCodes } from '@deja-js/component/core';
+import { filter, fromEvent, map, mergeWith, Observable, ReplaySubject } from 'rxjs';
+
+export type DialogResponse = 'ok' | 'cancel' | 'ignore' | 'retry' | 'yes' | 'no';
+
+export enum DialogButtons {
+    OK = 0x1,
+    CANCEL = 0x2,
+    IGNORE = 0x4,
+    RETRY = 0x8,
+    YES = 0x10,
+    NO = 0x20
+}
 
 /**
  * Simple dialog for Angular
@@ -17,58 +28,35 @@ import { filter, fromEvent, takeUntil } from 'rxjs';
     styleUrls: ['./dialog.component.scss'],
     templateUrl: './dialog.component.html'
 })
-export class DejaDialogComponent extends Destroy {
-    /** Event emitted when dialog close action is called */
-    @Output() public readonly closed = new EventEmitter();
+export class DejaDialogComponent {
+    @Output() public readonly close$: Observable<DialogResponse | undefined>;
 
-    @ContentChild('okaction') private okButton: { _elementRef: ElementRef<HTMLElement> };
-    @ContentChild('cancelaction') private cancelButton: { _elementRef: ElementRef<HTMLElement> };
+    @Input() public title?: string;
+    @Input() public text?: string;
+    @Input() public buttons?: DialogButtons;
+    @Input() public defaultResponse: DialogResponse = 'ok';
+
+    protected buttonClicked$ = new ReplaySubject<DialogResponse>(1);
 
     /**
      * Constructor
      */
-    public constructor(elementRef: ElementRef) {
-        super();
+    public constructor(elementRef: ElementRef<HTMLElement>) {
+        this.close$ = fromEvent<KeyboardEvent>(elementRef.nativeElement.ownerDocument, 'keyup').pipe(
+            filter(event => this.defaultResponse && event.code === KeyCodes.Enter || event.code === KeyCodes.Escape),
+            map(event => {
+                if (event.code === KeyCodes.Enter) {
+                    return this.defaultResponse;
+                }
 
-        const element = elementRef.nativeElement as HTMLElement;
-
-        fromEvent<KeyboardEvent>(element.ownerDocument, 'keyup').pipe(
-            filter(event => !!(event.code === KeyCodes.Enter && this.okButton?._elementRef) || !!(event.code === KeyCodes.Escape && this.cancelButton?._elementRef)),
-            takeUntil(this.destroyed$)
-        ).subscribe(event => {
-            if (event.code === KeyCodes.Enter) {
-                this.okButton._elementRef.nativeElement.click();
-            } else if (event.code === KeyCodes.Escape) {
-                this.cancelButton._elementRef.nativeElement.click();
-            }
-        });
+                return undefined;
+            }),
+            mergeWith(this.buttonClicked$)
+        );
     }
 
-    /**
-     * Listen on click on dialogComponent.
-     * If click is not inside the dialog, close action is called.
-     *
-     * @param event
-     */
-    @HostListener('click', ['$event'])
-    public close(event: MouseEvent): void {
-
-        let close = true;
-
-        let target = event.target as HTMLElement;
-        const element = event.currentTarget as HTMLElement;
-
-        // eslint-disable-next-line no-loops/no-loops
-        while (target.parentElement && target !== element) {
-            if (target.className === 'dialog') {
-                close = false;
-            }
-            target = target.parentElement;
-        }
-
-        if (close) {
-            this.closed.emit();
-            event.preventDefault();
-        }
+    protected hasControl(key: 'OK' | 'CANCEL' | 'IGNORE' | 'RETRY' | 'YES' | 'NO'): boolean {
+        // eslint-disable-next-line no-bitwise
+        return !!this.buttons && (this.buttons & DialogButtons[key]) !== 0;
     }
 }

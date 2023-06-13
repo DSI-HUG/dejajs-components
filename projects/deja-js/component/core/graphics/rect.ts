@@ -8,23 +8,14 @@
 
 import { Position } from './position';
 
-interface IRect {
-    left: number;
-    top: number;
-    right: number;
-    bottom: number;
-    width: number;
-    height: number;
-}
-
-export interface IRectOverlapInfos {
+export interface OverlapInfos {
     area: number;
     width: number;
     height: number;
     direction: 'horizontal' | 'vertical';
 }
 
-export class Rect {
+export class Rect implements DOMRect {
     public left: number;
     public top: number;
     public width: number;
@@ -37,11 +28,11 @@ export class Rect {
             this.width = width || 0;
             this.height = height || 0;
         } else {
-            const bounds = (left || {}) as IRect;
+            const bounds = (left || {}) as DOMRect;
             this.left = bounds.left || 0;
             this.top = bounds.top || 0;
-            this.width = bounds.right !== undefined ? bounds.right - this.left : bounds.width || 0;
-            this.height = bounds.bottom !== undefined ? bounds.bottom - this.top : bounds.height || 0;
+            this.width = (bounds.right !== undefined && Math.max(0, bounds.right - this.left)) || bounds.width || 0;
+            this.height = (bounds.bottom !== undefined && Math.max(0, bounds.bottom - this.top)) || bounds.height || 0;
         }
     }
 
@@ -53,7 +44,7 @@ export class Rect {
         return Rect.fromLTRB(Math.min(r1.left, r2.left), Math.min(r1.top, r2.top), Math.max(r1.left + r1.width, r2.left + r2.width), Math.max(r1.top + r1.height, r2.top + r2.height));
     }
 
-    public static overlapInfos(rect1: Rect, rect2: Rect): IRectOverlapInfos {
+    public static overlapInfos(rect1: Rect, rect2: Rect): OverlapInfos {
         const x = Math.max(0, Math.min(rect1.right, rect2.right) - Math.max(rect1.left, rect2.left));
         const y = Math.max(0, Math.min(rect1.bottom, rect2.bottom) - Math.max(rect1.top, rect2.top));
         return {
@@ -71,6 +62,22 @@ export class Rect {
 
     public static fromPoints(p1: Position, p2: Position): Rect {
         return Rect.fromLTRB(Math.min(p1.left, p2.left), Math.min(p1.top, p2.top), Math.max(p1.left, p2.left), Math.max(p1.top, p2.top));
+    }
+
+    public set x(value: number) {
+        this.left = value;
+    }
+
+    public get x(): number {
+        return this.left;
+    }
+
+    public set y(value: number) {
+        this.top = value;
+    }
+
+    public get y(): number {
+        return this.top;
     }
 
     public set right(value: number) {
@@ -132,7 +139,7 @@ export class Rect {
         return new Rect(this.left, this.top, this.width, this.height);
     }
 
-    public toClientRect(): ClientRect {
+    public toDomRect(): DOMRect {
         return {
             left: this.left,
             top: this.top,
@@ -140,13 +147,18 @@ export class Rect {
             right: this.right,
             width: this.width,
             height: this.height
-        } as ClientRect;
+        } as DOMRect;
     }
 
-    /**
-     * @deprecated use toClientRect instead
-     */
-    public toRectStruct(): ClientRect {
-        return this.toClientRect();
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    public toJSON(): Record<string, number> {
+        return {
+            left: this.left,
+            top: this.top,
+            bottom: this.bottom,
+            right: this.right,
+            width: this.width,
+            height: this.height
+        };
     }
 }

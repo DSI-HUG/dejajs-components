@@ -14,8 +14,8 @@ import { AbstractLazyModule, LazyLoaderService } from './lazy-loader.service';
 
 export abstract class DialogService<ReturnType, DataType> {
     protected openDialogSub$ = new ReplaySubject<MatDialogConfig<DataType>>(1);
-    protected dialogResponse$: Observable<ReturnType>;
-    protected dialogRef: MatDialogRef<unknown, ReturnType>;
+    protected dialogResponse$: Observable<ReturnType | undefined>;
+    protected dialogRef?: MatDialogRef<unknown, ReturnType>;
 
     public constructor(
         private lazyLoaderService: LazyLoaderService,
@@ -39,7 +39,7 @@ export abstract class DialogService<ReturnType, DataType> {
         );
     }
 
-    public openDialog$(dialogData?: DataType, dialogConfig?: MatDialogConfig<DataType>): Observable<ReturnType> {
+    public openDialog$(dialogData?: DataType, dialogConfig?: MatDialogConfig<DataType>): Observable<ReturnType | undefined> {
         dialogConfig = dialogConfig || {};
         dialogConfig.data = dialogData ?? {} as DataType;
         this.openDialogSub$.next(dialogConfig);
@@ -47,7 +47,7 @@ export abstract class DialogService<ReturnType, DataType> {
     }
 
     public closeDialog(): void {
-        this.dialogRef.close();
+        this.dialogRef?.close();
     }
 
     protected abstract getModule(): Promise<Type<AbstractLazyModule<unknown>>>;

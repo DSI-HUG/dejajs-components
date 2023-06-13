@@ -8,6 +8,7 @@
 
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { MatToolbarModule } from '@angular/material/toolbar';
 
 import { DejaDialogComponent } from './dialog.component';
 
@@ -19,7 +20,8 @@ import { DejaDialogComponent } from './dialog.component';
         DejaDialogComponent
     ],
     imports: [
-        CommonModule
+        CommonModule,
+        MatToolbarModule
     ]
 })
 export class DejaDialogModule { }

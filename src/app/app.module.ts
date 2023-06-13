@@ -17,7 +17,7 @@ import { MatLegacyListModule as MatListModule } from '@angular/material/legacy-l
 import { MatLegacyMenuModule as MatMenuModule } from '@angular/material/legacy-menu';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { DejaSlimScrollModule, DejaTextMetricsModule } from '@deja-js/component/core';
+import { DejaTextMetricsModule } from '@deja-js/component/core';
 import { DejaSidenavModule } from '@deja-js/component/sidenav';
 
 import { AppComponent } from './app.component';
@@ -32,7 +32,6 @@ import { routing } from './app.routes';
         BrowserAnimationsModule,
         BrowserModule,
         DejaSidenavModule,
-        DejaSlimScrollModule,
         DejaTextMetricsModule,
         FormsModule,
         HttpClientModule,

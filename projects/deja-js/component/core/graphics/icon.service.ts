@@ -31,6 +31,6 @@ export class IconService {
     }
 
     public useMaterialIcons(value = true): void {
-        this.iconRegistry.registerFontClassAlias('deja-icons', value ? 'material-icons' : null);
+        this.iconRegistry.registerFontClassAlias('deja-icons', value ? 'material-icons' : undefined);
     }
 }

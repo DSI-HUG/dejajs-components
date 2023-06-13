@@ -18,7 +18,7 @@ import { Subject } from 'rxjs';
 
 export class MatInputBase {
     // eslint-disable-next-line rxjs/finnish
-    public stateChanges: Subject<void>;
+    public stateChanges = new Subject<void>();
 
     public constructor(
         public _defaultErrorStateMatcher: ErrorStateMatcher,

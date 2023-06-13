@@ -16,8 +16,8 @@ import { MaterialColor } from './material-color';
     providedIn: 'root'
 })
 export class MaterialColorService {
-    private _colors: ReadonlyArray<MaterialColor>;
-    private palettes: ReadonlyMap<string, ReadonlyArray<Color>>;
+    private _colors?: ReadonlyArray<MaterialColor>;
+    private palettes?: ReadonlyMap<string, ReadonlyArray<Color>>;
 
     private palet = {
         'mat-red': {
@@ -253,52 +253,44 @@ export class MaterialColorService {
     } as { [color: string]: { [nuance: string]: string } };
 
     public get colors(): ReadonlyArray<MaterialColor> {
-        if (!this._colors) {
-            const colors = new Array<MaterialColor>;
-            Object.keys(this.palet).forEach(baseColorName => {
-                const baseColor = MaterialColor.fromHex(this.palet[baseColorName]['500']) as MaterialColor;
-                const subColors = new Array<MaterialColor>();
-                colors.push(baseColor);
-                Object.keys(this.palet[baseColorName]).forEach(subColorName => {
-                    const subColor = MaterialColor.fromHex(this.palet[baseColorName][subColorName]) as MaterialColor;
-                    subColor.name = subColorName;
-                    subColors.unshift(subColor);
-                });
-                baseColor.name = baseColorName;
-                baseColor.subColors = subColors;
+        return this._colors || Array.from(Object.keys(this.palet)).reduce((m, baseColorName) => {
+            const baseColor = MaterialColor.fromHex(this.palet[baseColorName]['500']) as MaterialColor;
+            const subColors = new Array<MaterialColor>();
+            m.push(baseColor);
+            Object.keys(this.palet[baseColorName]).forEach(subColorName => {
+                const subColor = MaterialColor.fromHex(this.palet[baseColorName][subColorName]) as MaterialColor;
+                subColor.name = subColorName;
+                subColors.unshift(subColor);
             });
-            this._colors = colors;
-        }
-        return this._colors;
+            baseColor.name = baseColorName;
+            baseColor.subColors = subColors;
+
+            return m;
+        }, this._colors = new Array<MaterialColor>());
     }
 
     public getColor(name: string): { [nuance: string]: string } {
         return this.palet[name];
     }
 
-    public getPalet(subColor: string): ReadonlyArray<Color> {
-        if (!this.palettes) {
-            const palettes = new Map<string, Array<Color>>();
-            Object.keys(this.palet).forEach(baseColorName => {
-                const baseColorObj = this.palet[baseColorName];
-                Object.keys(baseColorObj).forEach(subColorName => {
-                    if (!palettes.has(subColorName)) {
-                        palettes.set(subColorName, new Array<MaterialColor>);
-                    }
-                    palettes.get(subColorName).push(Color.fromHex(this.palet[baseColorName][subColorName]));
-                });
+    public getPalet(subColor: string): ReadonlyArray<Color> | undefined {
+        const palettes = this.palettes || Array.from(Object.keys(this.palet)).reduce((m, baseColorName) => {
+            const baseColorObj = this.palet[baseColorName];
+
+            Object.keys(baseColorObj).forEach(subColorName => {
+                const subColors = m.get(subColorName) || new Array<MaterialColor>();
+                m.set(subColorName, subColors);
+                subColors.push(Color.fromHex(this.palet[baseColorName][subColorName]));
             });
-            this.palettes = palettes;
-        }
-        return this.palettes.get(subColor);
+
+            return m;
+        }, this.palettes = new Map<string, Array<Color>>());
+
+        return palettes.get(subColor);
     }
 
     public getColorFromText(text: string): MaterialColor {
-        let sum = 0;
-        // eslint-disable-next-line no-loops/no-loops
-        for (let i = 0; i < text.length; i++) {
-            sum += text.charCodeAt(i);
-        }
+        const sum = [...text].reduce((s, char) => s + char.charCodeAt(0), 0);
         const colors = this.colors;
         const subColors = (colors[sum % colors.length]).subColors;
         return subColors[sum % subColors.length];

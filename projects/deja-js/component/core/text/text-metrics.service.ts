@@ -15,10 +15,10 @@ import { Destroy } from '../destroy/destroy';
  * Service to measure the theorical size of a text inside a container
  */
 export class DejaTextMetricsService extends Destroy {
-    private canvas: HTMLCanvasElement;
+    private canvas?: HTMLCanvasElement;
     private element$ = new Subject<HTMLElement>();
-    private computedStyles: CSSStyleDeclaration;
-    private charSize$ = new BehaviorSubject<number[]>(null);
+    private computedStyles?: CSSStyleDeclaration;
+    private charSize$ = new BehaviorSubject<number[] | undefined>(undefined);
 
     /**
      * Constructor
@@ -57,10 +57,13 @@ export class DejaTextMetricsService extends Destroy {
 
         const canvas = this.canvas || (this.canvas = document.createElement('canvas'));
         const context = canvas.getContext('2d');
-        context.font = font;
-        const metrics = context.measureText(text);
+        if (context) {
+            context.font = font;
+            const metrics = context.measureText(text);
+            return metrics.width * 1.1; // Correction for letter-spacing
+        }
 
-        return metrics.width * 1.1; // Correction for letter-spacing
+        return 0;
     }
 
     /**
@@ -96,12 +99,17 @@ export class DejaTextMetricsService extends Destroy {
     public getTextHeight(maxWidth: number, text: string): Observable<number> {
         return this.getNumberOfLines(maxWidth, text).pipe(
             map(numberOfLines => {
-                const computedLineHeight = parseInt(this.computedStyles.lineHeight.replace('px', ''), 10);
-                const lineHeight = (!isNaN(computedLineHeight)) ?
-                    computedLineHeight :
-                    Math.floor(parseInt(this.computedStyles.fontSize.replace('px', ''), 10) * 1.5);
+                if (!this.computedStyles) {
+                    return 0;
+                }
 
-                return lineHeight * +numberOfLines;
+                const computedLineHeight = parseInt(this.computedStyles.lineHeight.replace('px', ''), 10);
+                if (!isNaN(computedLineHeight)) {
+                    return computedLineHeight * numberOfLines;
+                }
+
+                const lineHeight = Math.floor(parseInt(this.computedStyles.fontSize.replace('px', ''), 10) * 1.5);
+                return lineHeight * numberOfLines;
             })
         );
     }
@@ -117,7 +125,7 @@ export class DejaTextMetricsService extends Destroy {
     // eslint-disable-next-line rxjs/finnish
     private getNumberOfLines(maxWidth: number, text: string): Observable<number> {
         return this.charSize$.pipe(
-            filter(charSize => charSize !== null),
+            filter(Boolean),
             map(charSize => {
                 let tmpSize = 0;
                 let numberOfLines = 1;

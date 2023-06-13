@@ -32,23 +32,11 @@ describe('DejaDialogComponent', () => {
         void expect(component).toBeTruthy();
     });
 
-    it('should not emit closed event if click inside the dialog', () => {
-        const spy = spyOn(component.closed, 'emit').and.callThrough();
-        (fixture.debugElement.query(By.css('.dialog')).nativeElement as HTMLElement).click();
-        void expect(spy).not.toHaveBeenCalled();
+    it('should emit closed event if click on the toolbar button', done => {
+        (fixture.debugElement.query(By.css('[data-cy="close-button"]')).nativeElement as HTMLElement).click();
+        component.close$.subscribe(response => {
+            expect(response).toBeUndefined();
+            done();
+        });
     });
-
-    it('should emit closed event one time if click outside the dialog', () => {
-        const spy = spyOn(component.closed, 'emit').and.callThrough();
-
-        const event = {
-            target: {},
-            // eslint-disable-next-line @typescript-eslint/no-empty-function
-            preventDefault: (): void => {}
-        };
-
-        component.close(event as MouseEvent);
-        void expect(spy).toHaveBeenCalledTimes(1);
-    });
-
 });

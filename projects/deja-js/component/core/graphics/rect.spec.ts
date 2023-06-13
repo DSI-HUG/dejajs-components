@@ -77,7 +77,7 @@ describe('Rect', () => {
     });
 
     it('should export to ClientRect struct', () => {
-        const crect = r1.toClientRect();
+        const crect = r1.toDomRect();
         void expect(crect.left).toBe(10);
         void expect(crect.top).toBe(20);
         void expect(crect.width).toBe(100);
@@ -85,7 +85,7 @@ describe('Rect', () => {
         void expect(crect.right).toBe(110);
         void expect(crect.bottom).toBe(220);
 
-        const crect2 = r1.toRectStruct();
+        const crect2 = r1.toDomRect();
         void expect(crect2.left).toBe(10);
         void expect(crect2.top).toBe(20);
         void expect(crect2.width).toBe(100);

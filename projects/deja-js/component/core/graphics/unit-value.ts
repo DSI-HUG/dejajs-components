@@ -9,17 +9,17 @@
 import { NumberInput } from '@angular/cdk/coercion';
 
 export class UnitValue {
-    public value: number;
-    public unit: string;
+    public value?: number;
+    public unit?: string;
 
     public constructor(value?: NumberInput, unit?: string) {
         if (typeof value === 'string') {
             // eslint-disable-next-line @typescript-eslint/prefer-regexp-exec
-            const match = value.match(/([0-9.]+)(.*)/);
-            this.value = match && match.length >= 2 && parseInt(match[1], 10);
-            this.unit = match && match.length >= 3 && match[2];
+            const match = value.match(/([0-9.]+)(.*)/) || undefined;
+            this.value = match && match.length >= 2 && parseInt(match[1], 10) || undefined;
+            this.unit = match && match.length >= 3 && match[2] || undefined;
         } else {
-            this.value = value;
+            this.value = value || undefined;
             this.unit = unit;
         }
     }

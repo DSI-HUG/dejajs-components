@@ -1,3 +1,29 @@
-<div class="dialog">
+<mat-toolbar class="dialog-toolbar" color="primary">
+    <span class="dialog-title" data-cy="confirmation-dialog-title">{{ title || '' }}</span>
+    <em class="dialog-action material-icons" data-cy="close-button" (click)="buttonClicked$.next(undefined)">close</em>
+</mat-toolbar>
+
+<div class="dialog-container">
     <ng-content></ng-content>
+</div>
+
+<div class="dialog-buttons">
+    <button type="button" mat-button id="cancelbtn" (click)="buttonClicked$.next('cancel')" *ngIf="hasControl('CANCEL')" color="primary" data-cy="confirmation-dialog-actions">
+        Cancel
+    </button>
+    <button type="button" mat-button id="ignorebtn" (click)="buttonClicked$.next('ignore')" *ngIf="hasControl('IGNORE')" color="primary" data-cy="confirmation-dialog-actions">
+        Ignore
+    </button>
+    <button type="button" mat-stroked-button default id="retrybtn" (click)="buttonClicked$.next('retry')" *ngIf="hasControl('RETRY')" color="primary" data-cy="confirmation-dialog-actions">
+        Retry
+    </button>
+    <button type="button" mat-stroked-button id="okbtn" (click)="buttonClicked$.next('ok')" *ngIf="hasControl('OK')" color="primary" data-cy="confirmation-dialog-actions">
+        Ok
+    </button>
+    <button type="button" mat-stroked-button id="okbtn" (click)="buttonClicked$.next('yes')" *ngIf="hasControl('YES')" color="primary" data-cy="confirmation-dialog-actions">
+        Yes
+    </button>
+    <button type="button" mat-stroked-button id="okbtn" (click)="buttonClicked$.next('no')" *ngIf="hasControl('NO')" color="primary" data-cy="confirmation-dialog-actions">
+        No
+    </button>
 </div>
