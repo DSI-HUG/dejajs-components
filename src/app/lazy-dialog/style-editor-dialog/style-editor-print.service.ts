@@ -1,4 +1,4 @@
-import { Injectable, Injector } from '@angular/core';
+import { inject, Injectable, Injector } from '@angular/core';
 import { Observable, Subject, switchMap } from 'rxjs';
 
 import { MessageBoxDialogService } from './message-box-dialog/message-box-dialog.service';
@@ -15,9 +15,11 @@ export class StyleEditorPrintService {
 
     public messageDialogResult$: Observable<string>;
 
-    public constructor(messageBoxDialogService: MessageBoxDialogService) {
+    private messageBoxDialogService = inject(MessageBoxDialogService);
+
+    public constructor() {
         this.messageDialogResult$ = this.openMessageDialog$.pipe(
-            switchMap(dialogData => messageBoxDialogService.openDialog$(dialogData.message, { injector: dialogData.injector }))
+            switchMap(dialogData => this.messageBoxDialogService.openDialog$(dialogData.message, { injector: dialogData.injector }))
         );
     }
 

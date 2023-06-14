@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Directive, ElementRef, EventEmitter, Input, Output } from '@angular/core';
+import { Directive, ElementRef, EventEmitter, inject, Input, Output } from '@angular/core';
 import { DejaConnectionPositionPair, Destroy } from '@deja-js/component/core';
 import { delay, fromEvent, of, switchMap, takeUntil } from 'rxjs';
 
@@ -26,10 +26,13 @@ export class DejaTooltipDirective extends Destroy {
     // eslint-disable-next-line @angular-eslint/no-output-rename, @angular-eslint/no-output-native
     @Output('tooltip-show') public readonly show = new EventEmitter();
 
-    public constructor(elementRef: ElementRef, tooltipService: DejaTooltipService) {
+    private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    private tooltipService = inject(DejaTooltipService);
+
+    public constructor() {
         super();
 
-        const element = elementRef.nativeElement as HTMLElement;
+        const element = this.elementRef.nativeElement;
 
         const leave$ = fromEvent<MouseEvent>(element, 'mouseleave');
 
@@ -40,9 +43,9 @@ export class DejaTooltipDirective extends Destroy {
             )),
             takeUntil(this.destroyed$)
         ).subscribe(() => {
-            tooltipService.params[this.name] = {
+            this.tooltipService.params[this.name] = {
                 model: this.model,
-                ownerElement: elementRef,
+                ownerElement: this.elementRef,
                 positions: this.positions
             };
 

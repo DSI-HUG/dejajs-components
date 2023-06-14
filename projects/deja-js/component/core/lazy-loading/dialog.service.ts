@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Type } from '@angular/core';
+import { inject, Type } from '@angular/core';
 import { MatLegacyDialog as MatDialog, MatLegacyDialogConfig as MatDialogConfig, MatLegacyDialogRef as MatDialogRef } from '@angular/material/legacy-dialog';
 import { Observable, ReplaySubject, switchMap, take, throttleTime } from 'rxjs';
 
@@ -17,17 +17,17 @@ export abstract class DialogService<ReturnType, DataType> {
     protected dialogResponse$: Observable<ReturnType | undefined>;
     protected dialogRef?: MatDialogRef<unknown, ReturnType>;
 
-    public constructor(
-        private lazyLoaderService: LazyLoaderService,
-        private dialog: MatDialog,
-        matDialogConfig?: MatDialogConfig<DataType>
-    ) {
+    protected matDialogConfig = inject(MatDialogConfig<DataType>, { optional: true });
+    private lazyLoaderService = inject(LazyLoaderService);
+    private dialog = inject(MatDialog);
+
+    public constructor() {
         this.dialogResponse$ = this.openDialogSub$.pipe(
             throttleTime(10),
             take(1),
             switchMap(dialogConfig => this.lazyLoaderService.loadModule$(this.getModule(), dialogConfig.injector).pipe(
                 switchMap(moduleInfos => {
-                    const config = { ...matDialogConfig || {} as MatDialogConfig<DataType>, ...dialogConfig };
+                    const config = { ...this.matDialogConfig || {} as MatDialogConfig<DataType>, ...dialogConfig };
                     config.minWidth = config.minWidth || '400px';
                     config.injector = moduleInfos.injector;
 

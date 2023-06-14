@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Directive, ElementRef, NgZone, OnInit } from '@angular/core';
+import { Directive, ElementRef, inject, NgZone, OnInit } from '@angular/core';
 import { MatLegacyInput as MatInput } from '@angular/material/legacy-input';
 import { Destroy } from '@deja-js/component/core';
 import { debounceTime, fromEvent, mergeWith, of, startWith, takeUntil } from 'rxjs';
@@ -17,13 +17,9 @@ import { debounceTime, fromEvent, mergeWith, of, startWith, takeUntil } from 'rx
 })
 export class InputAutosizeDirective extends Destroy implements OnInit {
 
-    public constructor(
-        private elementRef: ElementRef<HTMLInputElement>,
-        private ngZone: NgZone,
-        private matInput: MatInput
-    ) {
-        super();
-    }
+    private elementRef = inject<ElementRef<HTMLInputElement>>(ElementRef);
+    private ngZone = inject(NgZone);
+    private matInput = inject(MatInput);
 
     public ngOnInit(): void {
         const inputElement = this.elementRef.nativeElement;

@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Item, ItemService } from '@deja-js/component/v2/item-list';
 import { map, Observable } from 'rxjs';
 
@@ -14,9 +14,7 @@ import { CountriesService, Country } from './countries.service';
 
 @Injectable()
 export class CountriesListService extends ItemService<Country> {
-    public constructor(private countriesService: CountriesService) {
-        super();
-    }
+    private countriesService = inject(CountriesService);
 
     // Override for lazy loading
     protected getItemList$(query?: RegExp | string): Observable<Item<Country>[]> {

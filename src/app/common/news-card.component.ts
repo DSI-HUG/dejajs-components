@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Component, ElementRef, EventEmitter, Inject, Input, Optional, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Inject, inject, Input, Optional, Output } from '@angular/core';
 import { MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
 
 import { TooltipComponentInterface } from '../../../projects/deja-js/component/v2/tooltip/tooltip-component.interface';
@@ -24,9 +24,10 @@ export class NewsCardComponent implements TooltipComponentInterface {
     @Output()
     public readonly imageLoaded = new EventEmitter();
 
+    public elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+
     public constructor(
-        public elementRef: ElementRef<HTMLElement>,
-        @Optional() @Inject(MAT_DIALOG_DATA) news: News
+    @Optional() @Inject(MAT_DIALOG_DATA) news: News
     ) {
         if (news) {
             this.item = news;

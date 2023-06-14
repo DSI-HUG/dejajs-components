@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { ChangeDetectionStrategy, Component, ElementRef, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, inject, ViewEncapsulation } from '@angular/core';
 import { DejaTextMetricsService, Destroy } from '@deja-js/component/core';
 import { IconService } from '@deja-js/component/core/graphics';
 import { BehaviorSubject, takeUntil } from 'rxjs';
@@ -23,10 +23,14 @@ export class AppComponent extends Destroy {
     private _theme: string;
     private theme$: BehaviorSubject<string>;
 
-    public constructor(iconService: IconService, elementRef: ElementRef<HTMLElement>, textMetrics: DejaTextMetricsService) {
+    private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    private iconService = inject(IconService);
+    private textMetrics = inject(DejaTextMetricsService);
+
+    public constructor() {
         super();
 
-        textMetrics.metricsElem = elementRef.nativeElement;
+        this.textMetrics.metricsElem = this.elementRef.nativeElement;
 
         try {
             this._theme = localStorage.getItem('dejajs-demo-color');
@@ -42,7 +46,7 @@ export class AppComponent extends Destroy {
             takeUntil(this.destroyed$)
         ).subscribe(theme => document.body.setAttribute('theme', theme));
 
-        iconService.addSvgIcon('angular', 'assets/img/logo/angular.svg');
+        this.iconService.addSvgIcon('angular', 'assets/img/logo/angular.svg');
         // iconService.useMaterialIcons(false);
     }
 

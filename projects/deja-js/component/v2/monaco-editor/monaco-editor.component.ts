@@ -7,7 +7,7 @@
  */
 
 import { BooleanInput, coerceBooleanProperty, coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Optional, Output, Self, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, Output, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 
 import { MonacoEditorService } from './monaco-editor.service';
@@ -905,14 +905,14 @@ export class MonacoEditorComponent implements ControlValueAccessor {
 
     public options: EditorOptions;
 
+    public monacoEditorService = inject(MonacoEditorService);
+    public control = inject(NgControl, { optional: true, self: true });
+
     private _isDiffEditor: boolean;
     private _value: string;
     private _valueToCompare: string;
 
-    public constructor(
-        public monacoEditorService: MonacoEditorService,
-        @Self() @Optional() public control: NgControl
-    ) {
+    public constructor() {
         this.options = {
             automaticLayout: true
         } as EditorOptions;

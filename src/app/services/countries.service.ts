@@ -7,7 +7,7 @@
  */
 
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Color, MaterialColorService } from '@deja-js/component/core/graphics';
 import { ObjectMapper } from 'json-object-mapper';
 import { map, Observable, of, shareReplay } from 'rxjs';
@@ -27,8 +27,11 @@ export class CountriesService {
     private countriesDic = {} as { [code: string]: Country };
     private materialColors: ReadonlyArray<Color>;
 
-    public constructor(private httpClient: HttpClient, materialColors: MaterialColorService) {
-        this.materialColors = materialColors.getPalet('700');
+    private httpClient = inject(HttpClient);
+    private materialColorService = inject(MaterialColorService);
+
+    public constructor() {
+        this.materialColors = this.materialColorService.getPalet('700');
     }
 
     public getCountryByIndex$(index: number): Observable<Country> {

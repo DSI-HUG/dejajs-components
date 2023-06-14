@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ControlsOf, Destroy } from '@deja-js/component/core';
 import { debounceTime, distinctUntilChanged, map, Subject, takeUntil } from 'rxjs';
@@ -40,8 +40,9 @@ export class DejaNumericStepperDemoComponent extends Destroy {
     public numberForm: FormGroup<ControlsOf<NumberForm>>;
     public onInput1Change$ = new Subject<Event>();
 
+    private changeDetectorRef = inject(ChangeDetectorRef);
+
     public constructor(
-        private changeDetectorRef: ChangeDetectorRef,
         formBuilder: FormBuilder
     ) {
         super();

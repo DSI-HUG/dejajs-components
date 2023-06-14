@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Destroy } from '@deja-js/component/core';
 import { map, Subject, switchMap, takeUntil } from 'rxjs';
 
@@ -23,7 +23,9 @@ export class LazyDialogDemoComponent extends Destroy {
 
     public openFormDialog$ = new Subject<void>();
 
-    public constructor(styleEditorDialogService: StyleEditorDialogService) {
+    private styleEditorDialogService = inject(StyleEditorDialogService);
+
+    public constructor() {
         super();
 
         const dialogData = {
@@ -31,7 +33,7 @@ export class LazyDialogDemoComponent extends Destroy {
         } as StyleConfig;
 
         this.openFormDialog$.pipe(
-            switchMap(() => styleEditorDialogService.openDialog$(dialogData).pipe(
+            switchMap(() => this.styleEditorDialogService.openDialog$(dialogData).pipe(
                 map(result => console.log(result))
             )),
             takeUntil(this.destroyed$)

@@ -5,7 +5,7 @@
  *  Use of this source code is governed by an Apache-2.0 license that can be
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
-import { Component, ElementRef, Input, Output } from '@angular/core';
+import { Component, ElementRef, inject, Input, Output } from '@angular/core';
 import { KeyCodes } from '@deja-js/component/core';
 import { filter, fromEvent, map, mergeWith, Observable, ReplaySubject } from 'rxjs';
 
@@ -38,11 +38,13 @@ export class DejaDialogComponent {
 
     protected buttonClicked$ = new ReplaySubject<DialogResponse>(1);
 
+    private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+
     /**
      * Constructor
      */
-    public constructor(elementRef: ElementRef<HTMLElement>) {
-        this.close$ = fromEvent<KeyboardEvent>(elementRef.nativeElement.ownerDocument, 'keyup').pipe(
+    public constructor() {
+        this.close$ = fromEvent<KeyboardEvent>(this.elementRef.nativeElement.ownerDocument, 'keyup').pipe(
             filter(event => this.defaultResponse && event.code === KeyCodes.Enter || event.code === KeyCodes.Escape),
             map(event => {
                 if (event.code === KeyCodes.Enter) {

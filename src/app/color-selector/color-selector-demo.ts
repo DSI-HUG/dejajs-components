@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ColorEvent } from '@deja-js/component/color-selector';
 import { Color, MaterialColorService } from '@deja-js/component/core/graphics';
 
@@ -22,7 +22,7 @@ export class DejaColorSelectorDemoComponent {
     public invalidColor = Color.fromHex('#D02D06');
     public hoveredColor: Color;
 
-    public constructor(public materialColors: MaterialColorService) { }
+    public materialColors = inject(MaterialColorService);
 
     public onColorPickerHover(event: ColorEvent): void {
         this.hoveredColor = event.color;

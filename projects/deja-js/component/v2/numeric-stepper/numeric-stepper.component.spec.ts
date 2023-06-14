@@ -5,7 +5,7 @@
  *  Use of this source code is governed by an Apache-2.0 license that can be
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -30,7 +30,9 @@ class DejaNumericStepperContainerComponent {
     public numberValue = 30;
     public step = 10;
 
-    public constructor(private fb: FormBuilder) {
+    private fb = inject(FormBuilder);
+
+    public constructor() {
         this.numberForm = this.fb.group({
             numberValue: this.numberValue
         });

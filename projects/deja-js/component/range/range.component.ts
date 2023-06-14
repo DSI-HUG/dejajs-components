@@ -7,7 +7,7 @@
  */
 
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, HostListener, Input, Optional, Output, Self, TemplateRef } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, HostListener, inject, Input, Output, TemplateRef } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { Destroy } from '@deja-js/component/core';
 import { fromEvent, map, mergeWith, take, takeUntil } from 'rxjs';
@@ -42,7 +42,11 @@ export class DejaRangeComponent extends Destroy implements ControlValueAccessor 
     private _disabled = false;
     private _ranges: IRange[];
 
-    public constructor(private changeDetectorRef: ChangeDetectorRef, private elementRef: ElementRef<HTMLElement>, @Self() @Optional() public control: NgControl) {
+    private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    private changeDetectorRef = inject(ChangeDetectorRef);
+    private control = inject(NgControl, { optional: true, self: true });
+
+    public constructor() {
         super();
         if (this.control) {
             this.control.valueAccessor = this;

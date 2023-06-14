@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Directive, ElementRef, Input } from '@angular/core';
+import { Directive, ElementRef, inject, Input } from '@angular/core';
 import { Destroy } from '@deja-js/component/core';
 import { Position, Rect } from '@deja-js/component/core/graphics';
 import { filter, fromEvent, isObservable, map, mergeWith, Observable, of, Subject, switchMap, take, takeUntil, tap } from 'rxjs';
@@ -29,10 +29,13 @@ export class MouseDraggableDirective<T> extends Destroy {
         return this._context;
     }
 
-    public constructor(elementRef: ElementRef, dragDropService: MouseDragDropService<T>) {
+    private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    private dragDropService = inject<MouseDragDropService<T>>(MouseDragDropService);
+
+    public constructor() {
         super();
 
-        const element = elementRef.nativeElement as HTMLElement;
+        const element = this.elementRef.nativeElement;
 
         const mouseLeaveEvent$ = fromEvent<MouseEvent>(element, 'mouseleave');
         const mouseEnterEvent$ = fromEvent<MouseEvent>(element, 'mouseenter');
@@ -41,7 +44,7 @@ export class MouseDraggableDirective<T> extends Destroy {
         const mouseMoveEvent$ = fromEvent<MouseEvent>(element.ownerDocument, 'mousemove');
 
         mouseEnterEvent$.pipe(
-            filter(() => !dragDropService.isDragging),
+            filter(() => !this.dragDropService.isDragging),
             switchMap(() => mouseDownEvent$.pipe(
                 filter(event => event.buttons === 1),
                 // eslint-disable-next-line rxjs/no-unsafe-takeuntil
@@ -71,12 +74,12 @@ export class MouseDraggableDirective<T> extends Destroy {
                                     target$ = dragContext$.pipe(
                                         take(1),
                                         map(context => {
-                                            dragDropService.context = context;
+                                            this.dragDropService.context = context;
                                             return context && target; // Map to target if ddctx is defined
                                         })
                                     );
                                 } else {
-                                    dragDropService.context = dragContext;
+                                    this.dragDropService.context = dragContext;
                                     target$ = of(target);
                                 }
                             }
@@ -85,20 +88,20 @@ export class MouseDraggableDirective<T> extends Destroy {
                     return target$.pipe(
                         filter(target => !!target), // Start Drag if target is defined
                         switchMap(target => {
-                            dragDropService.dragging$.next(true);
+                            this.dragDropService.dragging$.next(true);
 
                             const moveUp$ = new Subject<void>();
 
                             const enterWhileNotDragDropEvent$ = mouseEnterEvent$.pipe(
-                                filter(event => event.buttons !== 1 && dragDropService.isDragging)
+                                filter(event => event.buttons !== 1 && this.dragDropService.isDragging)
                             );
 
                             const kill$ = mouseUpEvent$.pipe(
                                 mergeWith(enterWhileNotDragDropEvent$, moveUp$),
                                 take(1),
                                 tap(() => {
-                                    dragDropService.dragCursor$.next(null);
-                                    dragDropService.dragging$.next(false);
+                                    this.dragDropService.dragCursor$.next(null);
+                                    this.dragDropService.dragging$.next(false);
                                 }));
 
                             return mouseMoveEvent$.pipe(
@@ -116,7 +119,7 @@ export class MouseDraggableDirective<T> extends Destroy {
 
                                         if (!deadBounds.containsPoint(position)) {
                                             // Post cursor infos to service
-                                            dragDropService.dragCursor$.next({
+                                            this.dragDropService.dragCursor$.next({
                                                 position: position,
                                                 html: html,
                                                 originalHtml: target.innerHTML,

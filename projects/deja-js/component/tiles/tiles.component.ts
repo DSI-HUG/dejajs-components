@@ -7,7 +7,7 @@
  */
 
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, Input, OnDestroy, Optional, Output, Self, TemplateRef, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, inject, Input, OnDestroy, Output, TemplateRef, ViewChild } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { Destroy, KeyCodes } from '@deja-js/component/core';
 import { Position, Rect } from '@deja-js/component/core/graphics';
@@ -78,6 +78,8 @@ export class DejaTilesComponent extends Destroy implements AfterViewInit, Contro
 
     @ViewChild('tilesContainer', { static: true }) private tilesContainer: ElementRef<HTMLElement>;
 
+    public control = inject(NgControl, { self: true, optional: true });
+
     private _models = [] as DejaTile[];
     private delete$sub: Subscription;
     private copy$sub: Subscription;
@@ -90,14 +92,18 @@ export class DejaTilesComponent extends Destroy implements AfterViewInit, Contro
         return this.layoutProvider.tiles;
     }
 
-    public constructor(el: ElementRef, private changeDetectorRef: ChangeDetectorRef, private layoutProvider: DejaTilesLayoutProvider, @Self() @Optional() public control: NgControl) {
+    private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    private changeDetectorRef = inject(ChangeDetectorRef);
+    private layoutProvider = inject(DejaTilesLayoutProvider);
+
+    public constructor() {
         super();
 
         if (this.control) {
             this.control.valueAccessor = this;
         }
 
-        const element = el.nativeElement as HTMLElement;
+        const element = this.elementRef.nativeElement;
 
         from(this.layoutProvider.selectionChanged).pipe(
             takeUntil(this.destroyed$)

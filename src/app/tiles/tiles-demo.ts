@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { DejaMessageBoxType } from '@deja-js/component/core';
 import { Rect } from '@deja-js/component/core/graphics';
 import { DejaTile, IDejaTilesAddEvent, IDejaTilesRemoveEvent, ITileDragDropContext } from '@deja-js/component/tiles';
@@ -36,7 +36,9 @@ export class DejaTilesDemoComponent implements OnInit {
 
     private countriesMap: Map<string, Country>;
 
-    public constructor(private countriesService: CountriesService) {
+    private countriesService = inject(CountriesService);
+
+    public constructor() {
         this.messages$ = this.message$.pipe(
             scan((acc, curr) => [...acc, curr], [] as IMessage[]),
             defaultIfEmpty([] as IMessage[]));

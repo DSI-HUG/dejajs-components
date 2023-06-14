@@ -7,7 +7,7 @@
  */
 
 import { CommonModule } from '@angular/common';
-import { Component, DebugElement } from '@angular/core';
+import { Component, DebugElement, inject } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -75,7 +75,9 @@ class TreeListByModelContainerComponent {
     public modelsList: unknown[];
     public selectedModels: unknown[];
 
-    public constructor(sortingService: SortingService) {
+    private sortingService = inject(SortingService);
+
+    public constructor() {
         // eslint-disable-next-line prefer-spread
         const modelsList = Array.from({ length: 2000 }).map((_n: unknown, i: number) => {
             const rand = Math.floor(Math.random() * (70 - 33 + 1)) + 33; // random de 33 à 70;
@@ -87,7 +89,7 @@ class TreeListByModelContainerComponent {
         });
 
         this.selectedModels = [0, 1, 2];
-        this.modelsList = sortingService.sort(modelsList, { name: 'value' } as SortInfos);
+        this.modelsList = this.sortingService.sort(modelsList, { name: 'value' } as SortInfos);
     }
 
     public backgroundColor(item: Item<unknown>): string {

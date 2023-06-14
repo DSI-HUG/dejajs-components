@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Directive, ElementRef, Input } from '@angular/core';
+import { Directive, ElementRef, inject, Input } from '@angular/core';
 import { Rect } from '@deja-js/component/core/graphics';
 
 @Directive({
@@ -15,8 +15,10 @@ import { Rect } from '@deja-js/component/core/graphics';
 export class DejaTilePositionDirective {
     private element: HTMLElement;
 
-    public constructor(el: ElementRef) {
-        this.element = el.nativeElement as HTMLElement;
+    private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+
+    public constructor() {
+        this.element = this.elementRef.nativeElement;
         this.element.style.display = 'none';
     }
 

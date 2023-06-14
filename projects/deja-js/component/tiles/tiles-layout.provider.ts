@@ -7,7 +7,7 @@
  */
 
 /* eslint-disable rxjs/finnish */
-import { Injectable, Optional } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { DejaClipboardService, Destroy, KeyCodes } from '@deja-js/component/core';
 import { Directions, Position, Rect, Size } from '@deja-js/component/core/graphics';
 import { DragCursorInfos } from '@deja-js/component/v2/mouse-dragdrop';
@@ -99,7 +99,9 @@ export class DejaTilesLayoutProvider extends Destroy {
 
     private selectedIds = new Array<string>();
 
-    public constructor(@Optional() private clipboardService: DejaClipboardService) {
+    private clipboardService = inject(DejaClipboardService, { optional: true });
+
+    public constructor() {
         super();
 
         this.refreshTiles$.pipe(

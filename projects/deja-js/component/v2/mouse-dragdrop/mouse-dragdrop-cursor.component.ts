@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Component, ElementRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, ElementRef, inject, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Destroy } from '@deja-js/component/core';
 import { Position } from '@deja-js/component/core/graphics';
 import { BehaviorSubject, combineLatestWith, delay, filter, takeUntil, tap } from 'rxjs';
@@ -37,7 +37,10 @@ export class MouseDragDropCursorComponent extends Destroy {
         }
     }
 
-    public constructor(private elementRef: ElementRef<HTMLElement>, private dragDropService: MouseDragDropService<unknown>) {
+    private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    private dragDropService = inject(MouseDragDropService);
+
+    public constructor() {
         super();
 
         // Hide
@@ -64,7 +67,7 @@ export class MouseDragDropCursorComponent extends Destroy {
         this.cursor$.pipe(
             filter(cursor => !!cursor),
             tap(cursor => {
-                elementRef.nativeElement.style.display = '';
+                this.elementRef.nativeElement.style.display = '';
                 if (this.contentElement) {
                     this.contentElement.style.opacity = '0';
                 }
@@ -76,7 +79,7 @@ export class MouseDragDropCursorComponent extends Destroy {
             filter(cursor => !cursor.className || cursor.className !== 'hidden'),
             tap(cursor => {
                 if (cursor.html) {
-                    elementRef.nativeElement.className = cursor.className;
+                    this.elementRef.nativeElement.className = cursor.className;
                     if (this.contentElement) {
                         this.contentElement.innerHTML = cursor.html;
                         this.contentElement.style.width = `${cursor.width || 48}px`;

@@ -10,13 +10,11 @@ import { Directive, forwardRef } from '@angular/core';
 import { NG_VALIDATORS, NgControl, ValidationErrors, Validator } from '@angular/forms';
 
 @Directive({
-    providers: [
-        {
-            provide: NG_VALIDATORS,
-            useExisting: forwardRef(() => DejaChildValidatorDirective),
-            multi: true
-        }
-    ],
+    providers: [{
+        provide: NG_VALIDATORS,
+        useExisting: forwardRef(() => DejaChildValidatorDirective),
+        multi: true
+    }],
     selector: '[deja-child-validator]'
 })
 export class DejaChildValidatorDirective implements Validator {

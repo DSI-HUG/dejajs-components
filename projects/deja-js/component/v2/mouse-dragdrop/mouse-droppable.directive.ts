@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Directive, ElementRef, Input } from '@angular/core';
+import { Directive, ElementRef, inject, Input } from '@angular/core';
 import { Destroy } from '@deja-js/component/core';
 import { Position, Rect } from '@deja-js/component/core/graphics';
 import { distinctUntilChanged, filter, Observable, of, switchMap, take, takeUntil, tap } from 'rxjs';
@@ -29,10 +29,12 @@ export class MouseDroppableDirective<T> extends Destroy {
         return this._context;
     }
 
-    public constructor(elementRef: ElementRef<HTMLElement>, dragDropService: MouseDragDropService<T>) {
+    private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+
+    public constructor(dragDropService: MouseDragDropService<T>) {
         super();
 
-        const element = elementRef.nativeElement;
+        const element = this.elementRef.nativeElement;
         let dragContext: T;
 
         const dragging$ = dragDropService.dragging$.pipe(

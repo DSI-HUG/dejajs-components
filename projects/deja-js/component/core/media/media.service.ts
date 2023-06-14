@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Inject, Injectable, InjectionToken, NgZone, OnDestroy, Optional } from '@angular/core';
+import { Inject, inject, Injectable, InjectionToken, NgZone, OnDestroy, Optional } from '@angular/core';
 import { BehaviorSubject, distinctUntilChanged, map, Observable } from 'rxjs';
 
 export interface MediaQueryDefinition {
@@ -105,7 +105,9 @@ export class MediaService implements OnDestroy {
     public mediaChanged$ = new BehaviorSubject<string>('lg');
     public mql = {} as { [alias: string]: MediaQueryList };
 
-    public constructor(private zone: NgZone, @Optional() @Inject(MEDIA_QUERY_DEFINITIONS) mediaDefinitions?: MediaQueryDefinition[]) {
+    private zone = inject(NgZone);
+
+    public constructor(@Optional() @Inject(MEDIA_QUERY_DEFINITIONS) mediaDefinitions: ReadonlyArray<MediaQueryDefinition>) {
         if (!mediaDefinitions) {
             mediaDefinitions = SIMPLIFIED_MEDIA_QUERY_DEFINITIONS;
         }

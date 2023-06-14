@@ -27,8 +27,6 @@ export class DejaMessageBoxComponent implements OnInit {
     /** Event Emmited when the close action is called */
     @ContentChild('actionsTemplate') public actionsTemplate: TemplateRef<unknown>;
 
-    private _horizontal: boolean;
-
     @Input()
     public set horizontal(value: BooleanInput) {
         this._horizontal = coerceBooleanProperty(value);
@@ -38,7 +36,6 @@ export class DejaMessageBoxComponent implements OnInit {
         return this._horizontal;
     }
 
-    private _showCloseIcon = false;
     @Input()
     public set showCloseIcon(value: BooleanInput) {
         this._showCloseIcon = coerceBooleanProperty(value);
@@ -47,6 +44,9 @@ export class DejaMessageBoxComponent implements OnInit {
     public get showCloseIcon(): BooleanInput {
         return this._showCloseIcon;
     }
+
+    private _horizontal: boolean;
+    private _showCloseIcon = false;
 
     public ngOnInit(): void {
         if (!this.icon && this.type) {
@@ -60,10 +60,6 @@ export class DejaMessageBoxComponent implements OnInit {
                 }
             });
         }
-    }
-
-    public onClose(): void {
-        this.close.emit();
     }
 
     private getIconFromType(type: 'info' | 'primary' | 'success' | 'warn' | 'danger'): string {

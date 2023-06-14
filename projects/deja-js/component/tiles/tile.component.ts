@@ -7,7 +7,7 @@
  */
 
 import { BooleanInput } from '@angular/cdk/coercion';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, Output, TemplateRef } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, inject, Input, Output, TemplateRef } from '@angular/core';
 import { Destroy } from '@deja-js/component/core';
 import { debounceTime, delay, filter, take, takeUntil, tap } from 'rxjs';
 
@@ -31,9 +31,12 @@ export class DejaTileComponent extends Destroy {
     private element: HTMLElement;
     private _tile: DejaTile;
 
-    public constructor(el: ElementRef, private changeDetectorRef: ChangeDetectorRef) {
+    private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    private changeDetectorRef = inject(ChangeDetectorRef);
+
+    public constructor() {
         super();
-        this.element = el.nativeElement as HTMLElement;
+        this.element = this.elementRef.nativeElement;
         this.element.setAttribute('hidden', '0');
     }
 

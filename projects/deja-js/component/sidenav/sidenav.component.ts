@@ -7,7 +7,7 @@
  */
 
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
-import { ChangeDetectorRef, Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, ActivatedRouteSnapshot, NavigationEnd, Router } from '@angular/router';
 import { Destroy, MediaService } from '@deja-js/component/core';
 import { filter, map, mergeMap, takeUntil } from 'rxjs';
@@ -36,13 +36,14 @@ export class DejaSidenavComponent extends Destroy implements OnInit {
     public mode = 'side';
     public _showToolbar = false;
 
-    public constructor(
-        public sidenavService: DejaSidenavService,
-        private mediaService: MediaService,
-        private router: Router,
-        private activatedRoute: ActivatedRoute,
-        private changeDetectorRef: ChangeDetectorRef
-    ) {
+    public sidenavService = inject(DejaSidenavService);
+
+    private changeDetectorRef = inject(ChangeDetectorRef);
+    private mediaService = inject(MediaService);
+    private router = inject(Router);
+    private activatedRoute = inject(ActivatedRoute);
+
+    public constructor() {
         super();
 
         this.mediaService.mediaChanged$.pipe(

@@ -7,7 +7,7 @@
  */
 
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostBinding, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostBinding, inject, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { MatLegacyFormFieldControl as MatFormFieldControl } from '@angular/material/legacy-form-field';
 import { Destroy, KeyCodes } from '@deja-js/component/core';
 import { combineLatestWith, debounceTime, delay, filter, fromEvent, map, mergeWith, ReplaySubject, shareReplay, startWith, Subject, switchMap, takeUntil, tap, timer, withLatestFrom } from 'rxjs';
@@ -75,12 +75,8 @@ export class DejaNumericStepperComponent extends Destroy implements OnInit {
     private arrowSize = 32;
     private parentAppearance: string = null;
 
-    public constructor(
-        private elementRef: ElementRef<HTMLElement>,
-        private changeDetectorRef: ChangeDetectorRef
-    ) {
-        super();
-    }
+    private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    private changeDetectorRef = inject(ChangeDetectorRef);
 
     public ngOnInit(): void {
         const calcPositions = (linkedElements: { formFieldElement: HTMLElement; containerElement: HTMLElement; inputElement: HTMLInputElement }): void => {

@@ -5,7 +5,7 @@
  *  Use of this source code is governed by an Apache-2.0 license that can be
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
-import { ChangeDetectorRef, Component, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ControlsOf, Destroy } from '@deja-js/component/core';
 import { Item, SortInfos, SortingService } from '@deja-js/component/v2/item-list';
@@ -113,8 +113,9 @@ export class TreeListDemoComponent extends Destroy {
         return this._dialogVisible;
     }
 
+    private changeDetectorRef = inject(ChangeDetectorRef);
+
     public constructor(
-        private changeDetectorRef: ChangeDetectorRef,
         private countriesService: CountriesService,
         private folderService: FoldersService,
         public countriesListService: CountriesListService,

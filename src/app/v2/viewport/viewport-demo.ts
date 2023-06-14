@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Component, ViewChild } from '@angular/core';
+import { Component, inject, ViewChild } from '@angular/core';
 import { ViewPortComponent, ViewPortItem } from '@deja-js/component/v2/viewport';
 import { Observable, shareReplay } from 'rxjs';
 
@@ -50,8 +50,10 @@ export class ViewPortDemoComponent {
 
     public news$: Observable<News[]>;
 
-    public constructor(newsService: NewsService) {
-        this.news$ = newsService.getNews$(50).pipe(
+    private newsService = inject(NewsService);
+
+    public constructor() {
+        this.news$ = this.newsService.getNews$(50).pipe(
             shareReplay({ bufferSize: 1, refCount: false })
         );
     }

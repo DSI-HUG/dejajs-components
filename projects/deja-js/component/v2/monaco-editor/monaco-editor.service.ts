@@ -5,7 +5,7 @@
  *  Use of this source code is governed by an Apache-2.0 license that can be
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
-import { Injectable, NgZone } from '@angular/core';
+import { inject, Injectable, NgZone } from '@angular/core';
 import { Observable, shareReplay, take } from 'rxjs';
 
 import { EditorOptions, Language } from './options/editor-options.model';
@@ -51,10 +51,10 @@ export interface MonacoApi {
 })
 export class MonacoEditorService {
     public monacoApi$: Observable<MonacoApi>;
-    /**
-     * Constructor
-     */
-    public constructor(zone: NgZone) {
+
+    private zone = inject(NgZone);
+
+    public constructor() {
         this.monacoApi$ = new Observable<MonacoApi>(subscriber => {
             const wnd = window as unknown;
             type Require1 = ((keys: ReadonlyArray<string>, f: () => void) => void);
@@ -76,7 +76,7 @@ export class MonacoEditorService {
                 // Load monaco
                 (monacoWindow.require as Require2).config({ paths: { vs: basePath } });
                 (monacoWindow.require as Require1)(['vs/editor/editor.main'], () => {
-                    zone.run(() => {
+                    this.zone.run(() => {
                         subscriber.next(monacoWindow.monaco);
                     });
                 });

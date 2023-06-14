@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Directive, ElementRef, EventEmitter, OnDestroy, Output } from '@angular/core';
+import { Directive, ElementRef, EventEmitter, inject, OnDestroy, Output } from '@angular/core';
 
 @Directive({
     selector: '[resize-listener]'
@@ -15,9 +15,10 @@ export class DejaResizeListenerDirective implements OnDestroy {
     @Output() public readonly sizeChanged = new EventEmitter<Event>();
     private element: HTMLElement;
     private resizeSensor?: HTMLDivElement;
+    private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
-    public constructor(public elementRef: ElementRef) {
-        this.element = elementRef.nativeElement as HTMLElement;
+    public constructor() {
+        this.element = this.elementRef.nativeElement;
         this.resizeSensor = document.createElement('div');
         this.resizeSensor.dir = 'ltr';
         this.resizeSensor.className = 'resize-sensor';

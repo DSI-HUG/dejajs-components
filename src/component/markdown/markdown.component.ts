@@ -7,7 +7,7 @@
  */
 
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { AfterViewChecked, ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, ViewEncapsulation } from '@angular/core';
+import { AfterViewChecked, ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, ViewEncapsulation } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Destroy } from '@deja-js/component/core';
 import * as Prism from 'prismjs';
@@ -54,6 +54,8 @@ export class DejaMarkdownComponent extends Destroy implements AfterViewChecked {
         });
     }
 
+    protected httpClient = inject(HttpClient);
+
     private _initialised = false;
     private _html: SafeHtml;
     private _converter: Showdown.Converter;
@@ -62,7 +64,10 @@ export class DejaMarkdownComponent extends Destroy implements AfterViewChecked {
         return this._html;
     }
 
-    public constructor(public changeDetectorRef: ChangeDetectorRef, protected httpClient: HttpClient, private sanitized: DomSanitizer) {
+    private changeDetectorRef = inject(ChangeDetectorRef);
+    private sanitized = inject(DomSanitizer);
+
+    public constructor() {
         super();
         this._converter = new Showdown.Converter();
         this._converter.setOption('tables', true);

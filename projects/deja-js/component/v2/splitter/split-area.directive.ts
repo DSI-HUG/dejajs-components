@@ -10,7 +10,7 @@
  * Created by rtr on 22.12.2016.
  */
 import { coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
-import { Directive, ElementRef, HostBinding, Input } from '@angular/core';
+import { Directive, ElementRef, HostBinding, inject, Input } from '@angular/core';
 
 import { SplitterDirection } from './splitter-direction-type';
 
@@ -72,5 +72,5 @@ export class SplitAreaDirective {
 
     private _minSizePixel = 0;
 
-    public constructor(private elementRef: ElementRef<HTMLElement>) { }
+    private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 }

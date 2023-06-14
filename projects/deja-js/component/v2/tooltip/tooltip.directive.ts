@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Directive, ElementRef, Input } from '@angular/core';
+import { Directive, ElementRef, inject, Input } from '@angular/core';
 import { Destroy } from '@deja-js/component/core';
 import { filter, fromEvent, Observable, switchMap, take, takeUntil, timer } from 'rxjs';
 
@@ -19,10 +19,12 @@ export class TooltipDirective extends Destroy {
 
     @Input('app-tooltip') public openTooltip$: (element: HTMLElement) => Observable<void>;
 
-    public constructor(elementRef: ElementRef) {
+    private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+
+    public constructor() {
         super();
 
-        const triggerElement = elementRef.nativeElement as HTMLElement;
+        const triggerElement = this.elementRef.nativeElement;
 
         const leave$ = fromEvent<MouseEvent>(triggerElement, 'mouseleave');
 

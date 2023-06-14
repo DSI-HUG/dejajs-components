@@ -7,7 +7,7 @@
  */
 
 import { BooleanInput, coerceBooleanProperty, coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, Optional, Output, Self, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, inject, Input, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { MatLegacyFormFieldAppearance as MatFormFieldAppearance } from '@angular/material/legacy-form-field';
 import { Destroy } from '@deja-js/component/core';
@@ -95,6 +95,8 @@ export class DejaTimePickerComponent extends Destroy implements ControlValueAcce
         return this._disabled;
     }
 
+    public control = inject(NgControl, { self: true, optional: true });
+
     public onHoursChange$ = new Subject<Event | number>();
     public onMinutesChange$ = new Subject<Event | number>();
     public _step = 1;
@@ -102,10 +104,9 @@ export class DejaTimePickerComponent extends Destroy implements ControlValueAcce
     private _value: DateOrDuration;
     private _autoFocus = true;
 
-    public constructor(
-        private changeDetectorRef: ChangeDetectorRef,
-        @Self() @Optional() public control: NgControl
-    ) {
+    private changeDetectorRef = inject(ChangeDetectorRef);
+
+    public constructor() {
         super();
 
         if (this.control) {

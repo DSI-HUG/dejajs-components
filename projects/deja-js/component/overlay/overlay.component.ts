@@ -8,7 +8,7 @@
 
 import { BooleanInput, coerceBooleanProperty, coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
 import { CdkConnectedOverlay, CdkOverlayOrigin, OverlayContainer } from '@angular/cdk/overlay';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, Output, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, inject, Input, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { DejaConnectionPositionPair, Destroy, MediaService } from '@deja-js/component/core';
 import { take, takeUntil, takeWhile, timer } from 'rxjs';
 
@@ -94,7 +94,12 @@ export class DejaOverlayComponent extends Destroy {
     private _isMobile = false;
     private disableMediaService = false;
 
-    public constructor(private changeDetectorRef: ChangeDetectorRef, private elementRef: ElementRef, private overlayContainer: OverlayContainer, mediaService: MediaService) {
+    private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    private changeDetectorRef = inject(ChangeDetectorRef);
+    private overlayContainer = inject(OverlayContainer);
+    private mediaService = inject(MediaService);
+
+    public constructor() {
         super();
 
         const containerElement = this.overlayContainer.getContainerElement();
@@ -103,7 +108,7 @@ export class DejaOverlayComponent extends Destroy {
             return false;
         });
 
-        mediaService.isMobile$.pipe(
+        this.mediaService.isMobile$.pipe(
             takeWhile(() => !this.disableMediaService),
             takeUntil(this.destroyed$)
         ).subscribe(value => {

@@ -7,7 +7,7 @@
  */
 
 import { BooleanInput, coerceBooleanProperty, coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChildren, ElementRef, EventEmitter, HostBinding, Input, Output, QueryList, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChildren, ElementRef, EventEmitter, HostBinding, inject, Input, Output, QueryList, ViewEncapsulation } from '@angular/core';
 import { Destroy } from '@deja-js/component/core';
 import { filter, fromEvent, map, mergeWith, of, shareReplay, Subject, switchMap, take, takeUntil, tap } from 'rxjs';
 
@@ -109,13 +109,10 @@ export class DejaSplitterComponent extends Destroy {
         return this._disabled;
     }
 
-    /**
-     * Constructor
-     */
-    public constructor(
-        changeDetectorRef: ChangeDetectorRef,
-        elementRef: ElementRef<HTMLElement>
-    ) {
+    private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    private changeDetectorRef = inject(ChangeDetectorRef);
+
+    public constructor() {
         super();
 
         this.startDragging$.pipe(
@@ -129,7 +126,7 @@ export class DejaSplitterComponent extends Destroy {
                 }
 
                 const startPos = this.direction === 'horizontal' ? mouseEvent.pageX || mouseEvent.screenX : mouseEvent.pageY || mouseEvent.screenY;
-                const containerSizeInPixels = this.direction === 'horizontal' ? elementRef.nativeElement.offsetWidth : elementRef.nativeElement.offsetHeight;
+                const containerSizeInPixels = this.direction === 'horizontal' ? this.elementRef.nativeElement.offsetWidth : this.elementRef.nativeElement.offsetHeight;
                 const startSizeInPixelsA = areaA.sizeinPixels;
                 const startSizeInPixelsB = areaB.sizeinPixels;
 
@@ -171,7 +168,7 @@ export class DejaSplitterComponent extends Destroy {
         ).subscribe(event => {
             event.preventDefault();
             this.splitting = event.type !== 'mouseup' && event.type !== 'touchend' && event.type !== 'touchcancel' || null;
-            changeDetectorRef.markForCheck();
+            this.changeDetectorRef.markForCheck();
             return false;
         });
     }

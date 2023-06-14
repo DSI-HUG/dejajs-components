@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
 import { environment } from 'src/environments/environment';
@@ -12,7 +12,9 @@ export class DejaIframeDemoComponent {
 
     public url: string | SafeUrl;
 
-    public constructor(private domSanitizer: DomSanitizer) {
+    private domSanitizer = inject(DomSanitizer);
+
+    public constructor() {
         const untrustedUrl = environment.production ? 'https://dsi-hug.github.io/dejajs-components' : 'http://localhost:5100';
         this.url = this.domSanitizer.bypassSecurityTrustResourceUrl(untrustedUrl);
     }

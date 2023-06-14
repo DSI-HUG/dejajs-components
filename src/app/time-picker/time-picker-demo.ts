@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MAT_DATE_FORMATS } from '@angular/material/core';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
@@ -52,7 +52,10 @@ export class DejaTimePickerDemoComponent {
     public disable6 = true;
     public dateForm: FormGroup<ControlsOf<DateForm>>;
 
-    public constructor(private changeDetectorRef: ChangeDetectorRef, private fb: FormBuilder) {
+    private changeDetectorRef = inject(ChangeDetectorRef);
+    private fb = inject(FormBuilder);
+
+    public constructor() {
         this.dateForm = this.fb.group({
             date7: [this.date7]
         });

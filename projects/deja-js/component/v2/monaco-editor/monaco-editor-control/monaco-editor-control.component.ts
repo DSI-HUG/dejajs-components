@@ -7,7 +7,7 @@
  */
 
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
-import { ChangeDetectionStrategy, Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, EventEmitter, HostListener, inject, Input, OnInit, Output } from '@angular/core';
 import { Destroy } from '@deja-js/component/core';
 import { debounceTime, Subject, takeUntil, tap } from 'rxjs';
 
@@ -118,9 +118,9 @@ export class MonacoEditorControlComponent extends Destroy implements OnInit {
         return model?.id ? undefined : model?.original;
     }
 
-    public constructor(
-        private elementRef: ElementRef<HTMLElement>
-    ) {
+    private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+
+    public constructor() {
         super();
 
         console.log('MonacoEditorControlComponent constructor');

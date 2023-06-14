@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { Component, ContentChild, ElementRef, EventEmitter, Input, OnInit, Output, TemplateRef, ViewEncapsulation } from '@angular/core';
+import { Component, ContentChild, ElementRef, EventEmitter, inject, Input, OnInit, Output, TemplateRef, ViewEncapsulation } from '@angular/core';
 import { DejaConnectionPositionPair, Destroy } from '@deja-js/component/core';
 import { Position, Rect } from '@deja-js/component/core/graphics';
 import { debounceTime, delay, filter, from, fromEvent, map, Observable, takeUntil, tap } from 'rxjs';
@@ -110,14 +110,13 @@ export class DejaTooltipComponent extends Destroy implements OnInit {
         return this._model;
     }
 
-    /**
-     * Constructor
-     * Subscribe to mouseover to know when tooltip must disappear.
-     */
-    public constructor(elementRef: ElementRef, private tooltipService: DejaTooltipService) {
+    private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    private tooltipService = inject(DejaTooltipService);
+
+    public constructor() {
         super();
 
-        const element = elementRef.nativeElement as HTMLElement;
+        const element = this.elementRef.nativeElement;
 
         const hide$ = from(this.hide).pipe(
             tap(() => {

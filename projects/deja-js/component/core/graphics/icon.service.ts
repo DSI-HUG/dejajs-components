@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 
@@ -15,8 +15,8 @@ import { DomSanitizer } from '@angular/platform-browser';
 })
 export class IconService {
 
-    public constructor(private iconRegistry: MatIconRegistry, private sanitizer: DomSanitizer) {
-    }
+    private iconRegistry = inject(MatIconRegistry);
+    private sanitizer = inject(DomSanitizer);
 
     /**
      * register an SVG icon to the MatIconRegistry, so that this icon can be used with the MatIcon component.

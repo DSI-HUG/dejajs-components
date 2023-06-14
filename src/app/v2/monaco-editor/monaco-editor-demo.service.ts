@@ -7,7 +7,7 @@
  */
 
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 
 @Injectable({
@@ -15,9 +15,7 @@ import { map, Observable } from 'rxjs';
 })
 export class MonacoEditorDemoService {
 
-    public constructor(protected httpClient: HttpClient) {
-
-    }
+    protected httpClient = inject(HttpClient);
 
     public getFile$(filename: string): Observable<string> {
         return this.httpClient.get(`assets/datas/monaco/${filename}`, { observe: 'body', responseType: 'text' }).pipe(

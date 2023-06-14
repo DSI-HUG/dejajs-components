@@ -7,7 +7,7 @@
  */
 
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { ObjectMapper } from 'json-object-mapper';
 import { cloneDeep } from 'lodash-es';
 import { map, Observable, shareReplay, switchMap, tap } from 'rxjs';
@@ -21,7 +21,9 @@ import { News, NewsArticles, NewsSource, NewsSources } from '../common/news.mode
 export class NewsService {
     private news$: Observable<News[]>;
 
-    public constructor(private httpClient: HttpClient) {
+    private httpClient = inject(HttpClient);
+
+    public constructor() {
         this.news$ = this.httpClient.get<Record<string, unknown>>('https://newsapi.org/v1/sources?language=en').pipe(
             map(response => ObjectMapper.deserialize(NewsSources, response)),
             map(resp => {

@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Destroy } from '@deja-js/component/core';
 import { debounce, delay, Subject, Subscription, take, takeUntil, tap, timer } from 'rxjs';
 
@@ -132,13 +132,9 @@ export class DejaSnackbarComponent extends Destroy implements OnInit, AfterViewI
         this._alignments.left = this._alignments.right && this._alignments.left ? false : this._alignments.left;
     }
 
-    /**
-     * Creates an instance of DejaSnackbarComponent.
-     *
-     * @param elementRef
-     * @param renderer
-     */
-    public constructor(private elementRef: ElementRef<HTMLElement>) {
+    private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+
+    public constructor() {
         super();
 
         if (!DejaSnackbarComponent.INSTANCES) {
