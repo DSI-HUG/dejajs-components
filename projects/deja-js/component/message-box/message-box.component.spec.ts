@@ -35,18 +35,18 @@ describe('DejaMessageBoxComponent', () => {
     });
 
     describe('input type', () => {
-        it('should set an info_outline icon if type is info', () => {
+        it('should set an info icon if type is info', () => {
             component.icon = null;
             component.type = 'info';
             fixture.detectChanges();
-            void expect(component.icon).toEqual('info_outline');
+            void expect(component.icon).toEqual('info');
         });
 
-        it('should set an info_outline icon if type is primary', () => {
+        it('should set an info icon if type is primary', () => {
             component.icon = null;
             component.type = 'primary';
             fixture.detectChanges();
-            void expect(component.icon).toEqual('info_outline');
+            void expect(component.icon).toEqual('info');
         });
 
         it('should set a done icon if type is success', () => {
@@ -60,14 +60,14 @@ describe('DejaMessageBoxComponent', () => {
             component.icon = null;
             component.type = 'warn';
             fixture.detectChanges();
-            void expect(component.icon).toEqual('warning_outline');
+            void expect(component.icon).toEqual('warning');
         });
 
-        it('should set an error_outline icon if type is danger', () => {
+        it('should set an error icon if type is danger', () => {
             component.icon = null;
             component.type = 'danger';
             fixture.detectChanges();
-            void expect(component.icon).toEqual('error_outline');
+            void expect(component.icon).toEqual('error');
         });
     });
 
