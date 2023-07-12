@@ -1,11 +1,17 @@
 @use 'components/buttons'as buttons;
 @use 'components/inputs'as inputs;
 @use 'components/tabs'as tabs;
+@use '@fontsource/material-symbols-outlined/scss/metadata'as matSymbols;
 
 @mixin deja-material-theme($theme) {
+
     #dpi {
         @include buttons.buttons-theme($theme);
         @include inputs.inputs-theme($theme);
         @include tabs.tabs-theme($theme);
+    }
+
+    .mat-icon {
+        font-family: matSymbols.$family;
     }
 }

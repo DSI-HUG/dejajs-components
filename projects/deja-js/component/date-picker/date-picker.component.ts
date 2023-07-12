@@ -575,7 +575,7 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
     }
 
     /**
-     * Called when input change. If it's a string it's because user set the date manually. So we need to convert it into date with MomentJs.
+     * Called when input change. If it's a string it's because user set the date manually. So we need to convert it into date.
      *
      * @param date new value of this model
      */
@@ -673,7 +673,7 @@ export class DejaDatePickerComponent extends _MatInputMixinBase implements OnIni
         const f = this._format[this.cursorPosition - 1];
         // With this letter we determinate the format by checking on format array
         let unitOfTime = dateFormat.find(str => str.includes(f));
-        // If this format has a corresponding value inside formatToUnitOfTime object we can increment its value with moment.add() method
+        // If this format has a corresponding value inside formatToUnitOfTime object we can increment its value with add() method
         unitOfTime = (unitOfTime && formatToUnitOfTime[unitOfTime]) || undefined;
         if (unitOfTime) {
             const duration = {

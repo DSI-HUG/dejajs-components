@@ -337,7 +337,7 @@ Crée une liste déroulante.
   - `placeHolderTemplate`
 ```html
 <ng-template #placeHolderTemplate>
-    <mat-icon role="img" class="material-icons mat-icon" aria-label="info_outline">info_outline</mat-icon>
+    <mat-icon role="img" class="material-icons mat-icon" aria-label="info">info</mat-icon>
     <span>Liste des pays</span>
 </ng-template>
 ```

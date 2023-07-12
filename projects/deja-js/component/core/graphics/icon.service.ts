@@ -16,6 +16,9 @@ import { DomSanitizer } from '@angular/platform-browser';
 export class IconService {
 
     public constructor(private iconRegistry: MatIconRegistry, private sanitizer: DomSanitizer) {
+        const defaultFontSetClasses = iconRegistry.getDefaultFontSetClass();
+        const outlinedFontSetClasses = defaultFontSetClasses.concat(['material-symbols-outlined']);
+        iconRegistry.setDefaultFontSetClass(...outlinedFontSetClasses);
     }
 
     /**

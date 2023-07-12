@@ -1,3 +1,5 @@
+@use '@fontsource/material-symbols-outlined/scss/metadata'as matIcons;
+
 :host {
     display: flex;
     padding-right: 3rem;
@@ -36,7 +38,7 @@
         top: 0;
 
         >span {
-            font-family: 'Material Icons';
+            font-family: matIcons.$family;
             font-size: 1.2rem;
         }
 
@@ -45,7 +47,7 @@
             border: none;
             box-shadow: none;
             cursor: pointer;
-            font-family: 'Material Icons';
+            font-family: matIcons.$family;
             font-size: 1.5rem;
             justify-content: center;
             line-height: initial;
