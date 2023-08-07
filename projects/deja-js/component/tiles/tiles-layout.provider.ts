@@ -1533,26 +1533,28 @@ export class DejaTilesLayoutProvider extends Destroy {
         }
 
         const bounds = tileElement.getBoundingClientRect();
+        const horizontalDragSize = Math.min(15, bounds.width / 3);
+        const verticalDragSize = Math.min(15, bounds.height / 3);
 
-        if (x < bounds.left + 15) {
-            if (y < bounds.top + 15) {
+        if (x < bounds.left + horizontalDragSize) {
+            if (y < bounds.top + verticalDragSize) {
                 return 'nw-resize';
-            } else if (y > bounds.bottom - 15) {
+            } else if (y > bounds.bottom - verticalDragSize) {
                 return 'sw-resize';
             } else {
                 return 'w-resize';
             }
-        } else if (x > bounds.right - 15) {
-            if (y < bounds.top + 15) {
+        } else if (x > bounds.right - horizontalDragSize) {
+            if (y < bounds.top + verticalDragSize) {
                 return 'ne-resize';
-            } else if (y > bounds.bottom - 15) {
+            } else if (y > bounds.bottom - verticalDragSize) {
                 return 'se-resize';
             } else {
                 return 'e-resize';
             }
-        } else if (y < bounds.top + 15) {
+        } else if (y < bounds.top + verticalDragSize) {
             return 'n-resize';
-        } else if (y > bounds.bottom - 15) {
+        } else if (y > bounds.bottom - verticalDragSize) {
             return 's-resize';
         } else {
             return 'move';
