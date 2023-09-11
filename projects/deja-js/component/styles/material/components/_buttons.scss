@@ -1,10 +1,12 @@
+@use '@fontsource/material-symbols-outlined/scss/metadata'as matIcons;
+
 @mixin buttons-theme($theme) {
 
     [mat-menu-item].with-icon,
     [mat-raised-button].with-icon {
         &:before {
             content: attr(data-icon);
-            font-family: 'Material Icons';
+            font-family: matIcons.$family;
             left: 0;
             position: absolute;
             text-align: center;

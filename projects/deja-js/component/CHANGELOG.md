@@ -1,3 +1,27 @@
+# [14.5.0-develop.2](https://github.com/DSI-HUG/dejajs-components/compare/v14.5.0-develop.1...v14.5.0-develop.2) (2023-08-07)
+
+
+### Features
+
+* **tile:** amelioration resize small tiles ([19773dd](https://github.com/DSI-HUG/dejajs-components/commit/19773dd5138a020f62a44afe6a145b4e352c3e68))
+
+# [14.5.0-develop.1](https://github.com/DSI-HUG/dejajs-components/compare/v14.4.0...v14.5.0-develop.1) (2023-07-12)
+
+# [14.4.0](https://github.com/DSI-HUG/dejajs-components/compare/v14.3.0...v14.4.0) (2023-06-09)
+
+
+### Bug Fixes
+
+* fix range binding ([7317f2c](https://github.com/DSI-HUG/dejajs-components/commit/7317f2cab9c0a320e66c2b34f8ce036b2915476d))
+
+
+### Features
+
+* range, add trackby for range component ([e1bcf5f](https://github.com/DSI-HUG/dejajs-components/commit/e1bcf5fa7ee67e5d8aa15d9cb7089f226b8f5d1b))
+* tiles.component.html, add tryBy property ([72b495e](https://github.com/DSI-HUG/dejajs-components/commit/72b495eca745520455a5a55896480078838bd4a0))
+
+# [14.4.0-develop.4](https://github.com/DSI-HUG/dejajs-components/compare/v14.4.0-develop.3...v14.4.0-develop.4) (2023-06-09)
+
 # [14.4.0-develop.3](https://github.com/DSI-HUG/dejajs-components/compare/v14.4.0-develop.2...v14.4.0-develop.3) (2023-05-12)
 
 

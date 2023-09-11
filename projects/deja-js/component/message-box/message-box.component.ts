@@ -68,13 +68,13 @@ export class DejaMessageBoxComponent implements OnInit {
             case 'info':
             case 'primary':
                 type = 'primary';
-                return 'info_outline';
+                return 'info';
             case 'success':
                 return 'done';
             case 'warn':
-                return 'warning_outline';
+                return 'warning';
             case 'danger':
-                return 'error_outline';
+                return 'error';
             default:
                 return null;
         }
