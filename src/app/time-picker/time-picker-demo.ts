@@ -7,10 +7,9 @@
  */
 
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, ViewEncapsulation } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MAT_DATE_FORMATS } from '@angular/material/core';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
-import { ControlsOf } from '@deja-js/component/core';
 
 export const myFormats = {
     parse: {
@@ -24,8 +23,8 @@ export const myFormats = {
     }
 };
 
-interface DateForm {
-    date7: Date;
+interface DateFormControls {
+    date7: FormControl<Date | null>;
 }
 
 @Component({
@@ -41,7 +40,7 @@ interface DateForm {
 export class DejaTimePickerDemoComponent {
     public tabIndex = 1;
 
-    public date0: Date = null;
+    public date0: Date | null = null;
     public date1 = new Date(2021, 4, 6, 9, 5, 0);
     public date2 = new Date();
     public date3 = new Date();
@@ -50,7 +49,7 @@ export class DejaTimePickerDemoComponent {
     public date6 = new Date();
     public date7 = new Date(2021, 4, 28, 12, 55, 0);
     public disable6 = true;
-    public dateForm: FormGroup<ControlsOf<DateForm>>;
+    public dateForm: FormGroup<DateFormControls>;
 
     private changeDetectorRef = inject(ChangeDetectorRef);
     private fb = inject(FormBuilder);
@@ -63,9 +62,10 @@ export class DejaTimePickerDemoComponent {
 
     public matDateChange(event: MatDatepickerInputEvent<Date>): void {
         const date = event.value;
-        const clone = new Date(date);
-        clone.setHours(this.date0.getHours());
-        clone.setMinutes(this.date0.getMinutes());
+        const date0 = this.date0 || new Date();
+        const clone = date && new Date(date) || new Date();
+        clone.setHours(date0.getHours());
+        clone.setMinutes(date0.getMinutes());
         this.date0 = clone;
         this.changeDetectorRef.markForCheck();
     }

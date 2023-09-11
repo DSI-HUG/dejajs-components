@@ -22,12 +22,12 @@ import { DragCursorInfos, MouseDragDropService } from './mouse-dragdrop.service'
     templateUrl: './mouse-dragdrop-cursor.component.html'
 })
 export class MouseDragDropCursorComponent extends Destroy {
-    @ViewChild('block', { static: true }) private icon: ElementRef<HTMLElement>;
-    @ViewChild('content', { static: true }) private content: ElementRef<HTMLElement>;
-    private cursor$ = new BehaviorSubject<DragCursorInfos>(null);
-    private currentCursor: DragCursorInfos;
+    @ViewChild('block', { static: true }) private icon?: ElementRef<HTMLElement>;
+    @ViewChild('content', { static: true }) private content?: ElementRef<HTMLElement>;
+    private cursor$ = new BehaviorSubject<DragCursorInfos | undefined>(undefined);
+    private currentCursor?: DragCursorInfos;
 
-    public set position(value: Position) {
+    public set position(value: Position | undefined) {
         if (value) {
             this.elementRef.nativeElement.style.left = `${value.left}px`;
             this.elementRef.nativeElement.style.top = `${value.top}px`;
@@ -42,6 +42,8 @@ export class MouseDragDropCursorComponent extends Destroy {
 
     public constructor() {
         super();
+
+        const element = this.elementRef.nativeElement;
 
         // Hide
         this.cursor$.pipe(
@@ -65,9 +67,9 @@ export class MouseDragDropCursorComponent extends Destroy {
 
         // Show
         this.cursor$.pipe(
-            filter(cursor => !!cursor),
+            filter(Boolean),
             tap(cursor => {
-                this.elementRef.nativeElement.style.display = '';
+                element.style.display = '';
                 if (this.contentElement) {
                     this.contentElement.style.opacity = '0';
                 }
@@ -79,7 +81,9 @@ export class MouseDragDropCursorComponent extends Destroy {
             filter(cursor => !cursor.className || cursor.className !== 'hidden'),
             tap(cursor => {
                 if (cursor.html) {
-                    this.elementRef.nativeElement.className = cursor.className;
+                    if (element) {
+                        element.className = cursor.className || '';
+                    }
                     if (this.contentElement) {
                         this.contentElement.innerHTML = cursor.html;
                         this.contentElement.style.width = `${cursor.width || 48}px`;
@@ -120,11 +124,11 @@ export class MouseDragDropCursorComponent extends Destroy {
         });
     }
 
-    private get iconElement(): HTMLElement {
+    private get iconElement(): HTMLElement | undefined {
         return this.icon?.nativeElement;
     }
 
-    private get contentElement(): HTMLElement {
+    private get contentElement(): HTMLElement | undefined {
         return this.content?.nativeElement;
     }
 }

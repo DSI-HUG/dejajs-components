@@ -22,14 +22,16 @@ import { DejaTile } from './tile.class';
     templateUrl: './tile.component.html'
 })
 export class DejaTileComponent extends Destroy {
-    @Input() public template: TemplateRef<unknown>;
+    @Input()
+    public template?: TemplateRef<unknown>;
+
     // eslint-disable-next-line @angular-eslint/no-output-native
     @Output() public readonly close = new EventEmitter<Event>();
 
     public progressDiameter = 100;
 
     private element: HTMLElement;
-    private _tile: DejaTile;
+    private _tile!: DejaTile;
 
     private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private changeDetectorRef = inject(ChangeDetectorRef);
@@ -59,9 +61,9 @@ export class DejaTileComponent extends Destroy {
             }
 
             tile.pixelBounds$.pipe(
-                filter(bounds => !!bounds),
+                filter(Boolean),
                 take(1),
-                filter(() => tile.fading),
+                filter(() => !!tile.fading),
                 tap(() => {
                     this.element.setAttribute('fading', '1');
                     this.changeDetectorRef.markForCheck();
@@ -74,7 +76,7 @@ export class DejaTileComponent extends Destroy {
             });
 
             tile.pixelBounds$.pipe(
-                filter(bounds => !!bounds),
+                filter(Boolean),
                 takeUntil(this.destroyed$)
             ).subscribe(bounds => {
                 if (!tile.isHidden) {

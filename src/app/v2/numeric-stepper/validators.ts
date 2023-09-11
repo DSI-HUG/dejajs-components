@@ -7,12 +7,12 @@
  */
 
 import { AbstractControl } from '@angular/forms';
-export const numberValidator = (control: AbstractControl): Array<string> => {
+export const numberValidator = (control: AbstractControl): Array<string> | null => {
     const val = +control.value;
     if (isNaN(val)) {
         return ['Not a number'];
     } else if (val < 0) {
         return [`Expected positive number. Got ${val}`];
     }
-    return undefined;
+    return null;
 };

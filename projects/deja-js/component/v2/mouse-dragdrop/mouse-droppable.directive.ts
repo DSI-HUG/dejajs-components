@@ -18,14 +18,14 @@ import { DragCursorInfos, DropCursorInfos, MouseDragDropService } from './mouse-
     selector: '[mouse-droppable]'
 })
 export class MouseDroppableDirective<T> extends Destroy {
-    private _context: MouseDroppableContext<T>;
+    private _context?: MouseDroppableContext<T>;
 
     @Input('mouse-droppable')
-    public set context(value: MouseDroppableContext<T>) {
+    public set context(value: MouseDroppableContext<T> | undefined) {
         this._context = value;
     }
 
-    public get context(): MouseDroppableContext<T> {
+    public get context(): MouseDroppableContext<T> | undefined {
         return this._context;
     }
 
@@ -35,14 +35,14 @@ export class MouseDroppableDirective<T> extends Destroy {
         super();
 
         const element = this.elementRef.nativeElement;
-        let dragContext: T;
+        let dragContext: T | undefined;
 
         const dragging$ = dragDropService.dragging$.pipe(
             distinctUntilChanged()
         );
 
         const drop$ = dragDropService.dragCursor$.pipe(
-            filter(value => !!value),
+            filter(Boolean),
             switchMap(dragCursor => dragging$.pipe(
                 filter(value => !value),
                 take(1),
@@ -52,7 +52,7 @@ export class MouseDroppableDirective<T> extends Destroy {
                         this.context.drop(dragContext, dragCursor);
                     }
                     dragContext = undefined;
-                    dragDropService.dropCursor$.next(null);
+                    dragDropService.dropCursor$.next(undefined);
                 })
             ))
         );
@@ -71,16 +71,13 @@ export class MouseDroppableDirective<T> extends Destroy {
                             if (bounds.containsPoint(new Position(pageX, pageY))) {
                                 if (!dragContext) {
                                     dragContext = dragDropService.context;
-                                    if (this.context.dragEnter) {
+                                    if (dragContext && this.context.dragEnter) {
                                         const dropCursor$ = this.context.dragEnter(dragContext, dragCursor);
-                                        if (dropCursor$) {
-                                            const dropCursorObs$ = dropCursor$ as Observable<DropCursorInfos>;
-                                            if (dropCursorObs$.subscribe) {
-                                                // Observable
-                                                return dropCursorObs$;
-                                            } else {
-                                                return of(dropCursor$ as DropCursorInfos);
-                                            }
+                                        if (dropCursor$ instanceof Observable) {
+                                            // Observable
+                                            return dropCursor$;
+                                        } else {
+                                            return of(dropCursor$);
                                         }
                                     }
                                 } else if (this.context.dragOver) {
@@ -94,15 +91,15 @@ export class MouseDroppableDirective<T> extends Destroy {
                                     this.context.dragLeave(dragContext);
                                 }
                                 dragContext = undefined;
-                                dragDropService.dropCursor$.next(null);
+                                dragDropService.dropCursor$.next(undefined);
                             }
                         }
 
-                        return of(null as DropCursorInfos);
+                        return of(undefined);
                     })
                 )
             ),
-            filter(dropCursor => !!dropCursor),
+            filter(Boolean),
             takeUntil(this.destroyed$)
         ).subscribe(dropCursor => dragDropService.dropCursor$.next(dropCursor));
     }
@@ -113,5 +110,5 @@ export interface MouseDroppableContext<T> {
     dragEnter?: (dragContext$: T, dragCursor: DragCursorInfos) => DropCursorInfos | Observable<DropCursorInfos>; // Return object or observable<object>
     dragOver?: (dragContext$: T, dragCursor: DragCursorInfos) => DropCursorInfos;
     dragLeave?: (dragContext$: T) => void;
-    drop?: (dragContext$: T, dragCursor: DragCursorInfos) => void;
+    drop?: (dragContext$: T, dragCursor: DragCursorInfos | undefined) => void;
 }

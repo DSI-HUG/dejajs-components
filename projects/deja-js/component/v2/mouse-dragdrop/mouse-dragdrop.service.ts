@@ -31,10 +31,10 @@ export interface DragCursorInfos extends DropCursorInfos {
     providedIn: 'root'
 })
 export class MouseDragDropService<T> extends Destroy {
-    public dragCursor$ = new BehaviorSubject<DragCursorInfos>(null);
-    public dropCursor$ = new BehaviorSubject<DropCursorInfos>(null);
+    public dragCursor$ = new BehaviorSubject<DragCursorInfos | undefined>(undefined);
+    public dropCursor$ = new BehaviorSubject<DropCursorInfos | undefined>(undefined);
     public dragging$ = new BehaviorSubject<boolean>(false);
-    public context: T;
+    public context?: T;
 
     private _isDragging = false;
 

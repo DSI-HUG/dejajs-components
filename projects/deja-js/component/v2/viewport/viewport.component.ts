@@ -7,7 +7,7 @@
  */
 
 import { BooleanInput, coerceBooleanProperty, coerceNumberProperty, NumberInput } from '@angular/cdk/coercion';
-import { ChangeDetectionStrategy, Component, ContentChild, ElementRef, EventEmitter, HostBinding, Input, Output, QueryList, TemplateRef, ViewChild, ViewChildren } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ContentChild, ElementRef, EventEmitter, HostBinding, inject, Input, Output, QueryList, TemplateRef, ViewChild, ViewChildren } from '@angular/core';
 import { Destroy } from '@deja-js/component/core';
 import { BehaviorSubject, combineLatestWith, debounceTime, distinctUntilChanged, filter, from, fromEvent, interval, map, mergeMap, mergeWith, Observable, Subject, switchMap, takeUntil, tap, timer, withLatestFrom } from 'rxjs';
 
@@ -16,8 +16,8 @@ import { ViewPort, ViewPortDirection, ViewPortItem, ViewPortMode, ViewPortServic
 export type ViewPortScrollStyleType = 'scrollbar' | 'buttons';
 
 export class ViewPortItemClassEvent<T> {
-    public item: ViewPortItem<T>;
-    public classes: Array<string>;
+    public item?: ViewPortItem<T>;
+    public classes = new Array<string>();
 }
 
 @Component({
@@ -28,24 +28,26 @@ export class ViewPortItemClassEvent<T> {
     templateUrl: './viewport.component.html'
 })
 export class ViewPortComponent<T> extends Destroy {
-    @HostBinding('attr.buttons') public hasButtons: boolean = null;
-    @HostBinding('attr.horizontal') public isHorizontal: boolean = null;
+    @HostBinding('attr.buttons') public hasButtons: boolean | undefined = undefined;
+    @HostBinding('attr.horizontal') public isHorizontal: boolean | undefined = undefined;
 
     /** Permet de définir un template d'élément par binding */
-    @Input() public viewPortItemTemplateExternal: TemplateRef<unknown>;
+    @Input() public viewPortItemTemplateExternal?: TemplateRef<unknown>;
 
     @Output() public readonly itemClass = new EventEmitter<ViewPortItemClassEvent<T>>();
 
-    @ContentChild('viewPortItemTemplate') private viewPortItemTemplateInternal: TemplateRef<unknown>;
+    @ContentChild('viewPortItemTemplate') private viewPortItemTemplateInternal?: TemplateRef<unknown>;
 
-    public hasUpButton: boolean = null;
-    public hasDownButton: boolean = null;
+    public hasUpButton: boolean | undefined = undefined;
+    public hasDownButton: boolean | undefined = undefined;
     public buttons$ = new Subject<QueryList<ElementRef<HTMLElement>>>();
     public viewPort$: Observable<ViewPort<T>>;
     public viewPortElementSize$ = new Subject<{ size: number }>();
 
-    private _buttonsStep: NumberInput;
-    private reloadViewPort$ = new BehaviorSubject<void>(null);
+    public viewPortService = inject<ViewPortService<T>>(ViewPortService);
+
+    private _buttonsStep?: number;
+    private reloadViewPort$ = new BehaviorSubject<void>(undefined);
 
     @Input()
     public set buttonsStep(value: NumberInput) {
@@ -109,7 +111,7 @@ export class ViewPortComponent<T> extends Destroy {
         this.buttons$.next(buttons);
     }
 
-    public get viewPortItemTemplate(): TemplateRef<unknown> {
+    public get viewPortItemTemplate(): TemplateRef<unknown> | undefined {
         return this.viewPortItemTemplateExternal || this.viewPortItemTemplateInternal;
     }
 
@@ -135,21 +137,19 @@ export class ViewPortComponent<T> extends Destroy {
         this.viewPortService.debug = coerceBooleanProperty(value);
     }
 
-    public constructor(
-        public viewPortService: ViewPortService<T>
-    ) {
+    public constructor() {
         super();
 
-        this.viewPort$ = viewPortService.viewPort$.pipe(
+        this.viewPort$ = this.viewPortService.viewPort$.pipe(
             combineLatestWith(this.reloadViewPort$),
             map(([viewPort]) => ({ ...viewPort }))
         );
 
-        viewPortService.element$.pipe(
+        this.viewPortService.element$.pipe(
             distinctUntilChanged(),
             switchMap(element => fromEvent<Event>(element, 'scroll').pipe(
                 distinctUntilChanged(),
-                withLatestFrom(viewPortService.direction$),
+                withLatestFrom(this.viewPortService.direction$),
                 map(([_, direction]) => Math.round(direction === 'horizontal' ? element.scrollLeft : element.scrollTop))
             )),
             takeUntil(this.destroyed$)
@@ -157,11 +157,11 @@ export class ViewPortComponent<T> extends Destroy {
             this.viewPortService.scrollPosition$.next(scrollPosition);
         });
 
-        viewPortService.element$.pipe(
+        this.viewPortService.element$.pipe(
             distinctUntilChanged(),
             switchMap(element => fromEvent<WheelEvent>(element, 'mousewheel').pipe(
-                withLatestFrom(viewPortService.direction$),
-                filter(([_, direction]) => direction === 'horizontal' || this.hasButtons),
+                withLatestFrom(this.viewPortService.direction$),
+                filter(([_, direction]) => direction === 'horizontal' || !!this.hasButtons),
                 tap(([event, direction]) => {
                     event.stopPropagation();
                     event.preventDefault();
@@ -175,7 +175,7 @@ export class ViewPortComponent<T> extends Destroy {
             takeUntil(this.destroyed$)
         ).subscribe();
 
-        viewPortService.viewPort$.pipe(
+        this.viewPortService.viewPort$.pipe(
             takeUntil(this.destroyed$)
         ).subscribe(viewPort => {
             this.hasUpButton = this.hasButtons && viewPort.mode === 'disabled' ? viewPort.scrollPosition > 0 : viewPort.beforeSize > 0;
@@ -195,7 +195,7 @@ export class ViewPortComponent<T> extends Destroy {
         this.viewPortElementSize$.pipe(
             debounceTime(1),
             distinctUntilChanged(),
-            withLatestFrom(viewPortService.direction$, viewPortService.element$),
+            withLatestFrom(this.viewPortService.direction$, this.viewPortService.element$),
             takeUntil(this.destroyed$)
         ).subscribe(([viewPortElementSize, direction, element]) => {
             const newElementSize = direction === 'horizontal' ? element.clientWidth : element.clientHeight;
@@ -218,12 +218,14 @@ export class ViewPortComponent<T> extends Destroy {
 
         buttons$.pipe(
             filter(buttons => buttons.length === 2),
-            withLatestFrom(viewPortService.element$),
+            withLatestFrom(this.viewPortService.element$),
             switchMap(([buttons, viewPortElement]) => {
                 const clientSize = this.isHorizontal ? viewPortElement.clientWidth : viewPortElement.clientHeight;
 
                 const scroll = (event: MouseEvent, sign: number): void => {
-                    const delta = sign * (event.ctrlKey ? clientSize : +this.buttonsStep * 2);
+                    const buttonStep = this.buttonsStep ? +this.buttonsStep * 2 : 0;
+                    const delta = sign * (event.ctrlKey ? clientSize : buttonStep);
+
                     if (this.isHorizontal) {
                         viewPortElement.scroll({ left: viewPortElement.scrollLeft + delta, top: 0 });
                     } else {

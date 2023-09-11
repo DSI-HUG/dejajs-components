@@ -19,7 +19,7 @@ import { News } from './news.model';
 })
 export class NewsCardComponent implements TooltipComponentInterface {
     @Input()
-    public item: News;
+    public item?: News;
 
     @Output()
     public readonly imageLoaded = new EventEmitter();
@@ -29,8 +29,6 @@ export class NewsCardComponent implements TooltipComponentInterface {
     public constructor(
     @Optional() @Inject(MAT_DIALOG_DATA) news: News
     ) {
-        if (news) {
-            this.item = news;
-        }
+        this.item = news;
     }
 }

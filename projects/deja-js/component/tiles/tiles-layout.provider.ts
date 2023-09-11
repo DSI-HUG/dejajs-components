@@ -49,7 +49,7 @@ export interface ITileDragDropContext {
 
 @Injectable()
 export class DejaTilesLayoutProvider extends Destroy {
-    public refreshTiles$ = new Subject<IDejaTilesRefreshParams>();
+    public refreshTiles$ = new Subject<IDejaTilesRefreshParams | undefined>();
     public ensureVisible$ = new Subject<string>();
     public ensureBounds$ = new Subject<Rect>();
     public dragging$ = new BehaviorSubject<boolean>(false);
@@ -81,21 +81,21 @@ export class DejaTilesLayoutProvider extends Destroy {
     protected _maxWidthUnit = '%';
 
     private tilesDic = new Map<string, DejaTile>();
-    private _tiles: Array<DejaTile>;
-    private _cursor: string;
+    private _tiles?: Array<DejaTile>;
+    private _cursor?: string;
     private _targetBounds = new Rect();
     private destination = new Rect();
-    private lastTargetBounds: Rect;
-    private moveTimOut: Subscription;
-    private originalLayout: ILayoutInfos;
-    private validLayout: ILayoutInfos;
+    private lastTargetBounds?: Rect;
+    private moveTimOut?: Subscription;
+    private originalLayout?: ILayoutInfos;
+    private validLayout?: ILayoutInfos;
     private dragPageOffset = new Position();
     private dragOriginalPosition = new Position();
-    private dragRelativePosition: Map<string, Position>;
-    private _container: HTMLElement;
-    private currentTile: DejaTile;
-    private hundredPercentWith: number;
-    private dragTarget: Rect;
+    private dragRelativePosition?: Map<string, Position>;
+    private _container?: HTMLElement;
+    private currentTile?: DejaTile;
+    private hundredPercentWith?: number;
+    private dragTarget?: Rect;
 
     private selectedIds = new Array<string>();
 
@@ -212,19 +212,20 @@ export class DejaTilesLayoutProvider extends Destroy {
         const ensureTile$ = this.ensureVisible$.pipe(
             delay(1),
             map(id => this.tilesDic.get(id)),
-            filter(tile => !!tile),
+            filter(Boolean),
             map(tile => tile.percentBounds));
 
         this.ensureBounds$.pipe(
             mergeWith(ensureTile$),
+            filter(Boolean),
             takeUntil(this.destroyed$)
         ).subscribe(percentBounds => {
             const { left, right, top, bottom } = this.getPixelBounds(percentBounds);
 
-            const findScrollContainer = (container: HTMLElement): HTMLElement => {
+            const findScrollContainer = (container: HTMLElement | undefined): HTMLElement | undefined => {
                 // eslint-disable-next-line no-loops/no-loops
                 while (container && container.tagName !== 'DEJA-TILES') {
-                    container = container.parentElement;
+                    container = container.parentElement || undefined;
                 }
 
                 return container;
@@ -471,7 +472,7 @@ export class DejaTilesLayoutProvider extends Destroy {
                         })
                     );
                 }),
-                filter(mouseUpEvent => !!mouseUpEvent),
+                filter(Boolean),
                 takeUntil(this.destroyed$)
             ).subscribe(mouseUpEvent => {
                 if (this.currentTile.isPressed) {
@@ -851,7 +852,7 @@ export class DejaTilesLayoutProvider extends Destroy {
         this.clearMoveTimer();
 
         from(tiles).pipe(
-            filter(tile => !!tile),
+            filter(Boolean),
             takeUntil(this.destroyed$)
         ).subscribe(tile => {
             tile.isDragging = false;
@@ -880,7 +881,7 @@ export class DejaTilesLayoutProvider extends Destroy {
                 tile.isDragging = false;
             } else {
                 from(tiles).pipe(
-                    filter(tile => !!tile),
+                    filter(Boolean),
                     tap(tile => {
                         const left = this.validLayout.validBounds.left + this.dragRelativePosition.get(tile.id).left;
                         const top = this.validLayout.validBounds.top + this.dragRelativePosition.get(tile.id).top;
@@ -1082,7 +1083,7 @@ export class DejaTilesLayoutProvider extends Destroy {
 
             event.cancel$.pipe(
                 take(1),
-                filter(value => !!value),
+                filter(Boolean),
                 switchMap(() => {
                     // Reshow original tiles if cut operation
                     if (sourceTiles) {
@@ -1713,7 +1714,7 @@ export class DejaTilesLayoutProvider extends Destroy {
         });
     }
 
-    private pushVertical(bounds: Rect, direction: number, tiles: Array<DejaTile>, offset?: number): number {
+    private pushVertical(bounds: Rect, direction: number, tiles: Array<DejaTile>, offset = 0): number {
         let overflow = 0;
         const targetBounds = new Map<string, Rect>();
 
@@ -1735,7 +1736,7 @@ export class DejaTilesLayoutProvider extends Destroy {
                 this.moveVertical(direction, tiles, offset, targetBounds);
 
                 //  bounds array to tiles
-                this.tiles.forEach(t => targetBounds.has(t.id) && (t.percentBounds = targetBounds.get(t.id)));
+                this.tiles.forEach(t => targetBounds.has(t.id) && (t.percentBounds = targetBounds.get(t.id) || new Rect()));
             }
         }
 

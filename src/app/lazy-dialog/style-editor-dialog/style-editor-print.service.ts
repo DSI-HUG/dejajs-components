@@ -13,7 +13,7 @@ export class StyleEditorPrintService {
 
     public openMessageDialog$ = new Subject<MessageDialogDate>();
 
-    public messageDialogResult$: Observable<string>;
+    public messageDialogResult$: Observable<string | undefined>;
 
     private messageBoxDialogService = inject(MessageBoxDialogService);
 

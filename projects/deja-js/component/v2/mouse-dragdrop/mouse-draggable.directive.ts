@@ -18,7 +18,7 @@ import { DragCursorInfos, MouseDragDropService } from './mouse-dragdrop.service'
     selector: '[mouse-draggable]'
 })
 export class MouseDraggableDirective<T> extends Destroy {
-    private _context: MouseDraggableContext<T>;
+    private _context!: MouseDraggableContext<T>;
 
     @Input('mouse-draggable')
     public set context(value: MouseDraggableContext<T>) {
@@ -52,14 +52,14 @@ export class MouseDraggableDirective<T> extends Destroy {
                 switchMap(mouseDownEvent => {
                     const match = (el: HTMLElement): boolean => el.tagName === this.context.target.toUpperCase() || `#${el.id}` === this.context.target || el.hasAttribute(this.context.target.substring(1, this.context.target.length - 1)) || el.className.split(' ').some(className => `.${className}` === this.context.target);
 
-                    let target$ = of(null as HTMLElement);
+                    let target$: Observable<HTMLElement | undefined> = of(undefined);
                     if (this.context) {
                         let target: HTMLElement;
                         if (this.context.target) {
                             target = mouseDownEvent.target as HTMLElement;
                             // eslint-disable-next-line no-loops/no-loops
                             while (target && !match(target)) {
-                                target = target.parentElement;
+                                target = target.parentElement as HTMLElement;
                             }
                         } else {
                             target = element;
@@ -86,7 +86,7 @@ export class MouseDraggableDirective<T> extends Destroy {
                         }
                     }
                     return target$.pipe(
-                        filter(target => !!target), // Start Drag if target is defined
+                        filter(Boolean),
                         switchMap(target => {
                             this.dragDropService.dragging$.next(true);
 
@@ -100,7 +100,7 @@ export class MouseDraggableDirective<T> extends Destroy {
                                 mergeWith(enterWhileNotDragDropEvent$, moveUp$),
                                 take(1),
                                 tap(() => {
-                                    this.dragDropService.dragCursor$.next(null);
+                                    this.dragDropService.dragCursor$.next(undefined);
                                     this.dragDropService.dragging$.next(false);
                                 }));
 
@@ -147,7 +147,7 @@ export class MouseDraggableDirective<T> extends Destroy {
 }
 
 export interface MouseDraggableContext<T> {
-    target?: string; // Tagname or #id or [attribute]
+    target: string; // Tagname or #id or [attribute]
     className?: string;
     dragStart?: (element: HTMLElement) => T;
 }

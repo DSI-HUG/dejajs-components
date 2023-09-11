@@ -57,10 +57,10 @@ export class DejaMarkdownComponent extends Destroy implements AfterViewChecked {
     protected httpClient = inject(HttpClient);
 
     private _initialised = false;
-    private _html: SafeHtml;
+    private _html?: SafeHtml;
     private _converter: Showdown.Converter;
 
-    public get html(): SafeHtml {
+    public get html(): SafeHtml | undefined {
         return this._html;
     }
 

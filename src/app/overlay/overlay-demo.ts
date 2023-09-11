@@ -17,7 +17,7 @@ import { DejaOverlayComponent } from '@deja-js/component/overlay';
 })
 export class DejaOverlayDemoComponent {
     @ViewChild('contextMenu')
-    private contextMenu: DejaOverlayComponent;
+    private contextMenu?: DejaOverlayComponent;
 
     public selected = '';
     public items = [
@@ -36,7 +36,7 @@ export class DejaOverlayDemoComponent {
     public onContextMenu(event: MouseEvent): boolean {
         const parent = event.currentTarget as HTMLElement;
         const parentRect = parent.getBoundingClientRect();
-        this.contextMenu.show(event.pageX - parentRect.left, event.pageY - parentRect.top);
+        this.contextMenu?.show(event.pageX - parentRect.left, event.pageY - parentRect.top);
         event.preventDefault();
         return false;
     }

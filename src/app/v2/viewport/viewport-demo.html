@@ -24,7 +24,7 @@
                 <mat-form-field class="flex3r">
                     <input matInput type="number" [(ngModel)]="ensureIndex" autocomplete="off">
                 </mat-form-field>
-                <button type="button" mat-button (click)="viewport.ensureVisible(ensureIndex)">Go</button>
+                <button type="button" mat-button (click)="ensureIndex !== undefined && viewport && viewport.ensureVisible(ensureIndex)">Go</button>
                 <a mat-button (click)="reload()">
                     <mat-icon>refresh</mat-icon>
                 </a>
@@ -34,10 +34,10 @@
                 <mat-form-field class="flex3r">
                     <input matInput type="number" [(ngModel)]="scrollPosition" autocomplete="off">
                 </mat-form-field>
-                <button type="button" mat-button (click)="viewport.viewPortService.scrollPosition$.next(scrollPosition)">Go</button>
+                <button type="button" mat-button (click)="scrollPosition && viewport && viewport.viewPortService.scrollPosition$.next(scrollPosition)">Go</button>
             </span>
         </div>
-        <viewport #viewport [debugMode]="false" [models]="news$ | async" viewPortMode="auto" itemSize="41" [direction]="isHorizontal ? 'horizontal': 'vertical'" [scrollingStyle]="hasButtons ? 'buttons' : 'scrollbar'">
+        <viewport #viewport [debugMode]="false" *ngIf="news$ | async as news" [models]="news" viewPortMode="auto" itemSize="41" [direction]="isHorizontal ? 'horizontal': 'vertical'" [scrollingStyle]="hasButtons ? 'buttons' : 'scrollbar'">
             <ng-template #viewPortItemTemplate let-item let-size="size">
                 <news-card [item]="item.model" (imageLoaded)="imageLoaded(item)"></news-card>
             </ng-template>

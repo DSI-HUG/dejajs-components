@@ -21,13 +21,13 @@ import { NewsService } from '../../services/news.service';
 })
 export class ViewPortDemoComponent {
     @ViewChild('viewport')
-    private viewport: ViewPortComponent<News>;
+    protected viewport?: ViewPortComponent<News>;
 
     public tabIndex = 1;
     public isHorizontal = false;
     public hasButtons = false;
-    public ensureIndex: number;
-    public scrollPosition: number;
+    public ensureIndex?: number;
+    public scrollPosition = 0;
 
     public exampleValue = `
     <viewport [models]="news$ | async" itemSize="120">
@@ -48,7 +48,7 @@ export class ViewPortDemoComponent {
         </ng-template>
     </viewport>`;
 
-    public news$: Observable<News[]>;
+    public news$: Observable<ReadonlyArray<News>>;
 
     private newsService = inject(NewsService);
 
@@ -69,7 +69,7 @@ export class ViewPortDemoComponent {
             if (!item.loaded) {
                 item.loaded = true;
                 item.size = undefined;
-                this.viewport.refreshViewPort();
+                this.viewport?.refreshViewPort();
             }
         }));
     }

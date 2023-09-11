@@ -10,7 +10,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { ObjectMapper } from 'json-object-mapper';
 import { cloneDeep } from 'lodash-es';
-import { map, Observable, shareReplay, switchMap, tap } from 'rxjs';
+import { map, Observable, shareReplay, switchMap } from 'rxjs';
 
 import { News, NewsArticles, NewsSource, NewsSources } from '../common/news.model';
 
@@ -27,7 +27,7 @@ export class NewsService {
         this.news$ = this.httpClient.get<Record<string, unknown>>('https://newsapi.org/v1/sources?language=en').pipe(
             map(response => ObjectMapper.deserialize(NewsSources, response)),
             map(resp => {
-                if (resp.status !== 'ok') {
+                if (resp.status !== 'ok' || !resp.sources) {
                     throw new Error('Fail to get news');
                 }
                 return resp.sources;
@@ -39,13 +39,10 @@ export class NewsService {
             }),
             map(response => ObjectMapper.deserialize(NewsArticles, response)),
             map(resp => {
-                if (resp.status !== 'ok') {
+                if (!resp.articles || resp.status !== 'ok') {
                     throw new Error('Fail to get news');
                 }
                 return resp.articles;
-            }),
-            tap(x => {
-                console.log('x', x);
             }),
             shareReplay({ bufferSize: 1, refCount: false })
         );

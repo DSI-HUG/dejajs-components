@@ -85,13 +85,13 @@ export class DejaSplitterComponent extends Destroy {
     }
 
     @HostBinding('attr.splitting')
-    protected splitting = null as boolean;
+    protected splitting: boolean | null = null;
 
     @HostBinding('attr.direction')
     private _direction = 'horizontal' as SplitterDirection;
 
     @HostBinding('attr.disabled')
-    private _disabled = null as boolean;
+    private _disabled: boolean | null = null;
 
     protected startDragging$ = new Subject<DraggingEvent>();
 

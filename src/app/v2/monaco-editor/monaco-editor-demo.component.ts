@@ -23,14 +23,14 @@ import { MonacoEditorDemoService } from './monaco-editor-demo.service';
 export class MonacoEditorDemoComponent extends Destroy implements OnInit {
     public tabIndex = 1;
 
-    public xmlContent: string;
-    public xmlContentToCompare: string;
-    public jsonContent: string;
-    public jsonContentToCompare: Language;
-    public jsonContentForm: FormGroup;
+    public xmlContent?: string;
+    public xmlContentToCompare?: string;
+    public jsonContent?: string;
+    public jsonContentToCompare?: Language;
+    public jsonContentForm?: FormGroup;
 
-    public dynamicContent: string;
-    public dynamicLanguage: Language;
+    public dynamicContent?: string;
+    public dynamicLanguage?: Language;
 
     public readOnly = false;
 
@@ -60,7 +60,7 @@ export class MonacoEditorDemoComponent extends Destroy implements OnInit {
 
         this.fileService.getFile$('jsonFileToCompare.json').pipe(
             takeUntil(this.destroyed$)
-        ).subscribe((val: Language) => this.jsonContentToCompare = val);
+        ).subscribe(val => this.jsonContentToCompare = val as Language);
 
         this.updateLanguage('xml');
     }

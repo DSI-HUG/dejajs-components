@@ -7,10 +7,10 @@
  */
 
 import { AbstractControl } from '@angular/forms';
-export const cheeseValidator = (control: AbstractControl): string[] => {
+export const cheeseValidator = (control: AbstractControl): ReadonlyArray<string> | null => {
     const val = control.value as string;
     if (val === 'gruyère') {
         return [`${val} is not a fruit`];
     }
-    return undefined;
+    return null;
 };

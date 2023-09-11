@@ -171,7 +171,7 @@ export abstract class TooltipService<D> {
             }),
             tap(dialogRef => {
                 const componentInstance = dialogRef.componentInstance;
-                const tooltipBounds = componentInstance.elementRef?.nativeElement.parentElement.getBoundingClientRect();
+                const tooltipBounds = componentInstance.elementRef?.nativeElement.parentElement?.getBoundingClientRect();
                 const triggerBounds = triggerElement?.getBoundingClientRect();
                 const bodyBounds = document.body.getBoundingClientRect();
 

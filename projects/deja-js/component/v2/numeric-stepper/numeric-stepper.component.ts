@@ -9,7 +9,7 @@
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostBinding, inject, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { MatLegacyFormFieldControl as MatFormFieldControl } from '@angular/material/legacy-form-field';
-import { Destroy, KeyCodes } from '@deja-js/component/core';
+import { Destroy, filterMap, KeyCodes } from '@deja-js/component/core';
 import { combineLatestWith, debounceTime, delay, filter, fromEvent, map, mergeWith, ReplaySubject, shareReplay, startWith, Subject, switchMap, takeUntil, tap, timer, withLatestFrom } from 'rxjs';
 
 export type DejaNumericStepperLayout = 'vertical' | 'horizontal' | 'horizontal-inlay';
@@ -29,10 +29,14 @@ export class DejaNumericStepperComponent extends Destroy implements OnInit {
     @HostBinding('attr.layout') @Input()
     public layout: DejaNumericStepperLayout = 'vertical';
 
-    @Output() public readonly increment = new EventEmitter<void>();
-    @Output() public readonly decrement = new EventEmitter<void>();
+    @Output()
+    public readonly increment = new EventEmitter<void>();
 
-    @Input() public input: MatFormFieldControl<unknown>;
+    @Output()
+    public readonly decrement = new EventEmitter<void>();
+
+    @Input()
+    public input?: MatFormFieldControl<unknown>;
 
     @Input()
     public set arrowIcons(value: BooleanInput) {
@@ -53,16 +57,16 @@ export class DejaNumericStepperComponent extends Destroy implements OnInit {
     }
 
     @HostBinding('attr.hover')
-    protected hover = null as boolean;
+    protected hover: boolean | null = null;
 
-    public leftUp: number = null;
-    public leftDown: number = null;
-    public topUp: number = null;
-    public topDown: number = null;
-    public leftShadow: number = null;
-    public topShadow: number = null;
-    public widthShadow: number = null;
-    public heightShadow: number = null;
+    public leftUp?: number;
+    public leftDown?: number;
+    public topUp?: number;
+    public topDown?: number;
+    public leftShadow?: number;
+    public topShadow?: number;
+    public widthShadow?: number;
+    public heightShadow?: number;
 
     public disableUp = false;
     public disableDown = false;
@@ -73,23 +77,23 @@ export class DejaNumericStepperComponent extends Destroy implements OnInit {
     private _arrowIcons = false;
     private _showOnInit = false;
     private arrowSize = 32;
-    private parentAppearance: string = null;
+    private parentAppearance: string | undefined;
 
     private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private changeDetectorRef = inject(ChangeDetectorRef);
 
     public ngOnInit(): void {
-        const calcPositions = (linkedElements: { formFieldElement: HTMLElement; containerElement: HTMLElement; inputElement: HTMLInputElement }): void => {
-            const containerBounds = linkedElements.containerElement?.getBoundingClientRect();
-            const formFieldBounds = linkedElements.formFieldElement?.getBoundingClientRect();
-            const inputBounds = linkedElements.inputElement.getBoundingClientRect() || formFieldBounds;
+        const calcPositions = (formFieldElement: HTMLElement, containerElement: HTMLElement | undefined, inputElement: HTMLInputElement): void => {
+            const containerBounds = containerElement?.getBoundingClientRect();
+            const formFieldBounds = formFieldElement?.getBoundingClientRect();
+            const inputBounds = inputElement.getBoundingClientRect() || formFieldBounds;
 
             const bounds = this.elementRef.nativeElement.getBoundingClientRect();
 
             this.validateArrows$.next();
 
             // Ensure delayed hover in case of the mouse leave accidentally
-            linkedElements.formFieldElement.setAttribute('hover', '');
+            formFieldElement.setAttribute('hover', '');
 
             if (this.layout === 'horizontal') {
                 this.heightShadow = Math.min(48, containerBounds?.height || formFieldBounds.height) + 2;
@@ -143,9 +147,9 @@ export class DejaNumericStepperComponent extends Destroy implements OnInit {
             map(() => {
                 // Find form field
                 let parentElement = this.elementRef.nativeElement.parentElement;
-                let formFieldElement: HTMLElement;
-                let containerElement: HTMLElement;
-                let inputElement: HTMLInputElement;
+                let formFieldElement: HTMLElement | undefined;
+                let containerElement: HTMLElement | undefined;
+                let inputElement: HTMLInputElement | undefined;
 
                 // eslint-disable-next-line no-loops/no-loops
                 while (parentElement) {
@@ -176,9 +180,9 @@ export class DejaNumericStepperComponent extends Destroy implements OnInit {
                     }
                 }
 
-                return { formFieldElement, containerElement, inputElement };
+                return [formFieldElement, containerElement, inputElement] as const;
             }),
-            filter(containerElements => containerElements.formFieldElement && !!containerElements.inputElement),
+            filterMap(([formFieldElement, _containerElement, inputElement]) => formFieldElement && inputElement && [formFieldElement, _containerElement, inputElement] as const || undefined),
             shareReplay(1)
         );
 
@@ -207,43 +211,43 @@ export class DejaNumericStepperComponent extends Destroy implements OnInit {
         const step$ = this.clickArrow$.pipe(
             debounceTime(10),
             withLatestFrom(linkedElements$),
-            tap(([isUp, linkedElements]) => {
+            tap(([isUp, [_formFieldElement, _containerElement, inputElement]]) => {
                 if (isUp && !this.disableUp) {
-                    step(linkedElements.inputElement, 'increment', 'stepUp');
+                    step(inputElement, 'increment', 'stepUp');
                 }
                 if (!isUp && !this.disableDown) {
-                    step(linkedElements.inputElement, 'decrement', 'stepDown');
+                    step(inputElement, 'decrement', 'stepDown');
                 }
             }),
             shareReplay({ bufferSize: 1, refCount: false })
         );
 
         const valueChange$ = linkedElements$.pipe(
-            switchMap(linkedElements => fromEvent<void>(linkedElements.inputElement, 'input').pipe(
-                mergeWith(step$, fromEvent<void>(linkedElements.inputElement, 'paste'), fromEvent<void>(linkedElements.inputElement, 'keypress'))
+            switchMap(([_formFieldElement, _containerElement, inputElement]) => fromEvent<void>(inputElement, 'input').pipe(
+                mergeWith(step$, fromEvent<void>(inputElement, 'paste'), fromEvent<void>(inputElement, 'keypress'))
             )),
             debounceTime(50),
-            startWith(null as void)
+            startWith(undefined)
         );
 
         linkedElements$.pipe(
-            switchMap(linkedElements => fromEvent<MouseEvent>(linkedElements.containerElement || linkedElements.formFieldElement, 'mouseenter').pipe(
+            switchMap(([formFieldElement, containerElement, inputElement]) => fromEvent<MouseEvent>(containerElement || formFieldElement, 'mouseenter').pipe(
                 switchMap(() => valueChange$),
                 mergeWith(this.show$.pipe(
                     delay(200)
                 )),
-                tap(() => calcPositions(linkedElements)),
-                switchMap(() => fromEvent<MouseEvent>(linkedElements.containerElement || linkedElements.formFieldElement, 'mouseleave')),
+                tap(() => calcPositions(formFieldElement, containerElement, inputElement)),
+                switchMap(() => fromEvent<MouseEvent>(containerElement || formFieldElement, 'mouseleave')),
                 delay(400),
                 tap(() => {
-                    linkedElements.formFieldElement.removeAttribute('hover');
+                    formFieldElement.removeAttribute('hover');
                 })
             )),
             takeUntil(this.destroyed$)
         ).subscribe();
 
         linkedElements$.pipe(
-            switchMap(linkedElements => fromEvent<KeyboardEvent>(linkedElements.formFieldElement, 'keydown')),
+            switchMap(([formFieldElement]) => fromEvent<KeyboardEvent>(formFieldElement, 'keydown')),
             filter(event => event.code === KeyCodes.UpArrow || event.code === KeyCodes.DownArrow),
             takeUntil(this.destroyed$)
         ).subscribe(event => {
@@ -256,16 +260,16 @@ export class DejaNumericStepperComponent extends Destroy implements OnInit {
             combineLatestWith(this.validateArrows$),
             debounceTime(1),
             takeUntil(this.destroyed$)
-        ).subscribe(([inputElement]) => {
-            if (inputElement.inputElement.disabled) {
+        ).subscribe(([[_formFieldElement, _containerElement, inputElement]]) => {
+            if (inputElement.disabled) {
                 this.disableDown = true;
                 this.disableUp = true;
             } else {
-                const min = inputElement.inputElement.min;
-                this.disableDown = min !== '' && !isNaN(+min) && +inputElement.inputElement.value <= +min;
+                const min = inputElement.min;
+                this.disableDown = min !== '' && !isNaN(+min) && +inputElement.value <= +min;
 
-                const max = inputElement.inputElement.max;
-                this.disableUp = max !== '' && !isNaN(+max) && +inputElement.inputElement.value >= +max;
+                const max = inputElement.max;
+                this.disableUp = max !== '' && !isNaN(+max) && +inputElement.value >= +max;
             }
 
             this.changeDetectorRef.markForCheck();

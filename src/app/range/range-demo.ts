@@ -25,8 +25,8 @@ interface Error {
 export class DejaRangeDemoComponent {
     @Output() public readonly errorFeed = new EventEmitter();
 
-    @ViewChild('dejaRange') public rangeRef: DejaRangeComponent;
-    @ViewChild('dejaWeight') public weightRef: DejaRangeComponent;
+    @ViewChild('dejaRange') public rangeRef?: DejaRangeComponent;
+    @ViewChild('dejaWeight') public weightRef?: DejaRangeComponent;
 
     public tabIndex = 1;
     public readOnlyRanges: Range[];
@@ -120,26 +120,26 @@ export class DejaRangeDemoComponent {
     public remove(index: number): void {
         if (this.weights.length >= 2) {
 
-            const weight = this.weights
-                .find((_w: Weight, i: number) => index === i);
+            const weight = this.weights.find((_w: Weight, i: number) => index === i);
+            const wgts = this.weights.filter((_w: Weight, i: number) => index !== i);
 
-            const wgts = this.weights
-                .filter((_w: Weight, i: number) => index !== i);
-
-            if (index > 0) {
+            if (weight && index > 0) {
                 wgts[index - 1].maxWeight = weight.maxWeight;
             }
 
             this.weights = wgts;
-
-            this.weightRef.selected = 0;
+            if (this.weightRef) {
+                this.weightRef.selected = 0;
+            }
             this.computeRangeFromWeight();
         }
     }
 
     public add(index: number): void {
-        const weight = this.weights
-            .find((_w: Weight, i: number) => index === i);
+        const weight = this.weights.find((_w: Weight, i: number) => index === i);
+        if (!weight) {
+            return;
+        }
 
         const weightDifference = weight.maxWeight - weight.minWeight;
         if (weightDifference >= 2) {
@@ -151,7 +151,9 @@ export class DejaRangeDemoComponent {
             const rightWeights = index < this.weights.length ? this.weights.slice(index + 1) : [];
             this.weights = [...leftWeights, leftWeight, weight, ...rightWeights];
 
-            this.weightRef.selected = 0;
+            if (this.weightRef) {
+                this.weightRef.selected = 0;
+            }
             this.computeRangeFromWeight();
         }
     }

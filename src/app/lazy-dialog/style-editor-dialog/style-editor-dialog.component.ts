@@ -1,21 +1,21 @@
 /* eslint-disable no-bitwise */
 import { ChangeDetectionStrategy, Component, Inject, Injector, ViewEncapsulation } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
-import { ControlsOf, Destroy } from '@deja-js/component/core';
+import { Destroy } from '@deja-js/component/core';
 import { Color, MaterialColorService } from '@deja-js/component/core/graphics';
 import { takeUntil } from 'rxjs';
 
 import { StyleConfig, StyleConfigBorderDirection } from './style-config.model';
 import { StyleEditorPrintService } from './style-editor-print.service';
 
-export interface StyleEditorDialogForm {
-    borderWidth: number;
-    borderColor: Color;
-    topBorder: boolean;
-    rightBorder: boolean;
-    bottomBorder: boolean;
-    leftBorder: boolean;
+export interface StyleEditorDialogFormControls {
+    borderWidth: FormControl<number | null>;
+    borderColor: FormControl<Color | null>;
+    topBorder: FormControl<boolean | null>;
+    rightBorder: FormControl<boolean | null>;
+    bottomBorder: FormControl<boolean | null>;
+    leftBorder: FormControl<boolean | null>;
 }
 
 @Component({
@@ -29,27 +29,26 @@ export class StyleEditorDialogComponent extends Destroy {
     public materialColorService: MaterialColorService;
     public min = 0;
     public max = 20;
-    public formGroup: FormGroup<ControlsOf<StyleEditorDialogForm>>;
+    public formGroup: FormGroup<StyleEditorDialogFormControls>;
 
     private widthStep = 2;
 
     public constructor(
         @Inject(MAT_DIALOG_DATA) public params: StyleConfig,
         public syleEditorPrintService: StyleEditorPrintService,
-        private injector: Injector,
-        formBuilder: FormBuilder
+        private injector: Injector
     ) {
         super();
 
         this.materialColorService = injector.get(MaterialColorService);
 
-        this.formGroup = formBuilder.group<StyleEditorDialogForm>({
-            borderWidth: this.params?.borderWidth / this.widthStep || null,
-            borderColor: this.params?.borderColor ? Color.fromHex(this.params.borderColor) : null,
-            topBorder: this.params && (this.params.borderDirection & StyleConfigBorderDirection.top) !== 0,
-            rightBorder: this.params && (this.params.borderDirection & StyleConfigBorderDirection.right) !== 0,
-            bottomBorder: this.params && (this.params.borderDirection & StyleConfigBorderDirection.bottom) !== 0,
-            leftBorder: this.params && (this.params.borderDirection & StyleConfigBorderDirection.left) !== 0
+        this.formGroup = new FormGroup<StyleEditorDialogFormControls>({
+            borderWidth: new FormControl((this.params?.borderWidth || 0) / this.widthStep || null),
+            borderColor: new FormControl(this.params?.borderColor && Color.fromHex(this.params.borderColor) || null),
+            topBorder: new FormControl(((this.params?.borderDirection || 0) & StyleConfigBorderDirection.top) !== 0),
+            rightBorder: new FormControl(((this.params?.borderDirection || 0) & StyleConfigBorderDirection.right) !== 0),
+            bottomBorder: new FormControl(((this.params?.borderDirection || 0) & StyleConfigBorderDirection.bottom) !== 0),
+            leftBorder: new FormControl(((this.params?.borderDirection || 0) & StyleConfigBorderDirection.left) !== 0)
         });
 
         syleEditorPrintService.messageDialogResult$.pipe(
@@ -61,11 +60,12 @@ export class StyleEditorDialogComponent extends Destroy {
         this.syleEditorPrintService.openMessageDialog$.next({ message: 'My message', injector: this.injector });
     }
 
-    public createModelFromForm(values: Partial<StyleEditorDialogForm>): StyleConfig {
+    public createModelFromForm(): StyleConfig {
+        const values = this.formGroup.getRawValue();
         return {
-            borderWidth: Math.min(Math.max(values.borderWidth, this.min), this.max) * this.widthStep,
+            borderWidth: Math.min(Math.max((values.borderWidth || 0), this.min), this.max) * this.widthStep,
             borderColor: values.borderColor?.toHex(),
-            borderDirection: (values.topBorder && StyleConfigBorderDirection.top) + (values.rightBorder && StyleConfigBorderDirection.right) + (values.bottomBorder && StyleConfigBorderDirection.bottom) + (values.leftBorder && StyleConfigBorderDirection.left)
+            borderDirection: (values.topBorder && StyleConfigBorderDirection.top || 0) + (values.rightBorder && StyleConfigBorderDirection.right || 0) + (values.bottomBorder && StyleConfigBorderDirection.bottom || 0) + (values.leftBorder && StyleConfigBorderDirection.left || 0)
         } as StyleConfig;
     }
 }

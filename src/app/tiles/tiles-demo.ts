@@ -6,7 +6,7 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Component, inject, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, inject, ViewEncapsulation } from '@angular/core';
 import { DejaMessageBoxType } from '@deja-js/component/core';
 import { Rect } from '@deja-js/component/core/graphics';
 import { DejaTile, IDejaTilesAddEvent, IDejaTilesRemoveEvent, ITileDragDropContext } from '@deja-js/component/tiles';
@@ -25,7 +25,7 @@ interface MouseDraggableInterface extends ITileDragDropContext {
     styleUrls: ['./tiles-demo.scss'],
     templateUrl: './tiles-demo.html'
 })
-export class DejaTilesDemoComponent implements OnInit {
+export class DejaTilesDemoComponent {
     public tabIndex = 1;
     public messages$: Observable<IMessage[]>;
     public tiles1$: Observable<DejaTile[]>;
@@ -42,9 +42,7 @@ export class DejaTilesDemoComponent implements OnInit {
         this.messages$ = this.message$.pipe(
             scan((acc, curr) => [...acc, curr], [] as IMessage[]),
             defaultIfEmpty([] as IMessage[]));
-    }
 
-    public ngOnInit(): void {
         let x1 = 0;
         let y1 = 0;
         let x2 = 0;
@@ -60,7 +58,7 @@ export class DejaTilesDemoComponent implements OnInit {
             map(country => {
                 const tile = new DejaTile();
                 tile.percentBounds = new Rect(x1, y1, 15, 15);
-                tile.color = country.color;
+                tile.color = country.color || '';
                 tile.templateModel = country;
 
                 x1 += 15;
@@ -80,7 +78,7 @@ export class DejaTilesDemoComponent implements OnInit {
             map(country => {
                 const tile = new DejaTile();
                 tile.percentBounds = new Rect(x2, y2, 15, 15);
-                tile.color = country.color;
+                tile.color = country.color || '';
                 tile.templateModel = country;
 
                 x2 += 15;
@@ -102,7 +100,7 @@ export class DejaTilesDemoComponent implements OnInit {
                 const country = this.countriesMap.get(target.id);
                 const tile = new DejaTile();
                 tile.percentBounds = new Rect(0, 0, 15, 15);
-                tile.color = country.color;
+                tile.color = country?.color || '';
                 tile.templateModel = country;
 
                 return {
@@ -122,7 +120,7 @@ export class DejaTilesDemoComponent implements OnInit {
             } as DropCursorInfos),
             drop: dragContext => {
                 const country = dragContext.country;
-                dropArea.innerText = `The dropped country is ${country.naqme} - the code is: ${country.code}`;
+                dropArea.innerText = `The dropped country is ${country.naqme || ''} - the code is: ${country.code || ''}`;
             }
         } as MouseDroppableContext<MouseDraggableInterface>;
     }

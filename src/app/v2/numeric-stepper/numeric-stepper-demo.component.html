@@ -51,7 +51,7 @@
                     <deja-numeric-stepper (increment)="changeValue3(2)" (decrement)="changeValue3(-2)"></deja-numeric-stepper>
                     <input matInput type="text" formControlName="numberValue3" />
                     <span class="unit">cm</span>
-                    <mat-error>{{ numberForm.get('numberValue3').errors ? numberForm.get('numberValue3').errors[0] : ''}}</mat-error>
+                    <mat-error>{{ numberForm.controls.numberValue3.errors?.[0] || '' }}'</mat-error>
                 </mat-form-field>
             </div>
             <div [formGroup]="numberForm">
@@ -60,7 +60,7 @@
                     <!-- Increment/Decrement are linked to ngControl -->
                     <deja-numeric-stepper [input]="model4"></deja-numeric-stepper>
                     <input matInput required type="number" formControlName="numberValue4" #model4="matInput" />
-                    <mat-error>{{ numberForm.get('numberValue4').errors ? numberForm.get('numberValue4').errors[0] : ''}}</mat-error>
+                    <mat-error>{{ numberForm.controls.numberValue4.errors?.[0] || '' }}'</mat-error>
                 </mat-form-field>
             </div>
             <div [formGroup]="numberForm">
@@ -68,7 +68,7 @@
                     <mat-label>Standard</mat-label>
                     <deja-numeric-stepper (increment)="changeValue5(2)" (decrement)="changeValue5(-2)"></deja-numeric-stepper>
                     <input matInput type="text" formControlName="numberValue5" />
-                    <mat-error>{{ numberForm.get('numberValue5').errors ? numberForm.get('numberValue5').errors[0] : ''}}</mat-error>
+                    <mat-error>{{ numberForm.controls.numberValue5.errors?.[0] || '' }}'</mat-error>
                 </mat-form-field>
             </div>
             <div [formGroup]="numberForm">
@@ -77,7 +77,7 @@
                     <deja-numeric-stepper [input]="model6"></deja-numeric-stepper>
                     <!-- Binding angular not woorking here if min or max is 0 -->
                     <input type="number" min="{{value6min}}" max="{{value6max}}" matInput formControlName="numberValue6" #model6="matInput"/>
-                    <mat-error>{{ numberForm.get('numberValue6').errors ? numberForm.get('numberValue6').errors[0] : ''}}</mat-error>
+                    <mat-error>{{ numberForm.controls.numberValue6.errors?.[0] || '' }}'</mat-error>
                 </mat-form-field>
             </div>
         </mat-card-content>
@@ -92,7 +92,7 @@
                     <deja-numeric-stepper layout="horizontal" (increment)="changeValue3(2)" (decrement)="changeValue3(-2)"></deja-numeric-stepper>
                     <input matInput type="text" formControlName="numberValue3" inputAutosize />
                     <span class="unit">cm</span>
-                    <mat-error>{{ numberForm.get('numberValue3').errors ? numberForm.get('numberValue3').errors[0] : ''}}</mat-error>
+                    <mat-error>{{ numberForm.controls.numberValue3.errors?.[0] || '' }}'</mat-error>
                 </mat-form-field>
             </div>
             <div [formGroup]="numberForm">
@@ -100,7 +100,7 @@
                     <mat-label>Legacy</mat-label>
                     <deja-numeric-stepper layout="horizontal" [input]="model4h"></deja-numeric-stepper>
                     <input matInput type="number" formControlName="numberValue4" #model4h="matInput"/>
-                    <mat-error>{{ numberForm.get('numberValue4').errors ? numberForm.get('numberValue4').errors[0] : ''}}</mat-error>
+                    <mat-error>{{ numberForm.controls.numberValue4.errors?.[0] || '' }}'</mat-error>
                 </mat-form-field>
             </div>
             <div [formGroup]="numberForm">
@@ -108,7 +108,7 @@
                     <mat-label>Standard</mat-label>
                     <deja-numeric-stepper layout="horizontal" (increment)="changeValue5(2)" (decrement)="changeValue5(-2)"></deja-numeric-stepper>
                     <input matInput type="text" formControlName="numberValue5" />
-                    <mat-error>{{ numberForm.get('numberValue5').errors ? numberForm.get('numberValue5').errors[0] : ''}}</mat-error>
+                    <mat-error>{{ numberForm.controls.numberValue5.errors?.[0] || '' }}'</mat-error>
                 </mat-form-field>
             </div>
             <div [formGroup]="numberForm">
@@ -116,7 +116,7 @@
                     <mat-label>Fill</mat-label>
                     <deja-numeric-stepper layout="horizontal" (increment)="changeValue6(2)" (decrement)="changeValue6(-2)"></deja-numeric-stepper>
                     <input matInput type="text" formControlName="numberValue6" />
-                    <mat-error>{{ numberForm.get('numberValue6').errors ? numberForm.get('numberValue6').errors[0] : ''}}</mat-error>
+                    <mat-error>{{ numberForm.controls.numberValue6.errors?.[0] || '' }}</mat-error>
                 </mat-form-field>
             </div>
         </mat-card-content>
@@ -131,7 +131,7 @@
                     <deja-numeric-stepper layout="horizontal-inlay" (increment)="changeValue3(2)" (decrement)="changeValue3(-2)"></deja-numeric-stepper>
                     <input matInput inputAutosize type="text" formControlName="numberValue3"/>
                     <span class="unit">cm</span>
-                    <mat-error>{{ numberForm.get('numberValue3').errors ? numberForm.get('numberValue3').errors[0] : ''}}</mat-error>
+                    <mat-error>{{ numberForm.controls.numberValue3.errors?.[0] || '' }}'</mat-error>
                 </mat-form-field>
             </div>
             <div [formGroup]="numberForm">
@@ -139,7 +139,7 @@
                     <mat-label>Legacy</mat-label>
                     <deja-numeric-stepper layout="horizontal-inlay" [input]="model4h"></deja-numeric-stepper>
                     <input matInput inputAutosize type="number" formControlName="numberValue4" #model4h="matInput"/>
-                    <mat-error>{{ numberForm.get('numberValue4').errors ? numberForm.get('numberValue4').errors[0] : ''}}</mat-error>
+                    <mat-error>{{ numberForm.controls.numberValue4.errors?.[0] || '' }}'</mat-error>
                 </mat-form-field>
             </div>
             <div [formGroup]="numberForm">
@@ -147,7 +147,7 @@
                     <mat-label>Standard</mat-label>
                     <deja-numeric-stepper layout="horizontal-inlay" (increment)="changeValue5(2)" (decrement)="changeValue5(-2)"></deja-numeric-stepper>
                     <input matInput inputAutosize type="text" formControlName="numberValue5" />
-                    <mat-error>{{ numberForm.get('numberValue5').errors ? numberForm.get('numberValue5').errors[0] : ''}}</mat-error>
+                    <mat-error>{{ numberForm.controls.numberValue5.errors?.[0] || ''}}</mat-error>
                 </mat-form-field>
             </div>
             <div [formGroup]="numberForm">
@@ -155,7 +155,7 @@
                     <mat-label>Fill</mat-label>
                     <deja-numeric-stepper layout="horizontal-inlay" (increment)="changeValue6(2)" (decrement)="changeValue6(-2)"></deja-numeric-stepper>
                     <input matInput inputAutosize type="text" formControlName="numberValue6" />
-                    <mat-error>{{ numberForm.get('numberValue6').errors ? numberForm.get('numberValue6').errors[0] : ''}}</mat-error>
+                    <mat-error>{{ numberForm.controls.numberValue6.errors?.[0] || '' }}</mat-error>
                 </mat-form-field>
             </div>
         </mat-card-content>

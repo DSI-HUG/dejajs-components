@@ -28,7 +28,7 @@ export interface MonacoEditorControl extends IDisposable {
     getModel: () => MonacoEditorModel;
     trigger: (a: string, ation: string) => void;
     layout: () => void;
-    updateOptions: (options: EditorOptions) => void;
+    updateOptions: (options: EditorOptions | undefined) => void;
 }
 
 export interface MonacoEditorApi {

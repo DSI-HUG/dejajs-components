@@ -7,17 +7,17 @@
  */
 
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ControlsOf, Destroy } from '@deja-js/component/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Destroy } from '@deja-js/component/core';
 import { debounceTime, distinctUntilChanged, map, Subject, takeUntil } from 'rxjs';
 
 import { numberValidator } from './validators';
 
-interface NumberForm {
-    numberValue3: number;
-    numberValue4: number;
-    numberValue5: number;
-    numberValue6: number;
+interface NumberFormControls {
+    numberValue3: FormControl<number | null>;
+    numberValue4: FormControl<number | null>;
+    numberValue5: FormControl<number | null>;
+    numberValue6: FormControl<number | null>;
 }
 
 @Component({
@@ -37,21 +37,19 @@ export class DejaNumericStepperDemoComponent extends Destroy {
     public value6min = 0;
     public value6max = 20;
 
-    public numberForm: FormGroup<ControlsOf<NumberForm>>;
+    public numberForm: FormGroup<NumberFormControls>;
     public onInput1Change$ = new Subject<Event>();
 
     private changeDetectorRef = inject(ChangeDetectorRef);
 
-    public constructor(
-        formBuilder: FormBuilder
-    ) {
+    public constructor() {
         super();
 
-        this.numberForm = formBuilder.group({
-            numberValue3: formBuilder.control({ value: this.value3, disabled: false }, numberValidator),
-            numberValue4: formBuilder.control(this.value4, [Validators.required, numberValidator]),
-            numberValue5: formBuilder.control(this.value5, numberValidator),
-            numberValue6: formBuilder.control(this.value6, numberValidator)
+        this.numberForm = new FormGroup<NumberFormControls>({
+            numberValue3: new FormControl({ value: this.value3, disabled: false }, numberValidator),
+            numberValue4: new FormControl(this.value4, [Validators.required, numberValidator]),
+            numberValue5: new FormControl(this.value5, numberValidator),
+            numberValue6: new FormControl(this.value6, numberValidator)
         });
 
         this.onInput1Change$.pipe(
@@ -66,19 +64,19 @@ export class DejaNumericStepperDemoComponent extends Destroy {
     }
 
     public changeValue3(step: number): void {
-        this.numberForm.controls.numberValue3.setValue(+this.numberForm.controls.numberValue3.value + step);
+        this.numberForm.controls.numberValue3.setValue(this.numberForm.controls.numberValue3.value || 0 + step);
     }
 
     public changeValue4(step: number): void {
-        this.numberForm.controls.numberValue4.setValue(+this.numberForm.controls.numberValue4.value + step);
+        this.numberForm.controls.numberValue4.setValue(this.numberForm.controls.numberValue4.value || 0 + step);
     }
 
     public changeValue5(step: number): void {
-        this.numberForm.controls.numberValue5.setValue(+this.numberForm.controls.numberValue5.value + step);
+        this.numberForm.controls.numberValue5.setValue(this.numberForm.controls.numberValue5.value || 0 + step);
     }
 
     public changeValue6(step: number): void {
-        const value = Math.max(Math.min(+this.numberForm.controls.numberValue6.value + step, this.value6max), this.value6min);
+        const value = Math.max(Math.min(this.numberForm.controls.numberValue6.value || 0 || 0 + step, this.value6max), this.value6min);
         this.numberForm.controls.numberValue6.setValue(value);
     }
 }

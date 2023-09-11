@@ -62,7 +62,7 @@ export class MonacoEditorControlComponent extends Destroy implements OnInit {
             this._editableValue = value;
             const editableModel = this.editableModel;
             if (editableModel) {
-                editableModel.setValue(this.editableValue);
+                editableModel.setValue?.(this.editableValue);
             }
         }
     }
@@ -77,7 +77,7 @@ export class MonacoEditorControlComponent extends Destroy implements OnInit {
             this._readOnlyValue = value;
             const readOnlyModel = this.readOnlyModel;
             if (readOnlyModel) {
-                readOnlyModel.setValue(this.readOnlyValue);
+                readOnlyModel.setValue?.(this.readOnlyValue);
             }
         }
     }
@@ -98,24 +98,24 @@ export class MonacoEditorControlComponent extends Destroy implements OnInit {
         return this._monacoEditorApi;
     }
 
-    public editableModelSub: IDisposable;
-    private editor: MonacoEditorControl;
-    private _editableValue: string;
-    private _readOnlyValue: string;
-    private _isDiffEditor: boolean;
-    private _options: EditorOptions;
-    private _monacoEditorApi: MonacoApi;
+    public editableModelSub?: IDisposable;
+    private editor?: MonacoEditorControl;
+    private _editableValue?: string;
+    private _readOnlyValue?: string;
+    private _isDiffEditor?: boolean;
+    private _options!: EditorOptions;
+    private _monacoEditorApi!: MonacoApi;
 
     private createEditor$ = new Subject<void>();
 
-    private get editableModel(): MonacoEditorModel {
+    private get editableModel(): MonacoEditorModel | undefined {
         const model = this.editor?.getModel();
-        return model?.id ? model : model?.modified;
+        return model?.id ? model : model?.modified as MonacoEditorModel;
     }
 
-    private get readOnlyModel(): MonacoEditorModel {
+    private get readOnlyModel(): MonacoEditorModel | undefined {
         const model = this.editor?.getModel();
-        return model?.id ? undefined : model?.original;
+        return model?.id ? undefined : model?.original as MonacoEditorModel;
     }
 
     private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
@@ -127,7 +127,7 @@ export class MonacoEditorControlComponent extends Destroy implements OnInit {
 
         this.createEditor$.pipe(
             tap(() => {
-                this.editor = null;
+                this.editor = undefined;
             }),
             debounceTime(100),
             takeUntil(this.destroyed$)
@@ -135,17 +135,20 @@ export class MonacoEditorControlComponent extends Destroy implements OnInit {
             const element = this.elementRef.nativeElement;
 
             const setElementSize = (): void => {
-                element.setAttribute('style', `height: ${element.parentElement.offsetHeight}px; width:100%;`);
+                const offsetHeight = element.parentElement?.offsetHeight;
+                if (offsetHeight) {
+                    element.setAttribute('style', `height: ${element.parentElement.offsetHeight}px; width:100%;`);
+                }
             };
 
             this.clearElement();
             this.editor = this.isDiffEditor ? this.monacoEditorApi.editor.createDiffEditor(element, this.options) : this.monacoEditorApi.editor.create(element, this.options);
             setElementSize();
 
-            const editableModel = this.monacoEditorApi.editor.createModel(this.editableValue, this.options.language);
+            const editableModel = this.monacoEditorApi.editor.createModel(this.editableValue, this.options.language || '');
 
             if (this.isDiffEditor) {
-                const readOnlyModel = this.monacoEditorApi.editor.createModel(this.readOnlyValue, this.options.language);
+                const readOnlyModel = this.monacoEditorApi.editor.createModel(this.readOnlyValue, this.options.language || '');
                 this.editor.setModel({
                     modified: editableModel,
                     original: readOnlyModel
@@ -155,12 +158,12 @@ export class MonacoEditorControlComponent extends Destroy implements OnInit {
             }
 
             if (this.editableModelSub) {
-                this.editableModelSub.dispose();
+                this.editableModelSub.dispose?.();
                 delete this.editableModelSub;
             }
 
-            this.editableModelSub = editableModel.onDidChangeContent(() => {
-                const v = this.editableModel.getValue();
+            this.editableModelSub = editableModel.onDidChangeContent?.(() => {
+                const v = this.editableModel?.getValue?.();
                 this._editableValue = v;
                 this.valueChange.emit(v);
             });
@@ -170,11 +173,11 @@ export class MonacoEditorControlComponent extends Destroy implements OnInit {
             // eslint-disable-next-line rxjs-angular/prefer-takeuntil
         ).subscribe(() => {
             if (this.editor) {
-                this.editor.dispose();
+                this.editor.dispose?.();
             }
             this.clearElement();
             if (this.editableModelSub) {
-                this.editableModelSub.dispose();
+                this.editableModelSub.dispose?.();
             }
         });
     }
@@ -197,7 +200,9 @@ export class MonacoEditorControlComponent extends Destroy implements OnInit {
         const element = this.elementRef.nativeElement;
         // eslint-disable-next-line no-loops/no-loops
         while (element.hasChildNodes()) {
-            element.removeChild(element.firstChild);
+            if (element.firstChild) {
+                element.removeChild(element.firstChild);
+            }
         }
     }
 }

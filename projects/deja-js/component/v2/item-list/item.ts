@@ -40,7 +40,7 @@ export class Item<T> implements ViewPortItem<T> {
      * @return True si l'élément peut être réduit.
      */
     public get isCollapsible(): boolean {
-        return this.items && (this.collapsible ?? true);
+        return !!this.items && (this.collapsible ?? true);
     }
 
     /** Définit si l'élément est visible.

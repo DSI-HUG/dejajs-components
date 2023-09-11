@@ -20,7 +20,7 @@ export class DejaColorSelectorDemoComponent {
 
     public selectedColor = new Color(233, 30, 99);
     public invalidColor = Color.fromHex('#D02D06');
-    public hoveredColor: Color;
+    public hoveredColor?: Color;
 
     public materialColors = inject(MaterialColorService);
 

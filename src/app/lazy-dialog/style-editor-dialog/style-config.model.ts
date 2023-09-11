@@ -10,7 +10,7 @@ export enum StyleConfigBorderDirection {
 }
 
 export class StyleConfig {
-    public borderColor: string = void 0;
-    public borderWidth: number = void 0;
-    public borderDirection: StyleConfigBorderDirection = void 0;
+    public borderColor?: string = void 0;
+    public borderWidth?: number = void 0;
+    public borderDirection?: StyleConfigBorderDirection = void 0;
 }

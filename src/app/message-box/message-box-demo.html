@@ -13,14 +13,14 @@
 </mat-card>
 
 <div *ngIf="tabIndex === 1" class="example">
-    <deja-dialog *ngIf="dialogTitle" (closed)="dialogTitle = null">
-        <deja-message-box type="primary" title="Title" showCloseIcon="true" (close)="dialogTitle = null">
+    <deja-dialog *ngIf="dialogTitle" (closed)="dialogTitle = ''">
+        <deja-message-box type="primary" title="Title" showCloseIcon="true" (close)="dialogTitle = ''">
             <span [innerHtml]="dialogTitle"></span>
             <ng-template #actionsTemplate>
-                <button mat-button (click)="dialogTitle = null">
+                <button mat-button (click)="dialogTitle = ''">
                     Cancel
                 </button>
-                <button mat-button (click)="dialogTitle = null">
+                <button mat-button (click)="dialogTitle = ''">
                     Ok
                 </button>
             </ng-template>

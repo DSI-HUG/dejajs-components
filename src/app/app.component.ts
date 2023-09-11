@@ -19,9 +19,9 @@ import { BehaviorSubject, takeUntil } from 'rxjs';
     templateUrl: './app.component.html'
 })
 export class AppComponent extends Destroy {
-    public version: string;
-    private _theme: string;
-    private theme$: BehaviorSubject<string>;
+    public version?: string;
+    private _theme?: string;
+    private theme$: BehaviorSubject<string | undefined>;
 
     private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private iconService = inject(IconService);
@@ -33,7 +33,7 @@ export class AppComponent extends Destroy {
         this.textMetrics.metricsElem = this.elementRef.nativeElement;
 
         try {
-            this._theme = localStorage.getItem('dejajs-demo-color');
+            this._theme = localStorage.getItem('dejajs-demo-color') || undefined;
         } catch (_e) {
             console.log('Fail to get your prefered color from the local storage.');
         }
@@ -41,23 +41,23 @@ export class AppComponent extends Destroy {
         if (!this._theme) {
             this._theme = 'blue';
         }
-        this.theme$ = new BehaviorSubject<string>(this._theme);
+        this.theme$ = new BehaviorSubject<string | undefined >(this._theme);
         this.theme$.pipe(
             takeUntil(this.destroyed$)
-        ).subscribe(theme => document.body.setAttribute('theme', theme));
+        ).subscribe(theme => document.body.setAttribute('theme', theme || ''));
 
         this.iconService.addSvgIcon('angular', 'assets/img/logo/angular.svg');
         // iconService.useMaterialIcons(false);
     }
 
-    public get theme(): string {
+    public get theme(): string | undefined {
         return this._theme;
     }
 
-    public set theme(theme: string) {
+    public set theme(theme: string | undefined) {
         this._theme = theme;
         try {
-            localStorage.setItem('dejajs-demo-color', theme);
+            localStorage.setItem('dejajs-demo-color', theme || '');
         } catch (_e) {
             console.log('Fail to set your prefered color to the local storage.');
         }

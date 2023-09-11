@@ -33,8 +33,11 @@ type FieldType = 'hours' | 'minutes';
     encapsulation: ViewEncapsulation.None
 })
 export class DejaTimePickerComponent extends Destroy implements ControlValueAccessor {
-    @ViewChild('hours') public hours: ElementRef<HTMLInputElement>;
-    @ViewChild('minutes') public minutes: ElementRef<HTMLInputElement>;
+    @ViewChild('hours')
+    public hours?: ElementRef<HTMLInputElement>;
+
+    @ViewChild('minutes')
+    public minutes?: ElementRef<HTMLInputElement>;
 
     @Output() public readonly timeChange = new EventEmitter<DateOrDuration>();
 
@@ -63,11 +66,11 @@ export class DejaTimePickerComponent extends Destroy implements ControlValueAcce
     @Input() public defaultPlaceholderMinutes = '_ _';
 
     @Input()
-    public set time(value: DateOrDuration) {
+    public set time(value: DateOrDuration | undefined) {
         this.writeValue(value);
     }
 
-    public get time(): DateOrDuration {
+    public get time(): DateOrDuration | undefined {
         return this.value;
     }
 
@@ -101,7 +104,7 @@ export class DejaTimePickerComponent extends Destroy implements ControlValueAcce
     public onMinutesChange$ = new Subject<Event | number>();
     public _step = 1;
     private _disabled = false;
-    private _value: DateOrDuration;
+    private _value?: DateOrDuration;
     private _autoFocus = true;
 
     private changeDetectorRef = inject(ChangeDetectorRef);
@@ -118,13 +121,16 @@ export class DejaTimePickerComponent extends Destroy implements ControlValueAcce
             distinctUntilChanged(),
             map(hours => {
                 let isEvent = false;
+                let parsedHours: number | undefined;
                 if (typeof hours === 'object') {
                     const value = (hours.target as HTMLInputElement).value;
-                    hours = value !== undefined ? parseInt(value, 10) : undefined as number;
+                    parsedHours = value !== undefined ? parseInt(value, 10) : undefined;
                     isEvent = true;
+                } else {
+                    parsedHours = hours;
                 }
                 return {
-                    hours: !isNaN(hours) ? hours : 0,
+                    hours: parsedHours && !isNaN(+parsedHours) ? parsedHours : 0,
                     isEvent
                 };
             }),
@@ -146,10 +152,10 @@ export class DejaTimePickerComponent extends Destroy implements ControlValueAcce
             this.changeDetectorRef.markForCheck();
 
             if (isEvent && this._autoFocus) {
-                this.minutes.nativeElement.focus({
+                this.minutes?.nativeElement.focus({
                     preventScroll: true
                 });
-                this.minutes.nativeElement.select();
+                this.minutes?.nativeElement.select();
             }
         });
 
@@ -157,11 +163,14 @@ export class DejaTimePickerComponent extends Destroy implements ControlValueAcce
             debounce(minutes => timer(typeof minutes === 'object' ? 0 : 10)),
             distinctUntilChanged(),
             map(minutes => {
+                let parsedMinutes: number | undefined;
                 if (typeof minutes === 'object') {
                     const value = (minutes.target as HTMLInputElement).value;
-                    minutes = value !== undefined ? parseInt(value, 10) : undefined as number;
+                    parsedMinutes = value !== undefined ? parseInt(value, 10) : undefined;
+                } else {
+                    parsedMinutes = minutes;
                 }
-                return !isNaN(minutes) ? minutes : 0;
+                return parsedMinutes && !isNaN(parsedMinutes) ? parsedMinutes : 0;
             }),
             takeUntil(this.destroyed$)
         ).subscribe(minutes => {
@@ -191,7 +200,11 @@ export class DejaTimePickerComponent extends Destroy implements ControlValueAcce
 
     public onKeyDown($event: KeyboardEvent, mode: 'hours' | 'minutes'): void {
         // Get input element
-        const inputElement = mode === 'hours' ? this.hours.nativeElement : this.minutes.nativeElement;
+        const inputElement = mode === 'hours' ? this.hours?.nativeElement : this.minutes?.nativeElement;
+        if (!inputElement) {
+            return;
+        }
+
         if ($event.key?.toLowerCase() === 'd') {
             $event.stopPropagation();
             $event.preventDefault();
@@ -208,13 +221,13 @@ export class DejaTimePickerComponent extends Destroy implements ControlValueAcce
             }
 
             // Get the selection in input element
-            const [selectionStart, selectionEnd] = [inputElement.selectionStart, inputElement.selectionEnd].sort((a, b) => a - b);
-            const selectionDiff = selectionEnd - selectionStart;
+            const [selectionStart, selectionEnd] = [inputElement.selectionStart, inputElement.selectionEnd].sort((a, b) => (a || 0) - (b || 0));
+            const selectionDiff = (selectionEnd || 0) - (selectionStart || 0);
 
             // Get the current value in input element and update it with the new touched key
             const inputValue = inputElement.value || '';
             const inputValueArr = Array.from(inputValue);
-            inputValueArr.splice(selectionStart, selectionDiff, $event.key);
+            inputValueArr.splice((selectionStart || 0), selectionDiff, $event.key);
             const newInputValue = inputValueArr.join('');
 
             // Prevent event if the time is not valid
@@ -227,16 +240,16 @@ export class DejaTimePickerComponent extends Destroy implements ControlValueAcce
         }
     }
 
-    public get hoursValue(): number {
-        if (!this.value || (this.forceNullValue && this.mode === 'fullTimeWithMinutesDisabled' && this.control.pristine)) {
-            return null;
+    public get hoursValue(): number | undefined {
+        if (!this.value || !this.control || (this.forceNullValue && this.mode === 'fullTimeWithMinutesDisabled' && this.control.pristine)) {
+            return undefined;
         }
         return this.value instanceof Date ? this.value.getHours() : this.value.hours;
     }
 
-    public get minutesValue(): number {
-        if (!this.value || (this.forceNullValue && this.mode === 'fullTimeWithHoursDisabled' && this.control.pristine)) {
-            return null;
+    public get minutesValue(): number | undefined {
+        if (!this.value || !this.control || (this.forceNullValue && this.mode === 'fullTimeWithHoursDisabled' && this.control.pristine)) {
+            return undefined;
         }
         return this.value instanceof Date ? this.value.getMinutes() : this.value.minutes;
     }
@@ -260,16 +273,16 @@ export class DejaTimePickerComponent extends Destroy implements ControlValueAcce
     public onClick(mode: 'hours' | 'minutes'): void {
         if (this._autoFocus) {
             if (mode === 'hours') {
-                this.hours.nativeElement.select();
+                this.hours?.nativeElement.select();
             } else {
-                this.minutes.nativeElement.select();
+                this.minutes?.nativeElement.select();
             }
         }
     }
 
     // ************* ControlValueAccessor Implementation **************
     /** set accessor including call the onchange callback */
-    public set value(v: DateOrDuration) {
+    public set value(v: DateOrDuration | undefined) {
         if (v !== this._value) {
             this.writeValue(v);
             this.onChangeCallback(v);
@@ -278,12 +291,12 @@ export class DejaTimePickerComponent extends Destroy implements ControlValueAcce
     }
 
     /** get accessor */
-    public get value(): DateOrDuration {
+    public get value(): DateOrDuration | undefined {
         return this._value;
     }
 
     /** From ControlValueAccessor interface */
-    public writeValue(value: DateOrDuration): void {
+    public writeValue(value: DateOrDuration | undefined): void {
         if ((value || null) !== (this._value || null)) {
             if (value instanceof Date) {
                 this._value = value ? new Date(value.getTime()) : set(new Date(), { hours: 0, minutes: 0, seconds: 0 });

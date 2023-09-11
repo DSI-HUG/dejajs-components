@@ -8,16 +8,18 @@
 
 import { Directive, ElementRef, inject, Input } from '@angular/core';
 import { Destroy } from '@deja-js/component/core';
-import { filter, fromEvent, Observable, switchMap, take, takeUntil, timer } from 'rxjs';
+import { filter, fromEvent, Observable, of, switchMap, take, takeUntil, timer } from 'rxjs';
 
 @Directive({
     selector: '[app-tooltip]'
 })
 export class TooltipDirective extends Destroy {
     // eslint-disable-next-line @angular-eslint/no-input-rename
-    @Input('tooltip-delay') public delay = 300;
+    @Input('tooltip-delay')
+    public delay = 300;
 
-    @Input('app-tooltip') public openTooltip$: (element: HTMLElement) => Observable<void>;
+    @Input('app-tooltip')
+    public openTooltip$?: (element: HTMLElement) => Observable<void>;
 
     private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
@@ -32,7 +34,7 @@ export class TooltipDirective extends Destroy {
             switchMap(() => timer(this.delay).pipe(
                 take(1),
                 filter(() => !!this.openTooltip$),
-                switchMap(() => this.openTooltip$(triggerElement)),
+                switchMap(() => this.openTooltip$?.(triggerElement) || of(undefined)),
                 takeUntil(leave$)
             )),
             takeUntil(this.destroyed$)

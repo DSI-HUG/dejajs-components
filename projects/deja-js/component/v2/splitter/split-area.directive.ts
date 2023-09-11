@@ -23,7 +23,7 @@ import { SplitterDirection } from './splitter-direction-type';
 export class SplitAreaDirective {
 
     @HostBinding('style.order')
-    public order: number;
+    public order: number | null = null;
 
     @HostBinding('style.flex-basis.%')
     protected _size: number | null = null;
@@ -40,8 +40,8 @@ export class SplitAreaDirective {
 
     public get size(): number {
         const parentElement = this.elementRef.nativeElement.parentElement;
-        const parentSizeInPixels = this.direction === 'horizontal' ? parentElement.offsetWidth : parentElement.offsetHeight;
-        return 100 * this.sizeinPixels / parentSizeInPixels;
+        const parentSizeInPixels = this.direction === 'horizontal' && parentElement?.offsetWidth || parentElement?.offsetHeight || 0;
+        return parentSizeInPixels && 100 * this.sizeinPixels / parentSizeInPixels || 0;
     }
 
     public get sizeinPixels(): number {
@@ -61,12 +61,12 @@ export class SplitAreaDirective {
     }
 
     @HostBinding('style.min-width.px')
-    protected get minWidth(): number {
+    protected get minWidth(): number | null {
         return this.direction === 'vertical' ? null : this._minSizePixel;
     }
 
     @HostBinding('style.min-height.px')
-    protected get minHeight(): number {
+    protected get minHeight(): number | null {
         return this.direction === 'horizontal' ? null : this._minSizePixel;
     }
 

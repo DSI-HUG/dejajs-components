@@ -6,8 +6,8 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 import { ChangeDetectorRef, Component, inject, ViewChild, ViewEncapsulation } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { ControlsOf, Destroy } from '@deja-js/component/core';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { Destroy } from '@deja-js/component/core';
 import { Item, SortInfos, SortingService } from '@deja-js/component/v2/item-list';
 import { DropCursorInfos, MouseDraggableContext, MouseDroppableContext } from '@deja-js/component/v2/mouse-dragdrop';
 import { TreeListComponent } from '@deja-js/component/v2/tree-list';
@@ -36,8 +36,8 @@ interface ViewPortInfo {
     value: string;
 }
 
-interface FruitForm {
-    fruitName: string;
+interface FruitFormControls {
+    fruitName: FormControl<string | null>;
 }
 
 @Component({
@@ -48,23 +48,23 @@ interface FruitForm {
     templateUrl: './tree-list-demo.html'
 })
 export class TreeListDemoComponent extends Destroy {
-    @ViewChild('news') private newsList: TreeListComponent<News>;
-    @ViewChild('onexpand') private onExpandList: TreeListComponent<unknown>;
+    @ViewChild('news') protected newsList?: TreeListComponent<News>;
+    @ViewChild('onexpand') private onExpandList?: TreeListComponent<unknown>;
 
     public fruct = 'Apricots';
     public fructs = [] as string[];
     public fructItems = [] as Item<unknown>[];
     public fructItemsWithPreSelection = [] as Item<unknown>[];
     public folders: Folder[];
-    public ensureIndex: number;
+    public ensureIndex?: number;
     public tabIndex = 1;
-    public deepCountries$: Observable<DeepCountry[]>;
-    public countriesForMultiselect: Country[];
-    public multiselectModel: Country[];
-    public fruitForm: FormGroup<ControlsOf<FruitForm>>;
-    public fruitFormModels: FormGroup<ControlsOf<FruitForm>>;
+    public deepCountries$: Observable<ReadonlyArray<DeepCountry>>;
+    public countriesForMultiselect?: ReadonlyArray<Country>;
+    public multiselectModel: ReadonlyArray<Country>;
+    public fruitForm: FormGroup<FruitFormControls>;
+    public fruitFormModels: FormGroup<FruitFormControls>;
     public fruits$: Observable<string[]>;
-    public countries$: Observable<Country[]>;
+    public countries$: Observable<ReadonlyArray<Country>>;
     public countryItems$: Observable<Item<Country>[]>;
     public groupedCountryItems$: Observable<CountryGroupItem[]>;
     public onDemandGroupedCountryItems$: Observable<CountryGroupItem[]>;
@@ -73,7 +73,7 @@ export class TreeListDemoComponent extends Destroy {
     public sortInfos$: Observable<SortInfos>;
     public numbers: number[];
 
-    public disabled: boolean;
+    public disabled?: boolean;
     public country: Country;
     public deepCountry: DeepCountry = {
         l1: {
@@ -85,16 +85,13 @@ export class TreeListDemoComponent extends Destroy {
     };
 
     public news$: Observable<News[]>;
-    public sortedCountries$: Observable<Country[]>;
-    public bigCountries$: Observable<Country[]>;
-    public viewPortInfos: {
-        name: string;
-        value: string;
-    }[];
+    public sortedCountries$: Observable<ReadonlyArray<Country>>;
+    public bigCountries$: Observable<ReadonlyArray<Country>>;
+    public viewPortInfos?: ReadonlyArray<ViewPortInfo>;
 
     public bigNews$: Observable<News[]>;
 
-    public viewPortInfos$: Subscription;
+    public viewPortInfos$?: Subscription;
     public dialogResponse$: Subject<string> = new Subject<string>();
     public loremList$: Observable<Item<unknown>[]>;
 
@@ -124,9 +121,9 @@ export class TreeListDemoComponent extends Destroy {
         private formBuilder: FormBuilder
     ) {
         super();
-        this.multiselectModel = JSON.parse('[{"naqme":"ÅlandIslands","code":"AX","label":"ÅlandIslands","depth":0,"odd":true,"selected":true},{"naqme":"AmericanSamoa","code":"AS","label":"AmericanSamoa","depth":0,"odd":false,"selected":true},{"naqme":"Argentina","code":"AR","label":"Argentina","depth":0,"odd":false,"selected":true},{"naqme":"ChristmasIsland","code":"CX","label":"ChristmasIsland","depth":0,"odd":false,"selected":true},{"naqme":"Egypt","code":"EG","label":"Egypt","depth":0,"odd":true,"selected":true},{"naqme":"Dominica","code":"DM","label":"Dominica","depth":0,"odd":false,"selected":true}]') as Country[];
+        this.multiselectModel = JSON.parse('[{"naqme":"ÅlandIslands","code":"AX","label":"ÅlandIslands","depth":0,"odd":true,"selected":true},{"naqme":"AmericanSamoa","code":"AS","label":"AmericanSamoa","depth":0,"odd":false,"selected":true},{"naqme":"Argentina","code":"AR","label":"Argentina","depth":0,"odd":false,"selected":true},{"naqme":"ChristmasIsland","code":"CX","label":"ChristmasIsland","depth":0,"odd":false,"selected":true},{"naqme":"Egypt","code":"EG","label":"Egypt","depth":0,"odd":true,"selected":true},{"naqme":"Dominica","code":"DM","label":"Dominica","depth":0,"odd":false,"selected":true}]') as ReadonlyArray<Country>;
         this.news$ = newsService.getNews$(50);
-        this.bigCountries$ = countriesService.getCountries$(null, 100000);
+        this.bigCountries$ = countriesService.getCountries$(undefined, 100000);
 
         this.bigNews$ = newsService.getNews$(10000).pipe(
             shareReplay({ bufferSize: 1, refCount: false })
@@ -175,7 +172,7 @@ export class TreeListDemoComponent extends Destroy {
 
         this.sortedCountries$ = this.countries$.pipe(
             combineLatestWith(this.sortInfos$),
-            map(([countries, sortInfos]) => sortingService.sort(countries, sortInfos)),
+            map(([countries, sortInfos]) => sortingService.sort([...countries], sortInfos)),
             shareReplay({ bufferSize: 1, refCount: false })
         );
 
@@ -225,7 +222,7 @@ export class TreeListDemoComponent extends Destroy {
             delay(1),
             takeUntil(this.destroyed$)
         ).subscribe(() => {
-            this.multiselectModel = JSON.parse('[{"naqme":"ÅlandIslands","code":"AX","label":"ÅlandIslands","depth":0,"odd":true,"selected":true},{"naqme":"AmericanSamoa","code":"AS","label":"AmericanSamoa","depth":0,"odd":false,"selected":true},{"naqme":"Argentina","code":"AR","label":"Argentina","depth":0,"odd":false,"selected":true},{"naqme":"ChristmasIsland","code":"CX","label":"ChristmasIsland","depth":0,"odd":false,"selected":true},{"naqme":"Egypt","code":"EG","label":"Egypt","depth":0,"odd":true,"selected":true},{"naqme":"Dominica","code":"DM","label":"Dominica","depth":0,"odd":false,"selected":true}]') as Country[];
+            this.multiselectModel = JSON.parse('[{"naqme":"ÅlandIslands","code":"AX","label":"ÅlandIslands","depth":0,"odd":true,"selected":true},{"naqme":"AmericanSamoa","code":"AS","label":"AmericanSamoa","depth":0,"odd":false,"selected":true},{"naqme":"Argentina","code":"AR","label":"Argentina","depth":0,"odd":false,"selected":true},{"naqme":"ChristmasIsland","code":"CX","label":"ChristmasIsland","depth":0,"odd":false,"selected":true},{"naqme":"Egypt","code":"EG","label":"Egypt","depth":0,"odd":true,"selected":true},{"naqme":"Dominica","code":"DM","label":"Dominica","depth":0,"odd":false,"selected":true}]') as ReadonlyArray<Country>;
         });
 
         this.groupedCountryItems$ = this.countries$.pipe(
@@ -241,8 +238,8 @@ export class TreeListDemoComponent extends Destroy {
                 result.push(emptyGroupItem);
 
                 return countries.reduce((res, country) => {
-                    const firstLetter = country.naqme[0];
-                    const groupName = `Group ${firstLetter}`;
+                    const firstLetter = country.naqme?.[0];
+                    const groupName = `Group ${firstLetter || ''}`;
                     if (!countryMap[groupName]) {
                         countryMap[groupName] = [] as CountryGroupItem[];
                         const item = new CountryGroupItem(undefined, groupName);
@@ -265,8 +262,8 @@ export class TreeListDemoComponent extends Destroy {
                 const countryMap = {} as { [groupName: string]: Item<Country>[] };
 
                 return countries.reduce((result, country) => {
-                    const firstLetter = country.naqme[0];
-                    const groupName = `Group ${country.naqme[0]}`;
+                    const firstLetter = country.naqme?.[0];
+                    const groupName = `Group ${country.naqme?.[0] || ''}`;
                     if (!countryMap[groupName]) {
                         countryMap[groupName] = [] as CountryGroupItem[];
 
@@ -304,7 +301,7 @@ export class TreeListDemoComponent extends Destroy {
             takeUntil(this.destroyed$)
         ).subscribe(([item, countries]) => {
             item.loaded = true;
-            item.items = countries.filter(country => country.naqme.startsWith(item.firstLetter)).map(country => {
+            item.items = countries.filter(country => item.firstLetter && country.naqme?.startsWith(item.firstLetter)).map(country => {
                 const child = new Item<Country>(country.code, country.displayName);
                 const loadingItem = new CountryGroupItem(undefined, 'loading...');
                 loadingItem.selectable = false;
@@ -312,51 +309,38 @@ export class TreeListDemoComponent extends Destroy {
                 child.items = [loadingItem];
                 return child;
             });
-            this.onExpandList.itemService.refreshFlatItemList$.next();
+            this.onExpandList?.itemService.refreshFlatItemList$.next();
         });
 
         this.numbers = Array.from({ length: 40 }, () => Math.floor(Math.random() * 40));
     }
 
     public loadingItems() {
-        return (_query: string | RegExp, _selectedItems: Item<unknown>[]): Observable<Country[]> => this.countriesService.getCountries$().pipe(delay(3000));
+        return (_query: string | RegExp, _selectedItems: Item<unknown>[]): Observable<ReadonlyArray<Country>> => this.countriesService.getCountries$().pipe(delay(3000));
     }
 
     public collapsingItem() {
-        return (item: Item<Country>): Observable<Item<Country>> => {
+        return (item: Item<Country>): Observable<Item<Country> | undefined> => {
             const countryItem = item as CountryGroupItem;
             return countryItem.loaded ? of(item) : this.confirmDialog()(item);
         };
     }
 
     public expandingItem() {
-        return (item: Item<Country>): Observable<Item<Country>> => {
+        return (item: Item<Country>): Observable<Item<Country> | undefined> => {
             const group = item as CountryGroupItem;
             if (group.loaded) {
                 return of(item);
             } else {
                 return this.confirmDialog()(item).pipe(
-                    map(itm => itm || null as Item<Country>)
+                    map(itm => itm || undefined)
                 );
             }
         };
     }
 
-    public selectingItems() {
-        return (items: Item<Country>[]): Observable<Item<Country>[]> => {
-            this.dialogVisible = true;
-            return this.dialogResponse$.pipe(
-                take(1),
-                map(response => {
-                    this.dialogVisible = false;
-                    return response === 'ok' ? items : null;
-                })
-            );
-        };
-    }
-
     public confirmDialog() {
-        return (item: Item<Country>): Observable<Item<Country>> => {
+        return (item: Item<Country>): Observable<Item<Country> | undefined> => {
             this.dialogVisible = true;
             return this.dialogResponse$.pipe(
                 take(1),
@@ -364,7 +348,7 @@ export class TreeListDemoComponent extends Destroy {
                     this.dialogVisible = false;
                     return response === 'ok' ? item : null;
                 }),
-                filter(itm => !!itm) // Stop observable prevent unseletion of the current selection
+                filter(Boolean) // Stop observable prevent unseletion of the current selection
             );
         };
     }
@@ -396,12 +380,12 @@ export class TreeListDemoComponent extends Destroy {
             if (!item.loaded) {
                 item.loaded = true; // Loaded
                 item.size = undefined;
-                this.newsList.refreshViewPort();
+                this.newsList?.refreshViewPort();
             }
         }));
     }
 
-    public multiselectModelChange(countries: Country[]): void {
+    public multiselectModelChange(countries: ReadonlyArray<Country>): void {
         this.multiselectModel = countries || null;
     }
 
@@ -414,13 +398,14 @@ export class TreeListDemoComponent extends Destroy {
             target: '.listitem',
             className: 'country-target-cursor',
             dragStart: dragContext => {
-                const index = +dragContext.getAttribute('flat');
-                return index >= 0 ? treeList.itemService.flatItemList$.pipe(
+                const flatAttribute = dragContext.getAttribute('flat') || undefined;
+                const index = flatAttribute && +flatAttribute;
+                return index && treeList.itemService.flatItemList$.pipe(
                     map(list => {
                         const item = list[index];
                         return (item && !item.items && item.model) || undefined;
                     })
-                ) : undefined;
+                );
             }
         } as MouseDraggableContext<Observable<Country>>;
     }
@@ -434,7 +419,7 @@ export class TreeListDemoComponent extends Destroy {
             } as DropCursorInfos),
             drop: country => {
                 if (country) {
-                    dropArea.innerText = `The dropped country is ${country.naqme} - the code is: ${country.code} `;
+                    dropArea.innerText = `The dropped country is ${country.naqme || ''} - the code is: ${country.code || ''} `;
                 }
             }
         } as MouseDroppableContext<Country>;

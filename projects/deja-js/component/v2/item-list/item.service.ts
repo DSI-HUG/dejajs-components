@@ -42,12 +42,12 @@ export class ItemService<T> {
     public refreshVisibleItemList$ = new BehaviorSubject<void>(undefined);
     public selectedItems$: Observable<ReadonlyArray<Item<T>>>;
 
-    public selectingItems: (items: ReadonlyArray<Item<T>>) => Observable<ReadonlyArray<Item<T>>>;
-    public unSelectingItems: (items: ReadonlyArray<Item<T>>) => Observable<ReadonlyArray<Item<T>>>;
+    public selectingItems?: (items: ReadonlyArray<Item<T>>) => Observable<ReadonlyArray<Item<T>> | undefined>;
+    public unSelectingItems?: (items: ReadonlyArray<Item<T>>) => Observable<ReadonlyArray<Item<T>> | undefined>;
 
     private refreshSelection$ = new BehaviorSubject<RefreshSelectionParams<T>>({});
 
-    private previousQuery: string;
+    private previousQuery?: string;
 
     private diacriticService = inject(DiacriticService);
 
@@ -133,7 +133,7 @@ export class ItemService<T> {
             combineLatestWith(this.query$, this.minSearchLength$, this.searchField$, refreshFilterItemList$),
             switchMap(([flatItemList, query, minSearchLength, searchField]) => {
                 if (minSearchLength > 0 && (!query || typeof query === 'string' && query.length < minSearchLength)) {
-                    this.previousQuery = null;
+                    this.previousQuery = undefined;
                     return of(new Array<Item<T>>());
                 }
 
@@ -143,7 +143,7 @@ export class ItemService<T> {
 
                 const listToFilter$ = typeof query === 'string' && this.previousQuery && query.includes(this.previousQuery) && this.filteredItemList$ ? this.filteredItemList$ : of(flatItemList);
 
-                this.previousQuery = typeof query === 'string' ? query : null;
+                this.previousQuery = typeof query === 'string' ? query : undefined;
 
                 const escapeChars = (text: string): string => {
                     const specialChars = ['\\', '/', '|', '&', ';', '$', '%', '@', '"', '<', '>', '(', ')', '+'];
@@ -153,7 +153,7 @@ export class ItemService<T> {
 
                 // Check regexp validity
                 // regExp.test(this.getTextValue(item));
-                let regExp: RegExp;
+                let regExp: RegExp | undefined;
                 if (query) {
                     if (typeof query === 'string') {
                         try {
@@ -177,11 +177,11 @@ export class ItemService<T> {
                         // Filter the list
                         let previousItem: Item<T>;
                         return [...itemList].reverse().filter(item => {
-                            let isVisible: boolean;
-                            if (item.items === undefined) {
+                            let isVisible = false;
+                            if (item.items === undefined && regExp) {
                                 // child
                                 isVisible = this.itemMatch(item, searchField, regExp);
-                            } else {
+                            } else if (regExp) {
                                 // parent
                                 isVisible = this.parentItemMatch(item, previousItem, searchField, regExp);
                             }
@@ -200,14 +200,14 @@ export class ItemService<T> {
             combineLatestWith(this.refreshVisibleItemList$),
             map(([items]) => {
                 let isOdd = false;
-                let hideDepth = undefined as number;
+                let hideDepth: number | undefined;
                 return items.filter(item => {
-                    if (hideDepth !== undefined && hideDepth <= item.depth) {
+                    if (hideDepth !== undefined && item.depth !== undefined && hideDepth <= item.depth) {
                         // hidden by parent
                         return false;
                     }
                     if (item.isVisible ?? true) {
-                        if (item.collapsed) {
+                        if (item.collapsed && item.depth !== undefined) {
                             // hide all children
                             hideDepth = item.depth + 1;
                         } else {
@@ -225,11 +225,13 @@ export class ItemService<T> {
                         item.odd = isOdd;
 
                         return true;
-                    } else {
+                    } else if (item.depth !== undefined) {
                         // hide all children
                         hideDepth = item.depth + 1;
                         return false;
                     }
+
+                    return false;
                 });
             }),
             shareReplay({ bufferSize: 1, refCount: false })
@@ -283,7 +285,8 @@ export class ItemService<T> {
 
                 if (selectModels && visibleItemList?.length > 0) {
                     itemsToChange = [...itemsToChange, ...visibleItemList.filter(item => {
-                        item.selecting = ((!checkSelectable || item.isSelectable) && selectModels.some(model => this.compareModels(model, item.model, valueField))) || item.selecting;
+                        const itemModel = item.model;
+                        item.selecting = ((!checkSelectable || item.isSelectable) && itemModel && selectModels.some(model => this.compareModels(model, itemModel, valueField))) || item.selecting;
                         return item.selecting !== undefined;
                     })];
                 }
@@ -305,10 +308,10 @@ export class ItemService<T> {
                 const itemsToSelect = itemsToChange.filter(item => item.selecting);
                 const itemsToUnselect = itemsToChange.filter(item => !item.selecting);
 
-                const selecting$ = itemsToSelect.length && this.selectingItems ? this.selectingItems(itemsToSelect) : of(itemsToSelect);
+                const selecting$ = itemsToSelect.length && this.selectingItems && this.selectingItems(itemsToSelect) || of(itemsToSelect);
                 return selecting$.pipe(
                     map(selectable => selectable?.forEach(item => item.selected = true)),
-                    switchMap(() => itemsToUnselect.length && this.unSelectingItems ? this.unSelectingItems(itemsToUnselect) : of(itemsToUnselect)),
+                    switchMap(() => itemsToUnselect?.length && this.unSelectingItems && this.unSelectingItems(itemsToUnselect) || of(itemsToUnselect)),
                     map(unselectable => {
                         unselectable?.forEach(item => item.selected = false);
                         itemsToChange.forEach(item => delete item.selecting);
@@ -407,14 +410,14 @@ export class ItemService<T> {
     /** Set la selection sur les éléments spécifiés
      * @param items Liste des modèles des éléments à sélectionner.
      */
-    public setSelectedModels(models: ReadonlyArray<T>): void {
+    public setSelectedModels(models: ReadonlyArray<T | undefined>): void {
         this.refreshSelection$.next({ unselectItems: 'all', selectModels: models });
     }
 
     /** Set la selection sur les ids des éléments spécifiés
      * @param values Liste des ids des éléments à sélectionner.
      */
-    public setSelectedValues(values: ReadonlyArray<string>): void {
+    public setSelectedValues(values: ReadonlyArray<string | undefined>): void {
         this.refreshSelection$.next({ unselectItems: 'all', selectValues: values });
     }
 
@@ -428,17 +431,14 @@ export class ItemService<T> {
     /** Renvoie l'index de l'élément sur la liste plate corespondant à l'élément HTML spécifié
      * @return Index sur la liste plate corespondant à l'élément HTML
      */
-    public getItemIndexFromHtmlElement(element: HTMLElement): number {
+    public getItemIndexFromHtmlElement(element: HTMLElement): number | undefined {
         // eslint-disable-next-line no-loops/no-loops
         while (element?.parentElement && element.hasAttribute && !element.hasAttribute('flat') && element.parentElement.tagName !== 'BODY') {
             element = element.parentElement;
         }
 
-        if (!element?.hasAttribute('flat')) {
-            return undefined;
-        }
-
-        return +element.getAttribute('flat');
+        const flatAttribute = element.getAttribute('flat');
+        return flatAttribute && +flatAttribute || undefined;
     }
 
     /** Retourne une valeur indiquant si l'élément spécifié correspond aux critères de recherche spécifiés
@@ -450,12 +450,12 @@ export class ItemService<T> {
     protected itemMatch(item: Item<T>, searchField: string, regExp: RegExp): boolean {
         const indexedItem = item as IndexedItem<T>;
         const value = (searchField && indexedItem[searchField] as string) ?? item.label;
-        return value && regExp.test(this.diacriticService.remove(value));
+        return !!value && regExp.test(this.diacriticService.remove(value));
     }
 
     protected parentItemMatch(item: Item<T>, previousItem: Item<T>, _searchField: string, _regExp: RegExp): boolean {
         // parent, visible only if a child is visible
-        return previousItem && previousItem.depth === item.depth + 1;
+        return previousItem && item.depth !== undefined && previousItem.depth === item.depth + 1;
     }
 
     protected compareItems = (item1: Item<T>, item2: Item<T>): boolean => {
@@ -466,9 +466,9 @@ export class ItemService<T> {
         } else {
             const model1 = item1.model as unknown as Comparable<T>;
             const model2 = item1.model as unknown as Comparable<T>;
-            if (model1?.equals) {
+            if (model1?.equals && item2.model) {
                 return model1.equals(item2.model);
-            } else if (model2?.equals) {
+            } else if (model2?.equals && item1.model) {
                 return model2.equals(item1.model);
             } else if (item1.id && item2.id) {
                 return item1.id === item2.id;
@@ -478,14 +478,17 @@ export class ItemService<T> {
         }
     };
 
-    protected compareModels = (model1: T, model2: T, valueField: string): boolean => {
-        const isDefined = (value: T): boolean => value !== undefined && value !== null;
+    protected compareModels = (model1?: T, model2?: T, valueField?: string): boolean => {
 
-        if (!isDefined(model1) || !isDefined(model2)) {
+        if (model1 === undefined || model1 === null || model2 === undefined || model2 === null) {
             return false;
-        } else if (model1 === model2) {
+        }
+
+        if (model1 === model2) {
             return true;
-        } else if (Object(model1) === model1 && Object(model2) === model2) {
+        }
+
+        if (Object(model1) === model1 && Object(model2) === model2) {
             const cmp1 = model1 as unknown as Comparable<T>;
             const cmp2 = model2 as unknown as Comparable<T>;
             if (cmp1?.equals) {
@@ -497,15 +500,15 @@ export class ItemService<T> {
             } else {
                 return false;
             }
-        } else {
-            return false;
         }
+
+        return false;
     };
 
     protected extractValueField(model: T, field: string): unknown {
         const indexedModel = model as unknown as Record<string, unknown>;
         const fields = field.split('.');
-        return fields.reduce((mdl, fld) => mdl[fld], indexedModel);
+        return fields.reduce((mdl, fld) => mdl[fld] as Record<string, unknown>, indexedModel);
     }
 }
 
@@ -519,8 +522,8 @@ interface RefreshSelectionParams<T> {
     checkSelectable?: boolean;
     selectParents?: boolean;
     unselectItems?: ReadonlyArray<Item<T>> | 'all';
-    selectModels?: ReadonlyArray<T>;
-    selectValues?: ReadonlyArray<string>;
+    selectModels?: ReadonlyArray<T | undefined>;
+    selectValues?: ReadonlyArray<string | undefined>;
 }
 
 export interface IndexedItem<T> extends Item<T>, Record<string, unknown> { }

@@ -14,8 +14,11 @@ import { Component, Input } from '@angular/core';
     template: ''
 })
 export class ItemComponent {
-    @Input() public value: string;
-    @Input() public text: string;
+    @Input()
+    public value?: string;
+
+    @Input()
+    public text?: string;
 
     @Input()
     public set selected(value: BooleanInput) {
@@ -26,5 +29,5 @@ export class ItemComponent {
         return this._selected;
     }
 
-    private _selected: boolean;
+    private _selected = false;
 }

@@ -36,7 +36,7 @@ export class DejaDialogComponent {
     @Input() public buttons?: DialogButtons;
     @Input() public defaultResponse: DialogResponse = 'ok';
 
-    protected buttonClicked$ = new ReplaySubject<DialogResponse>(1);
+    protected buttonClicked$ = new ReplaySubject<DialogResponse | undefined>(1);
 
     private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 

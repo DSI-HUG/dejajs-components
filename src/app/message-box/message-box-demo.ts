@@ -21,7 +21,7 @@ import { NewsTooltipService } from './tooltip/news-tooltip.service';
 })
 export class DejaMessageBoxDemoComponent {
     public tabIndex = 1;
-    public dialogTitle: string;
+    public dialogTitle?: string;
     public newsTooltip$: (element: HTMLElement) => Observable<void>;
 
     public actions = [

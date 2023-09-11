@@ -1,4 +1,4 @@
 <div #tilesContainer id="tiles" [class.design]="designMode" [mouse-droppable]="getDropContext()" [attr.tabindex]="tabIndex" (focus)="onFocus()" (blur)="onBlur()">
     <deja-tile *ngFor="let tile of tiles; trackBy: trackBy; let index = index;" [id]="tile.id" [tile]="tile" [attr.tile-index]="index" [template]="tileTemplate" (close)="onTileClosed(tile)"></deja-tile>
-    <div deja-tile-position [bounds]="selectionRect$ | async"></div>
+    <div deja-tile-position *ngIf="selectionRect$ | async as bounds" [bounds]="bounds"></div>
 </div>

@@ -24,6 +24,7 @@ export class DejaMessageBoxComponent implements OnInit {
     @Input() public title: string;
     @Input() public icon: string;
     @Input() public actions: Array<DejaMessageBoxAction>;
+
     /** Event Emmited when the close action is called */
     @ContentChild('actionsTemplate') public actionsTemplate: TemplateRef<unknown>;
 

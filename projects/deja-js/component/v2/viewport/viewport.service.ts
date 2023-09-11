@@ -36,7 +36,7 @@ export class ViewPortService<T> {
     } as ViewPort<T>;
 
     public mode$ = new BehaviorSubject<ViewPortMode>('fixed');
-    public items$ = new BehaviorSubject<ReadonlyArray<ViewPortItem<T>>>([]);
+    public items$ = new BehaviorSubject<ReadonlyArray<ViewPortItem<T>>>(new Array<ViewPortItem<T>>());
     public maxSize$ = new BehaviorSubject<ViewPortMaxSize>(0);
     public ensureItem$ = new Subject<ViewPortItem<T> | number>();
     public scrollPosition$ = new BehaviorSubject<number>(0);
@@ -45,10 +45,10 @@ export class ViewPortService<T> {
     public direction$ = new BehaviorSubject<ViewPortDirection>('vertical');
     public debug = false;
 
-    private refresh$ = new BehaviorSubject<boolean>(null);
+    private refresh$ = new BehaviorSubject<boolean | undefined>(undefined);
     private deleteSizeCache$ = new BehaviorSubject<void>(undefined);
     private clear$ = new Subject<ViewPort<T>>();
-    private lastCalculatedSize: number;
+    private lastCalculatedSize?: number;
 
     private measureViewPort = {
         beforeSize: 0,
@@ -116,7 +116,7 @@ export class ViewPortService<T> {
             const rowsCount = Math.min(items.length - startRow, maxCount);
             let startIndex: number;
             let endIndex: number;
-            let newScrollPos: number;
+            let newScrollPos: number | undefined;
             if (!params.ensureParams || params.ensureParams.index === undefined || !params.ensureParams.atEnd) {
                 if (rowsCount < 0) {
                     endIndex = items.length - 1;
@@ -154,12 +154,12 @@ export class ViewPortService<T> {
         const calcVariableSizeViewPort$ = (params: ViewPortParams, items: ReadonlyArray<ViewPortItem<T>>, scrollPosition: number, containerSize: ViewPortMaxSize): Observable<ViewPort<T>> => {
             this.log('calcVariableSizeViewPort');
             const visibleItems = new Array<ViewPortItem<T>>();
-            let startIndex: number;
-            let endIndex: number;
+            let startIndex: number | undefined;
+            let endIndex: number | undefined;
             let beforeSize = 0;
             let viewPortSize = 0;
             let afterSize = 0;
-            let newScrollPos: number;
+            let newScrollPos: number | undefined;
 
             if (!params.ensureParams || params.ensureParams.index === undefined || !params.ensureParams.atEnd) {
                 items.forEach((item: ViewPortItem<T>, index: number) => {
@@ -213,7 +213,7 @@ export class ViewPortService<T> {
                                 newScrollPos = viewPortSize - +containerSize;
                             }
                         } else {
-                            newScrollPos += itemSize;
+                            newScrollPos = (newScrollPos || 0) + itemSize;
                             beforeSize += itemSize;
                         }
                     } else {
@@ -222,7 +222,7 @@ export class ViewPortService<T> {
                 }
             }
 
-            if (params.ensureParams?.index !== undefined && viewPortSize < containerSize && visibleItems.length < items.length) {
+            if (params.ensureParams?.index !== undefined && viewPortSize < +containerSize && visibleItems.length < items.length) {
                 params.ensureParams = {
                     index: params.ensureParams.atEnd ? 0 : items.length - 1,
                     atEnd: !params.ensureParams.atEnd
@@ -262,8 +262,9 @@ export class ViewPortService<T> {
                                 tap(() => {
                                     const elements = Array.from(params.element.getElementsByClassName('listitem'));
                                     elements.forEach(itemElement => {
-                                        const index = +itemElement.getAttribute('flat');
-                                        const item = viewPort.visibleItems[index - viewPort.startIndex];
+                                        const flatAttribute = itemElement.getAttribute('flat');
+                                        const index = flatAttribute && +flatAttribute || undefined;
+                                        const item = index !== undefined && viewPort.visibleItems[index - viewPort.startIndex];
                                         if (item) {
                                             item.size = clientSize(itemElement as HTMLElement, params.direction);
                                             this.log('calcAutoSizeViewPort: item found', item, 'measured size', item.size, 'HTML Element', itemElement);
@@ -284,9 +285,9 @@ export class ViewPortService<T> {
 
         const calcDisabledViewPort$ = (params: ViewPortParams, items: ReadonlyArray<ViewPortItem<T>>, scrollPosition: number, containerSize: ViewPortMaxSize, bindIfAny: boolean): Observable<ViewPort<T>> => {
             let viewPortSize = 0;
-            let startIndex: number;
-            let endIndex: number;
-            let newScrollPos: number;
+            let startIndex: number | undefined;
+            let endIndex: number | undefined;
+            let newScrollPos: number | undefined;
             const elements = params.element.getElementsByClassName('listitem');
 
             const viewPort = {
@@ -385,7 +386,7 @@ export class ViewPortService<T> {
             }
 
             let listSize = params.maxSize || clientSize(params.element, params.direction);
-            if (listSize <= 40) {
+            if (listSize !== 'auto' && listSize <= 40) {
                 listSize = innerSize(params.direction);
             }
 
@@ -408,7 +409,7 @@ export class ViewPortService<T> {
                 switchMap(viewPort => {
                     if (!fromMeasure && viewPort.viewPortSize > 0) {
                         const endScrollPos = viewPort.beforeSize + viewPort.viewPortSize + viewPort.afterSize - viewPort.listSize;
-                        if (params.mode !== 'disabled' && listSize < 80) {
+                        if (params.mode !== 'disabled' && listSize !== 'auto' && listSize < 80) {
                             // Measure again container and recalc viewport
                             const measure$ = of(this.measureViewPort);
                             return measure$.pipe(
@@ -425,7 +426,7 @@ export class ViewPortService<T> {
                                 atEnd: true
                             };
                             return calcViewPort$(params, items, 0, true);
-                        } else if (params.mode === 'auto' && viewPort.viewPortSize < listSize) {
+                        } else if (params.mode === 'auto' && listSize !== 'auto' && viewPort.viewPortSize < listSize) {
                             // Rendered viewport is to small, render again to complete
                             params.ensureParams = {
                                 index: items.length - 1,
@@ -474,7 +475,7 @@ export class ViewPortService<T> {
                     return ensureParams;
                 })
             )),
-            startWith(null as EnsureParams),
+            startWith(undefined),
             shareReplay({ bufferSize: 1, refCount: false })
         );
 
@@ -587,7 +588,7 @@ interface ViewPortParams {
 }
 
 export interface EnsureParams {
-    index: number;
+    index: number | undefined;
     atEnd: boolean;
 }
 
@@ -599,7 +600,7 @@ export interface ViewPort<T> extends ViewPortParams {
     endIndex: number;
     viewPortSize: number;
     listSize: number;
-    targetScrollPos: number;
+    targetScrollPos?: number;
     scrollPosition: number;
     items: ReadonlyArray<ViewPortItem<T>>;
 }

@@ -33,10 +33,10 @@
 		-->
 
     <div id="btnContainer">
-        <button mat-raised-button [style.background]="danger" (click)="push.emit('danger')">Danger</button>
-        <button mat-raised-button [style.background]="warning" (click)="push.emit('warning')">Warning</button>
-        <button mat-raised-button [style.background]="success" (click)="push.emit('success')">Success</button>
-        <button mat-raised-button [style.background]="info" (click)="push.emit('info')">Info</button>
+        <button mat-raised-button [style.background]="danger" (click)="push$.next('danger')">Danger</button>
+        <button mat-raised-button [style.background]="warning" (click)="push$.next('warning')">Warning</button>
+        <button mat-raised-button [style.background]="success" (click)="push$.next('success')">Success</button>
+        <button mat-raised-button [style.background]="info" (click)="push$.next('info')">Info</button>
         <button mat-raised-button (click)="simpleGate = true">Simple</button>
     </div>
 

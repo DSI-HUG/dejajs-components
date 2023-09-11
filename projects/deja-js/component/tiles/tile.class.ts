@@ -18,25 +18,25 @@ export class DejaTile {
     public pressed$ = new BehaviorSubject<boolean>(false);
     public selected$ = new BehaviorSubject<boolean>(false);
     public hidden$ = new ReplaySubject<boolean>(1);
-    public pixelBounds$ = new BehaviorSubject<Rect>(null);
+    public pixelBounds$ = new BehaviorSubject<Rect | undefined>(undefined);
     public deleted$ = new Subject<void>();
     public refresh$ = new Subject<void>();
     public isTemporary = false;
 
     private _id: string;
-    private _color: string;
+    private _color?: string;
     private _templateModel: unknown;
     private _isDragging = false;
     private _isDropping = false;
     private _isPressed = false;
     private _isHidden = false;
-    private _pixelBounds: Rect;
-    private _selected: boolean;
-    private _cutted: boolean;
-    private _pending: boolean;
-    private _fading: boolean;
-    private _percentBounds: Rect;
-    private _trackBy: unknown;
+    private _pixelBounds?: Rect;
+    private _selected?: boolean;
+    private _cutted?: boolean;
+    private _pending?: boolean;
+    private _fading?: boolean;
+    private _percentBounds?: Rect;
+    private _trackBy?: unknown;
 
     public constructor(id?: string) {
         this._id = id || `#${DejaTile.CURRENT_ID++}`;
@@ -46,14 +46,15 @@ export class DejaTile {
         return new Rect(0, 0, 15, 15);
     }
 
-    public set pixelBounds(value: Rect) {
-        if (!Rect.equals(this._pixelBounds, value)) {
+    public set pixelBounds(value: Rect | undefined) {
+        const pixelBounds = this._pixelBounds;
+        if (!pixelBounds || !value || !Rect.equals(pixelBounds, value)) {
             this._pixelBounds = value;
             this.pixelBounds$.next(value);
         }
     }
 
-    public get pixelBounds(): Rect {
+    public get pixelBounds(): Rect | undefined {
         return this._pixelBounds;
     }
 
@@ -62,7 +63,7 @@ export class DejaTile {
     }
 
     public get percentBounds(): Rect {
-        return this._percentBounds;
+        return this._percentBounds || new Rect();
     }
 
     public set templateModel(value: unknown) {
@@ -85,22 +86,22 @@ export class DejaTile {
         return this._trackBy;
     }
 
-    public set isCutted(value: boolean) {
+    public set isCutted(value: boolean | undefined) {
         if (this._cutted !== value) {
             this._cutted = value;
-            this.cutted$.next(value);
+            this.cutted$.next(value || false);
         }
     }
 
-    public get isCutted(): boolean {
+    public get isCutted(): boolean | undefined {
         return this._cutted;
     }
 
-    public set color(value: string) {
+    public set color(value: string | undefined) {
         this._color = value;
     }
 
-    public get color(): string {
+    public get color(): string | undefined {
         return this._color;
     }
 
@@ -137,14 +138,14 @@ export class DejaTile {
         return this._isPressed;
     }
 
-    public set isSelected(value: boolean) {
+    public set isSelected(value: boolean | undefined) {
         if (this._selected !== value) {
             this._selected = value;
-            this.selected$.next(value);
+            this.selected$.next(value || false);
         }
     }
 
-    public get isSelected(): boolean {
+    public get isSelected(): boolean | undefined {
         return this._selected;
     }
 
@@ -159,19 +160,19 @@ export class DejaTile {
         return this._isHidden;
     }
 
-    public set isPending(value: boolean) {
+    public set isPending(value: boolean | undefined) {
         this._pending = value;
     }
 
-    public get isPending(): boolean {
+    public get isPending(): boolean | undefined {
         return this._pending;
     }
 
-    public get fading(): boolean {
+    public get fading(): boolean | undefined {
         return this._fading;
     }
 
-    public set fading(value: boolean) {
+    public set fading(value: boolean | undefined) {
         this._fading = value;
     }
 

@@ -8,9 +8,9 @@
 
 import { Item } from './item';
 
-export class ItemEvent<T> {
-    public item: Item<T>;
-    public model: T;
-    public items: ReadonlyArray<Item<T>>;
-    public models: ReadonlyArray<T>;
+export interface ItemEvent<T> {
+    item: Item<T>;
+    model: T;
+    items: ReadonlyArray<Item<T>>;
+    models: ReadonlyArray<T>;
 }

@@ -74,17 +74,17 @@ export class DejaTilesComponent extends Destroy implements AfterViewInit, Contro
      */
     @Input() public tabIndex = 0;
 
-    @ContentChild('tileTemplate') public tileTemplate: TemplateRef<unknown>;
+    @ContentChild('tileTemplate') public tileTemplate?: TemplateRef<unknown>;
 
-    @ViewChild('tilesContainer', { static: true }) private tilesContainer: ElementRef<HTMLElement>;
+    @ViewChild('tilesContainer', { static: true }) private tilesContainer?: ElementRef<HTMLElement>;
 
     public control = inject(NgControl, { self: true, optional: true });
 
     private _models = [] as DejaTile[];
-    private delete$sub: Subscription;
-    private copy$sub: Subscription;
-    private cut$sub: Subscription;
-    private paste$sub: Subscription;
+    private delete$sub?: Subscription;
+    private copy$sub?: Subscription;
+    private cut$sub?: Subscription;
+    private paste$sub?: Subscription;
     private keyup$: Observable<KeyboardEvent>;
     private hasFocus = false;
 
@@ -273,7 +273,11 @@ export class DejaTilesComponent extends Destroy implements AfterViewInit, Contro
     // ************* End of ControlValueAccessor Implementation **************
 
     public ngAfterViewInit(): void {
-        this.layoutProvider.container = this.tilesContainer.nativeElement;
+        const container = this.tilesContainer?.nativeElement;
+        if (!container) {
+            throw new Error('DejaTilesComponent must be used with a container element with a template reference variable #tilesContainer');
+        }
+        this.layoutProvider.container = container;
         this.refresh({ resetWidth: true });
     }
 
@@ -331,8 +335,12 @@ export class DejaTilesComponent extends Destroy implements AfterViewInit, Contro
         this.layoutProvider.removeTiles(tileIds);
     }
 
-    public hitTest(pageX: number, pageY: number): DejaTile {
-        const containerElement = this.tilesContainer.nativeElement;
+    public hitTest(pageX: number, pageY: number): DejaTile | undefined {
+        const containerElement = this.tilesContainer?.nativeElement;
+        if (!containerElement) {
+            throw new Error('DejaTilesComponent must be used with a container element with a template reference variable #tilesContainer');
+        }
+
         const containerBounds = containerElement.getBoundingClientRect();
 
         const x = pageX - containerBounds.left;
@@ -347,7 +355,11 @@ export class DejaTilesComponent extends Destroy implements AfterViewInit, Contro
         }
 
         // Check if we drag on a tile
-        const containerElement = this.tilesContainer.nativeElement;
+        const containerElement = this.tilesContainer?.nativeElement;
+        if (!containerElement) {
+            throw new Error('DejaTilesComponent must be used with a container element with a template reference variable #tilesContainer');
+        }
+
         const containerBounds = containerElement.getBoundingClientRect();
 
         const x = pageX ? (pageX - containerBounds.left) : 0;
@@ -362,13 +374,13 @@ export class DejaTilesComponent extends Destroy implements AfterViewInit, Contro
     }
 
     public getDropContext(): MouseDroppableContext<ITileDragDropContext> {
-        let cursorInfo: DropCursorInfos;
+        let cursorInfo: DropCursorInfos | undefined;
 
         return {
             dragEnter: (dragContext, dragCursor) => {
                 cursorInfo = this.layoutProvider.dragEnter(dragContext, dragCursor) ? {
                     className: 'hidden' // Hide drag cursor
-                } as DropCursorInfos : null;
+                } as DropCursorInfos : undefined;
                 return cursorInfo;
             },
             dragOver: (_dragContext, dragCursor) => {
@@ -376,7 +388,7 @@ export class DejaTilesComponent extends Destroy implements AfterViewInit, Contro
                 return cursorInfo;
             },
             dragLeave: _dragContext => {
-                cursorInfo = null;
+                cursorInfo = undefined;
                 this.layoutProvider.dragleave$.next();
             }
         } as MouseDroppableContext<ITileDragDropContext>;

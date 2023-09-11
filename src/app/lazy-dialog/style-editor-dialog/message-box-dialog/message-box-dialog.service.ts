@@ -15,7 +15,7 @@ export class MessageBoxDialogService extends DialogService<string, string> {
         } as MatDialogConfig<string>;
     }
 
-    public openDialog$(dialogData: string, dialogConfig?: MatDialogConfig<string>): Observable<string> {
+    public openDialog$(dialogData: string, dialogConfig?: MatDialogConfig<string>): Observable<string | undefined> {
         return super.openDialog$(dialogData, dialogConfig);
     }
 

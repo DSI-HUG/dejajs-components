@@ -6,9 +6,9 @@
  *  found in the LICENSE file at https://github.com/DSI-HUG/dejajs-components/blob/master/LICENSE
  */
 
-import { Component, EventEmitter, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MaterialColorService } from '@deja-js/component/core/graphics';
-import { defaultIfEmpty, filter, from, interval, map, Observable, scan } from 'rxjs';
+import { defaultIfEmpty, filter, interval, map, Observable, ReplaySubject, scan } from 'rxjs';
 
 import { Message } from './message.class';
 
@@ -17,7 +17,7 @@ import { Message } from './message.class';
     styleUrls: ['./snackbar-demo.scss'],
     templateUrl: './snackbar-demo.html'
 })
-export class DejaSnackbarDemoComponent implements OnInit {
+export class DejaSnackbarDemoComponent {
     public tabIndex = 1;
 
     /*
@@ -31,7 +31,7 @@ export class DejaSnackbarDemoComponent implements OnInit {
     public successes$: Observable<Message[]>;
     public infos$: Observable<Message[]>;
 
-    public push = new EventEmitter<string>();
+    public push$ = new ReplaySubject<string>(1);
 
     public simpleGate = false;
 
@@ -41,7 +41,7 @@ export class DejaSnackbarDemoComponent implements OnInit {
     public info: string;
     public default: string;
 
-    public ngOnInit(): void {
+    public constructor() {
         const colors = new MaterialColorService();
         this.danger = colors.getColor('mat-red')[500];
         this.warning = colors.getColor('mat-orange')[500];
@@ -49,25 +49,25 @@ export class DejaSnackbarDemoComponent implements OnInit {
         this.info = colors.getColor('mat-blue')[500];
         this.default = colors.getColor('mat-grey')[900];
 
-        this.dangers$ = from(this.push).pipe(
+        this.dangers$ = this.push$.pipe(
             filter(type => type === 'danger'),
             map(() => new Message('Danger snackbar')),
             scan((acc, curr) => [...acc, curr], [] as Message[]),
             defaultIfEmpty([] as Message[]));
 
-        this.warnings$ = from(this.push).pipe(
+        this.warnings$ = this.push$.pipe(
             filter(type => type === 'warning'),
             map(() => new Message('Warning snackbar')),
             scan((acc, curr) => [...acc, curr], [] as Message[]),
             defaultIfEmpty([] as Message[]));
 
-        this.successes$ = from(this.push).pipe(
+        this.successes$ = this.push$.pipe(
             filter(type => type === 'success'),
             map(() => new Message('Success snackbar')),
             scan((acc, curr) => [...acc, curr], [] as Message[]),
             defaultIfEmpty([] as Message[]));
 
-        this.infos$ = from(this.push).pipe(
+        this.infos$ = this.push$.pipe(
             filter(type => type === 'info'),
             map(() => new Message('Info snackbar')),
             scan((acc, curr) => [...acc, curr], [] as Message[]),

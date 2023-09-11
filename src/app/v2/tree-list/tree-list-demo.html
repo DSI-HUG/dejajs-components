@@ -30,7 +30,7 @@
             <div>Just passing an array of objects</div>
             <div class="flexLayout">
                 <span class="flex45p flexLayout flexColumn">
-                    <tree-list [(ngModel)]="country" ngModelType="model" textField="naqme" valueField="code" [models]="countries$ | async"></tree-list>
+                    <tree-list [(ngModel)]="country" ngModelType="model" textField="naqme" valueField="code" *ngIf="countries$ | async as countries" [models]="countries"></tree-list>
                 </span>
                 <span class="flex45p flexOffset5p">
                     <h4>Selected country model :</h4>
@@ -45,7 +45,7 @@
             <div>tree-list has some keyboard navigation feature</div>
             <div class="flexLayout">
                 <span class="flex45p flexLayout flexColumn">
-                    <tree-list [(ngModel)]="country" textField="naqme" valueField="code" [models]="countries$ | async"></tree-list>
+                    <tree-list [(ngModel)]="country" textField="naqme" valueField="code" *ngIf="countries$ | async as countries" [models]="countries"></tree-list>
                 </span>
                 <ul class="flex45p flexOffset5p" id="shortcut-list">
                     <li>Press
@@ -136,7 +136,7 @@
             </div>
             <div class="flexLayout">
                 <span class="flex45p flexLayout flexColumn">
-                    <tree-list searchArea nodataholder="No record to display" ngModelType="model" maxHeight="auto" [disabled]="disabled" selectionClearable [(ngModel)]="deepCountry" textField="l1.l2.name" valueField="l1.l2.value" [models]="deepCountries$ | async"></tree-list>
+                    <tree-list searchArea nodataholder="No record to display" ngModelType="model" maxHeight="auto" [disabled]="disabled || false" selectionClearable [(ngModel)]="deepCountry" textField="l1.l2.name" valueField="l1.l2.value" *ngIf="deepCountries$ | async as deepCountries" [models]="deepCountries"></tree-list>
                 </span>
                 <span class="flex45p flexOffset5p">
                     <h4>Selected deep country model :</h4>
@@ -164,7 +164,7 @@
             <div>Multi selection example</div>
             <div class="flexLayout">
                 <span class="flex45p flexLayout flexColumn">
-                    <tree-list multiSelect textField="naqme" valueField="code" [selectedModels]="multiselectModel" (selectedChange)="multiselectModelChange($any($event).models)" [models]="countriesForMultiselect"></tree-list>
+                    <tree-list multiSelect textField="naqme" valueField="code" [selectedModels]="multiselectModel" (selectedChange)="multiselectModelChange($event.models)" *ngIf="countriesForMultiselect" [models]="countriesForMultiselect"></tree-list>
                 </span>
                 <span class="flexLayout flexColumn flex45p flexOffset5p">
                     <h4>Multi selection shortcuts :</h4>
@@ -193,7 +193,7 @@
             <div>Grouping example</div>
             <div class="flexLayout">
                 <span class="flex45p flexLayout flexColumn noselect">
-                    <tree-list #dragdroplist [items]="groupedCountryItems$ | async" [mouse-draggable]="getDragContext(dragdroplist)">
+                    <tree-list #dragdroplist *ngIf="groupedCountryItems$ | async as items" [items]="items" [mouse-draggable]="getDragContext(dragdroplist)">
                         <ng-template #itemTemplate let-item let-flatindex="flatindex">
                             <span>{{ item.label }}</span>
                 </ng-template>
@@ -212,14 +212,14 @@
         <mat-toolbar color="primary">Autocomplete</mat-toolbar>
         <mat-card-content>
             <div>Autocomplete 2 characters minimum</div>
-            <tree-list class="demo-half-width" nodataholder="No record to display" [models]="countries$ | async" textField="naqme" valueField="code" min-search-length="2"></tree-list>
+            <tree-list class="demo-half-width" nodataholder="No record to display" *ngIf="countries$ | async as countries" [models]="countries" textField="naqme" valueField="code" min-search-length="2"></tree-list>
         </mat-card-content>
         <mat-toolbar color="primary">Variable Row Size</mat-toolbar>
         <mat-card-content>
             <div>Variable Row height example</div>
             <div class="flexLayout">
                 <span class="flex45p flexLayout flexColumn">
-                    <tree-list [items]="loremList$ | async" multiSelect viewPortMode="variable" searchArea></tree-list>
+                    <tree-list *ngIf="loremList$ | async as loremList" [items]="loremList" multiSelect viewPortMode="variable" searchArea></tree-list>
                 </span>
             </div>
         </mat-card-content>
@@ -232,7 +232,7 @@
         <mat-card-content>
             <h1>Item Template</h1>
             <div>An exemple with auto sized item template</div>
-            <tree-list #news class="news" viewPortMode="auto" textField="title" searchField="description" [models]="news$ | async">
+            <tree-list #news class="news" viewPortMode="auto" textField="title" searchField="description" *ngIf="news$ | async as news" [models]="news">
                 <ng-template #itemTemplate let-item let-flatindex="flatindex">
                     <news-card [item]="item.model" (imageLoaded)="imageLoaded(item)"></news-card>
                 </ng-template>
@@ -241,7 +241,7 @@
             <div>Treelist with an header template</div>
             <div class="flexLayout">
                 <span class="flex45p flexLayout flexColumn">
-                    <tree-list #headertreelist textField="naqme" valueField="code" [models]="sortedCountries$ | async">
+                    <tree-list #headertreelist textField="naqme" valueField="code" *ngIf="sortedCountries$ | async as sortedCountries" [models]="sortedCountries">
                         <ng-template #headerTemplate>
                             <span id="headerTemplateContent" [style.width.px]="(headertreelist.viewPort$ | async)?.element?.clientWidth" (click)="sortCountries$.next()">
                                 <span id="title">
@@ -255,7 +255,7 @@
                 </tree-list>
                 </span>
                 <span class="flex45p flexLayout flexColumn flexOffset5p">
-                    <tree-list textField="naqme" [items]="groupedCountryItems$ | async">
+                    <tree-list textField="naqme" *ngIf="groupedCountryItems$ | async as items" [items]="items">
                         <ng-template #parentItemTemplate let-item>
                             <mat-icon id="placeholder-icon">public</mat-icon>&nbsp;
                             <span>{{ item.groupName }}</span>
@@ -266,7 +266,7 @@
             <h1>Search Prefix and Suffix Templates</h1>
             <div class="flexLayout">
                 <span class="flex45p flexLayout flexColumn">
-                    <tree-list searchArea textField="naqme" valueField="code" [models]="countries$ | async">
+                    <tree-list searchArea textField="naqme" valueField="code" *ngIf="countries$ | async as countries" [models]="countries">
                         <ng-template #searchPrefixTemplate>
                             <mat-icon (click)="onFilterTemplateClicked('Prefix')">public</mat-icon>
                         </ng-template>
@@ -336,10 +336,10 @@
         <mat-card-content>
             <h1>Confirm Selection</h1>
             <div>A dialog will confirm the selection of an item</div>
-            <tree-list class="demo-half-width fixed-height" multiSelect textField="naqme" valueField="code" [selectingItems]="selectingItems()" [models]="countries$ | async"> </tree-list>
+            <tree-list class="demo-half-width fixed-height" multiSelect textField="naqme" valueField="code" *ngIf="countries$ | async as countries" [models]="countries"> </tree-list>
             <h1>Confirm Expand and Collapse </h1>
             <div>A dialog will confirm the expand and collapse or an item if the children are not loaded. The children will be loaded asynchronously after the item expansion.</div>
-            <tree-list #onexpand class="demo-half-width fixed-height" searchArea [items]="onDemandGroupedCountryItems$ | async" (itemExpand)="itemExpand$.next($event.item)" [expandingItem]="expandingItem()" [collapsingItem]="collapsingItem()"></tree-list>
+            <tree-list #onexpand class="demo-half-width fixed-height" searchArea *ngIf="onDemandGroupedCountryItems$ | async as onDemandGroupedCountryItems" [items]="onDemandGroupedCountryItems" (itemExpand)="itemExpand$.next($event.item)" [expandingItem]="expandingItem()" [collapsingItem]="collapsingItem()"></tree-list>
         </mat-card-content>
     </mat-card>
 </div>
@@ -351,15 +351,15 @@
             <h1>10K items with Item Template </h1>
             <div class="flexContainer flexLayout flexAlignCenter flexJustifyStart">
                 <span class="flexExtendCollapseAuto">An exemple with 10000 auto sized templatized items</span>
-                <a mat-button (click)="news.reloadViewPort()">
+                <a mat-button (click)="newsList && newsList.reloadViewPort()">
                     <mat-icon>refresh</mat-icon>
                 </a>
                 <mat-form-field class="flexFixedAuto">
                     <input matInput type="number" [(ngModel)]="ensureIndex" autocomplete="off">
                 </mat-form-field>
-                    <button class="flexFixedAuto" mat-button (click)="news.ensureItemVisible(ensureIndex)">Ensure index</button>
+                    <button class="flexFixedAuto" mat-button (click)="ensureIndex !== undefined && newsList && newsList.ensureItemVisible(ensureIndex)">Ensure index</button>
             </div>
-            <tree-list #news [debugMode]="false" class="news" viewPortMode="auto" viewPortRowHeight="200" textField="title" searchField="description" [models]="bigNews$ | async">
+            <tree-list #news [debugMode]="false" class="news" viewPortMode="auto" viewPortRowHeight="200" textField="title" searchField="description"  *ngIf="bigNews$ | async as bigNews" [models]="bigNews">
                 <ng-template #itemTemplate let-item let-flatindex="flatindex">
                     <news-card [item]="item.model" (imageLoaded)="imageLoaded(item)"></news-card>
                 </ng-template>
@@ -368,7 +368,7 @@
             <h1>Fixed size rows 100K items</h1>
             <div>An exemple with 100000 fixed size items</div>
             <span class="flexLayout">
-                <tree-list #bigCountries searchArea id="bigCountries" class="flex45p" [models]="bigCountries$ | async" textField="naqme" valueField="code"></tree-list>
+                <tree-list #bigCountries searchArea id="bigCountries" class="flex45p" *ngIf="bigCountries$ | async as bigCountries" [models]="bigCountries" textField="naqme" valueField="code"></tree-list>
                 <span class="flex45p flexOffset5p">
                     <h4 id="vptitle">Viewport Infos:</h4>
                     <div *ngFor="let info of viewPortInfos">
@@ -388,11 +388,11 @@
             <form novalidate [formGroup]="fruitForm">
                 <div class="flexLayout">
                     <span class="flex45p flexLayout flexColumn">
-                        <tree-list [models]="fruits$ | async" formControlName="fruitName"></tree-list>
+                        <tree-list *ngIf="fruits$ | async as fruits" [models]="fruits" formControlName="fruitName"></tree-list>
                     </span>
                     <span class="flex45p flexOffset5p">
                         <h4>Your selection :</h4>
-                        <span>{{fruitForm.get('fruitName').value}}</span>
+                        <span>{{fruitForm.get('fruitName')?.value}}</span>
                     </span>
                 </div>
             </form>
@@ -405,11 +405,11 @@
             <form novalidate [formGroup]="fruitFormModels">
                 <div class="flexLayout">
                     <span class="flex45p flexLayout flexColumn">
-                        <tree-list multiSelect [models]="fruits$ | async" formControlName="fruitName"></tree-list>
+                        <tree-list multiSelect *ngIf="fruits$ | async as fruits" [models]="fruits" formControlName="fruitName"></tree-list>
                     </span>
                     <span class="flex45p flexOffset5p">
                         <h4>Your selection :</h4>
-                        <span>{{fruitFormModels.get('fruitName').value}}</span>
+                        <span>{{fruitFormModels.get('fruitName')?.value || ''}}</span>
                     </span>
                 </div>
             </form>

@@ -57,11 +57,11 @@ export class MonacoEditorComponent implements ControlValueAccessor {
      * The aria label for the editor's textarea (when it is focused).
      */
     @Input()
-    public set ariaLabel(value: string) {
+    public set ariaLabel(value: string | undefined) {
         this.updateOptions({ ariaLabel: value } as EditorOptions);
     }
 
-    public get ariaLabel(): string {
+    public get ariaLabel(): string | undefined {
         return this.options.ariaLabel;
     }
 
@@ -70,11 +70,11 @@ export class MonacoEditorComponent implements ControlValueAccessor {
      * Defaults to empty array.
      */
     @Input()
-    public set rulers(value: ReadonlyArray<number>) {
+    public set rulers(value: ReadonlyArray<number> | undefined) {
         this.updateOptions({ rulers: value } as EditorOptions);
     }
 
-    public get rulers(): ReadonlyArray<number> {
+    public get rulers(): ReadonlyArray<number> | undefined {
         return this.options.rulers;
     }
 
@@ -83,11 +83,11 @@ export class MonacoEditorComponent implements ControlValueAccessor {
      * Defaults to `~!@#$%^&*()-=+[{]}\\|;:\'",.<>/?
      */
     @Input()
-    public set wordSeparators(value: string) {
+    public set wordSeparators(value: string | undefined) {
         this.updateOptions({ wordSeparators: value } as EditorOptions);
     }
 
-    public get wordSeparators(): string {
+    public get wordSeparators(): string | undefined {
         return this.options.wordSeparators;
     }
 
@@ -112,11 +112,11 @@ export class MonacoEditorComponent implements ControlValueAccessor {
      * Defaults to true.
      */
     @Input()
-    public set lineNumbers(value: LineNumbers) {
+    public set lineNumbers(value: LineNumbers | undefined) {
         this.updateOptions({ lineNumbers: value } as EditorOptions);
     }
 
-    public get lineNumbers(): LineNumbers {
+    public get lineNumbers(): LineNumbers | undefined {
         return this.options.lineNumbers;
     }
 
@@ -207,11 +207,11 @@ export class MonacoEditorComponent implements ControlValueAccessor {
      * You can create custom themes via `monaco.editor.defineTheme`.
      */
     @Input()
-    public set theme(value: string) {
+    public set theme(value: string | undefined) {
         this.updateOptions({ theme: value } as EditorOptions);
     }
 
-    public get theme(): string {
+    public get theme(): string | undefined {
         return this.options.theme;
     }
 
@@ -232,11 +232,11 @@ export class MonacoEditorComponent implements ControlValueAccessor {
      * Control the behavior and rendering of the scrollbars.
      */
     @Input()
-    public set scrollbar(value: EditorScrollbarOptions) {
+    public set scrollbar(value: EditorScrollbarOptions | undefined) {
         this.updateOptions({ scrollbar: value } as EditorOptions);
     }
 
-    public get scrollbar(): EditorScrollbarOptions {
+    public get scrollbar(): EditorScrollbarOptions | undefined {
         return this.options.scrollbar;
     }
 
@@ -271,11 +271,11 @@ export class MonacoEditorComponent implements ControlValueAccessor {
      * Defaults to 'blink'.
      */
     @Input()
-    public set cursorBlinking(value: string) {
+    public set cursorBlinking(value: string | undefined) {
         this.updateOptions({ cursorBlinking: value } as EditorOptions);
     }
 
-    public get cursorBlinking(): string {
+    public get cursorBlinking(): string | undefined {
         return this.options.cursorBlinking;
     }
 
@@ -297,11 +297,11 @@ export class MonacoEditorComponent implements ControlValueAccessor {
      * Defaults to 'line'.
      */
     @Input()
-    public set cursorStyle(value: string) {
+    public set cursorStyle(value: string | undefined) {
         this.updateOptions({ cursorStyle: value } as EditorOptions);
     }
 
-    public get cursorStyle(): string {
+    public get cursorStyle(): string | undefined {
         return this.options.cursorStyle;
     }
 
@@ -419,11 +419,11 @@ export class MonacoEditorComponent implements ControlValueAccessor {
      * Defaults to 'same' in vscode and to 'none' in monaco-editor.
      */
     @Input()
-    public set wrappingIndent(value: string) {
+    public set wrappingIndent(value: string | undefined) {
         this.updateOptions({ wrappingIndent: value } as EditorOptions);
     }
 
-    public get wrappingIndent(): string {
+    public get wrappingIndent(): string | undefined {
         return this.options.wrappingIndent;
     }
 
@@ -432,11 +432,11 @@ export class MonacoEditorComponent implements ControlValueAccessor {
      * Defaults to '{([+'.
      */
     @Input()
-    public set wordWrapBreakBeforeCharacters(value: string) {
+    public set wordWrapBreakBeforeCharacters(value: string | undefined) {
         this.updateOptions({ wordWrapBreakBeforeCharacters: value } as EditorOptions);
     }
 
-    public get wordWrapBreakBeforeCharacters(): string {
+    public get wordWrapBreakBeforeCharacters(): string | undefined {
         return this.options.wordWrapBreakBeforeCharacters;
     }
 
@@ -445,11 +445,11 @@ export class MonacoEditorComponent implements ControlValueAccessor {
      * Defaults to ' \t})]?|&,;'.
      */
     @Input()
-    public set wordWrapBreakAfterCharacters(value: string) {
+    public set wordWrapBreakAfterCharacters(value: string | undefined) {
         this.updateOptions({ wordWrapBreakAfterCharacters: value } as EditorOptions);
     }
 
-    public get wordWrapBreakAfterCharacters(): string {
+    public get wordWrapBreakAfterCharacters(): string | undefined {
         return this.options.wordWrapBreakAfterCharacters;
     }
 
@@ -458,11 +458,11 @@ export class MonacoEditorComponent implements ControlValueAccessor {
      * Defaults to '.'.
      */
     @Input()
-    public set wordWrapBreakObtrusiveCharacters(value: string) {
+    public set wordWrapBreakObtrusiveCharacters(value: string | undefined) {
         this.updateOptions({ wordWrapBreakObtrusiveCharacters: value } as EditorOptions);
     }
 
-    public get wordWrapBreakObtrusiveCharacters(): string {
+    public get wordWrapBreakObtrusiveCharacters(): string | undefined {
         return this.options.wordWrapBreakObtrusiveCharacters;
     }
 
@@ -652,11 +652,11 @@ export class MonacoEditorComponent implements ControlValueAccessor {
      * Enable snippet suggestions. Default to 'true'.
      */
     @Input()
-    public set snippetSuggestions(value: SnippetSuggestions) {
+    public set snippetSuggestions(value: SnippetSuggestions | undefined) {
         this.updateOptions({ snippetSuggestions: value } as EditorOptions);
     }
 
-    public get snippetSuggestions(): SnippetSuggestions {
+    public get snippetSuggestions(): SnippetSuggestions | undefined {
         return this.options.snippetSuggestions;
     }
 
@@ -766,11 +766,11 @@ export class MonacoEditorComponent implements ControlValueAccessor {
      * Defaults to none.
      */
     @Input()
-    public set renderWhitespace(value: RenderWhitespace) {
+    public set renderWhitespace(value: RenderWhitespace | undefined) {
         this.updateOptions({ renderWhitespace: value } as EditorOptions);
     }
 
-    public get renderWhitespace(): RenderWhitespace {
+    public get renderWhitespace(): RenderWhitespace | undefined {
         return this.options.renderWhitespace;
     }
 
@@ -805,11 +805,11 @@ export class MonacoEditorComponent implements ControlValueAccessor {
      * Defaults to all.
      */
     @Input()
-    public set renderLineHighlight(value: RenderLineHighlight) {
+    public set renderLineHighlight(value: RenderLineHighlight | undefined) {
         this.updateOptions({ renderLineHighlight: value } as EditorOptions);
     }
 
-    public get renderLineHighlight(): RenderLineHighlight {
+    public get renderLineHighlight(): RenderLineHighlight | undefined {
         return this.options.renderLineHighlight;
     }
 
@@ -829,11 +829,11 @@ export class MonacoEditorComponent implements ControlValueAccessor {
      * The font family
      */
     @Input()
-    public set fontFamily(value: string) {
+    public set fontFamily(value: string | undefined) {
         this.updateOptions({ fontFamily: value } as EditorOptions);
     }
 
-    public get fontFamily(): string {
+    public get fontFamily(): string | undefined {
         return this.options.fontFamily;
     }
 
@@ -841,11 +841,11 @@ export class MonacoEditorComponent implements ControlValueAccessor {
      * The font weight
      */
     @Input()
-    public set fontWeight(value: FontWeight) {
+    public set fontWeight(value: FontWeight | undefined) {
         this.updateOptions({ fontWeight: value } as EditorOptions);
     }
 
-    public get fontWeight(): FontWeight {
+    public get fontWeight(): FontWeight | undefined {
         return this.options.fontWeight;
     }
 
@@ -877,29 +877,29 @@ export class MonacoEditorComponent implements ControlValueAccessor {
     * Language of content to show
     */
     @Input()
-    public set language(value: Language) {
+    public set language(value: Language | undefined) {
         this.updateOptions({ language: value } as EditorOptions);
     }
 
-    public get language(): Language {
+    public get language(): Language | undefined {
         return this.options.language;
     }
 
     @Input()
-    public set value(value: string) {
+    public set value(value: string | undefined) {
         this._value = value;
     }
 
-    public get value(): string {
+    public get value(): string | undefined {
         return this._value;
     }
 
     @Input()
-    public set valueToCompare(value: string) {
+    public set valueToCompare(value: string | undefined) {
         this._valueToCompare = value;
     }
 
-    public get valueToCompare(): string {
+    public get valueToCompare(): string | undefined {
         return this._valueToCompare;
     }
 
@@ -908,9 +908,9 @@ export class MonacoEditorComponent implements ControlValueAccessor {
     public monacoEditorService = inject(MonacoEditorService);
     public control = inject(NgControl, { optional: true, self: true });
 
-    private _isDiffEditor: boolean;
-    private _value: string;
-    private _valueToCompare: string;
+    private _isDiffEditor?: boolean;
+    private _value?: string;
+    private _valueToCompare?: string;
 
     public constructor() {
         this.options = {

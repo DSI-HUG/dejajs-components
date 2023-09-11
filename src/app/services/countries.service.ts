@@ -10,22 +10,22 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Color, MaterialColorService } from '@deja-js/component/core/graphics';
 import { ObjectMapper } from 'json-object-mapper';
-import { map, Observable, of, shareReplay } from 'rxjs';
+import { map, Observable, of, shareReplay, switchMap, throwError } from 'rxjs';
 
 export class Country {
-    public displayName: string = void 0;
-    public naqme: string = void 0;
-    public code: string = void 0;
-    public color: string = void 0;
-    public equals: (item: Country) => boolean;
+    public displayName?: string = void 0;
+    public naqme?: string = void 0;
+    public code?: string = void 0;
+    public color?: string = void 0;
+    public equals?: (item: Country) => boolean;
 }
 
 @Injectable({
     providedIn: 'root'
 })
 export class CountriesService {
-    private countriesDic = {} as { [code: string]: Country };
-    private materialColors: ReadonlyArray<Color>;
+    private countriesDic = new Map<string, Country>();
+    private materialColors: ReadonlyArray<Color> | undefined;
 
     private httpClient = inject(HttpClient);
     private materialColorService = inject(MaterialColorService);
@@ -39,22 +39,30 @@ export class CountriesService {
             map(countries => countries[index % countries.length]));
     }
 
-    public getCountryByCode$(code: string): Observable<Country> {
-        return of(this.countriesDic[code]);
+    public getCountryByCode$(code: string): Observable<Country | undefined> {
+        return of(this.countriesDic.get(code));
     }
 
     public getCountries$(query?: string, number?: number): Observable<Country[]> {
         let recordCount = number || 0;
         return this.httpClient.get<Record<string, unknown>>('assets/datas/countries.json', {}).pipe(
-            map(json => ObjectMapper.deserializeArray(Country, json.data)),
+            switchMap(json => {
+                if (!json.data) {
+                    return throwError(() => new Error('Fail to get countries'));
+                }
+
+                return of(ObjectMapper.deserializeArray(Country, json.data));
+            }),
             map(countries => {
                 let colorIndex = 0;
                 countries.forEach(country => {
                     country.displayName = country.naqme;
-                    country.color = this.materialColors[colorIndex].toHex();
-                    this.countriesDic[country.code] = country;
+                    country.color = this.materialColors?.[colorIndex].toHex();
+                    if (country.code) {
+                        this.countriesDic.set(country.code, country);
+                    }
 
-                    if (++colorIndex >= this.materialColors.length) {
+                    if (this.materialColors && ++colorIndex >= this.materialColors.length) {
                         colorIndex = 0;
                     }
                 });
@@ -65,9 +73,9 @@ export class CountriesService {
                 if (query) {
                     const sr = new RegExp(`^${query}`, 'i');
                     const sc = new RegExp(`^(?!${query}).*(${query})`, 'i');
-                    const result = countries.filter(z => sr.test(z.naqme));
+                    const result = countries.filter(z => z.naqme && sr.test(z.naqme));
                     countries.forEach(z => {
-                        if (sc.test(z.naqme)) {
+                        if (z.naqme && sc.test(z.naqme)) {
                             result.push(z);
                         }
                     });

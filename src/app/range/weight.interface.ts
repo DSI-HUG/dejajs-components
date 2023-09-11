@@ -29,6 +29,9 @@ export interface IWeight extends IRange {
 export class Weight implements IWeight {
     public min: number;
     public max: number;
-    public $width: number;
-    public constructor(public minWeight: number, public maxWeight: number) { }
+    public $width?: number;
+    public constructor(public minWeight: number, public maxWeight: number) {
+        this.min = 0;
+        this.max = 0;
+    }
 }
