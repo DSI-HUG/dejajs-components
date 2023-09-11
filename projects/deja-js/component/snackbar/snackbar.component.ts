@@ -55,7 +55,7 @@ export class DejaSnackbarComponent extends Destroy implements OnInit, AfterViewI
     /**
      * set a container for the snackbar instead of default behavior (viewport)
      */
-    @Input() public outerContainerElement: HTMLElement;
+    @Input() public outerContainerElement?: HTMLElement;
 
     /**
      * inner container element, represent the snackbar since the host has no height width and a position relative to it's html declaration
@@ -65,7 +65,7 @@ export class DejaSnackbarComponent extends Destroy implements OnInit, AfterViewI
     /**
      * height of the inner container element
      */
-    private height: number;
+    private height = 32;
 
     /**
      * vertical space between snackbar
@@ -95,7 +95,7 @@ export class DejaSnackbarComponent extends Destroy implements OnInit, AfterViewI
     /**
      * string representation of the alignment, used for statements and initial final position
      */
-    private anchor: string;
+    private anchor?: string;
 
     /**
      * object representation of the alignment, used to filter incompatible alignments and build the string representation
@@ -136,6 +136,8 @@ export class DejaSnackbarComponent extends Destroy implements OnInit, AfterViewI
 
     public constructor() {
         super();
+
+        this.host = this.elementRef.nativeElement;
 
         if (!DejaSnackbarComponent.INSTANCES) {
             DejaSnackbarComponent.INSTANCES = [];
@@ -210,8 +212,6 @@ export class DejaSnackbarComponent extends Destroy implements OnInit, AfterViewI
      * afterviewInit hook
      */
     public ngAfterViewInit(): void {
-        this.host = this.elementRef.nativeElement;
-
         if (!this.outerContainerElement) {
             // Set default outer container if none specified
             this.outerContainerElement = this.host.ownerDocument.body;
@@ -399,10 +399,8 @@ export class DejaSnackbarComponent extends Destroy implements OnInit, AfterViewI
         }
 
         const transform = window.getComputedStyle(this.host).transform;
-        const sixth = parseFloat(transform
-            .split(',')
-            .slice(-1)
-            .pop());
+        const sixthStr = transform.split(',').slice(-1).pop();
+        const sixth = sixthStr && parseFloat(sixthStr) || 0;
 
         this.animate$.next({
             before: {

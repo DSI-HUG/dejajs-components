@@ -151,7 +151,7 @@ export class DejaTilesComponent extends Destroy implements AfterViewInit, Contro
     }
 
     // provide a public access
-    public get selectionRect$(): Subject<Rect> {
+    public get selectionRect$(): Subject<Rect | undefined> {
         return this.layoutProvider.selectionRect$;
     }
 
@@ -313,7 +313,7 @@ export class DejaTilesComponent extends Destroy implements AfterViewInit, Contro
         return tiles;
     }
 
-    public paste(): DejaTile[] {
+    public paste(): DejaTile[] | undefined {
         const tiles = this.layoutProvider.paste();
         this.changeDetectorRef.markForCheck();
         return tiles;

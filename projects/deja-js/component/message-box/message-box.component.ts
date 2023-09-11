@@ -20,13 +20,13 @@ export class DejaMessageBoxComponent implements OnInit {
     // eslint-disable-next-line @angular-eslint/no-output-native
     @Output() public readonly close = new EventEmitter();
 
-    @Input() public type: DejaMessageBoxType;
-    @Input() public title: string;
-    @Input() public icon: string;
-    @Input() public actions: Array<DejaMessageBoxAction>;
+    @Input() public type?: DejaMessageBoxType;
+    @Input() public title?: string;
+    @Input() public icon?: string;
+    @Input() public actions?: Array<DejaMessageBoxAction>;
 
     /** Event Emmited when the close action is called */
-    @ContentChild('actionsTemplate') public actionsTemplate: TemplateRef<unknown>;
+    @ContentChild('actionsTemplate') public actionsTemplate?: TemplateRef<unknown>;
 
     @Input()
     public set horizontal(value: BooleanInput) {
@@ -46,7 +46,7 @@ export class DejaMessageBoxComponent implements OnInit {
         return this._showCloseIcon;
     }
 
-    private _horizontal: boolean;
+    private _horizontal = false;
     private _showCloseIcon = false;
 
     public ngOnInit(): void {
@@ -63,7 +63,7 @@ export class DejaMessageBoxComponent implements OnInit {
         }
     }
 
-    private getIconFromType(type: 'info' | 'primary' | 'success' | 'warn' | 'danger'): string {
+    private getIconFromType(type: 'info' | 'primary' | 'success' | 'warn' | 'danger'): string | undefined {
         switch (type) {
             case 'info':
             case 'primary':
@@ -76,7 +76,7 @@ export class DejaMessageBoxComponent implements OnInit {
             case 'danger':
                 return 'error';
             default:
-                return null;
+                return undefined;
         }
     }
 }

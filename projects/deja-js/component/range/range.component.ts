@@ -32,15 +32,15 @@ export class DejaRangeComponent extends Destroy implements ControlValueAccessor 
     // index of the selected range
     @Input() public selected = 0;
     // custom templates
-    @ContentChild('rangeTemplate') public rangeTemplate: TemplateRef<unknown>;
-    @ContentChild('separatorTemplate') public separatorTemplate: TemplateRef<unknown>;
+    @ContentChild('rangeTemplate') public rangeTemplate?: TemplateRef<unknown>;
+    @ContentChild('separatorTemplate') public separatorTemplate?: TemplateRef<unknown>;
 
     // minimum range percentage, used to avoid 2 separator being on the same visual space
     private minimumRangePercentage = 0.01;
 
     private _readOnly = true;
     private _disabled = false;
-    private _ranges: IRange[];
+    private _ranges?: IRange[];
 
     private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private changeDetectorRef = inject(ChangeDetectorRef);
@@ -225,7 +225,7 @@ export class DejaRangeComponent extends Destroy implements ControlValueAccessor 
             // get the block HTMLElement (contains range HTMLElement & separator HTMLElement)
             let parentElement = target.parentElement;
             // eslint-disable-next-line no-loops/no-loops
-            while (!parentElement.classList.contains('block')) {
+            while (parentElement && !parentElement.classList.contains('block')) {
                 parentElement = parentElement.parentElement;
             }
 

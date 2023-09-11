@@ -58,7 +58,7 @@ export class DejaTile {
         return this._pixelBounds;
     }
 
-    public set percentBounds(value: Rect) {
+    public set percentBounds(value: Rect | undefined) {
         this._percentBounds = value;
     }
 

@@ -23,7 +23,7 @@ import { take, takeUntil, takeWhile, timer } from 'rxjs';
 export class DejaOverlayComponent extends Destroy {
     @Input() public overlayBackdropClass = 'cdk-overlay-transparent-backdrop';
 
-    @Input() public overlayContainerClass: string;
+    @Input() public overlayContainerClass?: string;
 
     /** Déclenché lorsque la visibilité du dialog change. */
     @Output() public readonly visibleChange = new EventEmitter<boolean>();
@@ -36,9 +36,9 @@ export class DejaOverlayComponent extends Destroy {
     @Input() public overlayOffsetY = 0;
 
     /** Overlay pane containing the options. */
-    @ViewChild(CdkConnectedOverlay, { static: true }) private overlay: CdkConnectedOverlay;
+    @ViewChild(CdkConnectedOverlay, { static: true }) private overlay?: CdkConnectedOverlay;
 
-    public overlayOrigin: CdkOverlayOrigin;
+    public overlayOrigin?: CdkOverlayOrigin;
 
     /** Renvoie une valeur qui indique si le dialog est affiché. */
     private _isVisible = false;
@@ -70,9 +70,9 @@ export class DejaOverlayComponent extends Destroy {
     }
 
     private _hasBackdrop = true;
-    private _width: number = null;
+    private _width?: number | undefined;
     private _widthForMobile = '100%';
-    private _ownerElement: HTMLElement;
+    private _ownerElement?: HTMLElement;
 
     @Input() public set hasBackdrop(value: BooleanInput) {
         this._hasBackdrop = coerceBooleanProperty(value);
@@ -89,7 +89,7 @@ export class DejaOverlayComponent extends Destroy {
     }
 
     private _positions = DejaConnectionPositionPair.default;
-    private _positionsForMobile: DejaConnectionPositionPair[];
+    private _positionsForMobile?: DejaConnectionPositionPair[];
 
     private _isMobile = false;
     private disableMediaService = false;

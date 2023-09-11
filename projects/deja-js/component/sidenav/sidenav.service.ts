@@ -12,7 +12,7 @@ import { Injectable } from '@angular/core';
 })
 export class DejaSidenavService {
 
-    public opened: boolean;
+    public opened = false;
     public mode: 'over' | 'side' = 'side';
     public hidden = false;
 

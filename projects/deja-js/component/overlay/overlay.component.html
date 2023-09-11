@@ -1,3 +1,5 @@
-<ng-template #overlayCmp cdk-connected-overlay [cdkConnectedOverlayHasBackdrop]="hasBackdrop" [cdkConnectedOverlayBackdropClass]="overlayBackdropClass" [cdkConnectedOverlayOpen]="!!isVisible" [cdkConnectedOverlayOffsetY]="overlayOffsetY" [cdkConnectedOverlayOffsetX]="overlayOffsetX" [cdkConnectedOverlayOrigin]="overlayOrigin" (backdropClick)="close()" (detach)="close()" [cdkConnectedOverlayPositions]="positionPairs" [cdkConnectedOverlayWidth]="overlayWidth">
-    <ng-content></ng-content>
-</ng-template>
+<ng-container *ngIf="overlayOrigin && overlayWidth">
+    <ng-template #overlayCmp cdk-connected-overlay [cdkConnectedOverlayHasBackdrop]="hasBackdrop" [cdkConnectedOverlayBackdropClass]="overlayBackdropClass" [cdkConnectedOverlayOpen]="!!isVisible" [cdkConnectedOverlayOffsetY]="overlayOffsetY" [cdkConnectedOverlayOffsetX]="overlayOffsetX" [cdkConnectedOverlayOrigin]="overlayOrigin" (backdropClick)="close()" (detach)="close()" [cdkConnectedOverlayPositions]="positionPairs" [cdkConnectedOverlayWidth]="overlayWidth">
+        <ng-content></ng-content>
+    </ng-template>
+</ng-container>

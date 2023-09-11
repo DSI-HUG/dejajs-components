@@ -32,7 +32,7 @@ export class DejaSidenavComponent extends Destroy implements OnInit {
     @Input()
     public headerIcon = 'face';
 
-    public title: string;
+    public title?: string;
     public mode = 'side';
     public _showToolbar = false;
 
