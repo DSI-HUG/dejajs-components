@@ -11,7 +11,7 @@ import { By } from '@angular/platform-browser';
 import { delay, take, tap, timer } from 'rxjs';
 
 import { DejaCircularPickerModule } from '.';
-import { DejaCircularPickerComponent, CircularRange } from './circular-picker.component';
+import { CircularRange, DejaCircularPickerComponent } from './circular-picker.component';
 
 describe('DejaCircularPickerComponent', () => {
     let component: DejaCircularPickerComponent;

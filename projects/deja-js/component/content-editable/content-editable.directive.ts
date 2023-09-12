@@ -56,7 +56,7 @@ export class DejaEditableDirective extends Destroy implements ControlValueAccess
         );
 
         const submit$ = keyDown$.pipe(
-            filter(event => event.code === KeyCodes.Enter && !this.multiline),
+            filter(event => (event.code === String(KeyCodes.Enter)) && !this.multiline),
             map(() => 'submit' as EditState)
         );
 

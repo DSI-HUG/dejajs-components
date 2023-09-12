@@ -7,7 +7,9 @@
         {
             "files": ["./**/*.ts"],
             "rules": {
-                "@angular-eslint/prefer-on-push-component-change-detection": "off"
+                "@angular-eslint/prefer-on-push-component-change-detection": "off",
+                "@typescript-eslint/prefer-nullish-coalescing": "off",
+                "@typescript-eslint/array-type": "off"
             }
         }
     ]

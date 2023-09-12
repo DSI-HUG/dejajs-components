@@ -117,7 +117,7 @@ export class ViewPortService<T> {
             let startIndex: number;
             let endIndex: number;
             let newScrollPos: number | undefined;
-            if (!params.ensureParams || params.ensureParams.index === undefined || !params.ensureParams.atEnd) {
+            if (params.ensureParams?.index === undefined || !params.ensureParams.atEnd) {
                 if (rowsCount < 0) {
                     endIndex = items.length - 1;
                     startIndex = endIndex + 1 - Math.min(items.length, maxCount);
@@ -161,7 +161,7 @@ export class ViewPortService<T> {
             let afterSize = 0;
             let newScrollPos: number | undefined;
 
-            if (!params.ensureParams || params.ensureParams.index === undefined || !params.ensureParams.atEnd) {
+            if (params.ensureParams?.index === undefined || !params.ensureParams.atEnd) {
                 items.forEach((item: ViewPortItem<T>, index: number) => {
                     const itemSize = item.size || params.itemsSize;
 
@@ -312,7 +312,7 @@ export class ViewPortService<T> {
                 );
             }
 
-            if (!params.ensureParams || params.ensureParams.index === undefined || !params.ensureParams.atEnd) {
+            if (params.ensureParams?.index === undefined || !params.ensureParams.atEnd) {
                 // eslint-disable-next-line no-loops/no-loops
                 const itemElements = Array.from(elements) as HTMLElement[];
                 itemElements.forEach((itemElement, i) => {

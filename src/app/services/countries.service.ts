@@ -44,7 +44,7 @@ export class CountriesService {
     }
 
     public getCountries$(query?: string, number?: number): Observable<Country[]> {
-        let recordCount = number || 0;
+        let recordCount = number ?? 0;
         return this.httpClient.get<Record<string, unknown>>('assets/datas/countries.json', {}).pipe(
             switchMap(json => {
                 if (!json.data) {

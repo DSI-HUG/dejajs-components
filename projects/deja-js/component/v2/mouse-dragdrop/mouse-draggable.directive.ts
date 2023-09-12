@@ -59,7 +59,7 @@ export class MouseDraggableDirective<T> extends Destroy {
                             target = mouseDownEvent.target as HTMLElement;
                             // eslint-disable-next-line no-loops/no-loops
                             while (target && !match(target)) {
-                                target = target.parentElement as HTMLElement;
+                                target = target.parentElement!;
                             }
                         } else {
                             target = element;

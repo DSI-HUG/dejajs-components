@@ -248,10 +248,10 @@ export class DejaNumericStepperComponent extends Destroy implements OnInit {
 
         linkedElements$.pipe(
             switchMap(([formFieldElement]) => fromEvent<KeyboardEvent>(formFieldElement, 'keydown')),
-            filter(event => event.code === KeyCodes.UpArrow || event.code === KeyCodes.DownArrow),
+            filter(event => event.code === String(KeyCodes.UpArrow) || event.code === String(KeyCodes.DownArrow)),
             takeUntil(this.destroyed$)
         ).subscribe(event => {
-            this.clickArrow$.next(event.code === KeyCodes.UpArrow);
+            this.clickArrow$.next(event.code === String(KeyCodes.UpArrow));
             event.preventDefault();
             return false;
         });

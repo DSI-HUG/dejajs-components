@@ -55,7 +55,7 @@ export class Person {
     providedIn: 'root'
 })
 export class PeopleService {
-    private peopleDic = {} as { [code: string]: Person };
+    private peopleDic = {} as Record<string, Person>;
     private materialColors: ReadonlyArray<Color>;
 
     private httpClient = inject(HttpClient);
@@ -67,7 +67,7 @@ export class PeopleService {
     }
 
     public getPeople$(query?: string, number?: number): Observable<Person[]> {
-        let recordCount = number || 0;
+        let recordCount = number ?? 0;
         return this.httpClient.get('assets/datas/people.json', {}).pipe(
             map(json => ObjectMapper.deserializeArray(Person, json)),
             map(people => {

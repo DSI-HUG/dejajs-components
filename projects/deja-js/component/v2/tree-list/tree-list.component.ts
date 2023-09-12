@@ -600,7 +600,7 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
                     return undefined;
                 }
 
-                const keyCode = event.code;
+                const keyCode = event.code as KeyCodes;
                 if (keyCode === KeyCodes.Home ||
                     keyCode === KeyCodes.End ||
                     keyCode === KeyCodes.PageUp ||
@@ -785,7 +785,7 @@ export class TreeListComponent<T> extends Destroy implements ControlValueAccesso
             mergeWith(inputKeyboardEvents$),
             filter(() => !this.disabled),
             filter(event => {
-                const keyCode = event?.code;
+                const keyCode = event?.code as KeyCodes;
                 return !!keyCode && (keyCode >= KeyCodes.Key0 ||
                     keyCode === KeyCodes.Backspace ||
                     keyCode === KeyCodes.Space ||

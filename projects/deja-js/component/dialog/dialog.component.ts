@@ -45,9 +45,9 @@ export class DejaDialogComponent {
      */
     public constructor() {
         this.close$ = fromEvent<KeyboardEvent>(this.elementRef.nativeElement.ownerDocument, 'keyup').pipe(
-            filter(event => this.defaultResponse && event.code === KeyCodes.Enter || event.code === KeyCodes.Escape),
+            filter(event => this.defaultResponse && event.code === String(KeyCodes.Enter) || event.code === String(KeyCodes.Escape)),
             map(event => {
-                if (event.code === KeyCodes.Enter) {
+                if (event.code === String(KeyCodes.Enter)) {
                     return this.defaultResponse;
                 }
 

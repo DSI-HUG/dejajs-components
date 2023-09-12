@@ -58,7 +58,7 @@ export class DejaTilesDemoComponent {
             map(country => {
                 const tile = new DejaTile();
                 tile.percentBounds = new Rect(x1, y1, 15, 15);
-                tile.color = country.color || '';
+                tile.color = country.color ?? '';
                 tile.templateModel = country;
 
                 x1 += 15;
@@ -78,7 +78,7 @@ export class DejaTilesDemoComponent {
             map(country => {
                 const tile = new DejaTile();
                 tile.percentBounds = new Rect(x2, y2, 15, 15);
-                tile.color = country.color || '';
+                tile.color = country.color ?? '';
                 tile.templateModel = country;
 
                 x2 += 15;
@@ -100,7 +100,7 @@ export class DejaTilesDemoComponent {
                 const country = this.countriesMap.get(target.id);
                 const tile = new DejaTile();
                 tile.percentBounds = new Rect(0, 0, 15, 15);
-                tile.color = country?.color || '';
+                tile.color = country?.color ?? '';
                 tile.templateModel = country;
 
                 return {
@@ -120,7 +120,7 @@ export class DejaTilesDemoComponent {
             } as DropCursorInfos),
             drop: dragContext => {
                 const country = dragContext.country;
-                dropArea.innerText = `The dropped country is ${country.naqme || ''} - the code is: ${country.code || ''}`;
+                dropArea.innerText = `The dropped country is ${country.naqme ?? ''} - the code is: ${country.code ?? ''}`;
             }
         } as MouseDroppableContext<MouseDraggableInterface>;
     }

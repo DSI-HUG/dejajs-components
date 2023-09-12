@@ -19,8 +19,8 @@ describe('MonacoEditorComponent', () => {
     let fixture: ComponentFixture<MonacoEditorComponent>;
 
     beforeEach(waitForAsync(() => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any,  @typescript-eslint/no-unsafe-assignment
-        const wnd = <any>window;
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        const wnd = window as unknown as { MONACOEDITOR_BASEPATH: string };
         // Define a monaco editor base path just for tests, because webpack configuration or asset plugin not working
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         wnd.MONACOEDITOR_BASEPATH = 'https://dsi-hug.github.io/dejajs-components/assets/monaco/vs';

@@ -308,10 +308,10 @@ export class ItemService<T> {
                 const itemsToSelect = itemsToChange.filter(item => item.selecting);
                 const itemsToUnselect = itemsToChange.filter(item => !item.selecting);
 
-                const selecting$ = itemsToSelect.length && this.selectingItems && this.selectingItems(itemsToSelect) || of(itemsToSelect);
+                const selecting$ = itemsToSelect.length && this.selectingItems?.(itemsToSelect) || of(itemsToSelect);
                 return selecting$.pipe(
                     map(selectable => selectable?.forEach(item => item.selected = true)),
-                    switchMap(() => itemsToUnselect?.length && this.unSelectingItems && this.unSelectingItems(itemsToUnselect) || of(itemsToUnselect)),
+                    switchMap(() => itemsToUnselect?.length && this.unSelectingItems?.(itemsToUnselect) || of(itemsToUnselect)),
                     map(unselectable => {
                         unselectable?.forEach(item => item.selected = false);
                         itemsToChange.forEach(item => delete item.selecting);
@@ -485,6 +485,7 @@ export class ItemService<T> {
 
     protected compareModels = (model1?: T, model2?: T, valueField?: string): boolean => {
 
+        // eslint-disable-next-line @typescript-eslint/prefer-optional-chain
         if (model1 === undefined || model1 === null || model2 === undefined || model2 === null) {
             return false;
         }

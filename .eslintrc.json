@@ -8,7 +8,9 @@
         "plugins": ["deprecation"],
         "rules": {
             "@angular-eslint/prefer-on-push-component-change-detection": "off",
-            "deprecation/deprecation": "warn"
+            "deprecation/deprecation": "warn",
+            "@typescript-eslint/prefer-nullish-coalescing": "off",
+            "@typescript-eslint/array-type": "off"
         }
     }]
 }

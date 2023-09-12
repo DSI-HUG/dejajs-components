@@ -43,12 +43,12 @@ export class StyleEditorDialogComponent extends Destroy {
         this.materialColorService = injector.get(MaterialColorService);
 
         this.formGroup = new FormGroup<StyleEditorDialogFormControls>({
-            borderWidth: new FormControl((this.params?.borderWidth || 0) / this.widthStep || null),
+            borderWidth: new FormControl((this.params?.borderWidth ?? 0) / this.widthStep || null),
             borderColor: new FormControl(this.params?.borderColor && Color.fromHex(this.params.borderColor) || null),
-            topBorder: new FormControl(((this.params?.borderDirection || 0) & StyleConfigBorderDirection.top) !== 0),
-            rightBorder: new FormControl(((this.params?.borderDirection || 0) & StyleConfigBorderDirection.right) !== 0),
-            bottomBorder: new FormControl(((this.params?.borderDirection || 0) & StyleConfigBorderDirection.bottom) !== 0),
-            leftBorder: new FormControl(((this.params?.borderDirection || 0) & StyleConfigBorderDirection.left) !== 0)
+            topBorder: new FormControl(((this.params?.borderDirection ?? 0) & StyleConfigBorderDirection.top) !== 0),
+            rightBorder: new FormControl(((this.params?.borderDirection ?? 0) & StyleConfigBorderDirection.right) !== 0),
+            bottomBorder: new FormControl(((this.params?.borderDirection ?? 0) & StyleConfigBorderDirection.bottom) !== 0),
+            leftBorder: new FormControl(((this.params?.borderDirection ?? 0) & StyleConfigBorderDirection.left) !== 0)
         });
 
         syleEditorPrintService.messageDialogResult$.pipe(

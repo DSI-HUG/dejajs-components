@@ -250,7 +250,7 @@ export class MaterialColorService {
             800: '#37474f',
             900: '#263238'
         }
-    } as { [color: string]: { [nuance: string]: string } };
+    } as Record<string, Record<string, string>>;
 
     public get colors(): ReadonlyArray<MaterialColor> {
         return this._colors || Array.from(Object.keys(this.palet)).reduce((m, baseColorName) => {
@@ -269,7 +269,7 @@ export class MaterialColorService {
         }, this._colors = new Array<MaterialColor>());
     }
 
-    public getColor(name: string): { [nuance: string]: string } {
+    public getColor(name: string): Record<string, string> {
         return this.palet[name];
     }
 

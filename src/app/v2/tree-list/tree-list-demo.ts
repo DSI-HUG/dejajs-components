@@ -227,7 +227,7 @@ export class TreeListDemoComponent extends Destroy {
 
         this.groupedCountryItems$ = this.countries$.pipe(
             map(countries => {
-                const countryMap = {} as { [groupName: string]: Item<Country>[] };
+                const countryMap = {} as Record<string, Item<Country>[]>;
                 const result = [] as CountryGroupItem[];
 
                 const emptyGroupItem = new CountryGroupItem(undefined, 'EmptyGroup');
@@ -259,7 +259,7 @@ export class TreeListDemoComponent extends Destroy {
 
         this.onDemandGroupedCountryItems$ = this.countries$.pipe(
             map(countries => {
-                const countryMap = {} as { [groupName: string]: Item<Country>[] };
+                const countryMap = {} as Record<string, Item<Country>[]>;
 
                 return countries.reduce((result, country) => {
                     const firstLetter = country.naqme?.[0];

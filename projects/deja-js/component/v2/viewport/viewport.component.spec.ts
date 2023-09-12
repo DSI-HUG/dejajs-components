@@ -306,7 +306,6 @@ describe('ViewPortComponent', () => {
         const viewPortElement = fixture.debugElement.query(By.css('.viewport-wrapper')).nativeElement as HTMLElement;
 
         observeViewPort$(fixture, 6, 16480, 23280, 176, 412, 417).subscribe(() => {
-            // tslint:disable-next-line:no-string-literal
             void expect(viewPortElement.clientHeight).toEqual(120);
             done();
         });

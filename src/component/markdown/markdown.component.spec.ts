@@ -53,7 +53,7 @@ describe('DejaMarkdownComponent', () => {
     it('should convert string value to html', () => {
         component.value = '<p class="pTest"><a href="www.google.ch">site google</a></p>';
         fixture.detectChanges();
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+        // eslint-disable-next-line @typescript-eslint/non-nullable-type-assertion-style
         void expect(((fixture.nativeElement as HTMLElement).querySelector('.pTest > a') as HTMLElement).innerText).toEqual('site google');
     });
 
@@ -72,6 +72,7 @@ describe('DejaMarkdownComponent', () => {
 
         // Must do detectChanges after httpMock.flush()
         fixture.detectChanges();
+        // eslint-disable-next-line @typescript-eslint/non-nullable-type-assertion-style
         void expect((fixture.nativeElement as HTMLElement).querySelector('h1').innerText).toEqual('qwertzqwertz');
     });
 

@@ -103,7 +103,7 @@ export const SIMPLIFIED_MEDIA_QUERY_DEFINITIONS = [
 export class MediaService implements OnDestroy {
     public isMobile$: Observable<boolean>;
     public mediaChanged$ = new BehaviorSubject<string>('lg');
-    public mql = {} as { [alias: string]: MediaQueryList };
+    public mql = {} as Record<string, MediaQueryList>;
 
     private zone = inject(NgZone);
 

@@ -148,8 +148,8 @@ export class DejaSnackbarComponent extends Destroy implements OnInit, AfterViewI
         const applyParams = (styles: CSSStyleDeclaration): void => {
             Object.keys(styles)
                 .forEach(key => {
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any,  @typescript-eslint/no-unsafe-assignment,  @typescript-eslint/no-unsafe-member-access
-                    (<any> this.host.style)[key] = (<any>styles)[key];
+                    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+                    (<never> this.host.style)[key] = (<never>styles)[key];
                 });
         };
 

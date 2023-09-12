@@ -21,7 +21,7 @@ export class Rect implements DOMRect {
     public width: number;
     public height: number;
 
-    public constructor(left?: number | unknown, top?: number, width?: number, height?: number) {
+    public constructor(left?: unknown, top?: number, width?: number, height?: number) {
         if (typeof left === 'number') {
             this.left = left || 0;
             this.top = top || 0;

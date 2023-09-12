@@ -304,7 +304,7 @@ export class DejaTilesLayoutProvider extends Destroy {
                 const externalDrop = !dragDropInfos.tiles;
                 const mouseMove$ = fromEvent<MouseEvent>(container, 'mousemove');
                 const keyUp$ = fromEvent<KeyboardEvent>(container.ownerDocument, 'keyup');
-                const escape$ = keyUp$.pipe(filter(event => event.code === KeyCodes.Escape));
+                const escape$ = keyUp$.pipe(filter(event => event.code === String(KeyCodes.Escape)));
 
                 const mouseButtonReleased$ = mouseMove$.pipe(
                     filter(event => event.buttons !== 1)
