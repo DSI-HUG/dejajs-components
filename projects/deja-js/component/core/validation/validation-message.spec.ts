@@ -29,6 +29,6 @@ describe('ValidationMessages', () => {
     });
 
     it('should return undefined', () => {
-        void expect(validationMessages.getMessage(null)).toBeUndefined();
+        void expect(validationMessages.getMessage('')).toBeUndefined();
     });
 });

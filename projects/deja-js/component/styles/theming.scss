@@ -17,7 +17,6 @@
 @use '../message-box/message-box-theme'as messageBoxTheme;
 @use '../range/range-theme'as rangeTheme;
 @use '../sidenav/sidenav-theme'as sidenavTheme;
-@use '../tooltip/tooltip-theme'as tooltipTheme;
 @use '../v2/numeric-stepper/numeric-stepper-theme'as numericStepper2Theme;
 @use '../v2/mouse-dragdrop/mouse-dragdrop-theme'as mouseDragdrop2Theme;
 @use '../v2/tree-list/tree-list-theme'as treeList2Theme;
@@ -42,7 +41,6 @@
     @include rangeTheme.range-theme($custom-theme);
     @include sidenavTheme.sidenav-theme($custom-theme);
     @include splitter2Theme.splitter-theme($custom-theme);
-    @include tooltipTheme.tooltip-theme($custom-theme);
     @include mouseDragdrop2Theme.mouse-dragdrop-2-theme($custom-theme);
     @include treeList2Theme.tree-list-2-theme($custom-theme);
     @include viewport2Theme.viewport-2-theme($custom-theme);

@@ -50,13 +50,13 @@ describe('DejaColorPicker', () => {
         fixture.detectChanges();
 
         const el = fixture.debugElement.query(By.css('button'));
-        const backgroundColor = el.styles['background-color'];
+        const backgroundColor = el.styles['background-color'] || '';
         void expect([expectedColorHex, expectedColorRgb].includes(backgroundColor)).toBeTrue();
     });
 
     it('should set isOpen to true on show', () => {
         component.isOpen = false;
-        component.show(null);
+        component.show({} as MouseEvent);
 
         void expect(component.isOpen).toBeTruthy();
     });
@@ -64,7 +64,7 @@ describe('DejaColorPicker', () => {
     it('should not set isOpen to true on show if component disabled', () => {
         component.isOpen = false;
         component.disabled = true;
-        component.show(null);
+        component.show({} as MouseEvent);
 
         void expect(component.isOpen).toBeFalsy();
     });

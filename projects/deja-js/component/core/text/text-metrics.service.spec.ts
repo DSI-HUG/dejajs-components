@@ -12,7 +12,7 @@ import { DejaTextMetricsService } from './text-metrics.service';
 
 describe('DejaTextMetricsService', () => {
     let service: DejaTextMetricsService;
-    let spanElement: HTMLElement;
+    let spanElement: HTMLElement | null;
     const testText = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vulputate porttitor odio, non dictum massa vehicula nec.';
 
     beforeEach(() => {
@@ -29,13 +29,18 @@ describe('DejaTextMetricsService', () => {
         */
 
         spanElement = document.getElementById('testSpan');
-        service.metricsElem = spanElement;
+        if (spanElement) {
+            service.metricsElem = spanElement;
+        }
     });
 
     // remove the html fixture from the DOM
     afterEach(done => {
         timer(2000).subscribe(() => {
-            document.body.removeChild(document.getElementById('testSpan'));
+            const child = document.getElementById('testSpan');
+            if (child) {
+                document.body.removeChild(child);
+            }
             done();
         });
     });
@@ -59,7 +64,7 @@ describe('DejaTextMetricsService', () => {
 
     it('getTextMaxWidth() should return a value greater than 0', () => {
         const values: string[] = 'test content'.split(' ');
-        const maxWidth = service.getTextMaxWidth(values, spanElement);
+        const maxWidth = spanElement && service.getTextMaxWidth(values, spanElement);
         void expect(maxWidth).toBeGreaterThan(0);
         void expect(maxWidth).toBeLessThan(10 * 7); // 10px * 5 chars ('content')
         void expect(maxWidth).toBeGreaterThan(0.5 * 10 * 7); // (Arial width/height ratio) * 10px * 7 chars

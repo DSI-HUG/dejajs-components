@@ -36,38 +36,38 @@ describe('DejaMessageBoxComponent', () => {
 
     describe('input type', () => {
         it('should set an info icon if type is info', () => {
-            component.icon = null;
+            component.icon = undefined;
             component.type = 'info';
             fixture.detectChanges();
-            void expect(component.icon).toEqual('info');
+            void expect(String(component.icon)).toEqual('info');
         });
 
         it('should set an info icon if type is primary', () => {
-            component.icon = null;
+            component.icon = undefined;
             component.type = 'primary';
             fixture.detectChanges();
-            void expect(component.icon).toEqual('info');
+            void expect(String(component.icon)).toEqual('info');
         });
 
         it('should set a done icon if type is success', () => {
-            component.icon = null;
+            component.icon = undefined;
             component.type = 'success';
             fixture.detectChanges();
-            void expect(component.icon).toEqual('done');
+            void expect(String(component.icon)).toEqual('done');
         });
 
         it('should set a warning icon if type is warn', () => {
-            component.icon = null;
+            component.icon = undefined;
             component.type = 'warn';
             fixture.detectChanges();
-            void expect(component.icon).toEqual('warning');
+            void expect(String(component.icon)).toEqual('warning');
         });
 
         it('should set an error icon if type is danger', () => {
-            component.icon = null;
+            component.icon = undefined;
             component.type = 'danger';
             fixture.detectChanges();
-            void expect(component.icon).toEqual('error');
+            void expect(String(component.icon)).toEqual('error');
         });
     });
 
@@ -102,7 +102,7 @@ describe('DejaMessageBoxComponent', () => {
         });
 
         it('should not display mat-card-title if no icon', () => {
-            component.icon = null;
+            component.icon = undefined;
             fixture.detectChanges();
             void expect(fixture.debugElement.query(By.css('mat-card-title'))).toBeNull();
         });

@@ -7,16 +7,15 @@
  */
 import { Component, inject } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ControlsOf } from '@deja-js/component/core';
 
 import { DejaNumericStepperModule } from '.';
 import { DejaNumericStepperComponent } from './numeric-stepper.component';
 
-interface NumberForm {
-    numberValue: number;
+interface NumberFormControls {
+    numberValue: FormControl<number | null>;
 }
 
 @Component({
@@ -26,7 +25,7 @@ interface NumberForm {
                 <deja-numeric-stepper (increment)="numberValue = numberValue + step" (decrement)="numberValue = numberValue - step"></deja-numeric-stepper></mat-form-field>`
 })
 class DejaNumericStepperContainerComponent {
-    public numberForm: FormGroup<ControlsOf<NumberForm>>;
+    public numberForm: FormGroup<NumberFormControls>;
     public numberValue = 30;
     public step = 10;
 

@@ -47,7 +47,6 @@
         "@angular/platform-browser": "~16.0.4",
         "@angular/platform-browser-dynamic": "~16.0.4",
         "@angular/router": "~16.0.4",
-        "@fontsource/material-icons": "~5.0.2",
         "@fontsource/material-symbols-outlined": "~5.0.4",
         "core-js": "~3.30.2",
         "date-fns": "~2.30.0",

@@ -9,7 +9,7 @@
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Destroy } from '@deja-js/component/core';
-import { debounceTime, distinctUntilChanged, map, Subject, takeUntil } from 'rxjs';
+import { debounceTime, distinctUntilChanged, Subject, takeUntil } from 'rxjs';
 
 import { numberValidator } from './validators';
 
@@ -38,7 +38,7 @@ export class DejaNumericStepperDemoComponent extends Destroy {
     public value6max = 20;
 
     public numberForm: FormGroup<NumberFormControls>;
-    public onInput1Change$ = new Subject<Event>();
+    public onInput1Change$ = new Subject<number>();
 
     private changeDetectorRef = inject(ChangeDetectorRef);
 
@@ -55,7 +55,6 @@ export class DejaNumericStepperDemoComponent extends Destroy {
         this.onInput1Change$.pipe(
             debounceTime(1),
             distinctUntilChanged(),
-            map(event => parseFloat((event.target as HTMLInputElement).value)),
             takeUntil(this.destroyed$)
         ).subscribe(v => {
             this.value1 = v;
@@ -64,19 +63,19 @@ export class DejaNumericStepperDemoComponent extends Destroy {
     }
 
     public changeValue3(step: number): void {
-        this.numberForm.controls.numberValue3.setValue(this.numberForm.controls.numberValue3.value || 0 + step);
+        this.numberForm.controls.numberValue3.setValue((this.numberForm.controls.numberValue3.value || 0) + step);
     }
 
     public changeValue4(step: number): void {
-        this.numberForm.controls.numberValue4.setValue(this.numberForm.controls.numberValue4.value || 0 + step);
+        this.numberForm.controls.numberValue4.setValue((this.numberForm.controls.numberValue4.value || 0) + step);
     }
 
     public changeValue5(step: number): void {
-        this.numberForm.controls.numberValue5.setValue(this.numberForm.controls.numberValue5.value || 0 + step);
+        this.numberForm.controls.numberValue5.setValue((this.numberForm.controls.numberValue5.value || 0) + step);
     }
 
     public changeValue6(step: number): void {
-        const value = Math.max(Math.min(this.numberForm.controls.numberValue6.value || 0 || 0 + step, this.value6max), this.value6min);
+        const value = Math.max(Math.min((this.numberForm.controls.numberValue6.value || 0) + step, this.value6max), this.value6min);
         this.numberForm.controls.numberValue6.setValue(value);
     }
 }

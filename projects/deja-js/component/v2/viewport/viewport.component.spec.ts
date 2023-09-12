@@ -255,7 +255,7 @@ describe('ViewPortComponent', () => {
             delay(1),
             tap(() => fixture.detectChanges(true)),
             debounceTime(10),
-            filter(result => result.visibleItems?.length && result.listSize > 0), // items must be sized
+            filter(result => !!result.visibleItems?.length && result.listSize > 0), // items must be sized
             take(1),
             tap(result => {
                 const listitems = fixture.debugElement.queryAll(By.css('viewport > .viewport-wrapper > .listitem'));
@@ -280,7 +280,7 @@ describe('ViewPortComponent', () => {
 
     it('should render with viewport auto at position 0', done => {
         const fixture = TestBed.createComponent(ViewportAutoContainerComponent);
-        observeViewPort$(fixture, 5, 0, 39800, 134, 0, 4).subscribe(() => {
+        observeViewPort$(fixture, 5, 0, 39800, 154, 0, 4).subscribe(() => {
             done();
         });
         fixture.detectChanges();
@@ -328,7 +328,7 @@ describe('ViewPortComponent', () => {
             delay(10),
             tap(() => fixture.detectChanges()),
             debounceTime(100),
-            filter(result => result.visibleItems?.length && result.listSize > 0), // items must be sized
+            filter(result => !!result.visibleItems?.length && result.listSize > 0), // items must be sized
             take(3)
         ).subscribe(result => {
             const listitems = fixture.debugElement.queryAll(By.css('viewport > .viewport-wrapper > .listitem'));

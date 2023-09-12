@@ -160,7 +160,7 @@ export class DejaTilesLayoutProvider extends Destroy {
             let top = maxHeight;
             let left = 0;
             placeAtTheEnd.forEach(tile => {
-                tile.percentBounds = tile.percentBounds || new Rect(this.getPercentSize(left), this.getPercentSize(top), 3 * this.getTileMinPercentWidth(), 3 * this.getTileMinPercentHeight());
+                tile.percentBounds = !tile.percentBounds?.isEmpty && tile.percentBounds || new Rect(this.getPercentSize(left), this.getPercentSize(top), 3 * this.getTileMinPercentWidth(), 3 * this.getTileMinPercentHeight());
                 let pixelBounds = this.getPixelBounds(tile.percentBounds);
 
                 if (pixelBounds.right > width) {

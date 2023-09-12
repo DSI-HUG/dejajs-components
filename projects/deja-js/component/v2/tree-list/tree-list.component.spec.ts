@@ -92,7 +92,7 @@ class TreeListByModelContainerComponent {
         this.modelsList = this.sortingService.sort(modelsList, { name: 'value' } as SortInfos);
     }
 
-    public backgroundColor(item: Item<unknown>): string {
+    public backgroundColor(item: Item<unknown>): string | null {
         return item.selected ? '#888' : null;
     }
 }
@@ -165,7 +165,7 @@ describe('TreeListComponent', () => {
         treeListInstance.pageSize = 0;
         void expect(treeListInstance.pageSize).toBe(0);
 
-        void expect(treeListInstance.hintLabel).toBeUndefined();
+        void expect(treeListInstance.hintLabel).toBe('');
         treeListInstance.hintLabel = 'I am a hint label';
         void expect(treeListInstance.hintLabel).toEqual('I am a hint label');
 
@@ -188,7 +188,7 @@ describe('TreeListComponent', () => {
         // eslint-disable-next-line rxjs/no-subject-value
         void expect(treeListInstance.itemService.minSearchLength$.getValue()).toBe(3);
 
-        void expect(treeListInstance.disabled).toBeNull();
+        void expect(treeListInstance.disabled).toBeUndefined();
         treeListInstance.disabled = true;
         void expect(treeListInstance.disabled).toBeTruthy();
         treeListInstance.setDisabledState(false);
@@ -261,7 +261,7 @@ describe('TreeListComponent', () => {
             take(5)
         ).subscribe(vp => {
             const selectedElements = fixture.debugElement.queryAll(By.css('tree-list > .listcontainer .listitem.selected'));
-            const selectedItems = vp.items.filter((item: Item<unknown>) => item.selected);
+            const selectedItems = vp.items.filter(item => (item as Item<unknown>).selected);
             let itemsToSelect;
 
             switch (++pass) {
@@ -281,7 +281,7 @@ describe('TreeListComponent', () => {
                     void expect(selectedElements[1]?.attributes.flat).toBe(`${vp.endIndex}`);
                     void expect(selectedItems.length).toBe(3);
                     // Clear selection
-                    treeListInstance.selectedItems = null;
+                    treeListInstance.selectedItems = new Array<Item<unknown>>();
                     treeListInstance.reloadViewPort();
                     fixture.detectChanges();
                     break;
@@ -302,7 +302,7 @@ describe('TreeListComponent', () => {
                     void expect(selectedElements[0]?.attributes.flat).toBe('5');
                     void expect(selectedItems.length).toBe(1);
                     // Clear selection
-                    treeListInstance.selectedItem = null;
+                    treeListInstance.selectedItem = undefined;
                     fixture.detectChanges();
                     break;
 
@@ -364,8 +364,8 @@ describe('TreeListByModelContainerComponent', () => {
             take(7)
         ).subscribe(vp => {
             const selectedModels = fixture.debugElement.queryAll(By.css('tree-list > .listcontainer .listitem.selected'));
-            const models = vp.visibleItems.map((item: Item<unknown>) => item.model);
-            const selectedItems = vp.items.filter((item: Item<unknown>) => item.selected);
+            const models = vp.visibleItems.map(item => (item as Item<unknown>).model);
+            const selectedItems = vp.items.filter(item => (item as Item<unknown>).selected);
             let itemToSelect: Item<unknown>;
 
             switch (++pass) {
@@ -385,7 +385,7 @@ describe('TreeListByModelContainerComponent', () => {
                     void expect(selectedModels.length).toBe(2);
                     void expect(selectedItems.length).toBe(2);
                     // Clear selection
-                    treeListInstance.selectedModels = null;
+                    treeListInstance.selectedModels = new Array<Item<unknown>>();
                     treeListInstance.reloadViewPort();
                     fixture.detectChanges();
                     break;
@@ -470,12 +470,12 @@ describe('TreeListByModelContainerComponent', () => {
         ).subscribe(vp => {
             const selectedElements = fixture.debugElement.queryAll(By.css('tree-list > .listcontainer .listitem.selected'));
             const currentElement = fixture.debugElement.query(By.css('tree-list > .listcontainer .listitem.current'));
-            const selectedItems = vp.items.filter((item: Item<unknown>) => item.selected);
+            const selectedItems = vp.items.filter(item => (item as Item<unknown>).selected);
 
             switch (++pass) {
                 case 1:
                     // Selection from HTML
-                    void expect(vp.items.filter((item: Item<unknown>) => item.selected).length).toBe(3);
+                    void expect(vp.items.filter(item => (item as Item<unknown>).selected).length).toBe(3);
                     // Clear selection
                     treeListInstance.selectedModel = null;
                     treeListInstance.refreshViewPort();
@@ -795,7 +795,7 @@ describe('TreeListByOptionsContainerComponent', () => {
         ).subscribe(vp => {
             const selectedElements = fixture.debugElement.queryAll(By.css('tree-list > .listcontainer .listitem.selected'));
             const currentElement = fixture.debugElement.query(By.css('tree-list > .listcontainer .listitem.current'));
-            const selectedItems = vp.items.filter((item: Item<unknown>) => item.selected);
+            const selectedItems = vp.items.filter(item => (item as Item<unknown>).selected);
 
             switch (++pass) {
                 case 1:
@@ -909,7 +909,7 @@ describe('TreeListByOptionsContainerComponent', () => {
             const displayedElements = fixture.debugElement.queryAll(By.css('tree-list > .listcontainer .listitem'));
             const selectedElements = fixture.debugElement.queryAll(By.css('tree-list > .listcontainer .listitem.selected'));
             const currentElement = fixture.debugElement.query(By.css('tree-list > .listcontainer .listitem.current'));
-            const selectedItems = vp.items.filter((item: Item<unknown>) => item.selected);
+            const selectedItems = vp.items.filter(item => (item as Item<unknown>).selected);
 
             switch (++pass) {
                 case 1:

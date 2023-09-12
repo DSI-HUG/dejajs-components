@@ -438,7 +438,12 @@ export class ItemService<T> {
         }
 
         const flatAttribute = element.getAttribute('flat');
-        return flatAttribute && +flatAttribute || undefined;
+        const index = flatAttribute && +flatAttribute;
+        if (index === '') {
+            return undefined;
+        }
+
+        return index ?? undefined;
     }
 
     /** Retourne une valeur indiquant si l'élément spécifié correspond aux critères de recherche spécifiés

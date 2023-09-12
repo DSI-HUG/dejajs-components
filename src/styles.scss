@@ -50,6 +50,8 @@ body {
         flex-direction: column; // overflow: hidden;
     }
 
+    font-family: Roboto, 'Helvetica Neue', sans-serif;
+
     @include create-theme(mat.$blue-palette, mat.$teal-palette);
 
     &[theme="pink"] {

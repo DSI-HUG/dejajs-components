@@ -15,7 +15,6 @@ deja-sidenav {
     @mixin sidebar-light() {
         .mat-sidenav {
             transform: translate3d(calc(-100% + #{ $light-sidenav-width }), 0, 0);
-            visibility: visible !important;
 
             .header {
                 padding: 0 8px;
@@ -25,6 +24,11 @@ deja-sidenav {
                 .header-text {
                     display: none;
                 }
+            }
+
+            &.mat-drawer[style*="visibility: hidden"] {
+                display: block;
+                visibility: visible !important;
             }
 
             deja-sidenav-menu {

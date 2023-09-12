@@ -31,7 +31,7 @@ describe('DejaOverlayComponent', () => {
         const staleContainers = document.querySelectorAll('.cdk-overlay-container');
         // eslint-disable-next-line no-loops/no-loops
         for (let i = staleContainers.length - 1; i >= 0; i--) {
-            staleContainers[i].parentNode.removeChild(staleContainers[i]);
+            staleContainers[i]?.parentNode?.removeChild(staleContainers[i]);
         }
     };
 
@@ -67,14 +67,14 @@ describe('DejaOverlayComponent', () => {
 
     it('should use ownerElement if set', () => {
         fixture.detectChanges();
-        comp.show(null);
+        comp.show({} as MouseEvent);
         void expect(comp.ownerElement).toBeFalsy();
         const ownerElement: HTMLElement = document.createElement('div');
         ownerElement.setAttribute('id', 'overlayOwnerElement');
         document.body.appendChild(ownerElement);
         comp.ownerElement = ownerElement;
         fixture.detectChanges();
-        const el = comp.overlayOrigin.elementRef.nativeElement as HTMLElement;
+        const el = comp.overlayOrigin?.elementRef.nativeElement as HTMLElement;
         void expect(el).toBe(ownerElement);
     });
 
@@ -91,7 +91,7 @@ describe('DejaOverlayComponent', () => {
         void expect(comp.isVisible).toBeTruthy();
         const cdkBackdropContainerEl = document.querySelector('.cdk-overlay-backdrop');
         void expect(cdkBackdropContainerEl).toBeTruthy();
-        void expect(cdkBackdropContainerEl.classList.contains('cdk-overlay-transparent-backdrop')).toBeTruthy();
+        void expect(cdkBackdropContainerEl?.classList.contains('cdk-overlay-transparent-backdrop')).toBeTruthy();
     });
 
     it('should have backdrop and container class names', () => {
@@ -100,8 +100,8 @@ describe('DejaOverlayComponent', () => {
         fixture.detectChanges();
         const cdkBackdropContainerEl = document.querySelector('.cdk-overlay-backdrop');
         const cdkOverlayContainerEl = document.querySelector('.cdk-overlay-container');
-        void expect(cdkOverlayContainerEl.classList.contains('deja-overlay-container')).toBeTruthy();
-        void expect(cdkBackdropContainerEl.classList.contains('cdk-overlay-opaque-backdrop')).toBeTruthy();
+        void expect(cdkOverlayContainerEl?.classList.contains('deja-overlay-container')).toBeTruthy();
+        void expect(cdkBackdropContainerEl?.classList.contains('cdk-overlay-opaque-backdrop')).toBeTruthy();
     });
 
     it('should have overlay custom class when is visible', () => {
@@ -109,9 +109,9 @@ describe('DejaOverlayComponent', () => {
         comp.isVisible = true;
         fixture.detectChanges();
         const cdkOverlayContainerEl = document.querySelector('.cdk-overlay-container');
-        void expect(cdkOverlayContainerEl.classList.contains('deja-overlay-container')).toBeTruthy();
-        void expect(cdkOverlayContainerEl.classList.contains('class1')).toBeTruthy();
-        void expect(cdkOverlayContainerEl.classList.contains('class2')).toBeTruthy();
+        void expect(cdkOverlayContainerEl?.classList.contains('deja-overlay-container')).toBeTruthy();
+        void expect(cdkOverlayContainerEl?.classList.contains('class1')).toBeTruthy();
+        void expect(cdkOverlayContainerEl?.classList.contains('class2')).toBeTruthy();
     });
 
     it('should not have overlay custom class when is not visible', () => {
@@ -121,15 +121,15 @@ describe('DejaOverlayComponent', () => {
         comp.isVisible = false;
         fixture.detectChanges();
         const cdkOverlayContainerEl = document.querySelector('.cdk-overlay-container');
-        void expect(cdkOverlayContainerEl.classList.contains('deja-overlay-container')).toBeTruthy();
-        void expect(cdkOverlayContainerEl.classList.contains('class1')).toBeFalsy();
-        void expect(cdkOverlayContainerEl.classList.contains('class2')).toBeFalsy();
+        void expect(cdkOverlayContainerEl?.classList.contains('deja-overlay-container')).toBeTruthy();
+        void expect(cdkOverlayContainerEl?.classList.contains('class1')).toBeFalsy();
+        void expect(cdkOverlayContainerEl?.classList.contains('class2')).toBeFalsy();
     });
 
     it('should have isVisible=true when invoking show() method', () => {
         fixture.detectChanges();
         void expect(comp.isVisible).toBeFalsy();
-        comp.show(null);
+        comp.show({} as MouseEvent);
         void expect(comp.isVisible).toBeTruthy();
     });
 
@@ -140,7 +140,7 @@ describe('DejaOverlayComponent', () => {
             done();
         });
         void expect(!comp.isVisible).toBeTruthy();
-        comp.show(null);
+        comp.show({} as MouseEvent);
         void expect(comp.isVisible).toBeTruthy();
         comp.close();
         void expect(comp.isVisible).toBeFalsy();
@@ -153,11 +153,11 @@ describe('DejaOverlayComponent', () => {
             done();
         });
         void expect(comp.isVisible).toBeFalsy();
-        comp.show(null);
+        comp.show({} as MouseEvent);
         void expect(comp.isVisible).toBeTruthy();
         fixture.detectChanges();
         const cdkBackdropContainerEl = document.querySelector<HTMLDivElement>('.cdk-overlay-backdrop');
-        cdkBackdropContainerEl.click();
+        cdkBackdropContainerEl?.click();
         void expect(comp.isVisible).toBeFalsy();
     });
 
@@ -185,7 +185,7 @@ describe('DejaOverlayComponent', () => {
         fixture.detectChanges();
         void expect(comp.isMobile).toBeFalsy();
         let returnedWidth = comp.overlayWidth;
-        void expect(returnedWidth).toBeNull();
+        void expect(returnedWidth).toBeUndefined();
         returnedWidth = comp.widthForMobile;
         void expect(returnedWidth).toEqual('100%');
 

@@ -205,7 +205,7 @@ describe('DejaTilesComponent', () => {
                 void expect(tileElements.length).toBe(13);
                 const beerTile = tileElements.find(t => (t.nativeElement as HTMLElement).id === 'Beer');
                 void expect(beerTile).toBeDefined();
-                void expect((beerTile.nativeElement as HTMLElement).offsetTop).toBe(360 + padding);
+                void expect((beerTile?.nativeElement as HTMLElement).offsetTop).toBe(360 + padding);
             }),
             delay(10)
         ).subscribe(() => {

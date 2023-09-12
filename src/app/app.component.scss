@@ -6,12 +6,6 @@ body {
 }
 
 body {
-    // font-family: Roboto, 'Helvetica Neue', sans-serif; // Helps fonts on OSX looks more consistent with other systems
-
-    .material-icons{
-        font-family: 'Material Icons' !important;
-    }
-
     // Isn't currently in button styles due to performance concerns
     * {
         -webkit-font-smoothing: antialiased;

@@ -18,6 +18,12 @@ export class IconService {
     private iconRegistry = inject(MatIconRegistry);
     private sanitizer = inject(DomSanitizer);
 
+    public constructor() {
+        const defaultFontSetClasses = this.iconRegistry.getDefaultFontSetClass();
+        const outlinedFontSetClasses = defaultFontSetClasses.concat(['material-symbols-outlined']);
+        this.iconRegistry.setDefaultFontSetClass(...outlinedFontSetClasses);
+    }
+
     /**
      * register an SVG icon to the MatIconRegistry, so that this icon can be used with the MatIcon component.
      *

@@ -64,6 +64,11 @@ describe('DejaColorSelector', () => {
             elements.forEach(el => {
                 const style = (el.nativeElement as HTMLElement).style.backgroundColor;
                 const color = Color.parse(style);
+                void expect(color).toBeDefined();
+                if (!color) {
+                    return;
+                }
+
                 void expect(color.r).toEqual(color.g);
                 void expect(color.r).toEqual(color.b);
             });
