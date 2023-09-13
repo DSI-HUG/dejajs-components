@@ -1,3 +1,5 @@
+# [16.0.0-next.1](https://github.com/DSI-HUG/dejajs-components/compare/v15.0.0...v16.0.0-next.1) (2023-09-13)
+
 # [15.0.0-next.1](https://github.com/DSI-HUG/dejajs-components/compare/v14.4.0...v15.0.0-next.1) (2023-09-13)
 
 
