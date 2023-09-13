@@ -1,3 +1,10 @@
+# [15.0.0-next.1](https://github.com/DSI-HUG/dejajs-components/compare/v14.4.0...v15.0.0-next.1) (2023-09-13)
+
+
+### Features
+
+* **tile:** amelioration resize small tiles ([19773dd](https://github.com/DSI-HUG/dejajs-components/commit/19773dd5138a020f62a44afe6a145b4e352c3e68))
+
 # [15.0.0-next.1](https://github.com/DSI-HUG/dejajs-components/compare/v14.5.0-next.1...v15.0.0-next.1) (2023-09-13)
 
 # [14.5.0-next.1](https://github.com/DSI-HUG/dejajs-components/compare/v14.4.0...v14.5.0-next.1) (2023-09-12)
