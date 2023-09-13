@@ -29,7 +29,7 @@
                     },
                     {
                         "type": "ci",
-                        "release": "minor"
+                        "release": "patch"
                     },
                     {
                         "type": "chore",
