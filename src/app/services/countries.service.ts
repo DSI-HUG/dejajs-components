@@ -10,7 +10,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Color, MaterialColorService } from '@deja-js/component/core/graphics';
 import { ObjectMapper } from 'json-object-mapper';
-import { map, Observable, of, shareReplay } from 'rxjs';
+import { map, Observable, of, ReplaySubject, shareReplay, switchMap } from 'rxjs';
 
 export class Country {
     public displayName: string = void 0;
@@ -24,6 +24,7 @@ export class Country {
     providedIn: 'root'
 })
 export class CountriesService {
+    public click$ = new ReplaySubject<boolean>(1);
     private countriesDic = {} as { [code: string]: Country };
     private materialColors: Color[];
 
@@ -42,48 +43,50 @@ export class CountriesService {
 
     public getCountries$(query?: string, number?: number): Observable<Country[]> {
         let recordCount = number || 0;
-        return this.httpClient.get<Record<string, unknown>>('assets/datas/countries.json', {}).pipe(
-            map(json => ObjectMapper.deserializeArray(Country, json.data)),
-            map(countries => {
-                let colorIndex = 0;
-                countries.forEach(country => {
-                    country.displayName = country.naqme;
-                    country.color = this.materialColors[colorIndex].toHex();
-                    this.countriesDic[country.code] = country;
+        return this.click$.pipe(
+            switchMap(() => this.httpClient.get<Record<string, unknown>>('assets/datas/countries.json', {}).pipe(
+                map(json => ObjectMapper.deserializeArray(Country, json.data)),
+                map(countries => {
+                    let colorIndex = 0;
+                    countries.forEach(country => {
+                        country.displayName = country.naqme;
+                        country.color = this.materialColors[colorIndex].toHex();
+                        this.countriesDic[country.code] = country;
 
-                    if (++colorIndex >= this.materialColors.length) {
-                        colorIndex = 0;
-                    }
-                });
-                return countries;
-            }),
-            shareReplay({ bufferSize: 1, refCount: false }),
-            map(countries => {
-                if (query) {
-                    const sr = new RegExp(`^${query}`, 'i');
-                    const sc = new RegExp(`^(?!${query}).*(${query})`, 'i');
-                    const result = countries.filter(z => sr.test(z.naqme));
-                    countries.forEach(z => {
-                        if (sc.test(z.naqme)) {
-                            result.push(z);
+                        if (++colorIndex >= this.materialColors.length) {
+                            colorIndex = 0;
                         }
                     });
-                    return result;
-                } else {
                     return countries;
-                }
-            }),
-            map(countries => {
-                let returnCountries = countries;
-                if (recordCount) {
-                    // eslint-disable-next-line no-loops/no-loops
-                    while (recordCount > 0) {
-                        returnCountries = returnCountries.concat(countries);
-                        recordCount -= countries.length;
+                }),
+                shareReplay({ bufferSize: 1, refCount: false }),
+                map(countries => {
+                    if (query) {
+                        const sr = new RegExp(`^${query}`, 'i');
+                        const sc = new RegExp(`^(?!${query}).*(${query})`, 'i');
+                        const result = countries.filter(z => sr.test(z.naqme));
+                        countries.forEach(z => {
+                            if (sc.test(z.naqme)) {
+                                result.push(z);
+                            }
+                        });
+                        return result;
+                    } else {
+                        return countries;
                     }
-                }
-                return returnCountries;
-            })
+                }),
+                map(countries => {
+                    let returnCountries = countries;
+                    if (recordCount) {
+                        // eslint-disable-next-line no-loops/no-loops
+                        while (recordCount > 0) {
+                            returnCountries = returnCountries.concat(countries);
+                            recordCount -= countries.length;
+                        }
+                    }
+                    return returnCountries;
+                })
+            ))
         );
     }
 }

@@ -161,6 +161,9 @@ export class ViewPortService<T> {
             let afterSize = 0;
             let newScrollPos: number;
 
+            console.log('start:', viewPortSize, beforeSize, afterSize, containerSize);
+
+            debugger;
             if (!params.ensureParams || params.ensureParams.index === undefined || !params.ensureParams.atEnd) {
                 items.forEach((item: ViewPortItem<T>, index: number) => {
                     const itemSize = item.size || params.itemsSize;
@@ -229,6 +232,8 @@ export class ViewPortService<T> {
                 } as EnsureParams;
                 return calcVariableSizeViewPort$(params, items, scrollPosition, containerSize);
             }
+
+            console.log('end:', viewPortSize, beforeSize, afterSize, containerSize);
 
             return of({
                 beforeSize: beforeSize,
@@ -607,4 +612,5 @@ export interface ViewPort<T> extends ViewPortParams {
 export interface ViewPortItem<T> {
     size?: number;
     model?: T;
+    trackBy?: unknown;
 }

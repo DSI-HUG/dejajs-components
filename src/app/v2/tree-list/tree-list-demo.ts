@@ -116,7 +116,7 @@ export class TreeListDemoComponent extends Destroy {
 
     public constructor(
         private changeDetectorRef: ChangeDetectorRef,
-        private countriesService: CountriesService,
+        public countriesService: CountriesService,
         private folderService: FoldersService,
         public countriesListService: CountriesListService,
         public newsService: NewsService,

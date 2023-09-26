@@ -26,11 +26,12 @@
 <div *ngIf="tabIndex === 1">
     <mat-card class="tree-list-demo demo-card demo-basic">
         <mat-toolbar color="primary">Simple Usage</mat-toolbar>
+        <button (click)="countriesService.click$.next(true)">press me</button>
         <mat-card-content>
             <div>Just passing an array of objects</div>
             <div class="flexLayout">
                 <span class="flex45p flexLayout flexColumn">
-                    <tree-list [(ngModel)]="country" ngModelType="model" textField="naqme" valueField="code" [models]="countries$ | async"></tree-list>
+                    <tree-list [viewPortMode]="'auto'"  [(ngModel)]="country" ngModelType="model" textField="naqme" valueField="code" [models]="countries$ | async"></tree-list>
                 </span>
                 <span class="flex45p flexOffset5p">
                     <h4>Selected country model :</h4>
