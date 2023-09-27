@@ -306,4 +306,8 @@ export class ViewPortComponent<T> extends Destroy {
         }
         return classes.join(' ');
     }
+
+    public trackBy(_index: number, item: ViewPortItem<T>): unknown {
+        return item.trackBy || item;
+    }
 }
