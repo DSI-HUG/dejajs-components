@@ -5,14 +5,14 @@
     <ng-container *ngIf="viewPort$ | async as viewPort">
         <ng-container *ngIf="viewPort.direction === 'vertical';else horizontal">
             <div class="fake" *ngIf="viewPort.beforeSize > 0" [style.height.px]="viewPort.beforeSize">&nbsp;</div>
-            <div *ngFor="let item of (viewPort.mode === 'disabled' ? viewPort.items : viewPort.visibleItems); let index = index" [attr.class]="getItemClassName(item)" [attr.flat]="viewPort.startIndex + index" [attr.mode]="viewPort.mode" [style.width]="'100%'" [style.height]="getCssSize(item, viewPort.itemsSize, viewPort.mode)">
+            <div *ngFor="let item of (viewPort.mode === 'disabled' ? viewPort.items : viewPort.visibleItems); trackBy: trackBy; let index = index" [attr.class]="getItemClassName(item)" [attr.flat]="viewPort.startIndex + index" [attr.mode]="viewPort.mode" [style.width]="'100%'" [style.height]="getCssSize(item, viewPort.itemsSize, viewPort.mode)">
                 <ng-template [ngTemplateOutlet]="viewPortItemTemplate" [ngTemplateOutletContext]="{ $implicit: item, index: viewPort.startIndex + index, size: getItemSize(item, viewPort.itemsSize, viewPort.mode), model: item.model }"></ng-template>
             </div>
             <div class="fake" *ngIf="viewPort.afterSize > 0" [style.height.px]="viewPort.afterSize">&nbsp;</div>
         </ng-container>
         <ng-template #horizontal>
             <div class="fake" *ngIf="viewPort.beforeSize > 0" [style.flex-basis.px]="viewPort.beforeSize">&nbsp;</div>
-            <div *ngFor="let item of (viewPort.mode === 'disabled' ? viewPort.items : viewPort.visibleItems); let index = index" [attr.class]="getItemClassName(item)" [attr.flat]="viewPort.startIndex + index" [attr.mode]="viewPort.mode" [style.height]="'100%'" [style.flex-basis]="getCssSize(item, viewPort.itemsSize, viewPort.mode)">
+            <div *ngFor="let item of (viewPort.mode === 'disabled' ? viewPort.items : viewPort.visibleItems); trackBy: trackBy; let index = index" [attr.class]="getItemClassName(item)" [attr.flat]="viewPort.startIndex + index" [attr.mode]="viewPort.mode" [style.height]="'100%'" [style.flex-basis]="getCssSize(item, viewPort.itemsSize, viewPort.mode)">
                 <ng-template [ngTemplateOutlet]="viewPortItemTemplate" [ngTemplateOutletContext]="{ $implicit: item, index: viewPort.startIndex + index, size: getItemSize(item, viewPort.itemsSize, viewPort.mode), model: item.model }"></ng-template>
             </div>
             <div class="fake" *ngIf="viewPort.afterSize > 0" [style.flex-basis.px]="viewPort.afterSize">&nbsp;</div>
