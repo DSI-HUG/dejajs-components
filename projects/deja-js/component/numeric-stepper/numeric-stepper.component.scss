@@ -1,4 +1,4 @@
-@use "../styles/material/material-symbols"as matStyles;
+@use "../styles/material/material-symbols"as matSymbols;
 
 :host {
     display: flex;
@@ -38,7 +38,7 @@
         top: 0;
 
         >span {
-            font-family: matStyles.$fontFamily;
+            font-family: matSymbols.$fontFamily;
             font-size: 1.2rem;
         }
 
@@ -47,7 +47,7 @@
             border: none;
             box-shadow: none;
             cursor: pointer;
-            font-family: matStyles.$fontFamily;
+            font-family: matSymbols.$fontFamily;
             font-size: 1.5rem;
             justify-content: center;
             line-height: initial;

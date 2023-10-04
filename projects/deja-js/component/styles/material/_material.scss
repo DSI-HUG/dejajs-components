@@ -1,7 +1,7 @@
 @use 'components/buttons'as buttons;
 @use 'components/inputs'as inputs;
 @use 'components/tabs'as tabs;
-@use './material-symbols'as fontInfo;
+@use './material-symbols'as matSymbols;
 
 @mixin deja-material-theme($theme) {
 
@@ -12,7 +12,8 @@
     }
 
     .mat-icon {
-        font-family: fontInfo.$fontFamily;
+        font-family: matSymbols.$fontFamily;
+        font-size: 1.25rem;
     }
 
     .filled {

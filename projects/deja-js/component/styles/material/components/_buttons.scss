@@ -1,4 +1,4 @@
-@use "../material-symbols"as matStyles;
+@use "../material-symbols"as matSymbols;
 
 @mixin buttons-theme($theme) {
 
@@ -6,7 +6,7 @@
     [mat-raised-button].with-icon {
         &:before {
             content: attr(data-icon);
-            font-family: matStyles.$fontFamily;
+            font-family: matSymbols.$fontFamily;
             left: 0;
             position: absolute;
             text-align: center;
