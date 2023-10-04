@@ -19,6 +19,7 @@ export class Item<T> implements ViewPortItem<T> {
     public odd?: boolean;
     public searchText?: string;
     public className?: string;
+    public trackBy?: unknown;
     /** Indique si l'élément peut être réduit. */
     public collapsible?: boolean;
     /** Indique si l'élément est réduit. */
