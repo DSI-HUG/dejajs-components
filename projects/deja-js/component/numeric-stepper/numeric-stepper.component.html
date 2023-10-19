@@ -2,6 +2,6 @@
 <span class="unit" *ngIf="unit && shouldLabelFloat">{{ unit }}</span>
 
 <span class="steppers" *ngIf="!hideSteppers">
-    <button [disabled]="disabled || value === _min" (click)="value = ((value || 0) * 10000 - _step * 10000) / 10000" type="button" tabindex="-1">remove_circle</button>
-    <button [disabled]="disabled || value === _max" (click)="value = ((value || 0) * 10000 + _step * 10000) / 10000" type="button" tabindex="-1">add_circle</button>
+    <button [disabled]="disabled || value === _min" (click)="value = ((value || 0) * 10000 - _step * 10000) / 10000" type="button" tabindex="-1">remove</button>
+    <button [disabled]="disabled || value === _max" (click)="value = ((value || 0) * 10000 + _step * 10000) / 10000" type="button" tabindex="-1">add</button>
 </span>

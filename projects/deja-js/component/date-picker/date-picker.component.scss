@@ -1,38 +1,39 @@
 deja-date-picker {
-	position: relative;
+    position: relative;
 
-	.datepicker-actions {
-		position: absolute;
-		right: 0;
-		top: 50%;
-		transform: translateY(-50%);
-		z-index: 2;
+    .datepicker-actions {
+        position: absolute;
+        right: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 2;
 
-		button {
-			background: none;
-			border: none;
-			margin-left: 0.2rem;
-			padding: 0;
-			outline: none;
-			color: inherit;
-			cursor: pointer;
-			opacity: 0.4;
+        button {
+            background: none;
+            border: none;
+            margin-left: 0.2rem;
+            padding: 0;
+            outline: none;
+            color: inherit;
+            cursor: pointer;
+            opacity: 0.4;
 
-			&:hover {
-				opacity: 0.8;
-			}
+            &:hover {
+                opacity: 0.8;
+            }
 
-			[fontIcon] {
-                font-size: 100%;
+            [fontIcon],
+            .mat-icon {
+                font-size: 1.25rem;
                 width: 1em;
                 height: 1em;
-			}
-		}
-	}
+            }
+        }
+    }
 }
 
 .deja-datepicker-overlay-container {
-	overflow: visible;
+    overflow: visible;
 
     &.under-toolbar-position {
         .cdk-overlay-pane {
@@ -46,16 +47,16 @@ deja-date-picker {
         }
     }
 
-	.actions {
-		position: absolute;
-		right: 0.3rem;
-		top: 0.3rem;
+    .actions {
+        position: absolute;
+        right: 0.3rem;
+        top: 0.3rem;
         height: 40px;
 
-		button.mat-mini-fab {
-			background: none;
-			border: none;
-			box-shadow: none;
-		}
-	}
+        button.mat-mini-fab {
+            background: none;
+            border: none;
+            box-shadow: none;
+        }
+    }
 }

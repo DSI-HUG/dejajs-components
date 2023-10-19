@@ -1,4 +1,5 @@
-@use '@angular/material' as mat;
+@use '@angular/material'as mat;
+
 @mixin sidenav-theme($theme) {
     $primary: map-get($theme, primary);
     $background: map-get($theme, background);
@@ -34,6 +35,10 @@
                             .mat-list-icon,
                             .mat-list-text {
                                 color: mat.get-color-from-palette($primary) !important;
+                            }
+
+                            .mat-icon {
+                                font-variation-settings: "FILL"1;
                             }
                         }
 

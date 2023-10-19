@@ -35,8 +35,9 @@
 @use '../v2/viewport/viewport-theme'as viewport2Theme;
 @use '../v2/splitter/splitter-theme'as splitter2Theme;
 
-/** Font icons */
-@import '@fontsource/material-symbols-outlined';
+@use '../styles/material/material-symbols'as *;
+
+
 
 @mixin deja-theme($custom-theme) {
     @include chipsTheme.chips-theme($custom-theme);

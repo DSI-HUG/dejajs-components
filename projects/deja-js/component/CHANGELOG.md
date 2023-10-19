@@ -1,3 +1,21 @@
+# [14.6.0-develop.4](https://github.com/DSI-HUG/dejajs-components/compare/v14.6.0-develop.3...v14.6.0-develop.4) (2023-10-12)
+
+# [14.6.0-develop.3](https://github.com/DSI-HUG/dejajs-components/compare/v14.6.0-develop.2...v14.6.0-develop.3) (2023-10-04)
+
+# [14.6.0-develop.2](https://github.com/DSI-HUG/dejajs-components/compare/v14.6.0-develop.1...v14.6.0-develop.2) (2023-09-27)
+
+
+### Bug Fixes
+
+* add trackBy to treelist item ([466d558](https://github.com/DSI-HUG/dejajs-components/commit/466d5584d12d884b3aeff19bbde098755e2d395e))
+
+# [14.6.0-develop.1](https://github.com/DSI-HUG/dejajs-components/compare/v14.5.0...v14.6.0-develop.1) (2023-09-27)
+
+
+### Features
+
+* add track by ([58db9f0](https://github.com/DSI-HUG/dejajs-components/commit/58db9f0088b72847b589c3689a6acd6a9718789f))
+
 # [14.5.0](https://github.com/DSI-HUG/dejajs-components/compare/v14.4.0...v14.5.0) (2023-09-20)
 
 
