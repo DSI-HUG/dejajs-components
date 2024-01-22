@@ -1,3 +1,10 @@
+# [14.7.0-develop.4](https://github.com/DSI-HUG/dejajs-components/compare/v14.7.0-develop.3...v14.7.0-develop.4) (2024-01-22)
+
+
+### Bug Fixes
+
+* fix peer dependencie ([7c8868f](https://github.com/DSI-HUG/dejajs-components/commit/7c8868f8acafd40f2eafe357844e08da7c127a35))
+
 # [14.7.0-develop.3](https://github.com/DSI-HUG/dejajs-components/compare/v14.7.0-develop.2...v14.7.0-develop.3) (2023-12-21)
 
 # [14.7.0-develop.2](https://github.com/DSI-HUG/dejajs-components/compare/v14.7.0-develop.1...v14.7.0-develop.2) (2023-12-21)
