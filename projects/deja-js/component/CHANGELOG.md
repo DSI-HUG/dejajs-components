@@ -1,3 +1,5 @@
+# [14.7.0-develop.5](https://github.com/DSI-HUG/dejajs-components/compare/v14.7.0-develop.4...v14.7.0-develop.5) (2024-01-24)
+
 # [14.7.0-develop.4](https://github.com/DSI-HUG/dejajs-components/compare/v14.7.0-develop.3...v14.7.0-develop.4) (2024-01-22)
 
 
