@@ -1,0 +1,42 @@
+deja-time-picker.datepicker-with-time {
+    .time-range {
+        display: flex;
+        align-items: center;
+
+        .time-picker-separator {
+            text-align: center;
+            margin: 0 0.5rem;
+        }
+    }
+}
+
+.datepicker-with-time.action-buttons {
+    padding: 1.5rem 0 1rem 0;
+    display: flex;
+    justify-content: center;
+}
+
+.mat-datepicker-content-container[layout="h"] {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+
+    .mat-calendar {
+        height: auto;
+
+        .mat-calendar-header {
+            padding: 0 0.5rem 0 0.5rem;
+        }
+    }
+
+    .mat-calendar,
+    deja-time-picker.datepicker-with-time {
+        flex: 0 0 auto;
+    }
+
+    .datepicker-with-time.action-buttons {
+        flex: 1 0 100%;
+        padding: 0 0 1rem 0;
+        ;
+    }
+}

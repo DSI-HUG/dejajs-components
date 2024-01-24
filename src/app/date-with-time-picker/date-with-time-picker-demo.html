@@ -1,0 +1,56 @@
+<mat-tab-group [selectedIndex]="tabIndex" (selectedTabChange)="tabIndex = $event.index">
+    <mat-tab label="API REFERENCE"></mat-tab>
+    <mat-tab label="EXAMPLES"></mat-tab>
+</mat-tab-group>
+
+<mat-card class="demo-card demo-basic" *ngIf="tabIndex === 0">
+    <deja-markdown [url]="'https://raw.githubusercontent.com/DSI-HUG/dejajs-components/develop/projects/deja-js/component/date-with-time-picker/readme.md'"></deja-markdown>
+</mat-card>
+
+<div *ngIf="tabIndex === 1">
+    <mat-card class="demo-card">
+        <mat-toolbar color="primary">Date Picker Material with TimePicker</mat-toolbar>
+        <mat-card-content>
+            <div class="flex-layout">
+                <div>
+                    <form [formGroup]="dateTimeForm">
+                        <h3>Date time picker :</h3>
+                        <mat-form-field appearance="legacy">
+                            <mat-label>Choose a date and time</mat-label>
+                            <mat-hint>Format : dd.MM.yyyy HH:mm</mat-hint>
+                            <input matInput type="text" required [matDatepicker]="dateTimePicker" formControlName="date" dateTimeFormat>
+                            <mat-datepicker-toggle matSuffix [for]="dateTimePicker"></mat-datepicker-toggle>
+                            <mat-datepicker #dateTimePicker>
+                                <datepicker-with-time></datepicker-with-time>
+                            </mat-datepicker>
+                            <mat-error *ngIf="getError(dateTimeForm.controls.date.errors) as error">{{ error }}</mat-error>
+                        </mat-form-field>
+                    </form>
+                </div>
+                <div class="date-time-range">
+                    <form [formGroup]="dateTimeRangeForm">
+                        <h3>Date time range Picker :</h3>
+                        <mat-form-field data-cy="date-from" appearance="fill">
+                            <mat-label>From</mat-label>
+                            <input matInput type="text" [required]="true" [max]="dateTimeRangeForm.controls.to.value" [matDatepicker]="fromPicker" formControlName="from" dateTimeFormat>
+                            <mat-datepicker #fromPicker>
+                                <datepicker-with-time></datepicker-with-time>
+                            </mat-datepicker>
+                            <mat-datepicker-toggle matSuffix [for]="fromPicker"></mat-datepicker-toggle>
+                            <mat-error *ngIf="getError(dateTimeRangeForm.controls.from.errors) as error">{{ error }}</mat-error>
+                        </mat-form-field>
+                        <mat-form-field data-cy="date-to" appearance="fill">
+                            <mat-label>to</mat-label>
+                            <input matInput type="text" [required]="true" [min]="dateTimeRangeForm.controls.from.value" [matDatepicker]="toPicker" formControlName="to" dateTimeFormat>
+                            <mat-datepicker-toggle matSuffix [for]="toPicker"></mat-datepicker-toggle>
+                            <mat-datepicker #toPicker>
+                                <datepicker-with-time></datepicker-with-time>
+                            </mat-datepicker>
+                            <mat-error *ngIf="getError(dateTimeRangeForm.controls.to.errors) as error">{{ error }}</mat-error>
+                        </mat-form-field>
+                    </form>
+                </div>
+            </div>
+        </mat-card-content>
+    </mat-card>
+</div>

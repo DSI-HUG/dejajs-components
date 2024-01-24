@@ -26,6 +26,7 @@ const routes: Routes = [
     { path: 'splitter', loadChildren: () => import('./splitter/splitter-demo.module').then(m => m.DejaSplitterDemoModule), data: { title: 'Splitter' } },
     { path: 'tiles', loadChildren: () => import('./tiles/tiles-demo.module').then(m => m.DejaTilesDemoModule), data: { title: 'Tiles' } },
     { path: 'time-picker', loadChildren: () => import('./time-picker/time-picker-demo.module').then(m => m.DejaTimePickerDemoModule), data: { title: 'Time Picker' } },
+    { path: 'date-with-time-picker', loadChildren: () => import('./date-with-time-picker/date-with-time-picker-demo.module').then(m => m.DejaContentEditableDemoModule), data: { title: 'Date With Time Picker' } },
     { path: 'v2-numeric-stepper', loadChildren: () => import('./v2/numeric-stepper/numeric-stepper-demo.module').then(m => m.DejaNumericStepperDemoModule), data: { title: 'Numeric Stepper V2' } },
     { path: 'monaco-editor-v2', loadChildren: () => import('./v2/monaco-editor/monaco-editor-demo.module').then(m => m.MonacoEditorDemoModule), data: { title: 'Monaco Editor V2' } },
     { path: 'tree-list-v2', loadChildren: () => import('./v2/tree-list/tree-list-demo.module').then(m => m.TreeListDemoModule), data: { title: 'Tree List V2' } },
