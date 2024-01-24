@@ -11,7 +11,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Even
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { MatLegacyFormFieldAppearance as MatFormFieldAppearance } from '@angular/material/legacy-form-field';
 import { Destroy } from '@deja-js/component/core';
-import { isSameHour, set } from 'date-fns';
+import { Duration, isSameHour, set } from 'date-fns';
 import { debounce, distinctUntilChanged, map, Subject, takeUntil, timer } from 'rxjs';
 
 export type TimePickerDisplayMode = 'fullTime' | 'fullTimeWithHoursDisabled' | 'fullTimeWithMinutesDisabled' | 'hoursOnly' | 'minutesOnly';
@@ -241,14 +241,14 @@ export class DejaTimePickerComponent extends Destroy implements ControlValueAcce
     }
 
     public get hoursValue(): number | undefined {
-        if (!this.value || !this.control || (this.forceNullValue && this.mode === 'fullTimeWithMinutesDisabled' && this.control.pristine)) {
+        if (!this.value || (this.forceNullValue && this.mode === 'fullTimeWithMinutesDisabled' && (!this.control || this.control.pristine))) {
             return undefined;
         }
         return this.value instanceof Date ? this.value.getHours() : this.value.hours;
     }
 
     public get minutesValue(): number | undefined {
-        if (!this.value || !this.control || (this.forceNullValue && this.mode === 'fullTimeWithHoursDisabled' && this.control.pristine)) {
+        if (!this.value || (this.forceNullValue && this.mode === 'fullTimeWithHoursDisabled' && (!this.control || this.control.pristine))) {
             return undefined;
         }
         return this.value instanceof Date ? this.value.getMinutes() : this.value.minutes;

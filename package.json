@@ -44,6 +44,7 @@
         "@angular/forms": "~16.2.0",
         "@angular/localize": "~16.2.0",
         "@angular/material": "~16.2.0",
+        "@angular/material-date-fns-adapter": "~16.2.0",
         "@angular/platform-browser": "~16.2.0",
         "@angular/platform-browser-dynamic": "~16.2.0",
         "@angular/router": "~16.2.0",
