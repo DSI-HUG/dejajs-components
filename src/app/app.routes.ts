@@ -17,6 +17,7 @@ const routes: Routes = [
     { path: 'colorselector', loadChildren: () => import('./color-selector/color-selector-demo.module').then(m => m.DejaColorSelectorDemoModule), data: { title: 'Color Selector' } },
     { path: 'contenteditableselector', loadChildren: () => import('./content-editable/content-editable-demo.module').then(m => m.DejaContentEditableDemoModule), data: { title: 'Content Editable' } },
     { path: 'date-picker', loadChildren: () => import('./date-picker/date-picker-demo.module').then(m => m.DejaDatePickerDemoModule), data: { title: 'Date Picker' } },
+    { path: 'date-with-time-picker', loadChildren: () => import('./date-with-time-picker/date-with-time-picker-demo.module').then(m => m.DejaContentEditableDemoModule), data: { title: 'Date With Time Picker' } },
     { path: 'editor', loadChildren: () => import('./editor/editor-demo.module').then(m => m.DejaEditorDemoModule), data: { title: 'Editor' } },
     { path: 'iframe', loadChildren: () => import('./iframe/iframe-demo.module').then(m => m.DejaIframeDemoModule), data: { title: 'Iframe' } },
     { path: 'lazy-dialog', loadChildren: () => import('./lazy-dialog/lazy-dialog-demo.module').then(m => m.LazyDialogDemoModule), data: { title: 'Lazy Dialog' } },

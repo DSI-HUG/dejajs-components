@@ -1,0 +1,19 @@
+<ng-template>
+    <ng-container *ngIf="time">
+        <deja-time-picker
+            #timepicker
+            class="datepicker-with-time"
+            [(time)]="time"
+        ></deja-time-picker>
+        <div class="datepicker-with-time action-buttons">
+            <button
+                mat-raised-button
+                color="primary"
+                matDatepickerApply
+                (click)="onDateTimeClosed()"
+            >
+                OK
+            </button>
+        </div>
+    </ng-container>
+</ng-template>

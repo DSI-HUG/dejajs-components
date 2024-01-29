@@ -1,0 +1,36 @@
+.flex-layout {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    >div,
+    >form {
+        flex: 1 1 auto;
+    }
+}
+
+.flex-layout-center {
+    display: flex;
+    align-items: center;
+}
+
+.time-picker-actions {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+/* Override Material datepicker style */
+.mat-calendar-body-cell-content.mat-focus-indicator {
+    position: absolute !important;
+}
+
+.mat-datepicker-actions {
+    margin-left: 64px !important;
+}
+
+deja-time-picker[inform] {
+    padding-right: 1rem;
+}
