@@ -1,3 +1,10 @@
+# [14.7.0-develop.6](https://github.com/DSI-HUG/dejajs-components/compare/v14.7.0-develop.5...v14.7.0-develop.6) (2024-02-21)
+
+
+### Features
+
+* **dateTimePicker:** enhance material date picker with time selector (DEJS-1179) ([b3ea38f](https://github.com/DSI-HUG/dejajs-components/commit/b3ea38faf6c067c998c28d1d5a0d25aae18d3a2a))
+
 # [14.7.0-develop.5](https://github.com/DSI-HUG/dejajs-components/compare/v14.7.0-develop.4...v14.7.0-develop.5) (2024-01-24)
 
 # [14.7.0-develop.4](https://github.com/DSI-HUG/dejajs-components/compare/v14.7.0-develop.3...v14.7.0-develop.4) (2024-01-22)
