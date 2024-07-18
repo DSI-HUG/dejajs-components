@@ -1,3 +1,10 @@
+# [14.7.0-develop.8](https://github.com/DSI-HUG/dejajs-components/compare/v14.7.0-develop.7...v14.7.0-develop.8) (2024-07-18)
+
+
+### Bug Fixes
+
+* **editor:** desactivate webspellchecker if SCAYT script init fails (DEJS-1194) ([dfa51a7](https://github.com/DSI-HUG/dejajs-components/commit/dfa51a7567e888f67c438e977d83f9f5039c9ad2))
+
 # [14.7.0-develop.7](https://github.com/DSI-HUG/dejajs-components/compare/v14.7.0-develop.6...v14.7.0-develop.7) (2024-02-21)
 
 # [14.7.0-develop.6](https://github.com/DSI-HUG/dejajs-components/compare/v14.7.0-develop.5...v14.7.0-develop.6) (2024-02-21)
