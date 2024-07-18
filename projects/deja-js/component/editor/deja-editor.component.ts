@@ -102,6 +102,8 @@ export class DejaEditorComponent extends Destroy implements OnChanges, OnInit, A
         this._debounce = coerceNumberProperty(debounce);
     }
 
+    private readonly errorEventListener: EventListener;
+
     /**
      * Constructor
      */
@@ -111,6 +113,20 @@ export class DejaEditorComponent extends Destroy implements OnChanges, OnInit, A
         private initializer: DejaEditorService
     ) {
         super();
+        this.errorEventListener = (error: ErrorEvent): any => {
+            if (error.message === 'Uncaught ReferenceError: SCAYT is not defined' && this.instance) {
+                this.instance.destroy();
+                this.instance = null;
+                const config = cloneDeep(this.config);
+                config.plugins = config.plugins?.split(',').filter(plugin => !plugin.includes('scayt')).join(',');
+                config.removePlugins = config.removePlugins ? `${config.removePlugins},scayt` : 'scayt';
+                /* eslint-disable camelcase */
+                config.scayt_autoStartup = false;
+                /* eslint-enable camelcase */
+                this.ckeditorInit(config);
+            }
+        };
+        window.addEventListener('error', this.errorEventListener);
     }
 
     public get value(): string {
@@ -166,6 +182,7 @@ export class DejaEditorComponent extends Destroy implements OnChanges, OnInit, A
         this.change.complete();
         this.disabled.complete();
         this.instance?.destroy();
+        window.removeEventListener('error', this.errorEventListener);
     }
 
     /**
