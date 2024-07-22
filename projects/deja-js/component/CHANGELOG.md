@@ -1,3 +1,34 @@
+# [14.7.0-develop.8](https://github.com/DSI-HUG/dejajs-components/compare/v14.7.0-develop.7...v14.7.0-develop.8) (2024-07-18)
+
+
+### Bug Fixes
+
+* **editor:** desactivate webspellchecker if SCAYT script init fails (DEJS-1194) ([dfa51a7](https://github.com/DSI-HUG/dejajs-components/commit/dfa51a7567e888f67c438e977d83f9f5039c9ad2))
+
+# [14.7.0-develop.7](https://github.com/DSI-HUG/dejajs-components/compare/v14.7.0-develop.6...v14.7.0-develop.7) (2024-02-21)
+
+# [14.7.0-develop.6](https://github.com/DSI-HUG/dejajs-components/compare/v14.7.0-develop.5...v14.7.0-develop.6) (2024-02-21)
+
+
+### Features
+
+* **dateTimePicker:** enhance material date picker with time selector (DEJS-1179) ([b3ea38f](https://github.com/DSI-HUG/dejajs-components/commit/b3ea38faf6c067c998c28d1d5a0d25aae18d3a2a))
+
+# [14.7.0-develop.5](https://github.com/DSI-HUG/dejajs-components/compare/v14.7.0-develop.4...v14.7.0-develop.5) (2024-01-24)
+
+# [14.7.0-develop.4](https://github.com/DSI-HUG/dejajs-components/compare/v14.7.0-develop.3...v14.7.0-develop.4) (2024-01-22)
+
+
+### Bug Fixes
+
+* fix peer dependencie ([7c8868f](https://github.com/DSI-HUG/dejajs-components/commit/7c8868f8acafd40f2eafe357844e08da7c127a35))
+
+# [14.7.0-develop.3](https://github.com/DSI-HUG/dejajs-components/compare/v14.7.0-develop.2...v14.7.0-develop.3) (2023-12-21)
+
+# [14.7.0-develop.2](https://github.com/DSI-HUG/dejajs-components/compare/v14.7.0-develop.1...v14.7.0-develop.2) (2023-12-21)
+
+# [14.7.0-develop.1](https://github.com/DSI-HUG/dejajs-components/compare/v14.6.0...v14.7.0-develop.1) (2023-12-21)
+
 # [14.6.0](https://github.com/DSI-HUG/dejajs-components/compare/v14.5.0...v14.6.0) (2023-10-19)
 
 
