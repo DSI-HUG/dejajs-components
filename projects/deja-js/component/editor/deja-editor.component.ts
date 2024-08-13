@@ -103,6 +103,7 @@ export class DejaEditorComponent extends Destroy implements OnChanges, OnInit, A
     }
 
     private readonly errorEventListener: EventListener;
+    private scaytAlreadyDeactivated = false;
 
     /**
      * Constructor
@@ -114,11 +115,16 @@ export class DejaEditorComponent extends Destroy implements OnChanges, OnInit, A
     ) {
         super();
         this.errorEventListener = (error: ErrorEvent): any => {
-            if (error.message === 'Uncaught ReferenceError: SCAYT is not defined' && this.instance) {
+            if (error.message === 'Uncaught ReferenceError: SCAYT is not defined' && this.instance && !this.scaytAlreadyDeactivated) {
+                this.scaytAlreadyDeactivated = true;
+                this.cleanListeners();
                 this.instance.destroy();
                 this.instance = null;
                 const config = cloneDeep(this.config);
-                config.plugins = config.plugins?.split(',').filter(plugin => !plugin.includes('scayt')).join(',');
+                // Do not create the plugins property on config if not needed. this will produce an initialisation error of CKEdtor
+                if (config.plugins) {
+                    config.plugins = config.plugins.split(',').filter(plugin => !plugin.includes('scayt')).join(',');
+                }
                 config.removePlugins = config.removePlugins ? `${config.removePlugins},scayt` : 'scayt';
                 /* eslint-disable camelcase */
                 config.scayt_autoStartup = false;
