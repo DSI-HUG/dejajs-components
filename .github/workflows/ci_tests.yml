@@ -18,8 +18,8 @@ jobs:
         with:
           node-version: 18.x
           registry-url: https://registry.npmjs.org/
-      - name: Make sure npm is latest
-        run: npm install -g npm@latest
+    #   - name: Make sure npm is latest
+    #     run: npm install -g npm@latest
       - name: Install dependencies
         run: npm clean-install
       - name: Build

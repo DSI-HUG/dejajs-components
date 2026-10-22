@@ -1,3 +1,11 @@
+# [14.8.0](https://github.com/DSI-HUG/dejajs-components/compare/v14.7.0...v14.8.0) (2026-10-22)
+
+
+### Bug Fixes
+
+* **dejaEditor:** fix reinit of browser selection after text replacement (DEJS-1210) ([d69d5f1](https://github.com/DSI-HUG/dejajs-components/commit/d69d5f12db7b9dfc8d13f6ead05434e4c8bfbfe4))
+* **editor:** do not create the plugin property if it does not exists initially (DEJS-1194) ([754ebfd](https://github.com/DSI-HUG/dejajs-components/commit/754ebfdf4afbe257b1e109cb1b66b322ad63a717))
+
 ## [14.7.1-develop.1](https://github.com/DSI-HUG/dejajs-components/compare/v14.7.0...v14.7.1-develop.1) (2024-11-18)
 
 

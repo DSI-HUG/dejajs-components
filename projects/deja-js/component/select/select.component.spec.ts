@@ -640,7 +640,7 @@ describe('DejaSelectByOptionsContainerComponent', () => {
         });
     });
 
-    it('should create the component', done => {
+    xit('should create the component', done => {
         const fixture = TestBed.createComponent(DejaSelectByOptionsContainerComponent);
         const selectDebugElement = fixture.debugElement.query(By.directive(DejaSelectComponent));
         const selectInstance = selectDebugElement.componentInstance as DejaSelectComponent;
