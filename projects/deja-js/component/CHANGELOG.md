@@ -1,3 +1,10 @@
+## [14.7.1-develop.1](https://github.com/DSI-HUG/dejajs-components/compare/v14.7.0...v14.7.1-develop.1) (2024-11-18)
+
+
+### Bug Fixes
+
+* **editor:** do not create the plugin property if it does not exists initially (DEJS-1194) ([754ebfd](https://github.com/DSI-HUG/dejajs-components/commit/754ebfdf4afbe257b1e109cb1b66b322ad63a717))
+
 # [14.7.0](https://github.com/DSI-HUG/dejajs-components/compare/v14.6.0...v14.7.0) (2024-07-22)
 
 
