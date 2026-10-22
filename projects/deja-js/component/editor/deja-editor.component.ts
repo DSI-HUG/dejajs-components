@@ -591,17 +591,17 @@ export class DejaEditorComponent extends Destroy implements OnChanges, OnInit, A
             ))}</span>`);
             // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
             newElement.insertAfter(node.textNode);
-            // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
-            if (node.textNode.getText().substring(index + node.toReplace.length)) {
+            if (afterText) {
                 const end = new CKEDITOR.dom.text(afterText);
                 end.insertAfter(newElement);
             }
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-            this.instance.getSelection().selectElement(node.textNode);
-            const tmpRange = this.instance.getSelection().getRanges()[0];
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-            tmpRange.setStartAfter(node.textNode);
-            tmpRange.select();
+            const selection = this.instance.getSelection();
+            const range = selection.getRanges(true)?.[0] || this.instance.createRange();
+            range.selectNodeContents(newElement);
+            range.collapse(false);
+            selection.selectRanges([range]);
+            this.instance.focus();
+            this.instance.unlockSelection?.();
         }
     }
 
